@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\MotExpiryDate;
  */
 class MotExpiryDateTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = MotExpiryDate::class;
+    public const SUT_CLASS_NAME = MotExpiryDate::class;
 }

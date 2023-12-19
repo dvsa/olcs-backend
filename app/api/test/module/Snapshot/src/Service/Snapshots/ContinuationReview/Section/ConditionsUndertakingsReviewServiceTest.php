@@ -23,7 +23,7 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $mockTranslator = m::mock(TranslatorInterface::class);
-        
+
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
         $abstractReviewServiceServices->shouldReceive('getTranslator')
             ->withNoArgs()

@@ -3,6 +3,7 @@
 /**
  * IrfoDetails
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Irfo;
 
 use Doctrine\Common\Collections\Criteria;

@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
@@ -18,12 +18,12 @@ class ForgotPasswordOpenAm extends AbstractCommandHandler
     private ValidatableAdapterInterface $adapter;
     private TranslatorDelegator $translator;
 
-    const EMAIL_SUBJECT_KEY = 'auth.forgot-password.email.subject';
-    const EMAIL_MESSAGE_KEY = 'auth.forgot-password.email.message';
-    const MSG_GENERIC_FAIL = 'auth.forgot-password.fail';
-    const MSG_GENERIC_SUCCESS = 'auth.forgot-password.success';
-    const MSG_FAIL_DEBUG_LOG = '%s failed to send forgot password email: %s';
-    const MSG_EXCEPTION_ERROR_LOG = 'Forgot password email exception for %s: %s';
+    public const EMAIL_SUBJECT_KEY = 'auth.forgot-password.email.subject';
+    public const EMAIL_MESSAGE_KEY = 'auth.forgot-password.email.message';
+    public const MSG_GENERIC_FAIL = 'auth.forgot-password.fail';
+    public const MSG_GENERIC_SUCCESS = 'auth.forgot-password.success';
+    public const MSG_FAIL_DEBUG_LOG = '%s failed to send forgot password email: %s';
+    public const MSG_EXCEPTION_ERROR_LOG = 'Forgot password email exception for %s: %s';
 
     public function __construct(ValidatableAdapterInterface $adapter, TranslatorDelegator $translator)
     {

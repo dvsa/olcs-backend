@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Operator;
 
 use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType;
@@ -32,7 +33,7 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
 
     protected $extraRepos = ['OrganisationPerson', 'Person'];
 
-    const ERROR_UNKNOWN_TYPE = 'ERR_ORG_1';
+    public const ERROR_UNKNOWN_TYPE = 'ERR_ORG_1';
 
     public function handleCommand(CommandInterface $command)
     {

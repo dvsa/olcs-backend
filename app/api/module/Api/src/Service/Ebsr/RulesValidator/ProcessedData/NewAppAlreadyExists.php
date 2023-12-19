@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 class NewAppAlreadyExists extends AbstractValidator
 {
-    const NEW_APP_ALREADY_EXISTS_ERROR = 'new-app-already-exists-error';
+    public const NEW_APP_ALREADY_EXISTS_ERROR = 'new-app-already-exists-error';
 
     /**
      * @var array

@@ -14,7 +14,7 @@ class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
     {
         $mockSl = m::mock(Containerinterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(
-            ['elastic_search' => ['host' => 'google.com', 'port' =>4034]]
+            ['elastic_search' => ['host' => 'google.com', 'port' => 4034]]
         );
 
         $sut = new ClientFactory();

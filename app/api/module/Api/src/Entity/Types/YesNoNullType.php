@@ -5,6 +5,7 @@
  *
  * @author Jakub Igla <jakub.igla@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Entity\Types;
 
 use Doctrine\DBAL\Types\Type;
@@ -17,7 +18,7 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
  */
 class YesNoNullType extends Type
 {
-    const YESNONULL = 'yesnonull';
+    public const YESNONULL = 'yesnonull';
 
     public function getSqlDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {

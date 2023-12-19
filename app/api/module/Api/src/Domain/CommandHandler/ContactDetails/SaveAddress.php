@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ContactDetails;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;

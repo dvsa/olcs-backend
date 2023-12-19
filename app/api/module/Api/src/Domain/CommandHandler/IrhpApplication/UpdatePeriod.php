@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Update Period selection (create irhp permit application for selected stock period)
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitApplication\CreateForIrhpApplication;
@@ -90,7 +92,6 @@ class UpdatePeriod extends AbstractCommandHandler implements TransactionedInterf
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->applicationAnswersClearer = $container->get('QaApplicationAnswersClearer');
         return parent::__invoke($fullContainer, $requestedName, $options);

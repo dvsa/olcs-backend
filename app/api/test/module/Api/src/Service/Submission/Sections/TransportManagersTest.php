@@ -117,9 +117,7 @@ class TransportManagersTest extends AbstractSubmissionSectionTest
             )
             ->andReturn([]);
 
-
         $mockTmApplicationRepo = m::mock(TmApplicationRepo::class);
-
 
         $mockApplication = m::mock(Application::class)
             ->shouldReceive('getLicence')

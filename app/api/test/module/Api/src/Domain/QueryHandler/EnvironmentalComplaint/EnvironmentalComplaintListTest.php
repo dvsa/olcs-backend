@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\EnvironmentalComplaint;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\EnvironmentalComplaint\EnvironmentalComplaintList;

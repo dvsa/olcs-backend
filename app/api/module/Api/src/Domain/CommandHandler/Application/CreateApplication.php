@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAplicationFeeCommand;
@@ -35,7 +36,9 @@ use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
  */
 final class CreateApplication extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface, SlaCalculatorAwareInterface
 {
-    use AuthAwareTrait, DerivedTypeOfLicenceParamsTrait, SlaCalculatorAwareTrait;
+    use AuthAwareTrait;
+    use DerivedTypeOfLicenceParamsTrait;
+    use SlaCalculatorAwareTrait;
 
     protected $repoServiceName = 'Application';
 

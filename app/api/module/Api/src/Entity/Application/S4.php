@@ -20,9 +20,9 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
  */
 class S4 extends AbstractS4
 {
-    const STATUS_APPROVED = 's4_sts_approved';
-    const STATUS_REFUSED = 's4_sts_refused';
-    const STATUS_CANCELLED = 's4_sts_cancelled';
+    public const STATUS_APPROVED = 's4_sts_approved';
+    public const STATUS_REFUSED = 's4_sts_refused';
+    public const STATUS_CANCELLED = 's4_sts_cancelled';
 
     /**
      * S4 constructor.

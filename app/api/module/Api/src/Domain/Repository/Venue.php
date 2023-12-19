@@ -3,6 +3,7 @@
 /**
  * Venue Repository
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Venue as Entity;
@@ -30,8 +31,8 @@ class Venue extends AbstractRepository
 
         $qb->andWhere(
             $qb->expr()->orX(
-                $qb->expr()->isNull($this->alias .'.endDate'),
-                $qb->expr()->gt($this->alias .'.endDate', ':today')
+                $qb->expr()->isNull($this->alias . '.endDate'),
+                $qb->expr()->gt($this->alias . '.endDate', ':today')
             )
         );
 

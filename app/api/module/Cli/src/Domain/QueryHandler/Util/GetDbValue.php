@@ -11,7 +11,7 @@ use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
 
 class GetDbValue extends AbstractQueryHandler
 {
-    const ENTITIES_NAMESPACE = '\Dvsa\Olcs\Api\Entity\\';
+    public const ENTITIES_NAMESPACE = '\Dvsa\Olcs\Api\Entity\\';
 
     private $entityName;
 

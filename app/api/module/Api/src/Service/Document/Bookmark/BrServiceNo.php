@@ -11,9 +11,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrServiceNo extends SingleValueAbstract
 {
-    const DEFAULT_VALUE = 'N/A';
-    const FIELD  = 'serviceNo';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'busRegId';
-    const QUERY_CLASS = Qry::class;
+    public const DEFAULT_VALUE = 'N/A';
+    public const FIELD  = 'serviceNo';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'busRegId';
+    public const QUERY_CLASS = Qry::class;
 }

@@ -17,12 +17,12 @@ use Dvsa\Olcs\Utils\Helper\ValueHelper;
  */
 class Summary extends AbstractQueryHandler
 {
-    const ACTION_PRINT_SIGN_RETURN = 'PRINT_SIGN_RETURN';
-    const ACTION_SUPPLY_SUPPORTING_EVIDENCE = 'SUPPLY_SUPPORTING_EVIDENCE';
-    const ACTION_APPROVE_TM = 'APPROVE_TM';
+    public const ACTION_PRINT_SIGN_RETURN = 'PRINT_SIGN_RETURN';
+    public const ACTION_SUPPLY_SUPPORTING_EVIDENCE = 'SUPPLY_SUPPORTING_EVIDENCE';
+    public const ACTION_APPROVE_TM = 'APPROVE_TM';
 
-    const MISSING_EVIDENCE_OC = 'MISSING_EVIDENCE_OC';
-    const MISSING_EVIDENCE_FINANCIAL = 'markup-financial-standing-proof';
+    public const MISSING_EVIDENCE_OC = 'MISSING_EVIDENCE_OC';
+    public const MISSING_EVIDENCE_FINANCIAL = 'markup-financial-standing-proof';
 
     protected $repoServiceName = 'Application';
 

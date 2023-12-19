@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TrailerMotExpiryDate;
  */
 class TrailerMotExpiryDateTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = TrailerMotExpiryDate::class;
+    public const SUT_CLASS_NAME = TrailerMotExpiryDate::class;
 }

@@ -5,11 +5,13 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Service;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Date;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Date Helper Service Test
@@ -23,6 +25,12 @@ class DateTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->sut = new Date();
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testGetDateWithNoParams()

@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
@@ -16,5 +17,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class Grant extends AbstractIdOnlyCommand
 {
-
 }

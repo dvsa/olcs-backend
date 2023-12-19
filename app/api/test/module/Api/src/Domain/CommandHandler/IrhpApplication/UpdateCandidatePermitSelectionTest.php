@@ -3,6 +3,7 @@
 /**
  * Update candidate permit selection test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
@@ -26,7 +27,7 @@ use Mockery as m;
  */
 class UpdateCandidatePermitSelectionTest extends CommandHandlerTestCase
 {
-    const IRHP_APPLICATION_ID = 47;
+    public const IRHP_APPLICATION_ID = 47;
 
     private $irhpApplication;
 
@@ -184,7 +185,7 @@ class UpdateCandidatePermitSelectionTest extends CommandHandlerTestCase
                     $candidatePermit1Id,
                     $candidatePermit3Id,
                     'junk string',
-                    ['array element', new \stdClass]
+                    ['array element', new \stdClass()]
                 ]
             ]
         );
@@ -244,7 +245,7 @@ class UpdateCandidatePermitSelectionTest extends CommandHandlerTestCase
                     10,
                     30,
                     'junk string',
-                    ['array element', new \stdClass]
+                    ['array element', new \stdClass()]
                 ]
             ]
         );

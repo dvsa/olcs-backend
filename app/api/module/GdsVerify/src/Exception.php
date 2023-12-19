@@ -8,5 +8,4 @@ namespace Dvsa\Olcs\GdsVerify;
  */
 class Exception extends \Exception
 {
-
 }

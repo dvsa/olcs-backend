@@ -26,9 +26,10 @@ class DateFrom extends DynamicBookmark
 
     public function render()
     {
-        if (isset($this->data[1]['interimStatus']['id']) &&
-            $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE) {
-
+        if (
+            isset($this->data[1]['interimStatus']['id']) &&
+            $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE
+        ) {
             if ($this->data[1]['interimStart'] instanceof \DateTime) {
                 return $this->data[1]['interimStart']->format('d/m/Y');
             }

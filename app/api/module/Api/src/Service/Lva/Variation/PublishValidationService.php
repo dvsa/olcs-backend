@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class PublishValidationService
 {
-    const ERROR_NOT_PUBLISHABLE = 'APP-PUB-NOT-PUBLISHABLE';
+    public const ERROR_NOT_PUBLISHABLE = 'APP-PUB-NOT-PUBLISHABLE';
 
     /**
      * Validate the variation for publishing

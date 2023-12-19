@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PsvDisc;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -33,7 +34,9 @@ final class ConfirmPrinting extends AbstractCommandHandler implements Transactio
         if ($command->getIsSuccessfull()) {
             $this->getRepo()->setIsPrintingOffAndAssignNumbers($discIds, $command->getStartNumber());
             $this->setNewStartNumber(
-                $command->getLicenceType(), $command->getDiscSequence(), $command->getEndNumber() + 1
+                $command->getLicenceType(),
+                $command->getDiscSequence(),
+                $command->getEndNumber() + 1
             );
             $result->addMessage('Printing flag is now off and numbers assigned to discs');
         } else {

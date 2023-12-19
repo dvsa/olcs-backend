@@ -9,6 +9,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class PublicationDate extends PublicationFlatAbstract
 {
-    const FORMATTER = 'Date';
-    const FIELD  = 'pubDate';
+    public const FORMATTER = 'Date';
+    public const FIELD  = 'pubDate';
 }

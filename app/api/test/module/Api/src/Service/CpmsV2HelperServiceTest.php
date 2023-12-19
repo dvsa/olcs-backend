@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service;
 
+use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Cpms\Service\ApiService;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -22,13 +23,14 @@ use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Olcs\Logging\Log\Logger;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\CpmsV2HelperService
  */
 class CpmsV2HelperServiceTest extends MockeryTestCase
 {
-    const CHEQUE_NR = 100001;
+    public const CHEQUE_NR = 100001;
 
     /** @var CpmsV2HelperService */
     protected $sut;
@@ -74,6 +76,12 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
         // Create service with mocked dependencies
         $this->sut = $this->createService($this->cpmsClient, $this->feesHelper, $config);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
 
         parent::setUp();
     }
@@ -1609,7 +1617,6 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $txn->shouldReceive('getCpmsSchema')
             ->andReturn('client_id');
 
-
         $ft = m::mock(FeeTransactionEntity::class);
         $ft
             ->shouldReceive('getTransaction')
@@ -1630,20 +1637,25 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
         $address = new Address();
         $address->updateAddress('Foo', null, null, null, 'Bar', 'LS9 6NF');
 
-        $mockFeeType = m::mock()
-            ->shouldReceive('getDescription')
+        $mockFeeType = m::mock(FeeType::class);
+
+        $mockFeeType->shouldReceive('getDescription')
             ->andReturn('TEST_FEE_TYPE')
-            ->times(4)
-            ->shouldReceive('getVatCode')
+            ->times(4);
+
+        $mockFeeType->shouldReceive('getVatCode')
             ->andReturn('VAT_CODE')
-            ->twice()
+            ->twice();
+
+        $mockFeeType
             ->shouldReceive('getVatRate')
             ->andReturn('VAT_RATE')
-            ->twice()
+            ->twice();
+
+        $mockFeeType
             ->shouldReceive('getCountryCode')
             ->andReturn('NI')
-            ->times(5)
-            ->getMock();
+            ->times(5);
 
         if (!$isMiscellaneous) {
             $mockFeeType

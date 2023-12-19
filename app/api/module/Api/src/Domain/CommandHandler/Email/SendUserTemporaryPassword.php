@@ -3,6 +3,7 @@
 /**
  * Send Temporary Password Email
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

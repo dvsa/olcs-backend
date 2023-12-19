@@ -3,6 +3,7 @@
 /**
  * Update MyAccount Selfserve Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

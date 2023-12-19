@@ -41,7 +41,7 @@ class ServiceDesignationTest extends MockeryTestCase
         $sut = new ServiceDesignation(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
-            'busServices' => $serviceNo. ' / ' . $otherServiceNo
+            'busServices' => $serviceNo . ' / ' . $otherServiceNo
         ];
 
         $expectedOutput = new \ArrayObject($output);

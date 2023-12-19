@@ -26,26 +26,26 @@ use Dvsa\Olcs\Api\Entity\Person\Person;
  */
 class ContactDetails extends AbstractContactDetails
 {
-    const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
-    const TRANSPORT_MANAGER_STATUS_DISQUALIFIED = 'tm_s_dis';
-    const TRANSPORT_MANAGER_STATUS_REMOVED = 'tm_s_rem';
+    public const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
+    public const TRANSPORT_MANAGER_STATUS_DISQUALIFIED = 'tm_s_dis';
+    public const TRANSPORT_MANAGER_STATUS_REMOVED = 'tm_s_rem';
 
-    const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
-    const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
+    public const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
+    public const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
 
-    const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
-    const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
-    const CONTACT_TYPE_ESTABLISHMENT_ADDRESS = 'ct_est';
-    const CONTACT_TYPE_CORRESPONDENCE_ADDRESS = 'ct_corr';
-    const CONTACT_TYPE_TRANSPORT_CONSULTANT = 'ct_tcon';
-    const CONTACT_TYPE_TRANSPORT_MANAGER = 'ct_tm';
-    const CONTACT_TYPE_WORKSHOP = 'ct_work';
-    const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
-    const CONTACT_TYPE_PARTNER = 'ct_partner';
-    const CONTACT_TYPE_OBJECTOR = 'ct_obj';
-    const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
-    const CONTACT_TYPE_USER = 'ct_user';
-    const CONTACT_TYPE_HACKNEY = 'ct_hackney';
+    public const CONTACT_TYPE_REGISTERED_ADDRESS = 'ct_reg';
+    public const CONTACT_TYPE_COMPLAINANT = 'ct_complainant';
+    public const CONTACT_TYPE_ESTABLISHMENT_ADDRESS = 'ct_est';
+    public const CONTACT_TYPE_CORRESPONDENCE_ADDRESS = 'ct_corr';
+    public const CONTACT_TYPE_TRANSPORT_CONSULTANT = 'ct_tcon';
+    public const CONTACT_TYPE_TRANSPORT_MANAGER = 'ct_tm';
+    public const CONTACT_TYPE_WORKSHOP = 'ct_work';
+    public const CONTACT_TYPE_IRFO_OPERATOR = 'ct_irfo_op';
+    public const CONTACT_TYPE_PARTNER = 'ct_partner';
+    public const CONTACT_TYPE_OBJECTOR = 'ct_obj';
+    public const CONTACT_TYPE_STATEMENT_REQUESTOR = 'ct_requestor';
+    public const CONTACT_TYPE_USER = 'ct_user';
+    public const CONTACT_TYPE_HACKNEY = 'ct_hackney';
 
     /**
      * Construct

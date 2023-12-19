@@ -16,9 +16,9 @@ class EmailStyle extends AbstractHelper
      */
     public function primaryButton()
     {
-        return 'background-color: #00823b; color: #fff; border-color: #004f24; display: inline-block; '.
-            'vertical-align: top; font-size: 1rem; padding: 0.5em 0.75em; margin-right: 0.3em; text-decoration: none; '.
-            'text-rendering: optimizeLegibility; cursor: pointer; border-bottom: 2px solid; padding-bottom: 0.4em; '.
+        return 'background-color: #00823b; color: #fff; border-color: #004f24; display: inline-block; ' .
+            'vertical-align: top; font-size: 1rem; padding: 0.5em 0.75em; margin-right: 0.3em; text-decoration: none; ' .
+            'text-rendering: optimizeLegibility; cursor: pointer; border-bottom: 2px solid; padding-bottom: 0.4em; ' .
             'line-height: 1.4;';
     }
 }

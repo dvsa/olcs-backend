@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
 use Doctrine\DBAL\Exception as DBALException;
@@ -27,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 class QueueProcessorTest extends MockeryTestCase
 {
     protected $sut;
-    
+
     private $mockQueryHandlerManager;
 
     private $mockMsm;

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * BkmOurRef
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 /**
@@ -16,6 +18,6 @@ class BkmOurRef extends BkmAuthNo
      */
     public function render()
     {
-        return 'PT2/21/'.parent::render();
+        return 'PT2/21/' . parent::render();
     }
 }

@@ -71,9 +71,9 @@ class AbstractSectionTest extends MockeryTestCase
             [
                 'contactDetails' => (new ContactDetails(new RefData()))
                     ->setPerson(
-                        (new Person)
+                        (new Person())
                             ->setTitle(
-                                (new RefData)->setDescription('unit_Title')
+                                (new RefData())->setDescription('unit_Title')
                             )
                     ),
                 'expect' => ['title' => 'unit_Title'] + $personData,
@@ -81,7 +81,7 @@ class AbstractSectionTest extends MockeryTestCase
             [
                 'contactDetails' => (new ContactDetails(new RefData()))
                     ->setPerson(
-                        (new Person)
+                        (new Person())
                             ->setForename('unit_ForeName')
                             ->setFamilyName('unit_FamilyName')
                             ->setBirthDate(new \DateTime('2010-09-08'))

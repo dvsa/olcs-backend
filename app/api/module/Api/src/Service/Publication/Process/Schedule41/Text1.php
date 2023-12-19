@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Publication\Process\Schedule41;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
-use \Dvsa\Olcs\Api\Service\Publication\Formatter;
+use Dvsa\Olcs\Api\Service\Publication\Formatter;
 
 /**
  * Schedule41True Text1
@@ -84,7 +84,7 @@ final class Text1 implements ProcessInterface
                 $s4->getLicence()->getLicenceTypeShortCode(),
                 trim(
                     Formatter\OrganisationName::format($s4->getLicence()->getOrganisation())
-                    .' '.
+                    . ' ' .
                     Formatter\People::format(
                         $s4->getLicence()->getOrganisation(),
                         $organistionPeople
@@ -94,7 +94,7 @@ final class Text1 implements ProcessInterface
                 $s4->getApplication()->getLicenceTypeShortCode(),
                 trim(
                     Formatter\OrganisationName::format($s4->getApplication()->getLicence()->getOrganisation())
-                    .' '.
+                    . ' ' .
                     Formatter\People::format(
                         $s4->getApplication()->getLicence()->getOrganisation(),
                         $context->offsetGet('applicationPeople')

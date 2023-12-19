@@ -10,7 +10,6 @@ use Dvsa\Olcs\Transfer\Util\Annotation as Transfer;
  */
 class ByPermitNumber extends AbstractQuery
 {
-
     /**
      * @var int
      * @Transfer\Validator("Laminas\Validator\Digits")

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -28,7 +29,7 @@ final class PrintDiscs extends AbstractCommandHandler implements TransactionedIn
 {
     use ConfigAwareTrait;
 
-    const BATCH_SIZE = 30;
+    public const BATCH_SIZE = 30;
 
     protected $repoServiceName = 'GoodsDisc';
     protected $extraRepos = ['PsvDisc'];

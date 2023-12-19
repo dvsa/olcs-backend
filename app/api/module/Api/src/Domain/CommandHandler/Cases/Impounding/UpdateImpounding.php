@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding;
 
 use Doctrine\ORM\Query;

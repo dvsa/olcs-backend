@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry as Cmd;
@@ -53,7 +54,7 @@ class RetryTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertEquals(['Queue item requeued for after '.$expectedProcessAfter], $result->getMessages());
+        $this->assertEquals(['Queue item requeued for after ' . $expectedProcessAfter], $result->getMessages());
 
         $this->assertEquals(QueueEntity::STATUS_QUEUED, $item->getStatus()->getId());
         $this->assertEquals($expectedProcessAfter, $item->getProcessAfterDate()->format(\DateTime::W3C));

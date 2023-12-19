@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -73,7 +74,9 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->with($application);
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 627, 'section' => 'undertakings'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -117,10 +120,14 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->with($application);
 
         $this->expectedSideEffect(
-            CancelAllInterimFeesCommand::class, ['id' => 627], new Result()
+            CancelAllInterimFeesCommand::class,
+            ['id' => 627],
+            new Result()
         );
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 627, 'section' => 'undertakings'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -174,7 +181,9 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 627, 'section' => 'undertakings'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -233,10 +242,14 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->expectedSideEffect(
-            CreateFeeCommand::class, ['id' => 627, 'feeTypeFeeType' => 'GRANTINT', 'task' => null], new Result()
+            CreateFeeCommand::class,
+            ['id' => 627, 'feeTypeFeeType' => 'GRANTINT', 'task' => null],
+            new Result()
         );
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 627, 'section' => 'undertakings'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -282,11 +295,15 @@ class UpdateDeclarationTest extends CommandHandlerTestCase
             ->andReturn([]);
 
         $this->expectedSideEffect(
-            CreateFeeCommand::class, ['id' => 627, 'feeTypeFeeType' => 'GRANTINT', 'task' => null], new Result()
+            CreateFeeCommand::class,
+            ['id' => 627, 'feeTypeFeeType' => 'GRANTINT', 'task' => null],
+            new Result()
         );
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'undertakings'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 627, 'section' => 'undertakings'],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

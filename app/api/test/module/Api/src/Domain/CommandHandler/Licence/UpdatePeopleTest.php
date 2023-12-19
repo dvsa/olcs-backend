@@ -14,8 +14,8 @@ use Mockery as m;
  */
 class UpdatePeopleTest extends CommandHandlerTestCase
 {
-    const PERSON_ID = 7001;
-    const VERSION = 666;
+    public const PERSON_ID = 7001;
+    public const VERSION = 666;
 
     /** @var  UpdatePeople */
     protected $sut;

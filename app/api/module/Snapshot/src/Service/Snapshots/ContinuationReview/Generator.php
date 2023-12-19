@@ -19,15 +19,15 @@ use Laminas\Filter\Word\UnderscoreToCamelCase;
  */
 class Generator extends AbstractGenerator
 {
-    const PEOPLE_SECTION = 'people';
-    const TRAILERS_SECTION = 'trailers';
-    const TAXI_PHV_SECTION = 'taxi_phv';
-    const DISCS_SECTION = 'discs';
-    const COMMUNITY_LICENCES_SECTION = 'community_licences';
-    const FINANCE_SECTION = 'finance';
-    const DECLARATION_SECTION = 'declaration';
-    const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
-    const OPERATING_CENTRES_SECTION = 'operating_centres';
+    public const PEOPLE_SECTION = 'people';
+    public const TRAILERS_SECTION = 'trailers';
+    public const TAXI_PHV_SECTION = 'taxi_phv';
+    public const DISCS_SECTION = 'discs';
+    public const COMMUNITY_LICENCES_SECTION = 'community_licences';
+    public const FINANCE_SECTION = 'finance';
+    public const DECLARATION_SECTION = 'declaration';
+    public const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
+    public const OPERATING_CENTRES_SECTION = 'operating_centres';
 
     /** @var SectionAccessService */
     private $sectionAccessService;
@@ -200,7 +200,8 @@ class Generator extends AbstractGenerator
             $sections[] = self::FINANCE_SECTION;
         }
 
-        if (count($licence->getConditionUndertakings()) === 0
+        if (
+            count($licence->getConditionUndertakings()) === 0
             && in_array(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)
         ) {
             unset($sections[array_search(self::CONDITIONS_UNDERTAKINGS_SECTION, $sections)]);

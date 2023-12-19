@@ -12,8 +12,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\FeeBundle as Qry;
  */
 class InsufficientFeeTable extends DynamicBookmark
 {
-    const RTF_BOLD_START = '{\b ';
-    const RTF_BOLD_END = '}';
+    public const RTF_BOLD_START = '{\b ';
+    public const RTF_BOLD_END = '}';
 
     public function getQuery(array $data)
     {

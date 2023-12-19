@@ -9,5 +9,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\ImpoundingHearingVenue;
  */
 class ImpoundingHearingVenue1 extends ImpoundingHearingVenue
 {
-
 }

@@ -3,6 +3,7 @@
 /**
  * ContactDetails Repo test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;

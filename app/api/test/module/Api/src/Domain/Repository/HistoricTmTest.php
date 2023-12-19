@@ -5,10 +5,11 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use \Dvsa\Olcs\Api\Domain\Repository\HistoricTm as Repo;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Api\Domain\Repository\HistoricTm as Repo;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 use Mockery as m;
 

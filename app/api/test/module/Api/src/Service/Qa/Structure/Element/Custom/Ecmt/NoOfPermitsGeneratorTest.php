@@ -28,7 +28,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class NoOfPermitsGeneratorTest extends MockeryTestCase
 {
-    const ISSUE_FEE_PER_PERMIT = '5.00';
+    public const ISSUE_FEE_PER_PERMIT = '5.00';
 
     /**
      * @dataProvider dpGenerate

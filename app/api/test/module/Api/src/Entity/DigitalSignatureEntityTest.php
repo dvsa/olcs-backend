@@ -75,35 +75,35 @@ class DigitalSignatureEntityTest extends EntityTester
                 'Bob Smith',
                 [
                     Attributes::FIRST_NAME => 'BOB',
-                    Attributes::SURNAME=> 'SMITH',
+                    Attributes::SURNAME => 'SMITH',
                 ],
             ],
             [
                 'Bob Smith',
                 [
                     Attributes::FIRST_NAME => 'bob',
-                    Attributes::SURNAME=> 'smith',
+                    Attributes::SURNAME => 'smith',
                 ],
             ],
             [
                 'Bob Smith',
                 [
                     Attributes::FIRST_NAME => 'bob',
-                    Attributes::SURNAME=> 'smith',
+                    Attributes::SURNAME => 'smith',
                 ],
             ],
             [
                 'Smith',
                 [
                     Attributes::FIRST_NAME => '',
-                    Attributes::SURNAME=> 'smith',
+                    Attributes::SURNAME => 'smith',
                 ],
             ],
             [
                 'Bob',
                 [
                     Attributes::FIRST_NAME => 'bob',
-                    Attributes::SURNAME=> '',
+                    Attributes::SURNAME => '',
                 ],
             ],
             [

@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Repository\Licence as  LicenceRepo;
@@ -123,7 +124,9 @@ class DeletePeopleTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
 
         $appOrgPerson1 = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
-            $application, $organisation, new \Dvsa\Olcs\Api\Entity\Person\Person()
+            $application,
+            $organisation,
+            new \Dvsa\Olcs\Api\Entity\Person\Person()
         );
         $appOrgPerson1->setId(179);
         $appOrgPerson1->setPerson((new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(79));
@@ -190,7 +193,9 @@ class DeletePeopleTest extends CommandHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchUsingId')->with($command)->once()->andReturn($application);
 
         $appOrgPerson1 = new \Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson(
-            $application, $organisation, new \Dvsa\Olcs\Api\Entity\Person\Person()
+            $application,
+            $organisation,
+            new \Dvsa\Olcs\Api\Entity\Person\Person()
         );
         $appOrgPerson1->setId(179);
         $appOrgPerson1->setPerson((new \Dvsa\Olcs\Api\Entity\Person\Person())->setId(79));

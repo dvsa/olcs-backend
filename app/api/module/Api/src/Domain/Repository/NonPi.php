@@ -1,7 +1,9 @@
 <?php
+
 /**
  * NonPi Entity
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;

@@ -28,7 +28,7 @@ class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
         $this->sut = m::mock(UpdateMultipleNoOfPermits::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods();
- 
+
         parent::setUp();
     }
 

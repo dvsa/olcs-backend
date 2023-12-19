@@ -3,6 +3,7 @@
 /**
  * Publication by traffic area and pub type
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

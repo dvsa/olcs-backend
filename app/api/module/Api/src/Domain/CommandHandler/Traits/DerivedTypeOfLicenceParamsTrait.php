@@ -20,7 +20,8 @@ trait DerivedTypeOfLicenceParamsTrait
      */
     public function getDerivedVehicleType($vehicleType, $operatorType)
     {
-        if ($vehicleType == RefData::APP_VEHICLE_TYPE_LGV ||
+        if (
+            $vehicleType == RefData::APP_VEHICLE_TYPE_LGV ||
             $vehicleType == RefData::APP_VEHICLE_TYPE_MIXED
         ) {
             return $vehicleType;

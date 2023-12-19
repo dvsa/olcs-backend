@@ -24,10 +24,10 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoCountry;
  */
 class IrfoPermitStock extends AbstractIrfoPermitStock
 {
-    const STATUS_RETURNED = 'irfo_perm_s_s_ret';
-    const STATUS_VOID = 'irfo_perm_s_s_void';
-    const STATUS_ISSUED = 'irfo_perm_s_s_issued';
-    const STATUS_IN_STOCK = 'irfo_perm_s_s_in_stock';
+    public const STATUS_RETURNED = 'irfo_perm_s_s_ret';
+    public const STATUS_VOID = 'irfo_perm_s_s_void';
+    public const STATUS_ISSUED = 'irfo_perm_s_s_issued';
+    public const STATUS_IN_STOCK = 'irfo_perm_s_s_in_stock';
 
     public function __construct($serialNo, $validForYear, IrfoCountry $irfoCountry)
     {

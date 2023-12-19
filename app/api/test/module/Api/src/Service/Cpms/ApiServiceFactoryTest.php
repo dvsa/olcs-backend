@@ -28,7 +28,6 @@ class ApiServiceFactoryTest extends TestCase
                             'Accept' => 'application/json',
                         ],
 
-
                     ],
                 ],
             ],

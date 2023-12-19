@@ -3,6 +3,7 @@
 /**
  * Generate a cache based on the cache type and optional unique id
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Cache;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

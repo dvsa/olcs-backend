@@ -15,7 +15,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class NoOfPermitsConditionalUpdaterTest extends MockeryTestCase
 {
-    const EXISTING_BILATERAL_REQUIRED = [
+    public const EXISTING_BILATERAL_REQUIRED = [
         IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => 5,
         IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 7,
         IrhpPermitApplication::BILATERAL_MOROCCO_REQUIRED => null,

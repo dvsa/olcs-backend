@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Variation;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

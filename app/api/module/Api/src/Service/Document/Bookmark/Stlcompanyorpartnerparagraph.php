@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class Stlcompanyorpartnerparagraph extends AbstractLicenceType
 {
-    const PARTNERSHIP_ORGANISATION_TYPE_IDS = [Organisation::ORG_TYPE_PARTNERSHIP, Organisation::ORG_TYPE_LLP];
+    public const PARTNERSHIP_ORGANISATION_TYPE_IDS = [Organisation::ORG_TYPE_PARTNERSHIP, Organisation::ORG_TYPE_LLP];
 
     /**
      * Get the query to fetch data for the bookmark

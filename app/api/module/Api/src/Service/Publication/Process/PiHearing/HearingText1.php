@@ -3,6 +3,7 @@
 /**
  * Hearing text 1
  */
+
 namespace Dvsa\Olcs\Api\Service\Publication\Process\PiHearing;
 
 use Dvsa\Olcs\Api\Service\Publication\Process\Text1 as AbstractText1;

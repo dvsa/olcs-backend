@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -63,8 +64,8 @@ class QueueTest extends RepositoryTestCase
         $this->assertEquals($item, $this->sut->getNextItem());
 
         $now = new DateTime();
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND '.
-            '(q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1';
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND ' .
+            '(q.processAfterDate <= [[' . $now->format(DateTime::W3C) . ']] OR q.processAfterDate IS NULL) LIMIT 1';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -98,8 +99,8 @@ class QueueTest extends RepositoryTestCase
         $this->assertEquals($item, $this->sut->getNextItem(['foo']));
 
         $now = new DateTime();
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
-            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND' .
+            ' (q.processAfterDate <= [[' . $now->format(DateTime::W3C) . ']] OR q.processAfterDate IS NULL) LIMIT 1' .
             ' AND q.type IN [[["foo"]]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -134,8 +135,8 @@ class QueueTest extends RepositoryTestCase
         $this->assertEquals($item, $this->sut->getNextItem(['foo'], ['bar']));
 
         $now = new DateTime();
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
-            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND' .
+            ' (q.processAfterDate <= [[' . $now->format(DateTime::W3C) . ']] OR q.processAfterDate IS NULL) LIMIT 1' .
             ' AND q.type IN [[["foo"]]] AND q.type NOT IN [[["bar"]]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -199,8 +200,8 @@ class QueueTest extends RepositoryTestCase
         $this->assertTrue($this->sut->isItemTypeQueued('foo'));
 
         $now = new DateTime();
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
-            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND' .
+            ' (q.processAfterDate <= [[' . $now->format(DateTime::W3C) . ']] OR q.processAfterDate IS NULL) LIMIT 1' .
             ' AND q.type = [[foo]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -218,8 +219,8 @@ class QueueTest extends RepositoryTestCase
         $this->assertFalse($this->sut->isItemTypeQueued('foo'));
 
         $now = new DateTime();
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND'.
-            ' (q.processAfterDate <= [['. $now->format(DateTime::W3C) .']] OR q.processAfterDate IS NULL) LIMIT 1'.
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] AND' .
+            ' (q.processAfterDate <= [[' . $now->format(DateTime::W3C) . ']] OR q.processAfterDate IS NULL) LIMIT 1' .
             ' AND q.type = [[foo]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -276,7 +277,7 @@ SQL;
 
         $this->assertEquals($item, $this->sut->fetchNextItemIncludingPostponed(['foo']));
 
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1'.
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1' .
             ' AND q.type IN [[["foo"]]]';
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -299,7 +300,7 @@ SQL;
         );
 
         $this->assertEquals($item, $this->sut->fetchNextItemIncludingPostponed(['foo'], ['bar']));
-        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1'.
+        $expectedQuery = '[QUERY] AND q.status = [[que_sts_queued]] LIMIT 1' .
             ' AND q.type IN [[["foo"]]] AND q.type NOT IN [[["bar"]]]';
         $this->assertEquals($expectedQuery, $this->query);
     }

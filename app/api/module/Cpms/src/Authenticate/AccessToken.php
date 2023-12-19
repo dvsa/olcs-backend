@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Authenticate;
@@ -10,7 +11,7 @@ namespace Dvsa\Olcs\Cpms\Authenticate;
  */
 class AccessToken
 {
-    const INVALID_ACCESS_TOKEN = 114;
+    public const INVALID_ACCESS_TOKEN = 114;
 
     /** @var  string */
     protected $accessToken;

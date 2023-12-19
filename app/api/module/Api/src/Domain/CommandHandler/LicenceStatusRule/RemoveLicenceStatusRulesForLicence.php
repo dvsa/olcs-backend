@@ -5,6 +5,7 @@
  *
  * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

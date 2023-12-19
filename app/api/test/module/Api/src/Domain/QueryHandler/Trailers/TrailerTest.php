@@ -5,6 +5,7 @@
  *
  * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Trailer;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Trailer\Trailer;

@@ -32,7 +32,7 @@ class Approve extends AbstractSurrenderCommandHandler
         $this->licenceEntity = $this->getRepo('Licence')->fetchById($command->getId());
 
         $this->hasEcmsAndSignatureBeenChecked($command->getId());
-        
+
         $updateSurrenderResult = $this->handleSideEffect(UpdateSurrender::create(
             [
                 'id' => $command->getId(),

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Community Licence Suspension Reason
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspensionReason as CommunityLicSuspensionReasonEntity;

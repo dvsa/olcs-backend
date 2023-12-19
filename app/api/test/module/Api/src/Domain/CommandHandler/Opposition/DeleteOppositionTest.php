@@ -3,6 +3,7 @@
 /**
  * Delete Opposition Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Opposition;
 
 use Doctrine\ORM\Query;

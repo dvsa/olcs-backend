@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Service;
@@ -45,7 +46,8 @@ class ApiServiceFactory
 
     private function returnIdentity(): CpmsIdentityProvider
     {
-        if (empty($this->config['cpms_credentials']) ||
+        if (
+            empty($this->config['cpms_credentials']) ||
             empty($this->config['cpms_credentials']['client_id']) ||
             empty($this->config['cpms_credentials']['client_secret'])
         ) {

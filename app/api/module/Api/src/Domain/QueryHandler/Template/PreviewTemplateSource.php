@@ -75,7 +75,6 @@ class PreviewTemplateSource extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->twigRenderer = $container->get('TemplateTwigRenderer');
         $this->strategySelectingViewRenderer = $container->get('TemplateStrategySelectingViewRenderer');
         return parent::__invoke($fullContainer, $requestedName, $options);

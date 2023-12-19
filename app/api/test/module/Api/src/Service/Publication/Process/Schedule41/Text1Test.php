@@ -121,7 +121,7 @@ OC1 ADD1
 4 vehicle(s), 8 trailer(s)
 OC3 ADD1
 10 vehicle(s)
-Transferred from D12345 SN (DONOR_ORG T/A TRAD_NAME Director(s): Derek Dooley) to".
+Transferred from D12345 SN (DONOR_ORG T/A TRAD_NAME Director(s): Derek Dooley) to" .
             " LIC12345 SI (ORG_NAME Partner(s): Andy Adams).
 The operating centre(s) being removed from D12345 as part of this application.";
 
@@ -197,7 +197,7 @@ OC1 ADD1
 4 vehicle(s), 8 trailer(s)
 OC3 ADD1
 10 vehicle(s)
-Transferred from D12345 SN (DONOR_ORG T/A TRAD_NAME Director(s): Derek Dooley) to LIC12345 SI".
+Transferred from D12345 SN (DONOR_ORG T/A TRAD_NAME Director(s): Derek Dooley) to LIC12345 SI" .
             " (ORG_NAME Partner(s): Andy Adams).
 D12345 has been surrendered as part of this application.";
 
@@ -237,7 +237,7 @@ D12345 has been surrendered as part of this application.";
         $this->sut->process($publicationLink, $context);
 
         $expectedText = "Operating Centre(s):
-Transferred from D12345 SN (DONOR_ORG) to LIC12345 SI".
+Transferred from D12345 SN (DONOR_ORG) to LIC12345 SI" .
             " (ORG_NAME).
 D12345 has been surrendered as part of this application.
 Upgrade of Licence from SN to SI";

@@ -22,12 +22,12 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterface
 {
-    const BILATERAL_TYPE_STANDARD_SINGLE = 'standard.single';
-    const BILATERAL_TYPE_STANDARD_MULTIPLE = 'standard.multiple';
-    const BILATERAL_TYPE_CABOTAGE_SINGLE = 'cabotage.single';
-    const BILATERAL_TYPE_CABOTAGE_MULTIPLE = 'cabotage.multiple';
+    public const BILATERAL_TYPE_STANDARD_SINGLE = 'standard.single';
+    public const BILATERAL_TYPE_STANDARD_MULTIPLE = 'standard.multiple';
+    public const BILATERAL_TYPE_CABOTAGE_SINGLE = 'cabotage.single';
+    public const BILATERAL_TYPE_CABOTAGE_MULTIPLE = 'cabotage.multiple';
 
-    const BILATERAL_TYPES = [
+    public const BILATERAL_TYPES = [
         RefData::JOURNEY_SINGLE => [
             0 => self::BILATERAL_TYPE_STANDARD_SINGLE,
             1 => self::BILATERAL_TYPE_CABOTAGE_SINGLE,
@@ -38,7 +38,7 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         ],
     ];
 
-    const BILATERAL_TYPES_CRITERIA = [
+    public const BILATERAL_TYPES_CRITERIA = [
         self::BILATERAL_TYPE_STANDARD_SINGLE => [
             'journey' => RefData::JOURNEY_SINGLE,
             'cabotage' => false,
@@ -85,7 +85,7 @@ class IrhpPermitRange extends AbstractIrhpPermitRange implements DeletableInterf
         $journey,
         $cabotage
     ) {
-        $instance = new self;
+        $instance = new self();
 
         $instance->irhpPermitStock = $permitStock;
         $instance->emissionsCategory = $emissionsCategory;

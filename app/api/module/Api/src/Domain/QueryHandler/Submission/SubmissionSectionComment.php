@@ -3,6 +3,7 @@
 /**
  * SubmissionSectionComment
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

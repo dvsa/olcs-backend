@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Scanning\Controller;
 
 use Olcs\Logging\Log\Logger;

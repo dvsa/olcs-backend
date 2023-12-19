@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Service\File\Exception;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 use Laminas\Http\Response;
 
 /**
@@ -17,7 +17,7 @@ use Laminas\Http\Response;
  */
 class ContentStoreFileUploaderTest extends MockeryTestCase
 {
-    const IDENTIFIER = 'unit_Identifier';
+    public const IDENTIFIER = 'unit_Identifier';
 
     /** @var ContentStoreFileUploader */
     protected $sut;
@@ -31,7 +31,17 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
         $this->mockContentStoreCli = m::mock(ContentStoreClient::class);
 
-        $sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
         $sm->setService('ContentStore', $this->mockContentStoreCli);
 
         static::assertSame($this->sut, $this->sut->__invoke($sm, null));

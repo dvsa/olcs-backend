@@ -18,7 +18,7 @@ class DocumentSearchView implements BundleSerializableInterface
 {
     use BundleSerializableTrait;
 
-    const IDENTIFIER_UNLINKED = 'Unlinked';
+    public const IDENTIFIER_UNLINKED = 'Unlinked';
 
     /**
      * Id

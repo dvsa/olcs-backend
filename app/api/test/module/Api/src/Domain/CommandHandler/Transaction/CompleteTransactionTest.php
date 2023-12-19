@@ -90,7 +90,6 @@ class CompleteTransactionTest extends CommandHandlerTestCase
             ->once()
             ->andReturn([$fee1, $fee2]);
 
-
         $command = Cmd::create($data);
 
         // expectations

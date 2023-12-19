@@ -3,6 +3,7 @@
 /**
  * Organisation Permits Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
 use DateTime;

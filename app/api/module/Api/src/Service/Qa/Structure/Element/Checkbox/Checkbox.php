@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 
 class Checkbox implements ElementInterface
 {
-    const LABEL_KEY = 'label';
+    public const LABEL_KEY = 'label';
 
     /** @var TranslateableText $label */
     private $label;

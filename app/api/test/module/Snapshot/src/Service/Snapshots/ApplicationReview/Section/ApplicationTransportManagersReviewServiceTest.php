@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
@@ -22,7 +23,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
 class ApplicationTransportManagersReviewServiceTest extends MockeryTestCase
 {
     protected $sut;
-    
+
     /** @var TransportManagersReviewService */
     protected $mockTm;
 

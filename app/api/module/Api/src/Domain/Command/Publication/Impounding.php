@@ -3,6 +3,7 @@
 /**
  * Publish an Impounding
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Publication;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;

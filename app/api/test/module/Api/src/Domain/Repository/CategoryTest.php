@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use \Dvsa\Olcs\Transfer\Query as TransferQry;
+use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
 

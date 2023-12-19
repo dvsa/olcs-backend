@@ -115,7 +115,7 @@ Operating Centre: OC1 ADD1
 Authorisation: 4 vehicle(s), 8 trailer(s)
 Operating Centre: OC3 ADD1
 Authorisation: 10 vehicle(s)
-The Traffic Commissioner has given a direction under paragraph 2 of Schedule 4 that the above operating centre(s) ".
+The Traffic Commissioner has given a direction under paragraph 2 of Schedule 4 that the above operating centre(s) " .
             "shall be transferred from licence D12345 held by DONOR_ORG
 The operating centre(s) being removed from D12345 as part of this application.";
 
@@ -183,7 +183,7 @@ Operating Centre: OC1 ADD1
 Authorisation: 4 vehicle(s), 8 trailer(s)
 Operating Centre: OC3 ADD1
 Authorisation: 10 vehicle(s)
-The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)".
+The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)" .
             " shall be transferred from licence D12345 held by DONOR_ORG
 D12345 has been surrendered as part of this application.";
 
@@ -225,7 +225,7 @@ D12345 has been surrendered as part of this application.";
 
         $expectedText = "LICENCE_ADDRESS
 Transport Manager(s): Dave Jones, Shirley Basey
-The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)".
+The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)" .
             " shall be transferred from licence D12345 held by DONOR_ORG
 D12345 has been surrendered as part of this application.";
 
@@ -268,7 +268,7 @@ D12345 has been surrendered as part of this application.";
         $this->sut->process($publicationLink, $context);
 
         $expectedText = "LICENCE_ADDRESS
-The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)".
+The Department has given a direction under paragraph 2 of Schedule 1(NI) that the above operating centre(s)" .
             " shall be transferred from licence D12345 held by DONOR_ORG
 D12345 has been surrendered as part of this application.
 Upgrade of Licence from SN to SI";

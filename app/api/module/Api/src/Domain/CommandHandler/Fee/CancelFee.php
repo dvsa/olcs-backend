@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -29,7 +30,7 @@ final class CancelFee extends AbstractCommandHandler
         $fee->setFeeStatus($this->getRepo()->getRefdataReference(Fee::STATUS_CANCELLED));
         $this->getRepo()->save($fee);
 
-        $this->result->addMessage('Fee '. $fee->getId() .' cancelled successfully');
+        $this->result->addMessage('Fee ' . $fee->getId() . ' cancelled successfully');
 
         $this->maybeCloseFeeTask($fee);
 

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Correspondence;
 
 /**
@@ -14,5 +15,4 @@ namespace Dvsa\Olcs\Api\Domain\Command\Correspondence;
  */
 final class ProcessInboxDocuments extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
 {
-
 }

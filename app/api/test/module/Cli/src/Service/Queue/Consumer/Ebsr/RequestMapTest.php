@@ -58,7 +58,7 @@ class RequestMapTest extends AbstractConsumerTestCase
             'id' => $busRegId,
             'regNo' => $regNo,
             'licence' => $licence,
-            'user' =>$userId
+            'user' => $userId
         ];
 
         $item = new QueueEntity();

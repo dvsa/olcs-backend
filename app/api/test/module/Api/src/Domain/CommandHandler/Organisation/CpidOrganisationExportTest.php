@@ -6,11 +6,11 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace module\Api\src\Domain\CommandHandler\Organisation;
 
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\CpidOrganisationExport;
 use Dvsa\Olcs\Transfer\Command\Organisation\CpidOrganisationExport as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Class CpidOrganisationExportTest
- * 
+ *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */

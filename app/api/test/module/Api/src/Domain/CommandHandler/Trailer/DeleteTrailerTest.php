@@ -5,17 +5,15 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Trailer\DeleteTrailer;
-
 use Dvsa\Olcs\Api\Entity\Licence\Trailer;
-
 use Dvsa\Olcs\Transfer\Command\Trailer\DeleteTrailer as Cmd;
 
 /**
@@ -66,6 +64,5 @@ class DeleteTrailerTest extends CommandHandlerTestCase
         ];
 
         $this->assertEquals($expected, $result->toArray());
-
     }
 }

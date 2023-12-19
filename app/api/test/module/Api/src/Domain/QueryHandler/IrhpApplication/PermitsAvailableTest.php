@@ -110,7 +110,7 @@ class PermitsAvailableTest extends QueryHandlerTestCase
             $this->sut->handleQuery($this->query)
         );
     }
-    
+
     public function testReturnTrueWhenNotShortTerm()
     {
         $this->irhpApplication->shouldReceive('getIrhpPermitType->isEcmtShortTerm')

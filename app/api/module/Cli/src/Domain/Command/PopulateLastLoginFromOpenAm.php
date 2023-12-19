@@ -64,7 +64,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommand
     /**
      * @return ProgressBar
      */
-    public function getProgressBar() : ?ProgressBar
+    public function getProgressBar(): ?ProgressBar
     {
         return $this->progressBar;
     }

@@ -22,10 +22,10 @@ use RuntimeException;
  */
 class Template extends AbstractTemplate
 {
-    const BULK_GOODS_EMAIL_SUBJECT_LINE = 'Important information about your goods vehicle licence';
-    const BULK_PSV_EMAIL_SUBJECT_LINE = 'Important information about your PSV licence';
+    public const BULK_GOODS_EMAIL_SUBJECT_LINE = 'Important information about your goods vehicle licence';
+    public const BULK_PSV_EMAIL_SUBJECT_LINE = 'Important information about your PSV licence';
 
-    const BULK_TEMPLATE_SUBJECT_MAP = [
+    public const BULK_TEMPLATE_SUBJECT_MAP = [
         'report-gv-r' => self::BULK_GOODS_EMAIL_SUBJECT_LINE,
         'report-gv-sn' => self::BULK_GOODS_EMAIL_SUBJECT_LINE,
         'report-gv-si' => self::BULK_GOODS_EMAIL_SUBJECT_LINE,

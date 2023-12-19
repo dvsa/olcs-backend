@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
  */
 class SubmissionGenerator
 {
-    const MAX_GENERATE_SUBMISSION_TIME = 90;
+    public const MAX_GENERATE_SUBMISSION_TIME = 90;
 
     private $submissionConfig;
     private $sectionGeneratorPluginManager;

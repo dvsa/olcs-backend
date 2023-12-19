@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Authenticate;
@@ -16,7 +17,7 @@ class CpmsIdentityProviderFactory
         $this->userId = $userId;
     }
 
-    public function createCpmsIdentityProvider() : CpmsIdentityProvider
+    public function createCpmsIdentityProvider(): CpmsIdentityProvider
     {
         $identityProvider = new CpmsIdentityProvider($this->userId, $this->clientId, $this->clientSecret);
         return $identityProvider;

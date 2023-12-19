@@ -12,8 +12,8 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class OpenAmFactory implements FactoryInterface
 {
-    const MSG_MISSING_OPTIONS = 'OpenAm client options missing from config';
-    const MSG_MISSING_COOKIE_NAME = 'OpenAm cookie name missing from config';
+    public const MSG_MISSING_OPTIONS = 'OpenAm client options missing from config';
+    public const MSG_MISSING_COOKIE_NAME = 'OpenAm cookie name missing from config';
 
     /**
      * invoke method

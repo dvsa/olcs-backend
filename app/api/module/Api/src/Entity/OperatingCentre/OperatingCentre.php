@@ -34,9 +34,7 @@ class OperatingCentre extends AbstractOperatingCentre implements OrganisationPro
 
         /** @var \Dvsa\Olcs\Api\Entity\Cases\Complaint $complaint */
         foreach ($this->getComplaints() as $complaint) {
-
             if ($complaint->getClosedDate() === null && $complaint->isEnvironmentalComplaint()) {
-
                 $this->hasEnvironmentalComplaint = 'Y';
                 break;
             }
@@ -60,14 +58,11 @@ class OperatingCentre extends AbstractOperatingCentre implements OrganisationPro
         foreach ($this->getOppositions() as $opposition) {
             // Only move on if is NOT withdrawn.
             if ($opposition->getIsWithdrawn() === false) {
-
                 // Do we even have a linked application??
                 /** @var Application $application */
                 if ($application = $opposition->getCase()->getApplication()) {
-
                     // status is NONE of these
                     if (!in_array($application->getStatus()->getId(), $notAllowedStatuses)) {
-
                         $this->hasOpposition = 'Y';
                         break;
                     }

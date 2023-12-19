@@ -15,7 +15,8 @@ class CanAccessPreviousConviction extends AbstractCanAccessEntity
     {
         /* @var $entity \Dvsa\Olcs\Api\Entity\Application\PreviousConviction */
         $entity = $this->getRepo($this->repo)->fetchById($entityId);
-        if (!empty($entity->getTransportManager()) &&
+        if (
+            !empty($entity->getTransportManager()) &&
             $entity->getTransportManager() === $this->getCurrentUser()->getTransportManager()
         ) {
             return true;

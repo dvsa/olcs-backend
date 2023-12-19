@@ -45,7 +45,7 @@ class CabotageGenerator implements QuestionTextGeneratorInterface
             $additionalGuidanceTranslateableText->getKey(),
             strtolower($countryCode)
         );
-        
+
         $additionalGuidanceTranslateableText->setKey($key);
 
         return $questionText;

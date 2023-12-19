@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

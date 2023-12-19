@@ -127,7 +127,6 @@ class ProcessSignatureResponse extends AbstractCommandHandler implements Transac
     {
         $fullContainer = $container;
 
-
         $this->setGdsVerifyService($container->get(\Dvsa\Olcs\GdsVerify\Service\GdsVerify::class));
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

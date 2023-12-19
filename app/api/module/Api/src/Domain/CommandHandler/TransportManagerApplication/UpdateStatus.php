@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -35,7 +36,6 @@ final class UpdateStatus extends AbstractCommandHandler implements
             $tma = $this->getRepo()->fetchUsingId($command);
         }
         $status = $this->getRepo()->getRefdataReference($command->getStatus());
-
 
         $tma->setTmApplicationStatus($status);
         if ($command->getStatus() === TransportManagerApplication::STATUS_INCOMPLETE) {

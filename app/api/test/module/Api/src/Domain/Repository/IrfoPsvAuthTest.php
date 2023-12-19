@@ -3,6 +3,7 @@
 /**
  * IrfoPsvAuth Repo test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
@@ -111,7 +112,7 @@ class IrfoPsvAuthTest extends RepositoryTestCase
         $query = IrfoPsvAuthListQry::create(['organisation' => $orgId]);
         $this->assertEquals(['RESULTS'], $this->sut->fetchList($query));
 
-        $expectedQuery = 'BLAH AND m.organisation = [['.$orgId.']]';
+        $expectedQuery = 'BLAH AND m.organisation = [[' . $orgId . ']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 
@@ -139,10 +140,10 @@ class IrfoPsvAuthTest extends RepositoryTestCase
             . 'AND m.expiryDate >= [[2016-12-01T00:00:00+00:00]] '
             . 'AND m.expiryDate < [[2017-01-01T00:00:00+00:00]] '
             . 'AND m.status IN ['
-                . '"'.Entity::STATUS_APPROVED.'",'
-                . '"'.Entity::STATUS_GRANTED.'",'
-                . '"'.Entity::STATUS_PENDING.'",'
-                . '"'.Entity::STATUS_RENEW.'"'
+                . '"' . Entity::STATUS_APPROVED . '",'
+                . '"' . Entity::STATUS_GRANTED . '",'
+                . '"' . Entity::STATUS_PENDING . '",'
+                . '"' . Entity::STATUS_RENEW . '"'
             . '] '
             . 'AND o.isIrfo = [[true]]';
         $this->assertEquals($expectedQuery, $this->query);

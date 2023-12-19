@@ -27,8 +27,8 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class DispatchDocumentTest extends CommandHandlerTestCase
 {
-    const DOC_ID = 9001;
-    const LIC_ID = 8001;
+    public const DOC_ID = 9001;
+    public const LIC_ID = 8001;
 
     /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument */
     protected $sut;

@@ -1,13 +1,15 @@
 <?php
+
 /**
  * Class
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark as BookmarkNs;
-use \PHPUnit\Framework\TestCase as TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class

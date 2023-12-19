@@ -27,7 +27,6 @@ final class LinkedLicences extends AbstractSection
         /** @var Licence $licence */
         if (!empty($case->getLicence())) {
             foreach ($case->getLicence()->getOrganisation()->getLinkedLicences() as $licence) {
-
                 $thisRow = array();
                 if ($licence->getId() !== $case->getLicence()->getId()) {
                     $thisRow['id'] = $licence->getId();

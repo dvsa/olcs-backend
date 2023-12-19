@@ -10,7 +10,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use LmcRbacMvc\Service\AuthorizationService;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Entity\Application\ApplicationBuilder;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
 

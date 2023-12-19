@@ -3,6 +3,7 @@
 /**
  * With User
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Doctrine\ORM\EntityManagerInterface;

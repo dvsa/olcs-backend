@@ -31,16 +31,16 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class InspectionRequest extends AbstractInspectionRequest
 {
-    const ERROR_FIELD_IS_REQUIRED = 'IR-FR-1';
-    const ERROR_DUE_DATE = 'IR-DD-2';
-    const ERROR_DUE_DATE_NOT_IN_RANGE = 'IR-DD-3';
-    const ERROR_REQUEST_DATE_IN_FUTURE = 'IR-RD-1';
+    public const ERROR_FIELD_IS_REQUIRED = 'IR-FR-1';
+    public const ERROR_DUE_DATE = 'IR-DD-2';
+    public const ERROR_DUE_DATE_NOT_IN_RANGE = 'IR-DD-3';
+    public const ERROR_REQUEST_DATE_IN_FUTURE = 'IR-RD-1';
 
-    const REPORT_TYPE_MAINTENANCE_REQUEST = 'insp_rep_t_maint';
-    const RESULT_TYPE_NEW = 'insp_res_t_new';
-    const RESULT_TYPE_SATISFACTORY = 'insp_res_t_new_sat';
-    const RESULT_TYPE_UNSATISFACTORY = 'insp_res_t_new_unsat';
-    const REQUEST_TYPE_NEW_OP = 'insp_req_t_new_op';
+    public const REPORT_TYPE_MAINTENANCE_REQUEST = 'insp_rep_t_maint';
+    public const RESULT_TYPE_NEW = 'insp_res_t_new';
+    public const RESULT_TYPE_SATISFACTORY = 'insp_res_t_new_sat';
+    public const RESULT_TYPE_UNSATISFACTORY = 'insp_res_t_new_unsat';
+    public const REQUEST_TYPE_NEW_OP = 'insp_req_t_new_op';
 
     private $duePeriods = [3, 6, 9, 12];
 

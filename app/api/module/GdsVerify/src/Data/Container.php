@@ -54,7 +54,7 @@ class Container extends \SAML2\Compat\AbstractContainer
             if (is_object($message)) {
                 $message = get_class($message);
             }
-            $this->debugLogger->debug($type .' - '. $message);
+            $this->debugLogger->debug($type . ' - ' . $message);
         }
     }
 
@@ -65,7 +65,7 @@ class Container extends \SAML2\Compat\AbstractContainer
      */
     public function generateId()
     {
-        return '_'. Uuid::uuid4()->toString();
+        return '_' . Uuid::uuid4()->toString();
     }
 
     /**

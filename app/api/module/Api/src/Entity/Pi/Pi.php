@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Entity\Pi;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
@@ -40,9 +39,9 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  */
 class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 {
-    const STATUS_REGISTERED = 'pi_s_reg';
-    const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
-    const MSG_DECISION_DATE_BEFORE_HEARING_DATE = 'DECISION_DATE_BEFORE_HEARING_DATE';
+    public const STATUS_REGISTERED = 'pi_s_reg';
+    public const MSG_UPDATE_CLOSED = 'Can\'t update a closed Pi';
+    public const MSG_DECISION_DATE_BEFORE_HEARING_DATE = 'DECISION_DATE_BEFORE_HEARING_DATE';
 
     /**
      * @param CasesEntity     $case                  Case

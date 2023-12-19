@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\Lva;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;

@@ -3,6 +3,7 @@
 /**
  * Create Prohibition Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Prohibition;
 
 use Doctrine\ORM\Query;
@@ -13,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Prohibition;
 use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as ProhibitionEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**

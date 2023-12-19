@@ -3,6 +3,7 @@
 /**
  * Delete a queue item
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Queue;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;

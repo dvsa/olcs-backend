@@ -3,6 +3,7 @@
 /**
  * Create Recipient
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

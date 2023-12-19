@@ -6,8 +6,8 @@ use RuntimeException;
 
 class EcmtPermitUsageRefDataSource implements SourceInterface
 {
-    const LABEL_KEY = 'label';
-    const HINT_KEY = 'hint';
+    public const LABEL_KEY = 'label';
+    public const HINT_KEY = 'hint';
 
     /** @var RefDataSource */
     private $refDataSource;

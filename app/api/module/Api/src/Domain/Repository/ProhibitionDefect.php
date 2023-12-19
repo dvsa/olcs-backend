@@ -1,7 +1,9 @@
 <?php
+
 /**
  * ProhibitionDefect Repo
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as ProhibitionDefectEntity;

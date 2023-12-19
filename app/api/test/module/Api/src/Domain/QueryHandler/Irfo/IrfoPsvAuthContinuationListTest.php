@@ -3,6 +3,7 @@
 /**
  * IRFO PSV Auth Continuation List Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Irfo\IrfoPsvAuthContinuationList as Sut;

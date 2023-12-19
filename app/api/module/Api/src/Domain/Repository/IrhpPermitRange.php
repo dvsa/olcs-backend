@@ -74,7 +74,7 @@ class IrhpPermitRange extends AbstractRepository
         $doctrineQb
             ->orWhere($doctrineQb->expr()->between($this->alias . '.fromNo', ':fromNo', ':toNo'))
             ->orWhere($doctrineQb->expr()->between($this->alias . '.toNo', ':fromNo', ':toNo'))
-            ->orWhere($doctrineQb->expr()->between(':fromNo', $this->alias . '.fromNo', $this->alias .'.toNo'))
+            ->orWhere($doctrineQb->expr()->between(':fromNo', $this->alias . '.fromNo', $this->alias . '.toNo'))
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.irhpPermitStock', ':irhpPermitStock'))
             ->andWhere($doctrineQb->expr()->eq($this->alias . '.prefix', ':prefix'))
             ->setParameter('irhpPermitStock', $irhpPermitStock)
@@ -121,10 +121,10 @@ class IrhpPermitRange extends AbstractRepository
     public function fetchByPermitNumberAndStock($permitNumber, $permitStock)
     {
         $qb = $this->createQueryBuilder();
-        $qb->andWhere($qb->expr()->eq($this->alias.'.irhpPermitStock', ':permitStock'))
-           ->andWhere($qb->expr()->gte(':permitNumber', $this->alias.'.fromNo'))
-           ->andWhere($qb->expr()->lte(':permitNumber', $this->alias.'.toNo'))
-           ->andWhere($qb->expr()->eq($this->alias.'.lostReplacement', 1))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.irhpPermitStock', ':permitStock'))
+           ->andWhere($qb->expr()->gte(':permitNumber', $this->alias . '.fromNo'))
+           ->andWhere($qb->expr()->lte(':permitNumber', $this->alias . '.toNo'))
+           ->andWhere($qb->expr()->eq($this->alias . '.lostReplacement', 1))
            ->setParameter('permitNumber', $permitNumber)
            ->setParameter('permitStock', $permitStock);
 
@@ -163,7 +163,7 @@ class IrhpPermitRange extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb
-            ->select('rd.id as journey', $this->alias.'.cabotage')
+            ->select('rd.id as journey', $this->alias . '.cabotage')
             ->distinct()
             ->innerJoin($this->alias . '.irhpPermits', 'ip')
             ->innerJoin($this->alias . '.journey', 'rd')

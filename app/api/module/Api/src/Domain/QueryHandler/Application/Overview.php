@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  */
 class Overview extends AbstractQueryHandler
 {
-    const OPERATING_CENTRES_SECTION = 'operatingCentres';
+    public const OPERATING_CENTRES_SECTION = 'operatingCentres';
 
     protected $repoServiceName = 'Application';
 

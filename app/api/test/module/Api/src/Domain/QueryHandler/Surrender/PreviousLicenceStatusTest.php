@@ -9,7 +9,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 
 class PreviousLicenceStatusTest extends QueryHandlerTestCase
 {
-    const LICENCE_STATUS = 'lic_sts';
+    public const LICENCE_STATUS = 'lic_sts';
 
     public function setUp(): void
     {

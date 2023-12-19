@@ -3,6 +3,7 @@
 /**
  * PiHearingTest
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;
@@ -32,7 +33,6 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedPi as UnpublishedPiQry;
  */
 class PiHearingTest extends CommandHandlerTestCase
 {
-
     //variables to hold traffic area entity references
     protected $ta1;
     protected $ta2;

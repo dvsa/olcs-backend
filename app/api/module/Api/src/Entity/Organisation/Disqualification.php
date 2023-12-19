@@ -23,9 +23,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class Disqualification extends AbstractDisqualification
 {
-    const STATUS_NONE = 'None';
-    const STATUS_ACTIVE = 'Active';
-    const STATUS_INACTIVE = 'Inactive';
+    public const STATUS_NONE = 'None';
+    public const STATUS_ACTIVE = 'Active';
+    public const STATUS_INACTIVE = 'Inactive';
 
     /**
      * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
@@ -102,9 +102,10 @@ class Disqualification extends AbstractDisqualification
             }
 
             $now = new DateTime('now');
-            if ($now->getTimestamp() >= $startDate->getTimestamp() &&
+            if (
+                $now->getTimestamp() >= $startDate->getTimestamp() &&
                 $now->getTimestamp() <= $endDate->getTimestamp()
-                ) {
+            ) {
                 return self::STATUS_ACTIVE;
             }
         }
@@ -127,7 +128,7 @@ class Disqualification extends AbstractDisqualification
                 $startDate = new \DateTime($startDate);
             }
 
-            $endDate = $startDate->add(new \DateInterval('P'. (int) $this->getPeriod() .'M'));
+            $endDate = $startDate->add(new \DateInterval('P' . (int) $this->getPeriod() . 'M'));
         }
 
         return $endDate;

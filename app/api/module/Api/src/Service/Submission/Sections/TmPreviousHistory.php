@@ -26,7 +26,6 @@ final class TmPreviousHistory extends AbstractSection
         $revokedCurtailedSuspendedLicences = [];
 
         if (!empty($case->getTransportManager())) {
-
             $previousConvictions = $case->getTransportManager()->getPreviousConvictions();
 
             /** @var PreviousConviction $entity */
@@ -54,7 +53,6 @@ final class TmPreviousHistory extends AbstractSection
 
                 $revokedCurtailedSuspendedLicences[] = $thisRow;
             }
-
         }
 
         return [

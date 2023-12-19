@@ -3,6 +3,7 @@
 /**
  * UpdateLicenceStatusRule.php
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

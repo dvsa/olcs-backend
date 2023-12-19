@@ -48,7 +48,7 @@ final class GenerateIrfoPsvAuth extends AbstractCommandHandler implements Transa
         if (empty($templates)) {
             throw new Exception\BadRequestException(
                 'No template found for given IRFO PSV Auth Type: '
-                .$irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()
+                . $irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()
             );
         }
 

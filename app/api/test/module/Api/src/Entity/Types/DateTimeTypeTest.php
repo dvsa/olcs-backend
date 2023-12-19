@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Dvsa\Olcs\Api\Entity\Types\DateTimeType;
-use \Mockery as m;
+use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Entity\Types\DateTimeType

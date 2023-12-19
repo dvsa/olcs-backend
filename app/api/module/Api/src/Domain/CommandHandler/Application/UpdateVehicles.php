@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
@@ -35,7 +36,8 @@ final class UpdateVehicles extends AbstractCommandHandler implements Transaction
         $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         // If we are entering vehicles, and it is not a partial save then we need to have some active vehicles
-        if ($hasEnteredReg == 'Y' && !$command->getPartial()
+        if (
+            $hasEnteredReg == 'Y' && !$command->getPartial()
             && $application->getActiveVehicles()->count() < 1
         ) {
             throw new ValidationException(

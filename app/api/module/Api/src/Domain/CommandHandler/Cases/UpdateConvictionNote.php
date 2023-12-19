@@ -3,6 +3,7 @@
 /**
  * Update Conviction Note
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases;
 
 use Doctrine\ORM\Query;

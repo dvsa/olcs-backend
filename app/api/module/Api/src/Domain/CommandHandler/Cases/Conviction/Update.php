@@ -3,6 +3,7 @@
 /**
  * Update Conviction
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Conviction;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

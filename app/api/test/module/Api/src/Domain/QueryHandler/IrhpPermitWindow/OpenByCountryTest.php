@@ -40,7 +40,6 @@ class OpenByCountryTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($permitWindows);
 
-
         $result = $this->sut->handleQuery($query);
 
         $expected = [

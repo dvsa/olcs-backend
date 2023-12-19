@@ -22,15 +22,15 @@ use Olcs\Logging\Log\Logger;
  */
 class OpenAm
 {
-    const AUTHENTICATE_URI = '/json/authenticate';
-    const CHANGE_PW_URI = 'json/users/%s?_action=changePassword';
-    const FORGOT_PW_URI = 'json/users/?_action=forgotPassword';
-    const RESET_PW_URI = 'json/users?_action=forgotPasswordReset';
-    const RESET_PW_CONFIRM_URI = 'json/users?_action=confirm';
-    const MSG_SESSION_START_FAIL = 'Unable to begin an authentication session';
-    const MSG_JSON_ENCODE_FAIL = 'POST data could not be json encoded: %s';
-    const MSG_JSON_DECODE_FAIL = 'Unable to JSON decode response body: %s';
-    const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
+    public const AUTHENTICATE_URI = '/json/authenticate';
+    public const CHANGE_PW_URI = 'json/users/%s?_action=changePassword';
+    public const FORGOT_PW_URI = 'json/users/?_action=forgotPassword';
+    public const RESET_PW_URI = 'json/users?_action=forgotPasswordReset';
+    public const RESET_PW_CONFIRM_URI = 'json/users?_action=confirm';
+    public const MSG_SESSION_START_FAIL = 'Unable to begin an authentication session';
+    public const MSG_JSON_ENCODE_FAIL = 'POST data could not be json encoded: %s';
+    public const MSG_JSON_DECODE_FAIL = 'Unable to JSON decode response body: %s';
+    public const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
 
     private UriBuilder $uriBuilder;
     private HttpClient $httpClient;

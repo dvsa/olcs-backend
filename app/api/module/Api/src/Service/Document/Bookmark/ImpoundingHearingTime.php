@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\ImpoundingBundle as Qry;
  */
 class ImpoundingHearingTime extends SingleValueAbstract
 {
-    const FORMATTER = 'Time';
-    const FIELD  = 'hearingDate';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'impounding';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'Time';
+    public const FIELD  = 'hearingDate';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'impounding';
+    public const QUERY_CLASS = Qry::class;
 }

@@ -43,7 +43,6 @@ class LicenceOperatingCentreTest extends QueryHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
 
-
         parent::setUp();
     }
 

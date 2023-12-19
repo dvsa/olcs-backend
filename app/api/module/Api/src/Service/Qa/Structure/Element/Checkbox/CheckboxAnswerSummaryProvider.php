@@ -10,7 +10,8 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\AnyTrait;
 
 class CheckboxAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, AnyTrait;
+    use AlwaysIncludeSlugTrait;
+    use AnyTrait;
 
     /**
      * {@inheritdoc}

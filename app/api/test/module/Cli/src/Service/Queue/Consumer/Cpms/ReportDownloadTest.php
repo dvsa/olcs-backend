@@ -268,7 +268,7 @@ class ReportDownloadTest extends AbstractConsumerTestCase
             ->once()
             ->andReturn($result);
     }
- 
+
     /**
      * @param string $class
      * @param array $expectedDtoData

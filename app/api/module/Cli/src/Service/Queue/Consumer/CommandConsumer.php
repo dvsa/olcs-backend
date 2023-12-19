@@ -3,6 +3,7 @@
 /**
  * Command Consumer
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;

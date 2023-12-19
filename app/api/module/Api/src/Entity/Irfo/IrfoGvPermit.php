@@ -28,10 +28,10 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderInterface
 {
-    const STATUS_APPROVED = 'irfo_perm_s_approved';
-    const STATUS_PENDING = 'irfo_perm_s_pending';
-    const STATUS_REFUSED = 'irfo_perm_s_refused';
-    const STATUS_WITHDRAWN = 'irfo_perm_s_withdrawn';
+    public const STATUS_APPROVED = 'irfo_perm_s_approved';
+    public const STATUS_PENDING = 'irfo_perm_s_pending';
+    public const STATUS_REFUSED = 'irfo_perm_s_refused';
+    public const STATUS_WITHDRAWN = 'irfo_perm_s_withdrawn';
 
     public function __construct(Organisation $organisation, IrfoGvPermitType $type, RefData $status)
     {

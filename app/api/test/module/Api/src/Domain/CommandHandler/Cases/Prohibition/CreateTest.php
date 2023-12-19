@@ -3,6 +3,7 @@
 /**
  * Create Prohibition Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Prohibition;
 
 use Doctrine\ORM\Query;
@@ -13,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Prohibition;
 use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as ProhibitionEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**
@@ -54,11 +54,11 @@ class CreateTest extends CommandHandlerTestCase
         $id = 111;
 
         $data = [
-            "case" =>"50",
-            "prohibitionType" =>"pro_t_si",
-            "prohibitionDate" =>"2015-01-01",
-            "isTrailer" =>"N",
-            "clearedDate" =>"2015-01-02",
+            "case" => "50",
+            "prohibitionType" => "pro_t_si",
+            "prohibitionDate" => "2015-01-01",
+            "isTrailer" => "N",
+            "clearedDate" => "2015-01-02",
         ];
 
         $command = CreateCommand::create($data);

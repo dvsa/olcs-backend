@@ -1,13 +1,14 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Client;
 
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Olcs\Auth\Client\CognitoClientFactory;
 use Mockery as m;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 
 /**
  * Class CognitoClientFactoryTest
@@ -17,7 +18,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
 
-    const CONFIG_WITH_WITH_VALID_SETTINGS = [
+    public const CONFIG_WITH_WITH_VALID_SETTINGS = [
         CognitoClientFactory::CONFIG_CLIENT_ID => 'client_id',
         CognitoClientFactory::CONFIG_CLIENT_SECRET => 'client_secret',
         CognitoClientFactory::CONFIG_POOL_ID => 'pool_id',

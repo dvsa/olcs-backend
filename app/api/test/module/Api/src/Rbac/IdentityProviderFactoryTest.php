@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Rbac;
 
 use Dvsa\Olcs\Api\Rbac\IdentityProviderFactory;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 
 class IdentityProviderFactoryTest extends MockeryTestCase
 {

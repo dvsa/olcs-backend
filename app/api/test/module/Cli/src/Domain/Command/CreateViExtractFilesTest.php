@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Cli\Domain\Command;
 
 use Dvsa\Olcs\Cli\Domain\Command\CreateViExtractFiles;

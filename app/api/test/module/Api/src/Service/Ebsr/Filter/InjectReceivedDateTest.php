@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
-use \PHPUnit\Framework\TestCase as TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class InjectReceivedDateTest

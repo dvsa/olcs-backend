@@ -15,7 +15,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class MoroccoFieldsGeneratorTest extends MockeryTestCase
 {
-    const PERIOD_NAME_KEY = 'period.name.key';
+    public const PERIOD_NAME_KEY = 'period.name.key';
 
     private $irhpPermitStock;
 

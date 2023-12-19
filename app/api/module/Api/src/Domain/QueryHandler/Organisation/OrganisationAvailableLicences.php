@@ -156,7 +156,6 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->stockAvailabilityChecker = $container->get('PermitsAvailabilityStockAvailabilityChecker');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle as Qry;
  */
 class InterimValidDate extends SingleValueAbstract
 {
-    const FORMATTER = 'Date';
-    const SRCH_VAL_KEY = 'application';
-    const FIELD = 'interimStart';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'Date';
+    public const SRCH_VAL_KEY = 'application';
+    public const FIELD = 'interimStart';
+    public const QUERY_CLASS = Qry::class;
 }

@@ -3,6 +3,7 @@
 /**
  * Update IrfoDetails
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -36,7 +37,6 @@ final class UpdateIrfoDetails extends AbstractCommandHandler implements Transact
         }
 
         if ($command->getIrfoContactDetails() !== null) {
-
             if ($org->getIrfoContactDetails() instanceof ContactDetails) {
                 // update existing contact details
                 $org->getIrfoContactDetails()->update(

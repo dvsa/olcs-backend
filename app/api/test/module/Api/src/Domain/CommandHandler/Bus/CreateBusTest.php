@@ -3,6 +3,7 @@
 /**
  * Create Bus Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateBus;

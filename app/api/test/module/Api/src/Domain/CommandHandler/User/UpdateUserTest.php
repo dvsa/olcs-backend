@@ -3,6 +3,7 @@
 /**
  * Update User Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Doctrine\Common\Collections\ArrayCollection;

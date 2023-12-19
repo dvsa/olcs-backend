@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Organisation;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

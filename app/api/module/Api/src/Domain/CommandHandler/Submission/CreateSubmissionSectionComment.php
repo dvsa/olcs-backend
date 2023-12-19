@@ -15,7 +15,7 @@ use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as Cmd;
  */
 final class CreateSubmissionSectionComment extends AbstractCommandHandler
 {
-    const ERR_COMMENT_EXISTS = 'Comment already exists';
+    public const ERR_COMMENT_EXISTS = 'Comment already exists';
 
     protected $repoServiceName = 'SubmissionSectionComment';
 

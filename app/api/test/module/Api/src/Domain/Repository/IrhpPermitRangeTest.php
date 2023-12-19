@@ -316,10 +316,10 @@ class IrhpPermitRangeTest extends RepositoryTestCase
             . 'INNER JOIN m.irhpPermits ip '
             . 'INNER JOIN m.journey rd '
             . 'AND ip.status IN [[['
-                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
-                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+                . '"' . IrhpPermitEntity::STATUS_PENDING . '",'
+                . '"' . IrhpPermitEntity::STATUS_AWAITING_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_ERROR . '"'
             . ']]] '
             . 'AND m.irhpPermitStock = [[100]] '
             . 'ORDER BY rd.id ASC '
@@ -358,11 +358,11 @@ class IrhpPermitRangeTest extends RepositoryTestCase
         );
 
         $expectedQuery = 'BLAH '
-            . 'OR m.fromNo BETWEEN [['.$from.']] AND [['.$to.']] '
-            . 'OR m.toNo BETWEEN [['.$from.']] AND [['.$to.']] '
-            . 'OR [['.$from.']] BETWEEN m.fromNo AND m.toNo '
-            . 'AND m.irhpPermitStock = [['.$irhpPermitStockId.']] '
-            . 'AND m.prefix = [['.$prefix.']]';
+            . 'OR m.fromNo BETWEEN [[' . $from . ']] AND [[' . $to . ']] '
+            . 'OR m.toNo BETWEEN [[' . $from . ']] AND [[' . $to . ']] '
+            . 'OR [[' . $from . ']] BETWEEN m.fromNo AND m.toNo '
+            . 'AND m.irhpPermitStock = [[' . $irhpPermitStockId . ']] '
+            . 'AND m.prefix = [[' . $prefix . ']]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }
@@ -399,12 +399,12 @@ class IrhpPermitRangeTest extends RepositoryTestCase
         );
 
         $expectedQuery = 'BLAH '
-            . 'OR m.fromNo BETWEEN [['.$from.']] AND [['.$to.']] '
-            . 'OR m.toNo BETWEEN [['.$from.']] AND [['.$to.']] '
-            . 'OR [['.$from.']] BETWEEN m.fromNo AND m.toNo '
-            . 'AND m.irhpPermitStock = [['.$irhpPermitStockId.']] '
-            . 'AND m.prefix = [['.$prefix.']] '
-            . 'AND m.id != [['.$irhpPermitRangeId.']]';
+            . 'OR m.fromNo BETWEEN [[' . $from . ']] AND [[' . $to . ']] '
+            . 'OR m.toNo BETWEEN [[' . $from . ']] AND [[' . $to . ']] '
+            . 'OR [[' . $from . ']] BETWEEN m.fromNo AND m.toNo '
+            . 'AND m.irhpPermitStock = [[' . $irhpPermitStockId . ']] '
+            . 'AND m.prefix = [[' . $prefix . ']] '
+            . 'AND m.id != [[' . $irhpPermitRangeId . ']]';
 
         $this->assertEquals($expectedQuery, $this->query);
     }

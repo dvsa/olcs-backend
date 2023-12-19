@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class TcSignature extends ImageBookmark
 {
-    const PREFORMATTED = true;
+    public const PREFORMATTED = true;
 
     /**
      * Hard-coding our containing element's dimensions is far from
@@ -23,10 +23,10 @@ class TcSignature extends ImageBookmark
      * \\networkdrive\path\to\image.jpg. Using INCLUDEPICTURE with URLs
      * does NOT resize the image
      */
-    const CONTAINER_WIDTH = 251;
-    const CONTAINER_HEIGHT = 56;
+    public const CONTAINER_WIDTH = 251;
+    public const CONTAINER_HEIGHT = 56;
 
-    const IMAGE_PREFIX = 'TC_SIG_';
+    public const IMAGE_PREFIX = 'TC_SIG_';
 
     private $imageMap = [
         TA::NORTH_EASTERN_TRAFFIC_AREA_CODE    => 'NORTHEASTERN',

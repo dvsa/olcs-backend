@@ -89,11 +89,15 @@ class BilateralFeeBreakdownGeneratorTest extends MockeryTestCase
                 $this->assertArrayHasKey(0, $feeTypes);
                 $this->assertArrayHasKey(1, $feeTypes);
 
-                if ($feeTypes[0] === $applicationFeeType1StandardApplication &&
-                    $feeTypes[1] === $applicationFeeType1StandardIssue) {
+                if (
+                    $feeTypes[0] === $applicationFeeType1StandardApplication &&
+                    $feeTypes[1] === $applicationFeeType1StandardIssue
+                ) {
                     return $feePerPermit1Standard;
-                } elseif ($feeTypes[0] === $applicationFeeType1CabotageApplication &&
-                    $feeTypes[1] === $applicationFeeType1CabotageIssue) {
+                } elseif (
+                    $feeTypes[0] === $applicationFeeType1CabotageApplication &&
+                    $feeTypes[1] === $applicationFeeType1CabotageIssue
+                ) {
                     return $feePerPermit1Cabotage;
                 }
 

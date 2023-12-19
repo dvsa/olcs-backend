@@ -165,7 +165,6 @@ class SubmissionEntityTest extends EntityTester
         $submission = new Entity($case, $submissionType);
 
         $this->assertSame('ORG1', $submission->getRelatedOrganisation());
-
     }
 
     public function testGetSetSectionData()
@@ -174,7 +173,7 @@ class SubmissionEntityTest extends EntityTester
         $this->assertNull($value);
         $this->sut->setSectionData('KEY', 'VALUE');
         $value  = $this->sut->getSectionData();
-        $this->assertSame(['KEY'=>'VALUE'], $value);
+        $this->assertSame(['KEY' => 'VALUE'], $value);
     }
 
     public function testSectionData()
@@ -186,7 +185,7 @@ class SubmissionEntityTest extends EntityTester
 
     public function testNewSubmissionDataSnapshot()
     {
-        $this->sut->setNewSubmissionDataSnapshot(['KEY'=>'VALUE']);
+        $this->sut->setNewSubmissionDataSnapshot(['KEY' => 'VALUE']);
         $this->assertSame('{"KEY":"VALUE"}', ($this->sut->getDataSnapshot()));
     }
 

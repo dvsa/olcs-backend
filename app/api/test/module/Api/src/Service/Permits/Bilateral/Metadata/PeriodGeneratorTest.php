@@ -19,9 +19,9 @@ use RuntimeException;
  */
 class PeriodGeneratorTest extends MockeryTestCase
 {
-    const BEHAVIOUR_NAME = 'behaviourName';
+    public const BEHAVIOUR_NAME = 'behaviourName';
 
-    const STOCK_ID = 99;
+    public const STOCK_ID = 99;
 
     private $irhpPermitStockRepo;
 

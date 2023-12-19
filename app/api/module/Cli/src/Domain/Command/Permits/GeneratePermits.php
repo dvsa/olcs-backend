@@ -3,6 +3,7 @@
 /**
  * Generate permits
  */
+
 namespace Dvsa\Olcs\Cli\Domain\Command\Permits;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Mockery as m;
@@ -39,7 +40,7 @@ class ApplicationConditionsUndertakingsReviewServiceTest extends MockeryTestCase
             ->andReturn($this->mockTranslator);
 
         $this->mockConditionsUndertakings = m::mock(ConditionsUndertakingsReviewService::class);
-        
+
         $this->sut = new ApplicationConditionsUndertakingsReviewService(
             $abstractReviewServiceServices,
             $this->mockConditionsUndertakings

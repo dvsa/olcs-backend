@@ -3,6 +3,7 @@
 /**
  * Update MyAccount
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\MyAccount;
 
 use Dvsa\Olcs\Transfer\FieldType\Traits\TranslateToWelshOptional;

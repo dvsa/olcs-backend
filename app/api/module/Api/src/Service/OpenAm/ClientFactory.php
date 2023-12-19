@@ -3,6 +3,7 @@
 /**
  * Client Factory
  */
+
 namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Laminas\Http\Client as HttpClient;

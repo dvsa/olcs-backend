@@ -60,7 +60,7 @@ class Stay extends AbstractStay
 
         $this->setRequestDate($requestDate);
 
-        $decisionDate = (is_null($decisionDate))? null : new \DateTime($decisionDate);
+        $decisionDate = (is_null($decisionDate)) ? null : new \DateTime($decisionDate);
         $this->setDecisionDate($decisionDate);
 
         $this->setNotes($notes);

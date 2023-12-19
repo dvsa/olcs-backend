@@ -15,21 +15,21 @@ class SubmissionResult extends AbstractFilter
     /**
      * Constants used for creating bus reg information in the ebsr_submission_result column
      */
-    const UNKNOWN_REG_NO = 'unknown reg no';
-    const UNKNOWN_SERVICE_NO = 'unknown service no';
-    const UNKNOWN_START_POINT = 'unknown start point';
-    const UNKNOWN_FINISH_POINT = 'unknown finish point';
-    const UNKNOWN_START_DATE = 'unknown start date';
+    public const UNKNOWN_REG_NO = 'unknown reg no';
+    public const UNKNOWN_SERVICE_NO = 'unknown service no';
+    public const UNKNOWN_START_POINT = 'unknown start point';
+    public const UNKNOWN_FINISH_POINT = 'unknown finish point';
+    public const UNKNOWN_START_DATE = 'unknown start date';
 
     /**
      * common format for the various dates
      */
-    const DATE_FORMAT = 'l F jS Y';
+    public const DATE_FORMAT = 'l F jS Y';
 
     /**
      * How many levels of doctrine entities we recurse when creating our data array
      */
-    const DOCTRINE_DEBUG_LEVEL = 2;
+    public const DOCTRINE_DEBUG_LEVEL = 2;
 
     /**
      * Formats data for the ebsr_submission_result field

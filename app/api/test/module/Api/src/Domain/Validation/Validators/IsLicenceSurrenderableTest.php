@@ -73,7 +73,6 @@ class IsLicenceSurrenderableTest extends AbstractValidatorsTestCase
         $licenceId = 1;
         $licenceStatus = Licence::LICENCE_STATUS_VALID;
 
-
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getStatus->getId')->andReturn($licenceStatus);
         $licenceRepo = $this->mockRepo('Licence');
@@ -99,7 +98,6 @@ class IsLicenceSurrenderableTest extends AbstractValidatorsTestCase
         $licenceId = 1;
         $licenceStatus = Licence::LICENCE_STATUS_VALID;
 
-
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getStatus->getId')->andReturn($licenceStatus);
         $licenceRepo = $this->mockRepo('Licence');
@@ -114,7 +112,6 @@ class IsLicenceSurrenderableTest extends AbstractValidatorsTestCase
 
         $surrenderRepo = $this->mockRepo('Surrender');
         $surrenderRepo->shouldReceive('fetchOneByLicenceId')->with($licenceId)->andReturn($existingSurrender);
-
 
         $this->sut->isValid($licenceId);
     }

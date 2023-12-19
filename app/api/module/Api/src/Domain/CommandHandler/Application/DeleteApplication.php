@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -33,7 +34,8 @@ final class DeleteApplication extends AbstractCommandHandler
         $application = $this->getRepo()->fetchUsingId($command);
 
         // safety measure, currently only variations not submitted can be deleted
-        if ($application->isVariation() &&
+        if (
+            $application->isVariation() &&
             $application->getStatus()->getId() === Application::APPLICATION_STATUS_NOT_SUBMITTED
         ) {
             $this->getRepo()->delete($application);

@@ -106,9 +106,10 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     protected function validate(Command $command)
     {
         // if attached to an Operating Centre then operating centre param is mandatory
-        if ($command->getAttachedTo() === ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE &&
+        if (
+            $command->getAttachedTo() === ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE &&
             empty($command->getOperatingCentre())
-            ) {
+        ) {
             throw new ValidationException(['Operating centre missing']);
         }
 

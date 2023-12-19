@@ -14,7 +14,7 @@ use RuntimeException;
 
 class EmissionsCategoryAvailabilityCounter
 {
-    const ERR_BAD_ISOLATION_LEVEL = 'Transaction isolation level must be set to REPEATABLE_READ';
+    public const ERR_BAD_ISOLATION_LEVEL = 'Transaction isolation level must be set to REPEATABLE_READ';
 
     /** @var Connection */
     private $connection;

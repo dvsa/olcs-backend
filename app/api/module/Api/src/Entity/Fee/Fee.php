@@ -32,35 +32,35 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class Fee extends AbstractFee implements OrganisationProviderInterface
 {
-    const STATUS_OUTSTANDING       = 'lfs_ot';
-    const STATUS_PAID              = 'lfs_pd';
-    const STATUS_CANCELLED         = 'lfs_cn';
-    const STATUS_REFUND_PENDING    = 'lfs_refund_pending';
-    const STATUS_REFUND_FAILED     = 'lfs_refund_failed';
-    const STATUS_REFUNDED          = 'lfs_refunded';
+    public const STATUS_OUTSTANDING       = 'lfs_ot';
+    public const STATUS_PAID              = 'lfs_pd';
+    public const STATUS_CANCELLED         = 'lfs_cn';
+    public const STATUS_REFUND_PENDING    = 'lfs_refund_pending';
+    public const STATUS_REFUND_FAILED     = 'lfs_refund_failed';
+    public const STATUS_REFUNDED          = 'lfs_refunded';
 
-    const ACCRUAL_RULE_LICENCE_START            = 'acr_licence_start';
-    const ACCRUAL_RULE_CONTINUATION             = 'acr_continuation';
-    const ACCRUAL_RULE_IMMEDIATE                = 'acr_immediate';
-    const ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS     = 'acr_irhp_permit_3_months';
-    const ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS     = 'acr_irhp_permit_6_months';
-    const ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS     = 'acr_irhp_permit_9_months';
-    const ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS    = 'acr_irhp_permit_12_months';
+    public const ACCRUAL_RULE_LICENCE_START            = 'acr_licence_start';
+    public const ACCRUAL_RULE_CONTINUATION             = 'acr_continuation';
+    public const ACCRUAL_RULE_IMMEDIATE                = 'acr_immediate';
+    public const ACCRUAL_RULE_IRHP_PERMIT_3_MONTHS     = 'acr_irhp_permit_3_months';
+    public const ACCRUAL_RULE_IRHP_PERMIT_6_MONTHS     = 'acr_irhp_permit_6_months';
+    public const ACCRUAL_RULE_IRHP_PERMIT_9_MONTHS     = 'acr_irhp_permit_9_months';
+    public const ACCRUAL_RULE_IRHP_PERMIT_12_MONTHS    = 'acr_irhp_permit_12_months';
 
-    const METHOD_CARD_ONLINE  = 'fpm_card_online';
-    const METHOD_CARD_OFFLINE = 'fpm_card_offline';
-    const METHOD_CASH         = 'fpm_cash';
-    const METHOD_CHEQUE       = 'fpm_cheque';
-    const METHOD_POSTAL_ORDER = 'fpm_po';
-    const METHOD_WAIVE        = 'fpm_waive';
-    const METHOD_REFUND       = 'fpm_refund';
-    const METHOD_REVERSAL     = 'fpm_reversal';
-    const METHOD_RECEIPT      = 'fpm_rcpt';
-    const METHOD_MIGRATED     = 'fpm_migrated';
+    public const METHOD_CARD_ONLINE  = 'fpm_card_online';
+    public const METHOD_CARD_OFFLINE = 'fpm_card_offline';
+    public const METHOD_CASH         = 'fpm_cash';
+    public const METHOD_CHEQUE       = 'fpm_cheque';
+    public const METHOD_POSTAL_ORDER = 'fpm_po';
+    public const METHOD_WAIVE        = 'fpm_waive';
+    public const METHOD_REFUND       = 'fpm_refund';
+    public const METHOD_REVERSAL     = 'fpm_reversal';
+    public const METHOD_RECEIPT      = 'fpm_rcpt';
+    public const METHOD_MIGRATED     = 'fpm_migrated';
 
-    const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
+    public const DEFAULT_INVOICE_ADDRESS_LINE = 'Miscellaneous payment';
     // CPMS enforces 'valid' postcodes :(
-    const DEFAULT_POSTCODE = 'LS9 6NF';
+    public const DEFAULT_POSTCODE = 'LS9 6NF';
 
     /** @var int */
     private $daysToPayIssueFee;
@@ -104,9 +104,11 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
             $transactionDate = $this->asDateTime($transaction->getCreatedOn());
             $interval = new \DateInterval('PT' . $pendingPaymentsTimeout . 'S');
             $maxPendingDate = $transactionDate->add($interval);
-            if ($transaction->isOutstanding()
+            if (
+                $transaction->isOutstanding()
                 && $transaction->getType()->getId() !== Transaction::TYPE_WAIVE
-                && $maxPendingDate > (new DateTime('now'))) {
+                && $maxPendingDate > (new DateTime('now'))
+            ) {
                 return true;
             }
         }
@@ -670,9 +672,11 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         $feeTransactions = [];
 
         foreach ($this->getFeeTransactions() as $ft) {
-            if ($ft->getTransaction()->isCompletePaymentOrAdjustment()
+            if (
+                $ft->getTransaction()->isCompletePaymentOrAdjustment()
                 && !$ft->isRefundedOrReversed()
-                && empty($ft->getReversedFeeTransaction())) {
+                && empty($ft->getReversedFeeTransaction())
+            ) {
                 $feeTransactions[] = $ft;
             }
         }

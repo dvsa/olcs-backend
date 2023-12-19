@@ -13,7 +13,7 @@ class GetList extends AbstractListQueryHandler
 {
     protected $repoServiceName = 'IrhpPermitStock';
     protected $bundle = [
-        'irhpPermitType'=> ['name'],
+        'irhpPermitType' => ['name'],
         'irhpPermitRanges',
         'irhpPermitWindows',
         'country'

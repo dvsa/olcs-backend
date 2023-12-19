@@ -81,7 +81,7 @@ trait SectionTrait
 
         if (!isset(static::SECTIONS[$irhpPermitTypeId]) || !is_array(static::SECTIONS[$irhpPermitTypeId])) {
             throw new RuntimeException(
-                'Missing required definition of sections for irhpPermitTypeId: '.$irhpPermitTypeId
+                'Missing required definition of sections for irhpPermitTypeId: ' . $irhpPermitTypeId
             );
         }
 

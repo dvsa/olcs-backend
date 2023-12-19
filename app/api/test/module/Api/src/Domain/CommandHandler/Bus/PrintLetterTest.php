@@ -18,8 +18,8 @@ use Mockery as m;
  */
 class PrintLetterTest extends CommandHandlerTestCase
 {
-    const LIC_ID = 9999;
-    const BUS_REG_ID = 7777;
+    public const LIC_ID = 9999;
+    public const BUS_REG_ID = 7777;
 
     public function setUp(): void
     {

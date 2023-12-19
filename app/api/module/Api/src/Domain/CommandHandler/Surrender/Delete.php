@@ -19,7 +19,7 @@ final class Delete extends AbstractSurrenderCommandHandler
     public function handleCommand(CommandInterface $command)
     {
         $id = $command->getId();
-    
+
         try {
             $this->getRepo()->delete($this->getRepo()->fetchOneByLicenceId($id));
 

@@ -3,6 +3,7 @@
 /**
  * LegacyOffence
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;

@@ -9,5 +9,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\PVehicleRegistrationMark;
  */
 class PVehicleRegistrationMark1 extends PVehicleRegistrationMark
 {
-
 }

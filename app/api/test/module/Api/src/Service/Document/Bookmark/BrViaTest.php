@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrVia;
  */
 class BrViaTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = BrVia::class;
+    public const SUT_CLASS_NAME = BrVia::class;
 }

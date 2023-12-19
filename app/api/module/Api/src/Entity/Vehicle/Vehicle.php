@@ -21,8 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Vehicle extends AbstractVehicle
 {
-    const ERROR_VRM_EXISTS = 'VE-VRM-1';
-    const ERROR_VRM_OTHER_LICENCE = 'VE-VRM-2';
-    const ERROR_TOO_MANY = 'VE-AUTH-1';
-    const ERROR_VRM_HAS_SECTION_26 = 'VE-VRM_SECTION26';
+    public const ERROR_VRM_EXISTS = 'VE-VRM-1';
+    public const ERROR_VRM_OTHER_LICENCE = 'VE-VRM-2';
+    public const ERROR_TOO_MANY = 'VE-AUTH-1';
+    public const ERROR_VRM_HAS_SECTION_26 = 'VE-VRM_SECTION26';
 }

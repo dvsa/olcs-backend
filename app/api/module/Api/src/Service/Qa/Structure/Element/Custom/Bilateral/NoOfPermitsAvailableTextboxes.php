@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 
 class NoOfPermitsAvailableTextboxes
 {
-    const LOOKUP = [
+    public const LOOKUP = [
         Answer::BILATERAL_CABOTAGE_ONLY => [
             IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED,
         ],

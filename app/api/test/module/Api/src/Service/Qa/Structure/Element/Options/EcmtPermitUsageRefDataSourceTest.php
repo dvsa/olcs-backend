@@ -18,7 +18,7 @@ use RuntimeException;
  */
 class EcmtPermitUsageRefDataSourceTest extends MockeryTestCase
 {
-    const OPTIONS = [
+    public const OPTIONS = [
         'categoryId' => 5
     ];
 

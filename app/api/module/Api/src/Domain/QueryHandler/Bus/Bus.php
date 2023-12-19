@@ -3,6 +3,7 @@
 /**
  * Bus
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -60,7 +61,7 @@ class Bus extends AbstractQueryHandler
         if ($this->getCurrentUser()->isAnonymous()) {
             return [];
         }
-        
+
         return ['disqualifications'];
     }
 }

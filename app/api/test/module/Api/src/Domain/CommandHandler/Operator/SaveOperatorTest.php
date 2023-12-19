@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Operator;
 
 use Doctrine\ORM\Query;
@@ -32,7 +33,7 @@ use Mockery as m;
  */
 class SaveOperatorTest extends CommandHandlerTestCase
 {
-    const NATURE_OF_BUSINESS = 'testnob';
+    public const NATURE_OF_BUSINESS = 'testnob';
 
     public function setUp(): void
     {

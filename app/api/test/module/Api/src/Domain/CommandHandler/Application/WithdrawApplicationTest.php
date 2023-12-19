@@ -86,7 +86,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $application->setId(1);
         $application->setLicence($licence);
 
-
         $application->shouldReceive('getCurrentInterimStatus')
             ->andReturn(Application::INTERIM_STATUS_INFORCE)
             ->twice()

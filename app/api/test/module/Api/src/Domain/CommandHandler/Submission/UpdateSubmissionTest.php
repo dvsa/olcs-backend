@@ -3,6 +3,7 @@
 /**
  * Create SubmissionSectionComment Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Doctrine\ORM\Query;
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use \Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
+use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
@@ -54,8 +55,7 @@ class UpdateSubmissionTest extends CommandHandlerTestCase
         $mockSubmissionGenerator = m::mock(SubmissionGenerator::class);
         $mockSubmissionGenerator
             ->shouldReceive('generateSubmission')
-            ->andReturn(m::mock(SubmissionEntity::class)->shouldReceive('getId')->andReturn(111)->getMock())
-        ;
+            ->andReturn(m::mock(SubmissionEntity::class)->shouldReceive('getId')->andReturn(111)->getMock());
 
         $this->mockedSmServices = [
             SubmissionGenerator::class => $mockSubmissionGenerator,
@@ -99,8 +99,8 @@ class UpdateSubmissionTest extends CommandHandlerTestCase
     {
         $data = [
             'case' => '24',
-            'submissionType'=> 'submission_type_o_mlh_otc',
-            'sections'=> [
+            'submissionType' => 'submission_type_o_mlh_otc',
+            'sections' => [
                 'introduction'
             ]
         ];

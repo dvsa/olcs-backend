@@ -123,7 +123,7 @@ class FeesHelperService implements FactoryInterface
 
         // min. payment must be greater than the outstanding amount for all but the last fee
         $minPayment = 1; // 1 penny
-        for ($i=0; $i < count($fees) -1; $i++) {
+        for ($i = 0; $i < count($fees) - 1; $i++) {
             $minPayment += FeeEntity::amountToPence($fees[$i]->getOutstandingAmount());
         }
 

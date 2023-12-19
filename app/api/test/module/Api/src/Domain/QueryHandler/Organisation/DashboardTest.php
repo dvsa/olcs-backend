@@ -110,7 +110,7 @@ class DashboardTest extends QueryHandlerTestCase
                 'applications' => [
                     ['id' => 1],
                 ],
-                'variations' =>[
+                'variations' => [
                     [ 'id' => 2],
                 ],
             ],

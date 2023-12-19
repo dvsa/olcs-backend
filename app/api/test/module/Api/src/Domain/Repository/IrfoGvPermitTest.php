@@ -3,6 +3,7 @@
 /**
  * IrfoGvPermit Repo test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
@@ -34,6 +35,5 @@ class IrfoGvPermitTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH AND m.organisation = [[ORG1]]';
         $this->assertEquals($expectedQuery, $this->query);
-
     }
 }

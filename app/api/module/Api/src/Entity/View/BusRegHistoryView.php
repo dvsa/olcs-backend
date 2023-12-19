@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bus Reg History View
  *
@@ -12,6 +13,7 @@
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;

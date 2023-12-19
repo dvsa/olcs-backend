@@ -170,7 +170,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $this->auth->shouldReceive('isGranted')
             ->with(\Dvsa\Olcs\Api\Entity\User\Permission::INTERNAL_USER, null)->andReturn(true);
         $dto = m::mock(CommandInterface::class);
-        $dto->shouldReceive('getFilename')->with()->once()->andReturn('foo.'. $extension);
+        $dto->shouldReceive('getFilename')->with()->once()->andReturn('foo.' . $extension);
 
         if ($valid) {
             $this->assertTrue($this->sut->isValid($dto));
@@ -214,7 +214,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
 
         /** @var CommandInterface|m\MockInterface $dto */
         $dto = m::mock(CommandInterface::class);
-        $dto->shouldReceive('getFilename')->with()->once()->andReturn('foo.'. $extension);
+        $dto->shouldReceive('getFilename')->with()->once()->andReturn('foo.' . $extension);
         $dto->shouldReceive('getLicence')->andReturn(176);
         $dto->shouldReceive('getApplication')->andReturn(null);
         $dto->shouldReceive('getCase')->andReturn(null);

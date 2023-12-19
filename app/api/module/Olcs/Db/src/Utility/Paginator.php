@@ -1,4 +1,5 @@
 <?php
+
 /*
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -24,7 +25,6 @@ use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\NoResultException;
-
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\WhereInWalker;
 
@@ -70,7 +70,7 @@ class Paginator implements \Countable, \IteratorAggregate
         }
 
         $this->query = $query;
-        $this->fetchJoinCollection = (Boolean) $fetchJoinCollection;
+        $this->fetchJoinCollection = (bool) $fetchJoinCollection;
     }
 
     /**
@@ -124,7 +124,7 @@ class Paginator implements \Countable, \IteratorAggregate
         if ($this->count === null) {
             try {
                 $this->count = array_sum(array_map('current', $this->getCountQuery()->getScalarResult()));
-            } catch(NoResultException $e) {
+            } catch (NoResultException $e) {
                 $this->count = 0;
             }
         }
@@ -212,7 +212,7 @@ class Paginator implements \Countable, \IteratorAggregate
     private function useOutputWalker(Query $query)
     {
         if ($this->useOutputWalkers === null) {
-            return (Boolean) $query->getHint(Query::HINT_CUSTOM_OUTPUT_WALKER) == false;
+            return (bool) $query->getHint(Query::HINT_CUSTOM_OUTPUT_WALKER) == false;
         }
 
         return $this->useOutputWalkers;
@@ -246,7 +246,7 @@ class Paginator implements \Countable, \IteratorAggregate
         /* @var $countQuery Query */
         $countQuery = $this->cloneQuery($this->query);
 
-        if ( ! $countQuery->hasHint(CountWalker::HINT_DISTINCT)) {
+        if (! $countQuery->hasHint(CountWalker::HINT_DISTINCT)) {
             $countQuery->setHint(CountWalker::HINT_DISTINCT, true);
         }
 
@@ -272,7 +272,7 @@ class Paginator implements \Countable, \IteratorAggregate
         foreach ($parameters as $key => $parameter) {
             $parameterName = $parameter->getName();
 
-            if( ! (isset($parameterMappings[$parameterName]) || array_key_exists($parameterName, $parameterMappings))) {
+            if (! (isset($parameterMappings[$parameterName]) || array_key_exists($parameterName, $parameterMappings))) {
                 unset($parameters[$key]);
             }
         }

@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryPartial\Filter;
 
 use Doctrine\ORM\QueryBuilder;

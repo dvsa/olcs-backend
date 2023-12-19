@@ -37,7 +37,7 @@ class AbstractBookmarkTest extends MockeryTestCase
         $expectExt = 'ut';
 
         $vfs = vfsStream::setup('root');
-        vfsStream::newFile('AbstractBookmarkStub.' .$expectExt)
+        vfsStream::newFile('AbstractBookmarkStub.' . $expectExt)
             ->withContent($expectContent)
             ->at($vfs);
 
@@ -48,7 +48,7 @@ class AbstractBookmarkTest extends MockeryTestCase
 
         $sut = new AbstractBookmarkStub();
         $sut->setParser($mockParser);
-        $sut->setSnippetPath($vfs->url() .'/');
+        $sut->setSnippetPath($vfs->url() . '/');
 
         static::assertEquals($expectContent, $sut->getSnippet());
     }

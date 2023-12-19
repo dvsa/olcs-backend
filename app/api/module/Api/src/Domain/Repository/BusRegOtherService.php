@@ -3,6 +3,7 @@
 /**
  * Bus Reg other service
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Bus\BusRegOtherService as Entity;

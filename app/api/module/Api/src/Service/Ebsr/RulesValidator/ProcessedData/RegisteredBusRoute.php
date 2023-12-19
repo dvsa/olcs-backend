@@ -11,9 +11,9 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class RegisteredBusRoute extends AbstractValidator
 {
-    const REGISTERED_BUS_ROUTE_ERROR = 'registered-bus-route-error';
-    const TYPE_CANCELLATION = 'cancellation';
-    const TYPE_VARIATION = 'variation';
+    public const REGISTERED_BUS_ROUTE_ERROR = 'registered-bus-route-error';
+    public const TYPE_CANCELLATION = 'cancellation';
+    public const TYPE_VARIATION = 'variation';
 
     /**
      * @var array

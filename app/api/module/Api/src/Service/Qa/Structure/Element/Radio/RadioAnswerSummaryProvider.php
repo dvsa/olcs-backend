@@ -12,7 +12,8 @@ use RuntimeException;
 
 class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, AnyTrait;
+    use AlwaysIncludeSlugTrait;
+    use AnyTrait;
 
     /** @var OptionListGenerator */
     private $optionListGenerator;

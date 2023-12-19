@@ -34,7 +34,7 @@ class EnvironmentalComplaintsTest extends AbstractSubmissionSectionTest
                             'complaintDate' => '',
                             'ocAddress' => [
                                 0 => [
-                                    'address' =>[
+                                    'address' => [
                                         'addressLine1' => '633_a1',
                                         'addressLine2' => '633_a2',
                                         'addressLine3' => '633_a3',
@@ -57,7 +57,7 @@ class EnvironmentalComplaintsTest extends AbstractSubmissionSectionTest
                             'complaintDate' => '03/05/2006',
                             'ocAddress' => [
                                 0 => [
-                                    'address' =>[
+                                    'address' => [
                                         'addressLine1' => '633_a1',
                                         'addressLine2' => '633_a2',
                                         'addressLine3' => '633_a3',
@@ -80,7 +80,7 @@ class EnvironmentalComplaintsTest extends AbstractSubmissionSectionTest
                             'complaintDate' => '04/05/2006',
                             'ocAddress' => [
                                 0 => [
-                                    'address' =>[
+                                    'address' => [
                                         'addressLine1' => '633_a1',
                                         'addressLine2' => '633_a2',
                                         'addressLine3' => '633_a3',

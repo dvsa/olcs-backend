@@ -82,7 +82,6 @@ final class DeleteDocument extends AbstractCommandHandler implements Transaction
     {
         $fullContainer = $container;
 
-
         $this->fileUploader = $container->get('FileUploader');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

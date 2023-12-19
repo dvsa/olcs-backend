@@ -4,6 +4,7 @@
  * Create SubmissionAction
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41;
 
 use Dvsa\Olcs\Api\Entity\Application\S4;

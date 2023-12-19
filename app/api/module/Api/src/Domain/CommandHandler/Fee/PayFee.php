@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -75,7 +76,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         $application = $fee->getApplication();
 
         // if New Application and Grant Fee
-        if ($application &&
+        if (
+            $application &&
             $application->isGoods() &&
             $application->isNew() &&
             $this->isInternalUser() &&
@@ -98,7 +100,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     {
         $application = $fee->getApplication();
 
-        if ($application === null
+        if (
+            $application === null
             || $application->isVariation()
             || $application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_GRANTED
         ) {
@@ -127,7 +130,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     {
         $irhpApplication = $fee->getIrhpApplication();
 
-        if ($irhpApplication === null
+        if (
+            $irhpApplication === null
             || !$fee->getFeeType()->isIrhpApplication()
             || !$irhpApplication->canBeSubmitted()
         ) {
@@ -224,7 +228,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         }
 
         $application = $fee->getApplication();
-        if ($application->isGoods() && !$application->isVariation() &&
+        if (
+            $application->isGoods() && !$application->isVariation() &&
             $application->getCurrentInterimStatus() === ApplicationEntity::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
@@ -242,7 +247,8 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     {
         $application = $fee->getApplication();
 
-        if ($fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT
+        if (
+            $fee->getFeeType()->getFeeType()->getId() !== FeeType::FEE_TYPE_GRANTINT
             || $application->getCurrentInterimStatus() !== ApplicationEntity::INTERIM_STATUS_GRANTED
         ) {
             return;

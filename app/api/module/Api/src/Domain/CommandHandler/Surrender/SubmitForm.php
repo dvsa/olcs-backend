@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Surrender;
 
 use Doctrine\ORM\Query;
@@ -17,7 +16,6 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 class SubmitForm extends AbstractSurrenderCommandHandler
 {
-
     use AuthAwareTrait;
 
     protected $extraRepos = ['Licence'];

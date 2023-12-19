@@ -24,7 +24,6 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
 
         /* @var $taskAllocationRule \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule */
         foreach ($rules as $taskAllocationRule) {
-
             // delete all alpha splits attached to the rule first
             foreach ($taskAllocationRule->getTaskAlphaSplits() as $taskAlphaSplit) {
                 $this->getRepo('TaskAlphaSplit')->delete($taskAlphaSplit);

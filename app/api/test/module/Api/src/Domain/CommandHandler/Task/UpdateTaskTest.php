@@ -19,15 +19,15 @@ use Mockery as m;
  */
 class UpdateTaskTest extends CommandHandlerTestCase
 {
-    const TASK_ID = 999;
+    public const TASK_ID = 999;
 
-    const TEAM_ID = 7001;
-    const TEAM_ID_2 = 7002;
+    public const TEAM_ID = 7001;
+    public const TEAM_ID_2 = 7002;
 
-    const USER_ID = 6001;
+    public const USER_ID = 6001;
 
-    const CAT_ID = 5001;
-    const SUB_CAT_ID = 4001;
+    public const CAT_ID = 5001;
+    public const SUB_CAT_ID = 4001;
 
     /** @var UpdateTask */
     protected $sut;

@@ -20,5 +20,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class HistoricTm extends AbstractHistoricTm
 {
-
 }

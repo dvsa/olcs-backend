@@ -16,7 +16,7 @@ use Laminas\Http\Response;
  */
 class ClientTest extends MockeryTestCase
 {
-    const COMPANY_NO = '03127414';
+    public const COMPANY_NO = '03127414';
 
     /** @var  Client */
     protected $sut;

@@ -14,9 +14,9 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class Licence extends AbstractValidator
 {
-    const LICENCE_MISSING_ERROR = 'licence-missing-error';
-    const LICENCE_INACTIVE_ERROR = 'licence-inactive-error';
-    const LICENCE_TYPE_ERROR = 'licence-type-error';
+    public const LICENCE_MISSING_ERROR = 'licence-missing-error';
+    public const LICENCE_INACTIVE_ERROR = 'licence-inactive-error';
+    public const LICENCE_TYPE_ERROR = 'licence-type-error';
 
     /**
      * @var array

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
@@ -61,8 +62,10 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements 
             );
         }
         $licenceType = $application->getLicenceType()->getId();
-        if ($licenceType === LicenceEntity::LICENCE_TYPE_RESTRICTED ||
-            $licenceType === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED) {
+        if (
+            $licenceType === LicenceEntity::LICENCE_TYPE_RESTRICTED ||
+            $licenceType === LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED
+        ) {
             throw new ValidationException(
                 [
                     'application' =>  'A transport manager cannot be added to a restricted licence'
@@ -78,8 +81,10 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements 
                 ]
             );
         }
-        if ($application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED  &&
-            $application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION) {
+        if (
+            $application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_NOT_SUBMITTED  &&
+            $application->getStatus()->getId() !== ApplicationEntity::APPLICATION_STATUS_UNDER_CONSIDERATION
+        ) {
             throw new ValidationException(
                 [
                     'application' =>

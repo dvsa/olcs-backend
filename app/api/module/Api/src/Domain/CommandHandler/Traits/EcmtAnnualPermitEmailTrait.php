@@ -24,7 +24,6 @@ trait EcmtAnnualPermitEmailTrait
     {
         $fullContainer = $container;
 
-
         $this->daysToPayIssueFeeProvider = $container->get('PermitsFeesDaysToPayIssueFeeProvider');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

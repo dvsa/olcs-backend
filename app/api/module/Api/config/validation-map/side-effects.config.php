@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
  * already have validation, and if the user has the ability to run the calling command, then all side-effects should be
  * runnable
  */
+
 return [
     CommandHandler\Application\GrantGoods::class                                      => IsSideEffect::class,
     CommandHandler\Application\GrantPsv::class                                        => IsSideEffect::class,

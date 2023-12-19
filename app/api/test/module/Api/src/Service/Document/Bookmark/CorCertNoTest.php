@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\CorCertNo;
  */
 class CorCertNoTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = CorCertNo::class;
+    public const SUT_CLASS_NAME = CorCertNo::class;
 }

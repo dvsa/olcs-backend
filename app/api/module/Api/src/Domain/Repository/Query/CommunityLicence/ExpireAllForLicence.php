@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository\Query\CommunityLicence;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;

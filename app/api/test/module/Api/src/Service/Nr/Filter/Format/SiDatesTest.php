@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Nr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates;
-use \PHPUnit\Framework\TestCase as TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class SiDatesTest
@@ -11,7 +11,6 @@ use \PHPUnit\Framework\TestCase as TestCase;
  */
 class SiDatesTest extends TestCase
 {
-
     /**
      * Tests the filter
      *
@@ -30,7 +29,7 @@ class SiDatesTest extends TestCase
         $expectedOutput = [
             'checkDate' => new \DateTime('2015-12-23 00:00:00'),
             'infringementDate' => new \DateTime('2015-12-24 00:00:00'),
-            'imposedErrus' => [0 =>$expectedPenaltyDates]
+            'imposedErrus' => [0 => $expectedPenaltyDates]
         ];
 
         $sut = new SiDates();

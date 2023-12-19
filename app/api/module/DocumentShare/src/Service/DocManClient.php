@@ -10,9 +10,9 @@ use Laminas\Http\Response;
 
 class DocManClient implements DocumentStoreInterface
 {
-    const ERR_RESP_FAIL = 'Document store returns invalid response';
+    public const ERR_RESP_FAIL = 'Document store returns invalid response';
 
-    const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
+    public const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
 
     /** @var HttpClient */
     protected $httpClient;
@@ -136,7 +136,7 @@ class DocManClient implements DocumentStoreInterface
                 ->send();
 
             if (!$response->isSuccess()) {
-                $message = json_encode(["error" =>self::ERR_RESP_FAIL, "reason"=>$response->getStatusCode(), "path" => $path]);
+                $message = json_encode(["error" => self::ERR_RESP_FAIL, "reason" => $response->getStatusCode(), "path" => $path]);
                 Logger::logResponse($response->getStatusCode(), $message);
                 return null;
             }

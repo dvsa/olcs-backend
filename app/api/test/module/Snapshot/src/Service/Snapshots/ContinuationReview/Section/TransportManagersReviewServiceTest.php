@@ -24,7 +24,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $mockTranslator = m::mock(TranslatorInterface::class);
-        
+
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
         $abstractReviewServiceServices->shouldReceive('getTranslator')
             ->withNoArgs()
@@ -124,7 +124,7 @@ class TransportManagersReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuations.tm-section.table.name', 'header' => true],
                 ['value' => 'continuations.tm-section.table.dob', 'header' => true],

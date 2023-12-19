@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
@@ -16,5 +17,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class UpdateConvictionsPenaltiesStatus extends AbstractIdOnlyCommand
 {
-
 }

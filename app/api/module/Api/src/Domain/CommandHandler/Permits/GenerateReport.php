@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
@@ -12,8 +12,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 class GenerateReport extends AbstractCommandHandler
 {
-    const SUCCESS_MSG = 'Permit report of type %s generated';
-    const MISSING_REPORT_EXCEPTION = 'Requested report does not have an associated command';
+    public const SUCCESS_MSG = 'Permit report of type %s generated';
+    public const MISSING_REPORT_EXCEPTION = 'Requested report does not have an associated command';
 
     /**
      * Generate a permit report

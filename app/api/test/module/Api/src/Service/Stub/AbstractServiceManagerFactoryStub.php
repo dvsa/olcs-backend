@@ -9,6 +9,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
  */
 class AbstractServiceManagerFactoryStub extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'unit_SrvMngFactory';
+    public const CONFIG_KEY = 'unit_SrvMngFactory';
     public const PLUGIN_MANAGER_CLASS = ServiceManagerStub::class;
 }

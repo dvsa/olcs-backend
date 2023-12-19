@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -26,11 +27,12 @@ final class SendContinuationNotSought extends AbstractCommandHandler implements
     EmailAwareInterface,
     TranslatorAwareInterface
 {
-    use EmailAwareTrait, TranslatorAwareTrait;
+    use EmailAwareTrait;
+    use TranslatorAwareTrait;
 
     protected $repoServiceName = 'SystemParameter';
 
-    const DATE_FORMAT = 'd/m/Y';
+    public const DATE_FORMAT = 'd/m/Y';
 
     /**
      * @param CommandInterface $command

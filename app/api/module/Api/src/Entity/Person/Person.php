@@ -87,7 +87,7 @@ class Person extends AbstractPerson implements OrganisationProviderInterface
      */
     public function getFullName()
     {
-        return trim($this->getForename() .' '. $this->getFamilyName());
+        return trim($this->getForename() . ' ' . $this->getFamilyName());
     }
 
     /**

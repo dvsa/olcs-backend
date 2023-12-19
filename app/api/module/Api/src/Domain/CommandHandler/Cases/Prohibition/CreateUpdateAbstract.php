@@ -3,6 +3,7 @@
 /**
  * Create Update Abstract
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

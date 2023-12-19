@@ -28,34 +28,34 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class TransportManagerApplication extends AbstractTransportManagerApplication implements OrganisationProviderInterface
 {
-    const ACTION_ADD    = 'A';
-    const ACTION_UPDATE = 'U';
-    const ACTION_DELETE = 'D';
+    public const ACTION_ADD    = 'A';
+    public const ACTION_UPDATE = 'U';
+    public const ACTION_DELETE = 'D';
 
-    const STATUS_INCOMPLETE = 'tmap_st_incomplete';
-    const STATUS_AWAITING_SIGNATURE = 'tmap_st_awaiting_signature';
-    const STATUS_TM_SIGNED = 'tmap_st_tm_signed';
-    const STATUS_OPERATOR_SIGNED = 'tmap_st_operator_signed';
-    const STATUS_POSTAL_APPLICATION = 'tmap_st_postal_application';
-    const STATUS_RECEIVED = 'tmap_st_received';
-    const STATUS_DETAILS_SUBMITTED = 'tmap_st_details_submitted';
-    const STATUS_DETAILS_CHECKED = 'tmap_st_details_checked';
-    const STATUS_OPERATOR_APPROVED = 'tmap_st_operator_approved';
+    public const STATUS_INCOMPLETE = 'tmap_st_incomplete';
+    public const STATUS_AWAITING_SIGNATURE = 'tmap_st_awaiting_signature';
+    public const STATUS_TM_SIGNED = 'tmap_st_tm_signed';
+    public const STATUS_OPERATOR_SIGNED = 'tmap_st_operator_signed';
+    public const STATUS_POSTAL_APPLICATION = 'tmap_st_postal_application';
+    public const STATUS_RECEIVED = 'tmap_st_received';
+    public const STATUS_DETAILS_SUBMITTED = 'tmap_st_details_submitted';
+    public const STATUS_DETAILS_CHECKED = 'tmap_st_details_checked';
+    public const STATUS_OPERATOR_APPROVED = 'tmap_st_operator_approved';
 
-    const ERROR_TM_EXIST = 'tm_exist';
-    const ERROR_DOB_REQUIRED = 'dob_required';
+    public const ERROR_TM_EXIST = 'tm_exist';
+    public const ERROR_DOB_REQUIRED = 'dob_required';
 
-    const ERROR_MON = 'err_mon';
-    const ERROR_TUE = 'err_tue';
-    const ERROR_WED = 'err_wed';
-    const ERROR_THU = 'err_thu';
-    const ERROR_FRI = 'err_fri';
-    const ERROR_SAT = 'err_sat';
-    const ERROR_SUN = 'err_sun';
+    public const ERROR_MON = 'err_mon';
+    public const ERROR_TUE = 'err_tue';
+    public const ERROR_WED = 'err_wed';
+    public const ERROR_THU = 'err_thu';
+    public const ERROR_FRI = 'err_fri';
+    public const ERROR_SAT = 'err_sat';
+    public const ERROR_SUN = 'err_sun';
 
-    const TYPE_INTERNAL = 'tm_t_i';
-    const TYPE_EXTERNAL = 'tm_t_e';
-    const TYPE_BOTH = 'tm_t_b';
+    public const TYPE_INTERNAL = 'tm_t_i';
+    public const TYPE_EXTERNAL = 'tm_t_e';
+    public const TYPE_BOTH = 'tm_t_b';
 
     public function updateTransportManagerApplication(
         $application,

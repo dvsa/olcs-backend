@@ -31,12 +31,12 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class GrantTest extends CommandHandlerTestCase
 {
-    const SERVICE_TRANSACTION_MANAGER = 'TransactionManager';
-    const SERVICE_REPOSITORY_MANAGER = 'RepositoryServiceManager';
-    const SERVICE_VALIDATION = 'ApplicationGrantValidationService';
-    const SERVICE_QUERY_HANDLER = 'QueryHandlerManager';
-    const SERVICE_COMMAND_HANDLER = 'CommandHandlerManager';
-    const REPOSITORY_APPLICATION = 'Application';
+    public const SERVICE_TRANSACTION_MANAGER = 'TransactionManager';
+    public const SERVICE_REPOSITORY_MANAGER = 'RepositoryServiceManager';
+    public const SERVICE_VALIDATION = 'ApplicationGrantValidationService';
+    public const SERVICE_QUERY_HANDLER = 'QueryHandlerManager';
+    public const SERVICE_COMMAND_HANDLER = 'CommandHandlerManager';
+    public const REPOSITORY_APPLICATION = 'Application';
 
     /**
      * @inheritdoc

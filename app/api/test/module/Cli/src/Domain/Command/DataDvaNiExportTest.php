@@ -14,7 +14,7 @@ class DataDvaNiExportTest extends MockeryTestCase
     {
         $params = [
             'reportName' => 'unit_ReportName',
-            'path'=> 'unit_Path',
+            'path' => 'unit_Path',
         ];
 
         $sut = DataDvaNiExport::create($params);

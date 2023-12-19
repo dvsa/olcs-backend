@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\File;
 
 /**
@@ -14,5 +15,4 @@ namespace Dvsa\Olcs\Api\Service\File;
  */
 class MimeNotAllowedException extends \Exception
 {
-
 }

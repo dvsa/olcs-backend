@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\EngineNumber;
  */
 class EngineNumberTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = EngineNumber::class;
+    public const SUT_CLASS_NAME = EngineNumber::class;
 }

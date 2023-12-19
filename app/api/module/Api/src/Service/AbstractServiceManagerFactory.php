@@ -7,7 +7,7 @@ use Laminas\Mvc\Service\AbstractPluginManagerFactory;
 
 abstract class AbstractServiceManagerFactory extends AbstractPluginManagerFactory
 {
-    const CONFIG_KEY = 'define_me';
+    public const CONFIG_KEY = 'define_me';
 
     public function __invoke(ContainerInterface $container, $name, array $options = null)
     {

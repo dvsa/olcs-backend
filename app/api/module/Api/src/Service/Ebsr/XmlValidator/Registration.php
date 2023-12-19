@@ -11,7 +11,7 @@ use Laminas\Validator\Exception;
  */
 class Registration extends AbstractValidator
 {
-    const STRUCTURE_ERROR = 'registration-structure-error';
+    public const STRUCTURE_ERROR = 'registration-structure-error';
 
     /**
      * @var array

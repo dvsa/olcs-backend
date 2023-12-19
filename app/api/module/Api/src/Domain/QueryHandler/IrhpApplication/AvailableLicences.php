@@ -3,6 +3,7 @@
 /**
  * Retrieve IRHP application record alongside available licences
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;

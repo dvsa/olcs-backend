@@ -11,5 +11,6 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\User;
  */
 final class GenerateCoverLetter extends AbstractCommand
 {
-    use Licence, User;
+    use Licence;
+    use User;
 }

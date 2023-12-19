@@ -18,5 +18,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LegacyOffence extends AbstractLegacyOffence
 {
-
 }

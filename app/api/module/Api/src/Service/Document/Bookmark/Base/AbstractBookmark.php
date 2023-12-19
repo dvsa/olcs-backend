@@ -16,8 +16,8 @@ abstract class AbstractBookmark
      * This indicates that the parser should replace any relevant characters
      * such as newlines with its own representation (e.g. \par, <br>, etc)
      */
-    const PREFORMATTED = false;
-    const TYPE = null;
+    public const PREFORMATTED = false;
+    public const TYPE = null;
 
     /** @var string */
     protected $snippedPath;

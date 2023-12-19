@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Logger;
 
-use Olcs\TestHelpers\MockeryTestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Mockery\MockInterface;

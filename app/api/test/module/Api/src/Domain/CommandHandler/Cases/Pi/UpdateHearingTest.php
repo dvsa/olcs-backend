@@ -3,6 +3,7 @@
 /**
  * Update Hearing Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Pi;
 
 use Doctrine\ORM\Query;
@@ -155,7 +156,7 @@ class UpdateHearingTest extends CommandHandlerTestCase
         $this->expectedSideEffect(PublishHearingCmd::class, $publishData, $result1);
 
         $result2 = new Result();
-        $actionDate = date('Y-m-d', mktime(date("H"), date("i"), date("s"), date("n"), date("j")+7, date("Y")));
+        $actionDate = date('Y-m-d', mktime(date("H"), date("i"), date("s"), date("n"), date("j") + 7, date("Y")));
         $taskData = [
             'category' => TaskEntity::CATEGORY_COMPLIANCE,
             'subCategory' => TaskEntity::SUB_CATEGORY_HEARINGS_APPEALS,

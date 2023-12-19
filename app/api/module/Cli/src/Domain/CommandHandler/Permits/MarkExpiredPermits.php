@@ -15,9 +15,9 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 class MarkExpiredPermits extends AbstractCommandHandler
 {
-    const MSG_CERT_EXPIRED = 'Roadworthiness certificate ID %d with MOT expiry %s has been expired';
-    const MSG_CERT_NOT_EXPIRED = 'Roadworthiness certificate ID %d with MOT expiry %s was not expired';
-    const MSG_CERT_NUM_EXPIRED = '%d certificates have been expired out of %d checked';
+    public const MSG_CERT_EXPIRED = 'Roadworthiness certificate ID %d with MOT expiry %s has been expired';
+    public const MSG_CERT_NOT_EXPIRED = 'Roadworthiness certificate ID %d with MOT expiry %s was not expired';
+    public const MSG_CERT_NUM_EXPIRED = '%d certificates have been expired out of %d checked';
 
     protected $repoServiceName = 'IrhpPermit';
 

@@ -24,7 +24,7 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
 {
     use AuthAwareTrait;
 
-    const DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FIRST = [
+    public const DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FIRST = [
         'templates/PUB_APPS_SUPP_DOCS_1ST.rtf',
         'templates/GB/ENV_PUB_APPS_SUPP_DOCS_1ST.rtf',
         'templates/GB/PSV_NEW_APP_SUPP_DOCS_1ST.rtf',
@@ -34,7 +34,7 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
         'templates/GB/Incompletenon-digitalVarapp1strequestforsupportingdocs.rtf',
     ];
 
-    const DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FINAL = [
+    public const DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FINAL = [
         'templates/GB/PUB_APPS_SUPP_DOCS_FINAL.rtf',
         'templates/GB/ENV_PUB_APPS_SUPP_DOCS_FINAL.rtf',
         'templates/GB/PSV_NEW_APP_SUPP_DOCS_FINAL.rtf',
@@ -114,10 +114,12 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
      */
     protected function handleFollowUpTaskForApplicationOrVariationFirstLetter(DocTemplate $template, CreateLetterCommand $command)
     {
-        if (! in_array(
-            $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
-            static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FIRST
-        )) {
+        if (
+            ! in_array(
+                $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
+                static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FIRST
+            )
+        ) {
             return;
         }
 
@@ -158,10 +160,12 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
      */
     protected function handleFollowUpTaskForApplicationFinalLetter(DocTemplate $template, CreateLetterCommand $command)
     {
-        if (! in_array(
-            $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
-            static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FINAL
-        )) {
+        if (
+            ! in_array(
+                $this->resolveTemplateIdentifier($template->getDocument()->getIdentifier()),
+                static::DOCUMENT_TEMPLATE_IDENTIFIERS_FOLLOW_UP_FINAL
+            )
+        ) {
             return;
         }
 

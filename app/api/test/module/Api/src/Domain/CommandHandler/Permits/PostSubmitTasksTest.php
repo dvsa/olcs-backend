@@ -16,9 +16,9 @@ use Mockery as m;
 
 class PostSubmitTasksTest extends CommandHandlerTestCase
 {
-    const IRHP_PERMIT_TYPE_ID = 15;
+    public const IRHP_PERMIT_TYPE_ID = 15;
 
-    const IRHP_APPLICATION_ID = 100;
+    public const IRHP_APPLICATION_ID = 100;
 
     private $irhpApplication;
 

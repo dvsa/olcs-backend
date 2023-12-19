@@ -30,12 +30,12 @@ class TransportManager extends AbstractTransportManager implements
     ContextProviderInterface,
     OrganisationProviderInterface
 {
-    const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
-    const TRANSPORT_MANAGER_STATUS_DISQUALIFIED = 'tm_s_dis';
-    const TRANSPORT_MANAGER_STATUS_REMOVED = 'tm_s_rem';
-    const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
-    const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
-    const TRANSPORT_MANAGER_TYPE_INTERNAL = 'tm_t_i';
+    public const TRANSPORT_MANAGER_STATUS_CURRENT = 'tm_s_cur';
+    public const TRANSPORT_MANAGER_STATUS_DISQUALIFIED = 'tm_s_dis';
+    public const TRANSPORT_MANAGER_STATUS_REMOVED = 'tm_s_rem';
+    public const TRANSPORT_MANAGER_TYPE_EXTERNAL = 'tm_t_e';
+    public const TRANSPORT_MANAGER_TYPE_BOTH = 'tm_t_b';
+    public const TRANSPORT_MANAGER_TYPE_INTERNAL = 'tm_t_i';
 
     /**
      * Update type, status and home/work contact details of the TM

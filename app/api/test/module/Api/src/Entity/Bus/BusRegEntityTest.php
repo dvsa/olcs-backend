@@ -752,7 +752,7 @@ class BusRegEntityTest extends EntityTester
         $this->entity->setVersion(10);
         $this->entity->setIsShortNotice('Y');
         $this->entity->setShortNotice($shortNotice);
-        $this->entity->setEndDate(new \DateTime);
+        $this->entity->setEndDate(new \DateTime());
         $this->entity->addVariationReasons(new RefDataEntity());
         $this->entity->addOtherServices($otherService1);
         $this->entity->addOtherServices($otherService2);

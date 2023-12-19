@@ -13,11 +13,11 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 class GovUkAccountService
 {
-    const VOT_P0 = 'P0';
-    const VOT_P1 = 'P1';
-    const VOT_P2 = 'P2';
-    const JWT_TIMESTAMP_LEEWAY_SECONDS = 30;
-    const ERR_MISSING_NAMES = 'No name data available to process';
+    public const VOT_P0 = 'P0';
+    public const VOT_P1 = 'P1';
+    public const VOT_P2 = 'P2';
+    public const JWT_TIMESTAMP_LEEWAY_SECONDS = 30;
+    public const ERR_MISSING_NAMES = 'No name data available to process';
 
     protected GovUkAccount $provider;
     protected array $config;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Cli\Controller;
 
 use Olcs\Logging\Log\Logger;

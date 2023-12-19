@@ -3,6 +3,7 @@
 /**
  * Register User Selfserve Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;

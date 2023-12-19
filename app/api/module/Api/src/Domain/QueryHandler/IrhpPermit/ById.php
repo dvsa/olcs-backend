@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Retrieve an IRHP Permit by id
  *

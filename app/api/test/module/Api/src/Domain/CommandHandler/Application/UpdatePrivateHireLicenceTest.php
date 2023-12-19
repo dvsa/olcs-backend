@@ -31,7 +31,7 @@ class UpdatePrivateHireLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'privateHireLicence' => 654,
             'version' => 21,
@@ -91,7 +91,7 @@ class UpdatePrivateHireLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandValidation()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'privateHireLicence' => 654,
             'version' => 21,

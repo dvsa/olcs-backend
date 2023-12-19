@@ -298,6 +298,5 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         }
 
         return new \Doctrine\Common\Collections\ArrayCollection($applicationOrganisationPersons);
-
     }
 }

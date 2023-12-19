@@ -23,7 +23,7 @@ class IrhpPermitApplicationCreatorTest extends MockeryTestCase
     public function testHandle()
     {
         $stockId = 47;
-        
+
         $irhpPermitWindow = m::mock(IrhpPermitWindow::class);
 
         $irhpPermitStock = m::mock(IrhpPermitStock::class);

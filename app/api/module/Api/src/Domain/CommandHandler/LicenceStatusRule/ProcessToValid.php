@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -35,12 +36,13 @@ final class ProcessToValid extends AbstractCommandHandler implements Transaction
         /* @var $licenceStatusRule \Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule */
         foreach ($licencesToAction as $licenceStatusRule) {
             // if licence is not curtailed or suspended, then continue
-            if ($licenceStatusRule->getLicence()->getStatus()->getId() !== Licence::LICENCE_STATUS_CURTAILED &&
+            if (
+                $licenceStatusRule->getLicence()->getStatus()->getId() !== Licence::LICENCE_STATUS_CURTAILED &&
                 $licenceStatusRule->getLicence()->getStatus()->getId() !== Licence::LICENCE_STATUS_SUSPENDED
             ) {
                 $result->addMessage(
                     "To Valid Licence Status Rule ID {$licenceStatusRule->getId()} licence "
-                    ."is not curtailed or suspended"
+                    . "is not curtailed or suspended"
                 );
                 continue;
             }

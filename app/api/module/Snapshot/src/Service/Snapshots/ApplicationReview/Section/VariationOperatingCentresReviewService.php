@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 /**
@@ -50,7 +51,7 @@ class VariationOperatingCentresReviewService extends AbstractOperatingCentresRev
         $this->goodsOperatingCentreReviewService = $goodsOperatingCentreReviewService;
         $this->variationGoodsOcTotalAuthReviewService = $variationGoodsOcTotalAuthReviewService;
     }
- 
+
     /**
      * Format the readonly config from the given data
      *

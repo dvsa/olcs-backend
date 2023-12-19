@@ -3,6 +3,7 @@
 /**
  * Venue Bundle Bookmark
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark;
 
 use Dvsa\Olcs\Transfer\Query\QueryInterface;

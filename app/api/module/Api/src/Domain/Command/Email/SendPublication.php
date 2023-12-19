@@ -3,6 +3,7 @@
 /**
  * Send a publication
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;

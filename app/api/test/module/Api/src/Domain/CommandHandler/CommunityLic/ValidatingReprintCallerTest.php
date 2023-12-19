@@ -71,7 +71,7 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
         $this->repoMap['CommunityLic']->shouldReceive('fetchById')
             ->with(87)
             ->andReturn($communityLicence87);
-        
+
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getLicence')
             ->andReturn($licenceId);
@@ -233,7 +233,7 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
         $this->repoMap['CommunityLic']->shouldReceive('fetchById')
             ->with(131)
             ->andReturn($communityLicence131);
-        
+
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getLicence')
             ->andReturn($licenceId);
@@ -307,7 +307,7 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
         $this->repoMap['CommunityLic']->shouldReceive('fetchById')
             ->with(11)
             ->andReturn($communityLicence11);
-       
+
         $command = m::mock(CommandInterface::class);
         $command->shouldReceive('getLicence')
             ->andReturn($licenceId);
@@ -324,7 +324,6 @@ class ValidatingReprintCallerTest extends CommandHandlerTestCase
             ],
             new Result()
         );
-
 
         $result = $this->sut->handleCommand($command);
 

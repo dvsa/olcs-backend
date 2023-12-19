@@ -57,7 +57,6 @@ class ResetToNotYetSubmittedFromCancelled extends AbstractCommandHandler impleme
     {
         $fullContainer = $container;
 
-
         $this->ecmtApplicationFeeCommandCreator = $container->get('PermitsFeesEcmtApplicationFeeCommandCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

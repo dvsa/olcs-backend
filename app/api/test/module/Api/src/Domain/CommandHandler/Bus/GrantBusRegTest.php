@@ -24,7 +24,7 @@ use Mockery as m;
  */
 class GrantBusRegTest extends CommandHandlerTestCase
 {
-    const BUS_REG_ID = 9999;
+    public const BUS_REG_ID = 9999;
 
     /** @var  GrantBusReg */
     protected $sut;

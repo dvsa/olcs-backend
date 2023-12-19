@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Permits;
 
@@ -23,7 +23,7 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
 {
     use TranslatorAwareTrait;
 
-    const MSG_USER_MISSING = 'User details missing';
+    public const MSG_USER_MISSING = 'User details missing';
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -79,7 +79,6 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
 
             $isTrailer = $irhpApplication->isCertificateOfRoadworthinessTrailer();
 
-
             $appNotes = '';
             $notes = $irhpApplication->getNotes();
 
@@ -110,7 +109,7 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
                 'Last app update by' => $lastUpdateBy,
             ];
 
-            foreach($questionAnswerData as $answerData) {
+            foreach ($questionAnswerData as $answerData) {
                 $questionHeading = $this->translate($answerData['questionShort']);
                 $newRow[$questionHeading] = $answerData['answer'];
             }
@@ -128,7 +127,7 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
 
         $userId = $command->getUser();
 
-        foreach($includedAppPaths as $id => $title) {
+        foreach ($includedAppPaths as $id => $title) {
             $this->result->merge(
                 $this->handleSideEffect(
                     $this->getUploadCmd($rows[$id], $title, $userId)

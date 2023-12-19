@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section;
 
 use Dvsa\Olcs\Api\Entity\Surrender;

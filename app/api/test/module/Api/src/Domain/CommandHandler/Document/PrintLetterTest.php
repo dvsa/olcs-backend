@@ -17,10 +17,10 @@ use Mockery as m;
  */
 class PrintLetterTest extends CommandHandlerTestCase
 {
-    const LIC_ID = 8001;
+    public const LIC_ID = 8001;
 
-    const DOC_ID = 7001;
-    const DOC_DESC = 'unit test doc description';
+    public const DOC_ID = 7001;
+    public const DOC_DESC = 'unit test doc description';
 
     /** @var  PrintLetter */
     protected $sut;

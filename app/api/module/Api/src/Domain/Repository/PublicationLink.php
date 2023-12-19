@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -169,10 +170,10 @@ class PublicationLink extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->eq($this->alias .'.publication', ':publicationId'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.publication', ':publicationId'))
             ->setParameter('publicationId', $publication->getId());
         $qb->andWhere($qb->expr()->isNotNull($this->alias . '.publishAfterDate'));
-        $qb->andWhere($qb->expr()->gt($this->alias .'.publishAfterDate', ':today'))
+        $qb->andWhere($qb->expr()->gt($this->alias . '.publishAfterDate', ':today'))
             ->setParameter('today', (new Datetime())->format('Y-m-d'));
 
         return $qb->getQuery()->getResult();

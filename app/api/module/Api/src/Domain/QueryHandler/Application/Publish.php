@@ -60,7 +60,6 @@ class Publish extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->applicationValidationService = $container->get('ApplicationPublishValidationService');
         $this->variationValidationService = $container->get('VariationPublishValidationService');
         return parent::__invoke($fullContainer, $requestedName, $options);

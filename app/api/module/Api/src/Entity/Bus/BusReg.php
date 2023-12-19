@@ -45,25 +45,25 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class BusReg extends AbstractBusReg implements ContextProviderInterface, OrganisationProviderInterface
 {
-    const STATUS_NEW = 'breg_s_new';
-    const STATUS_VAR = 'breg_s_var';
-    const STATUS_CANCEL = 'breg_s_cancellation';
-    const STATUS_ADMIN = 'breg_s_admin';
-    const STATUS_REGISTERED = 'breg_s_registered';
-    const STATUS_REFUSED = 'breg_s_refused';
-    const STATUS_WITHDRAWN = 'breg_s_withdrawn';
-    const STATUS_CNS = 'breg_s_cns';
-    const STATUS_CANCELLED = 'breg_s_cancelled';
-    const STATUS_EXPIRED = 'breg_s_expired';
+    public const STATUS_NEW = 'breg_s_new';
+    public const STATUS_VAR = 'breg_s_var';
+    public const STATUS_CANCEL = 'breg_s_cancellation';
+    public const STATUS_ADMIN = 'breg_s_admin';
+    public const STATUS_REGISTERED = 'breg_s_registered';
+    public const STATUS_REFUSED = 'breg_s_refused';
+    public const STATUS_WITHDRAWN = 'breg_s_withdrawn';
+    public const STATUS_CNS = 'breg_s_cns';
+    public const STATUS_CANCELLED = 'breg_s_cancelled';
+    public const STATUS_EXPIRED = 'breg_s_expired';
 
-    const SUBSIDY_NO = 'bs_no';
+    public const SUBSIDY_NO = 'bs_no';
 
-    const TXC_APP_NEW = 'new';
-    const TXC_APP_CANCEL = 'cancel';
-    const TXC_APP_CHARGEABLE = 'chargeableChange';
-    const TXC_APP_NON_CHARGEABLE = 'nonChargeableChange';
+    public const TXC_APP_NEW = 'new';
+    public const TXC_APP_CANCEL = 'cancel';
+    public const TXC_APP_CHARGEABLE = 'chargeableChange';
+    public const TXC_APP_NON_CHARGEABLE = 'nonChargeableChange';
 
-    const FORBIDDEN_NO_PERMISSION_ERROR = 'No permission to edit this record';
+    public const FORBIDDEN_NO_PERMISSION_ERROR = 'No permission to edit this record';
 
     /**
      * Statuses to be included in a registration history list
@@ -270,7 +270,7 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
         // set reference data
         $busReg->setStatus($status);
-        $busReg->setStatusChangeDate(new \DateTime);
+        $busReg->setStatusChangeDate(new \DateTime());
         $busReg->setRevertStatus($revertStatus);
 
         //increment variation number
@@ -701,7 +701,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
             $interval = new \DateInterval('P' . $busRules->getCancellationPeriod() . 'D');
 
-
             //this rule applies until the day AFTER the cancellation period
             //so for a 90 day cancellation period, short notice applies until the 91st day
             if ($effectiveDate->setTime(0, 0) <= $lastDateTime->add($interval)->setTime(0, 0)) {
@@ -1094,7 +1093,8 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
         //we only check the parent for scottish variations/cancellations
         //there should always be a parent, but we'll test for bad (most probably legacy) data
-        if ($this->busNoticePeriod->isScottishRules()
+        if (
+            $this->busNoticePeriod->isScottishRules()
             && $this->variationNo > 0
             && $this->parent instanceof BusReg
             && $this->parent->getEffectiveDate() !== null
@@ -1304,7 +1304,6 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
         }
         //strip out any empty string values except 0
         $additional = array_filter($additional, 'strlen');
-
 
         if (!empty($additional)) {
             return $this->serviceNo . '(' . implode(',', $additional) . ')';

@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\DeleteList as CommandHandler;
@@ -139,6 +140,5 @@ class DeleteListTest extends CommandHandlerTestCase
         $result2 = new Result();
         $result2->addId('task', 2);
         $this->expectedSideEffect(CreateTaskCmd::class, $data2, $result2);
-
     }
 }

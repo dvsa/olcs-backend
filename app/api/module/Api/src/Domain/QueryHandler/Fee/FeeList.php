@@ -74,7 +74,6 @@ class FeeList extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->feesHelper = $container->get('FeesHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

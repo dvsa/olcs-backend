@@ -59,7 +59,6 @@ class RangesByIrhpApplication extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->candidatePermitsAvailableCountCalculator = $container->get('PermitsAvailabilityCandidatePermitsAvailableCountCalculator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

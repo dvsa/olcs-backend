@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
 
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -16,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class ApplicationGoodsOcTotalAuthReviewService extends AbstractReviewService
 {
-    const OTHER_ROW_DEFINITIONS = [
+    public const OTHER_ROW_DEFINITIONS = [
         [
             'label' => 'review-operating-centres-authorisation-trailers',
             'sourceKey' => 'totAuthTrailers',
@@ -46,7 +47,8 @@ class ApplicationGoodsOcTotalAuthReviewService extends AbstractReviewService
         $multiItems = [];
         $vehicleTypeId = $data['vehicleType']['id'];
 
-        if (($vehicleTypeId == RefData::APP_VEHICLE_TYPE_HGV) ||
+        if (
+            ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_HGV) ||
             ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_MIXED && is_null($data['totAuthLgvVehicles']))
         ) {
             $multiItems[] = [
@@ -62,7 +64,8 @@ class ApplicationGoodsOcTotalAuthReviewService extends AbstractReviewService
             ];
         }
 
-        if ($vehicleTypeId == (RefData::APP_VEHICLE_TYPE_LGV) ||
+        if (
+            $vehicleTypeId == (RefData::APP_VEHICLE_TYPE_LGV) ||
             ($vehicleTypeId == RefData::APP_VEHICLE_TYPE_MIXED && !is_null($data['totAuthLgvVehicles']))
         ) {
             $multiItems[] = [

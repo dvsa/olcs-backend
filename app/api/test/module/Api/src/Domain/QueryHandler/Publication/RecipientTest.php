@@ -3,6 +3,7 @@
 /**
  * Recipient Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Publication;
 
 use Mockery as m;

@@ -37,7 +37,6 @@ class VehiclesSpecified extends DynamicBookmark
         $isGoods = $this->data['goodsOrPsv']['id'] === Licence::LICENCE_CATEGORY_GOODS_VEHICLE;
 
         if ($isGoods) {
-
             $header[] = [
                 'BOOKMARK1' => 'Registration mark',
                 'BOOKMARK2' => 'Plated weight',

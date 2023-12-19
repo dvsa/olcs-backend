@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\OperatingCentre;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

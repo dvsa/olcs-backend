@@ -58,7 +58,7 @@ class UsersReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuations.users-section.table.name', 'header' => true],
                 ['value' => 'continuations.users-section.table.email', 'header' => true],
@@ -98,7 +98,7 @@ class UsersReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
            'emptyTableMessage' => 'continuations.users-section-empty-table-message_translated'
         ];
 

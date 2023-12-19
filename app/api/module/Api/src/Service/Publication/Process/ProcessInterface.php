@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Service\Publication\Process;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;

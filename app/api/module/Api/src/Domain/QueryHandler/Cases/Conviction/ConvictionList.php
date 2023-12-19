@@ -3,6 +3,7 @@
 /**
  * ConvictionList
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Conviction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

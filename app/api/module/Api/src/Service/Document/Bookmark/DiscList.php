@@ -15,24 +15,24 @@ class DiscList extends AbstractDiscList
     /**
      * Discs per row in a page
      */
-    const PER_ROW = 2;
+    public const PER_ROW = 2;
 
     /**
      * Typical row spacer. Magic number gleaned from old codebase
      */
-    const ROW_HEIGHT = 2526;
+    public const ROW_HEIGHT = 2526;
 
     /**
      * Last row spacer. Magic number gleaned from old codebase
      */
-    const LAST_ROW_HEIGHT = 359;
+    public const LAST_ROW_HEIGHT = 359;
 
     /**
      * Bookmark variable prefix
      */
-    const BOOKMARK_PREFIX = 'DISC';
+    public const BOOKMARK_PREFIX = 'DISC';
 
-    const QUERY_CLASS = Qry::class;
+    public const QUERY_CLASS = Qry::class;
 
     protected $discBundle = [
         'licenceVehicle' => [
@@ -52,7 +52,6 @@ class DiscList extends AbstractDiscList
         }
 
         foreach ($this->data as $key => $disc) {
-
             $licence = $disc['licenceVehicle']['licence'];
             $vehicle = $disc['licenceVehicle']['vehicle'];
             $organisation = $licence['organisation'];
@@ -99,7 +98,6 @@ class DiscList extends AbstractDiscList
          * fill the rest up with placeholders
          */
         while (($length = count($discs) % self::PER_PAGE) !== 0) {
-
             $prefix = $this->getPrefix($length);
             $discs[] = [
                 $prefix . 'TITLE'       => self::PLACEHOLDER,
@@ -117,10 +115,10 @@ class DiscList extends AbstractDiscList
 
         // bit ugly, but now we have to chunk the discs into N per row
         $discGroups = [];
-        for ($i = 0; $i < count($discs); $i+= self::PER_ROW) {
+        for ($i = 0; $i < count($discs); $i += self::PER_ROW) {
             $discGroups[] = array_merge(
                 $discs[$i],
-                $discs[$i+1],
+                $discs[$i + 1],
                 [
                     'ROW_HEIGHT' => $this->getRowHeight($i)
                 ]
@@ -155,6 +153,6 @@ class DiscList extends AbstractDiscList
         $index /= self::PER_ROW;
         $max = self::PER_PAGE / self::PER_ROW;
 
-        return ($index % $max === $max-1) ? self::LAST_ROW_HEIGHT : self::ROW_HEIGHT;
+        return ($index % $max === $max - 1) ? self::LAST_ROW_HEIGHT : self::ROW_HEIGHT;
     }
 }

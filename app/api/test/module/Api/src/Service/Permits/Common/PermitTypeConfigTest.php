@@ -12,9 +12,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PermitTypeConfigTest extends MockeryTestCase
 {
-    const RESTRICTED_COUNTRIES_QUESTION_KEY = 'restricted.countries.question.key';
+    public const RESTRICTED_COUNTRIES_QUESTION_KEY = 'restricted.countries.question.key';
 
-    const RESTRICTED_COUNTRY_IDS = ['ES', 'FR', 'DE'];
+    public const RESTRICTED_COUNTRY_IDS = ['ES', 'FR', 'DE'];
 
     private $permitTypeConfig;
 

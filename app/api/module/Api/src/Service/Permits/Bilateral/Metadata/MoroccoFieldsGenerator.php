@@ -13,7 +13,8 @@ class MoroccoFieldsGenerator implements FieldsGeneratorInterface
     public function generate(IrhpPermitStock $irhpPermitStock, ?IrhpPermitApplication $irhpPermitApplication)
     {
         $value = null;
-        if (is_object($irhpPermitApplication) &&
+        if (
+            is_object($irhpPermitApplication) &&
             $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock() === $irhpPermitStock
         ) {
             $bilateralRequired = $irhpPermitApplication->getBilateralRequired();

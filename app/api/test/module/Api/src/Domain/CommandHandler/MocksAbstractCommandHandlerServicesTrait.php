@@ -60,7 +60,6 @@ trait MocksAbstractCommandHandlerServicesTrait
     protected function setUpCommandHandlerManager(): m\MockInterface
     {
         $instance = m::mock(CommandHandlerManager::class)->makePartial();
-        $instance->setServiceLocator($this->serviceManager());
         $instance->allows('handleCommand')->andReturnUsing(function () {
             return new Result();
         })->byDefault();

@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\Criteria;
@@ -47,7 +48,6 @@ final class GrantTransportManager extends AbstractCommandHandler implements Tran
             $this->deleteAllTransportManagersForLicence($licence);
             $result->addMessage('All transport managers removed');
             return $result;
-
         }
 
         $tmas = $application->getTransportManagers();

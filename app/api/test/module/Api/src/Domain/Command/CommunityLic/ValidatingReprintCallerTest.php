@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Command\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\ValidatingReprintCaller;

@@ -58,7 +58,7 @@ final class ConvictionFpnOffenceHistory extends AbstractSection
      * Method to extract the name depending on Conviction defendant
      *
      * @param Conviction $entity Conviction Entity
-     * 
+     *
      * @return string
      */
     private function determineName(Conviction $entity)

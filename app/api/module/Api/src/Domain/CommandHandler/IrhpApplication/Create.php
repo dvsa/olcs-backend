@@ -28,7 +28,7 @@ use Interop\Container\ContainerInterface;
  */
 final class Create extends AbstractCommandHandler
 {
-    const LICENCE_INVALID_MSG = 'Licence ID %d with number %s is unable to make an application for %s stock ID %d';
+    public const LICENCE_INVALID_MSG = 'Licence ID %d with number %s is unable to make an application for %s stock ID %d';
 
     protected $repoServiceName = 'IrhpApplication';
     protected $extraRepos = ['Licence', 'IrhpPermitStock', 'IrhpPermitType', 'IrhpPermitWindow'];
@@ -131,7 +131,6 @@ final class Create extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);

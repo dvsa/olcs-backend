@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create translation key text record
  *

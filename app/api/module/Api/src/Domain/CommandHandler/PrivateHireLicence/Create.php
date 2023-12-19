@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -34,7 +35,7 @@ final class Create extends AbstractCommandHandler implements
     use AuthAwareTrait;
     use AddressServiceAwareTrait;
 
-    const PHL_INVALID_TA = 'PHL_INVALID_TA';
+    public const PHL_INVALID_TA = 'PHL_INVALID_TA';
 
     protected $repoServiceName = 'PrivateHireLicence';
 
@@ -75,8 +76,10 @@ final class Create extends AbstractCommandHandler implements
         $this->result->addId('privateHireLicence', $phl->getId());
         $this->result->addMessage('PrivateHireLicence created');
 
-        if ($this->isGranted(Permission::SELFSERVE_USER) &&
-            ($command->getLva() === 'licence')) {
+        if (
+            $this->isGranted(Permission::SELFSERVE_USER) &&
+            ($command->getLva() === 'licence')
+        ) {
             $data = [
                 'licence' => $command->getLicence(),
                 'category' => CategoryEntity::CATEGORY_APPLICATION,

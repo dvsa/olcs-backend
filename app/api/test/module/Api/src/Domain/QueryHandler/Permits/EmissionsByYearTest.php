@@ -113,7 +113,6 @@ class EmissionsByYearTest extends QueryHandlerTestCase
             )
             ->andReturn([]);
 
-
         $this->assertEquals(
             [
                 'yearEmissions' => [],

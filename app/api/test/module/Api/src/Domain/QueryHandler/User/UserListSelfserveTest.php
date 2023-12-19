@@ -3,6 +3,7 @@
 /**
  * UserListSelfserveTest
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\User\UserListSelfserve as QueryHandler;

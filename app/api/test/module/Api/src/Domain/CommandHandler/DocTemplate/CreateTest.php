@@ -21,16 +21,16 @@ use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
-use \Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\DocTemplate\Create
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    const BODY = 'expect_body';
-    const IDENTIFIER = 'templates/fileName.rtf';
-    const USER_ID = 291;
+    public const BODY = 'expect_body';
+    public const IDENTIFIER = 'templates/fileName.rtf';
+    public const USER_ID = 291;
 
     /** @var Upload */
     protected $sut;

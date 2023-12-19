@@ -25,7 +25,7 @@ class OrganisationName
                 }
             }
 
-            $text .= ' T/A '. $oldestTradingName->getName();
+            $text .= ' T/A ' . $oldestTradingName->getName();
         }
         return $text;
     }

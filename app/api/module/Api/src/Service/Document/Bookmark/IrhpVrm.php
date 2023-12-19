@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class IrhpVrm extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'vehicle-vehicle-registration-number';
+    public const FIELD = 'vehicle-vehicle-registration-number';
 }

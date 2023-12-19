@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\OlcsTest\Api\Entity\Cases;
 
 use Dvsa\Olcs\Api\Entity\System\RefData;

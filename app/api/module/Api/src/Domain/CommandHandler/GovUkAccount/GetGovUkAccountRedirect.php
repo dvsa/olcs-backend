@@ -40,4 +40,3 @@ class GetGovUkAccountRedirect extends AbstractCommandHandler
         return $this->result->addMessage($authorisationUrl->getUrl());
     }
 }
-

@@ -106,7 +106,12 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
             $standardDeviation += $applicationPermitsRequired;
         }
 
-        $randomFactor = stats_rand_gen_normal($deviationData['meanDeviation'], $standardDeviation);
+        // https://stackoverflow.com/a/15952104
+        // https://en.wikipedia.org/wiki/Box%E2%80%93Muller_transform
+        $x = mt_rand() / mt_getrandmax();
+        $y = mt_rand() / mt_getrandmax();
+
+        $randomFactor = sqrt(-2 * log($x)) * cos(2 * pi() * $y) * $standardDeviation + $deviationData['meanDeviation'];
 
         $this->randomizedScore = $randomFactor * $this->applicationScore;
         $this->randomFactor = $randomFactor;

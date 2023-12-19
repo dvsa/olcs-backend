@@ -73,14 +73,14 @@ class FixIsIrfoTest extends AbstractDbQueryTestCase
     protected function getExpectedQuery()
     {
         return 'UPDATE organisation o '
-            .'LEFT JOIN irfo_psv_auth ipa ON ipa.organisation_id = o.id '
-            .'LEFT JOIN irfo_gv_permit igp ON igp.organisation_id = o.id '
-            .'SET o.is_irfo = 0, '
-                .'o.last_modified_on = NOW(), '
-                .'o.last_modified_by = :currentUserId '
-            .'WHERE o.type <> \'org_t_ir\' '
-                .'AND ipa.id IS NULL '
-                .'AND igp.id IS NULL '
-                .'AND o.is_irfo <> 0;';
+            . 'LEFT JOIN irfo_psv_auth ipa ON ipa.organisation_id = o.id '
+            . 'LEFT JOIN irfo_gv_permit igp ON igp.organisation_id = o.id '
+            . 'SET o.is_irfo = 0, '
+                . 'o.last_modified_on = NOW(), '
+                . 'o.last_modified_by = :currentUserId '
+            . 'WHERE o.type <> \'org_t_ir\' '
+                . 'AND ipa.id IS NULL '
+                . 'AND igp.id IS NULL '
+                . 'AND o.is_irfo <> 0;';
     }
 }

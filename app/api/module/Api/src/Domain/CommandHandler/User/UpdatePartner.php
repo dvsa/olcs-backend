@@ -3,6 +3,7 @@
 /**
  * Update Partner
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Doctrine\ORM\Query;

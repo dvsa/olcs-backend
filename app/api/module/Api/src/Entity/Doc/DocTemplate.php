@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  */
 class DocTemplate extends AbstractDocTemplate implements DeletableInterface
 {
-    const TEMPLATE_PATH_PREFIXES = [
+    public const TEMPLATE_PATH_PREFIXES = [
         'root' => 'templates/',
         'ni' => 'templates/NI/',
         'gb' => 'templates/GB/',

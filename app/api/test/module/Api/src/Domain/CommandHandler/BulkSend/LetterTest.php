@@ -72,7 +72,6 @@ class LetterTest extends CommandHandlerTestCase
             ->times(4)
             ->andReturn('SOME-DOC');
 
-
         $template->shouldReceive('getDescription')->andReturn('SOME-DESC');
 
         $processResult = new Result();

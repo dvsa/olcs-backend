@@ -11,5 +11,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class UpdateDeclarationsInternalStatus extends AbstractIdOnlyCommand
 {
-
 }

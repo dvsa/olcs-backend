@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as Entity;
@@ -34,7 +35,7 @@ class OtherLicence extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($dqb)
             ->withRefdata();
 
-        $dqb->andWhere($dqb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias . '.transportManager', ':tmId'))
             ->setParameter('tmId', $tmId);
 
         return $dqb->getQuery()->getResult();
@@ -49,7 +50,7 @@ class OtherLicence extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query->getTransportManager()) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':tmId'))
                 ->setParameter('tmId', $query->getTransportManager());
         }
     }

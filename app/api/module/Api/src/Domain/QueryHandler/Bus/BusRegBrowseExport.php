@@ -79,7 +79,7 @@ class BusRegBrowseExport extends AbstractQueryHandler
 
         $size = $fstats['size'];
 
-        $filename = 'Bus_registration_decisions_'.$acceptedDate.'.csv';
+        $filename = 'Bus_registration_decisions_' . $acceptedDate . '.csv';
 
         $response = new \Laminas\Http\Response\Stream();
         $response->setStatusCode(Response::STATUS_CODE_200);

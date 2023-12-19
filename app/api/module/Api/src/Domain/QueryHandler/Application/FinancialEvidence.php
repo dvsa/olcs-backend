@@ -121,7 +121,6 @@ class FinancialEvidence extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->helper = $container->get('FinancialStandingHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

@@ -18,9 +18,9 @@ use Mockery as m;
 
 class MaxPermittedReachedByStockAndLicenceTest extends QueryHandlerTestCase
 {
-    const IRHP_PERMIT_STOCK_ID = 40;
+    public const IRHP_PERMIT_STOCK_ID = 40;
 
-    const LICENCE_ID = 7;
+    public const LICENCE_ID = 7;
 
     private $irhpPermitType;
 

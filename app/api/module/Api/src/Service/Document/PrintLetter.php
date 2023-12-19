@@ -32,7 +32,8 @@ class PrintLetter implements FactoryInterface
 
         // if the allow email preference is off and this correspondence isnt being force sent
         $org = $licence->getOrganisation();
-        if (!ValueHelper::isOn($org->getAllowEmail())
+        if (
+            !ValueHelper::isOn($org->getAllowEmail())
             && $forceCorrespondence === false
         ) {
             return false;

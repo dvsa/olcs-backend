@@ -19,9 +19,9 @@ use RuntimeException;
  */
 class QuestionHandlerDelegatorTest extends MockeryTestCase
 {
-    const HANDLER_2_QUESTION_ID = 60;
+    public const HANDLER_2_QUESTION_ID = 60;
 
-    const REQUIRED_PERMITS = [
+    public const REQUIRED_PERMITS = [
         'requiredPermitsKey1' => 'requiredPermitsValue1',
         'requiredPermitsKey2' => 'requiredPermitsValue2'
     ];

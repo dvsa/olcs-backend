@@ -18,8 +18,8 @@ use Olcs\XmlTools\Xml\XmlNodeBuilder;
  */
 class MsiResponse
 {
-    const AUTHORITY_TRU = 'Transport Regulation Unit';
-    const AUTHORITY_TC = 'Traffic Commissioner';
+    public const AUTHORITY_TRU = 'Transport Regulation Unit';
+    public const AUTHORITY_TC = 'Traffic Commissioner';
 
     /**
      * @var string $responseDateTime

@@ -65,7 +65,6 @@ class PayFeeTest extends CommandHandlerTestCase
         $irhpApplication->shouldReceive('hasOutstandingFees')->once()->andReturn(true);
         $irhpApplication->shouldReceive('getId')->andReturn($irhpApplicationId);
 
-
         /** @var FeeEntity $fee */
         $fee = m::mock(FeeEntity::class);
         $fee->shouldReceive('getFeeType->getFeeType->getId'); //avoided breaking old code
@@ -82,7 +81,6 @@ class PayFeeTest extends CommandHandlerTestCase
         $result = new Result();
         $result->addMessage('message');
         $result->addId('returnedId', $irhpApplicationId);
-
 
         $result = $this->sut->handleCommand($command);
 

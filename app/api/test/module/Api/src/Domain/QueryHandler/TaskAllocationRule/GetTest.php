@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TaskAllocationRule;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TaskAllocationRule\Get as QueryHandler;

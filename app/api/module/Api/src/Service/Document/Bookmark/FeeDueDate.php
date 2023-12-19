@@ -17,7 +17,7 @@ class FeeDueDate extends DynamicBookmark implements DateHelperAwareInterface
 {
     use DateHelperAwareTrait;
 
-    const TARGET_DAYS = 15;
+    public const TARGET_DAYS = 15;
 
     public function getQuery(array $data)
     {

@@ -5,6 +5,7 @@
  *
  * @author Andrew Newton <andy@vitri.ltd>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\BulkSend;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class AddressesTest extends QueryHandlerTestCase
 {
-    const CONTACT_DETAILS_ID = 8888;
+    public const CONTACT_DETAILS_ID = 8888;
 
     /** @var  Addresses */
     protected $sut;

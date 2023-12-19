@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
@@ -19,6 +20,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\GenerateBatch;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCmd;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Create Other Licence Test
@@ -34,6 +36,12 @@ class GenerateBatchTest extends CommandHandlerTestCase
         $this->mockRepo('Licence', Repository\Licence::class);
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
 
         parent::setUp();
     }

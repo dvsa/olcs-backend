@@ -33,6 +33,7 @@ class EncryptedStringTypeTest extends \PHPUnit\Framework\TestCase
     public function testGetEncrypterNotSet()
     {
         $this->expectException(\RuntimeException::class, 'An encrypter must be set to allow encrypting data');
+        $this->sut->setEncrypter(null);
         $this->sut->getEncrypter();
     }
 

@@ -78,7 +78,7 @@ class NamingServiceAwareTraitTest extends MockeryTestCase
 
     public function testDetermineEntityFromCommandNull()
     {
-        $sut = new NamingServiceAwareTraitStub;
+        $sut = new NamingServiceAwareTraitStub();
 
         static::assertNull($sut->determineEntityFromCommand([]));
     }

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Operator;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Operator\BusinessDetails as BusinessDetailsQueryHanlder;

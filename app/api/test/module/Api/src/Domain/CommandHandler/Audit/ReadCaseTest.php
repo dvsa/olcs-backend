@@ -18,7 +18,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class ReadCaseTest extends CommandHandlerTestCase
 {
-    const USER_ID = 9999;
+    public const USER_ID = 9999;
 
     /** @var m\MockInterface|User */
     private $mockUser;

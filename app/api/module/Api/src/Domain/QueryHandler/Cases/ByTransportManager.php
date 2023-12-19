@@ -3,6 +3,7 @@
 /**
  * Cases by transport manager
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

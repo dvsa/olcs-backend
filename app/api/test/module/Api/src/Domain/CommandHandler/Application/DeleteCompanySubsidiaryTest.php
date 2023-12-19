@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
 {
-    const APP_ID = 9999;
+    public const APP_ID = 9999;
 
     /** @var DeleteCompanySubsidiary|m\MockInterface */
     protected $sut;

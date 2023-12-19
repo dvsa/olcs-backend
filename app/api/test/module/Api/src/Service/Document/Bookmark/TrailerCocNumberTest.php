@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TrailerCocNumber;
  */
 class TrailerCocNumberTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = TrailerCocNumber::class;
+    public const SUT_CLASS_NAME = TrailerCocNumber::class;
 }

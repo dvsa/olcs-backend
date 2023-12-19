@@ -102,17 +102,17 @@ class DeleteTest extends CommandHandlerTestCase
             [
                 'ids' => [555, 666],
                 'yesNo' => null,
-                'optOutTmLetterValue' =>0
+                'optOutTmLetterValue' => 0
             ],
             [
                 'ids' => [555, 666],
                 'yesNo' => 'Y',
-                'optOutTmLetterValue' =>0
+                'optOutTmLetterValue' => 0
             ],
             [
                 'ids' => [555, 666],
                 'yesNo' => 'N',
-                'optOutTmLetterValue' =>1
+                'optOutTmLetterValue' => 1
             ],
         ];
     }

@@ -13,7 +13,6 @@ use Mockery as m;
 
 class DeleteTest extends CommandHandlerTestCase
 {
-
     /** @var Sut */
     protected $sut;
 

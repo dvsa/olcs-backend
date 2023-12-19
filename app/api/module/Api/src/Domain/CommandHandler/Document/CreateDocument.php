@@ -2,9 +2,10 @@
 
 /**
  * Create Document
- * 
+ *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;

@@ -34,51 +34,51 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
  */
 class Task extends AbstractTask
 {
-    const STATUS_OPEN = 'tst_open';
-    const STATUS_CLOSED = 'tst_closed';
-    const STATUS_ALL = 'tst_all';
+    public const STATUS_OPEN = 'tst_open';
+    public const STATUS_CLOSED = 'tst_closed';
+    public const STATUS_ALL = 'tst_all';
 
-    const CATEGORY_LICENSING = 1;
-    const CATEGORY_COMPLIANCE = 2;
-    const CATEGORY_BUS = 3;
-    const CATEGORY_PERMITS = 4;
-    const CATEGORY_ENVIRONMENTAL = 7;
-    const CATEGORY_APPLICATION = 9;
-    const CATEGORY_SUBMISSION = 10;
+    public const CATEGORY_LICENSING = 1;
+    public const CATEGORY_COMPLIANCE = 2;
+    public const CATEGORY_BUS = 3;
+    public const CATEGORY_PERMITS = 4;
+    public const CATEGORY_ENVIRONMENTAL = 7;
+    public const CATEGORY_APPLICATION = 9;
+    public const CATEGORY_SUBMISSION = 10;
 
-    const SUBCATEGORY_FEE_DUE = 11;
-    const SUBCATEGORY_EBSR = 36;
-    const SUB_CATEGORY_HEARINGS_APPEALS = 49;
-    const SUBCATEGORY_REVIEW_COMPLAINT = 61;
-    const SUBCATEGORY_SUBMISSION_ASSIGNMENT = 114;
-    const SUBCATEGORY_LICENSING_GENERAL_TASK = 77;
-    const SUBCATEGORY_PERMITS_APPLICATION_OUTCOME = 199;
-    const SUBCATEGORY_APPLICATION = 93;
+    public const SUBCATEGORY_FEE_DUE = 11;
+    public const SUBCATEGORY_EBSR = 36;
+    public const SUB_CATEGORY_HEARINGS_APPEALS = 49;
+    public const SUBCATEGORY_REVIEW_COMPLAINT = 61;
+    public const SUBCATEGORY_SUBMISSION_ASSIGNMENT = 114;
+    public const SUBCATEGORY_LICENSING_GENERAL_TASK = 77;
+    public const SUBCATEGORY_PERMITS_APPLICATION_OUTCOME = 199;
+    public const SUBCATEGORY_APPLICATION = 93;
 
     /**
      * Ref data constants
      */
-    const TYPE_SIMPLE  = 'task_at_simple';
-    const TYPE_MEDIUM  = 'task_at_medium';
-    const TYPE_COMPLEX = 'task_at_complex';
+    public const TYPE_SIMPLE  = 'task_at_simple';
+    public const TYPE_MEDIUM  = 'task_at_medium';
+    public const TYPE_COMPLEX = 'task_at_complex';
 
-    const TASK_DESCRIPTION_FEE_DUE = 'Fee due (Part)';
-    const TASK_DESCRIPTION_FINANCIAL_EVIDENCE_UPLOADED = 'Financial evidence uploaded';
-    const TASK_DESCRIPTION_SUPPORTING_EVIDENCE_UPLOADED = 'Supporting evidence uploaded';
-    const TASK_DESCRIPTION_OC_EVIDENCE_UPLOADED = 'Operating centre advert(s) uploaded';
-    const TASK_DESCRIPTION_DUPLICATED = 'Duplicate payment on %s fee: %s';
-    const TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE = 'Check digital signature for licence continuation';
-    const TASK_DESCRIPTION_CHECK_WET_SIGNATURE = 'Check wet signature for licence continuation';
-    const TASK_DESCRIPTION_LICENCE_EXPIRED = 'Licence expired';
-    const TASK_DESCRIPTION_SEND_OUTCOME_LETTER = 'Send outcome letter';
-    const TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED = 'Short term application received';
-    const TASK_DESCRIPTION_ECMT_INTERNATIONAL_REMOVALS_RECEIVED = 'ECMT International Removals application received';
-    const TASK_DESCRIPTION_BILATERAL_RECEIVED = 'Bilateral application received';
-    const TASK_DESCRIPTION_MULTILATERAL_RECEIVED = 'Multilateral application received';
-    const TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED = 'Annual ECMT application received';
-    const TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED = 'Certificate of Roadworthiness application received';
+    public const TASK_DESCRIPTION_FEE_DUE = 'Fee due (Part)';
+    public const TASK_DESCRIPTION_FINANCIAL_EVIDENCE_UPLOADED = 'Financial evidence uploaded';
+    public const TASK_DESCRIPTION_SUPPORTING_EVIDENCE_UPLOADED = 'Supporting evidence uploaded';
+    public const TASK_DESCRIPTION_OC_EVIDENCE_UPLOADED = 'Operating centre advert(s) uploaded';
+    public const TASK_DESCRIPTION_DUPLICATED = 'Duplicate payment on %s fee: %s';
+    public const TASK_DESCRIPTION_CHECK_DIGITAL_SIGNATURE = 'Check digital signature for licence continuation';
+    public const TASK_DESCRIPTION_CHECK_WET_SIGNATURE = 'Check wet signature for licence continuation';
+    public const TASK_DESCRIPTION_LICENCE_EXPIRED = 'Licence expired';
+    public const TASK_DESCRIPTION_SEND_OUTCOME_LETTER = 'Send outcome letter';
+    public const TASK_DESCRIPTION_SHORT_TERM_ECMT_RECEIVED = 'Short term application received';
+    public const TASK_DESCRIPTION_ECMT_INTERNATIONAL_REMOVALS_RECEIVED = 'ECMT International Removals application received';
+    public const TASK_DESCRIPTION_BILATERAL_RECEIVED = 'Bilateral application received';
+    public const TASK_DESCRIPTION_MULTILATERAL_RECEIVED = 'Multilateral application received';
+    public const TASK_DESCRIPTION_ANNUAL_ECMT_RECEIVED = 'Annual ECMT application received';
+    public const TASK_DESCRIPTION_CERT_ROADWORTHINESS_RECEIVED = 'Certificate of Roadworthiness application received';
 
-    const ACTION_DATE_FORMAT = 'Y-m-d';
+    public const ACTION_DATE_FORMAT = 'Y-m-d';
 
     public function __construct(Category $category, SubCategory $subCategory)
     {

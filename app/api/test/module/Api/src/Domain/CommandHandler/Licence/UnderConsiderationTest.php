@@ -4,6 +4,7 @@
  * UnderConsiderationTest.php
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence;

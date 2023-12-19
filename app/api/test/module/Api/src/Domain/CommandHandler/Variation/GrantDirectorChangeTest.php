@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople;
@@ -16,7 +17,7 @@ use Mockery as m;
 
 class GrantDirectorChangeTest extends CommandHandlerTestCase
 {
-    const TEST_VARIATION_ID = 'TEST_VARIATION_ID';
+    public const TEST_VARIATION_ID = 'TEST_VARIATION_ID';
 
     public function setUp(): void
     {

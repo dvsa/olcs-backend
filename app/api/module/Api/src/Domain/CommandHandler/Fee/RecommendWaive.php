@@ -23,7 +23,7 @@ final class RecommendWaive extends AbstractCommandHandler implements Transaction
 {
     use AuthAwareTrait;
 
-    const WAIVE_REFERENCE = 'WAIVE'; // string to go in transaction.reference
+    public const WAIVE_REFERENCE = 'WAIVE'; // string to go in transaction.reference
 
     protected $repoServiceName = 'Fee';
 

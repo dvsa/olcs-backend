@@ -3,6 +3,7 @@
 /**
  * Send User Registered Email
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Email;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

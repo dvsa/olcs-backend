@@ -3,6 +3,7 @@
 /**
  * Create Update Abstract
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

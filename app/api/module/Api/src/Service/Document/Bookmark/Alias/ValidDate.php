@@ -11,5 +11,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IssueDate;
  */
 class ValidDate extends IssueDate
 {
-
 }

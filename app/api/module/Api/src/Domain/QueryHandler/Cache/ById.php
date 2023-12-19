@@ -22,7 +22,7 @@ class ById extends AbstractQueryHandler implements CacheAwareInterface
 {
     use CacheAwareTrait;
 
-    const MSG_PERMISSION_ERROR = 'You don\'t have permission to generate this cache';
+    public const MSG_PERMISSION_ERROR = 'You don\'t have permission to generate this cache';
 
     private $map = [
         CacheEncryption::TRANSLATION_REPLACEMENT_IDENTIFIER => Cache\Replacements::class,

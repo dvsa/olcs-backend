@@ -3,6 +3,7 @@
 /**
  * Update User Selfserve Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
@@ -251,7 +252,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['EventHistoryCreator']->shouldReceive('create')
             ->times($eventHistoryTimes);
-
 
         /** @var UserEntity $savedUser */
         $savedUser = null;

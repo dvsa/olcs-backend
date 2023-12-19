@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

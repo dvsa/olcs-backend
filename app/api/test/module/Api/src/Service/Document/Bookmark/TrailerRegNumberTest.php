@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TrailerRegNumber;
  */
 class TrailerRegNumberTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = TrailerRegNumber::class;
+    public const SUT_CLASS_NAME = TrailerRegNumber::class;
 }

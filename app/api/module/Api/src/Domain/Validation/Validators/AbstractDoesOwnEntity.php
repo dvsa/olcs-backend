@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -21,8 +22,8 @@ abstract class AbstractDoesOwnEntity extends AbstractValidator implements
     AuthAwareInterface,
     RepositoryManagerAwareInterface
 {
-    use AuthAwareTrait,
-        RepositoryManagerAwareTrait;
+    use AuthAwareTrait;
+    use RepositoryManagerAwareTrait;
 
     protected $repo;
 

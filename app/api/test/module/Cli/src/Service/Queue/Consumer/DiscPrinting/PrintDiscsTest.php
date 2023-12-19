@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\DiscPrinting;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;

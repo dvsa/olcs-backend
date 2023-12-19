@@ -8,6 +8,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Service;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -29,15 +30,15 @@ use Interop\Container\ContainerInterface;
 class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 {
     // CPMS' preferred date format (note: this changed around 03/2015)
-    const DATE_FORMAT = 'Y-m-d';
+    public const DATE_FORMAT = 'Y-m-d';
 
-    const DATETIME_FORMAT = 'Y-m-d H:i:s';
+    public const DATETIME_FORMAT = 'Y-m-d H:i:s';
 
-    const REFUND_REASON = 'Refund';
+    public const REFUND_REASON = 'Refund';
 
-    const PARAM_CUSTOMER_NAME_LIMIT = 100;
-    const PARAM_CUSTOMER_MANAGER_NAME_LIMIT = 100;
-    const PARAM_RECEIVER_NAME_LIMIT = 150;
+    public const PARAM_CUSTOMER_NAME_LIMIT = 100;
+    public const PARAM_CUSTOMER_MANAGER_NAME_LIMIT = 100;
+    public const PARAM_RECEIVER_NAME_LIMIT = 150;
 
     /**
      * @var ApiService
@@ -114,7 +115,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function initiateStoredCardRequest($redirectUrl, array $fees, $storedCardReference, array $extraParams = [])
     {
-        $endPoint = '/api/payment/stored-card/'. $storedCardReference;
+        $endPoint = '/api/payment/stored-card/' . $storedCardReference;
         $scope    = ApiService::SCOPE_STORED_CARD;
 
         return $this->initiateRequest($redirectUrl, $fees, $endPoint, $scope, $extraParams);
@@ -206,7 +207,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function getPaymentStatus($receiptReference, $fee)
     {
         $method   = 'get';
-        $endPoint = '/api/payment/'.$receiptReference;
+        $endPoint = '/api/payment/' . $receiptReference;
         $scope    = ApiService::SCOPE_QUERY_TXN;
 
         $params = [
@@ -243,7 +244,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function getPaymentAuthCode($receiptReference, $fee)
     {
         $method   = 'get';
-        $endPoint = '/api/payment/'.$receiptReference.'/auth-code';
+        $endPoint = '/api/payment/' . $receiptReference . '/auth-code';
         $scope    = ApiService::SCOPE_QUERY_TXN;
 
         $response = $this->send($method, $endPoint, $scope, [], $fee);
@@ -469,7 +470,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function getReportStatus($reference)
     {
-        $endPoint = '/api/report/'.$reference.'/status';
+        $endPoint = '/api/report/' . $reference . '/status';
         $params = [
             'filters' => [
                 'scheme' => [
@@ -491,7 +492,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     public function downloadReport($reference, $token)
     {
-        $url = '/api/report/'.$reference.'/download?token='.$token;
+        $url = '/api/report/' . $reference . '/download?token=' . $token;
         $params = [
             'filters' => [
                 'scheme' => [
@@ -539,7 +540,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $reference = $ft->getTransaction()->getReference();
 
         $method   = 'post';
-        $endPoint = '/api/payment/'. $reference .'/refund';
+        $endPoint = '/api/payment/' . $reference . '/refund';
         $scope    = ApiService::SCOPE_REFUND;
 
         $params = array_merge(
@@ -667,7 +668,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
     public function reversePayment($receiptReference, $paymentMethod, $fees = [], $extraParams = [])
     {
         $method   = 'post';
-        $endPoint = '/api/payment/'.$receiptReference.'/reversal';
+        $endPoint = '/api/payment/' . $receiptReference . '/reversal';
 
         $scopeMap = [
             Fee::METHOD_CHEQUE       => ApiService::CHEQUE_RD,
@@ -681,7 +682,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         if (in_array($paymentMethod, [Fee::METHOD_CARD_ONLINE, Fee::METHOD_CARD_OFFLINE])) {
             // for card reversals, switch endpoint to 'charge back'
-            $endPoint = '/api/payment/'.$receiptReference.'/chargeback';
+            $endPoint = '/api/payment/' . $receiptReference . '/chargeback';
         }
 
         $firstFee = reset($fees);
@@ -863,7 +864,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         }
 
         // All bus fees linked to a licence
-        if (in_array($feeType->getFeeType()->getId(), [FeeTypeEntity::FEE_TYPE_BUSAPP, FeeTypeEntity::FEE_TYPE_BUSVAR])
+        if (
+            in_array($feeType->getFeeType()->getId(), [FeeTypeEntity::FEE_TYPE_BUSAPP, FeeTypeEntity::FEE_TYPE_BUSVAR])
             && $feeLicence !== null
         ) {
             return $feeLicence->getLicNo() . 'B';

@@ -3,6 +3,7 @@
 /**
  * Update Service Details
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -73,7 +74,6 @@ final class UpdateServiceDetails extends AbstractCommandHandler implements Trans
 
         $this->result->addId('BusReg', $busRegId);
         $this->result->addMessage('Bus registration saved successfully');
-
 
         return $this->result;
     }

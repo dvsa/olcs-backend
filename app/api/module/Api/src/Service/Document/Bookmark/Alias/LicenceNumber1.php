@@ -11,5 +11,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceNumber;
  */
 class LicenceNumber1 extends LicenceNumber
 {
-
 }

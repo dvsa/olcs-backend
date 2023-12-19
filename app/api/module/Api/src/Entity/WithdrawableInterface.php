@@ -19,12 +19,12 @@ interface WithdrawableInterface
     public function getWithdrawReason();
     public function getAppWithdrawnEmailCommand($withdrawReason);
 
-    const WITHDRAWN_REASON_NOTSUCCESS = 'permits_app_withdraw_notsuccess';
-    const WITHDRAWN_REASON_UNPAID = 'permits_app_withdraw_not_paid';
-    const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
-    const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
-    const WITHDRAWN_REASON_PERMITS_REVOKED = 'permits_app_withdraw_permits_rev';
+    public const WITHDRAWN_REASON_NOTSUCCESS = 'permits_app_withdraw_notsuccess';
+    public const WITHDRAWN_REASON_UNPAID = 'permits_app_withdraw_not_paid';
+    public const WITHDRAWN_REASON_BY_USER = 'permits_app_withdraw_by_user';
+    public const WITHDRAWN_REASON_DECLINED = 'permits_app_withdraw_declined';
+    public const WITHDRAWN_REASON_PERMITS_REVOKED = 'permits_app_withdraw_permits_rev';
 
-    const ERR_CANT_WITHDRAW = 'Unable to withdraw this application';
-    const ERR_CANT_DECLINE = 'Unable to decline this application, not in awaiting fee state';
+    public const ERR_CANT_WITHDRAW = 'Unable to withdraw this application';
+    public const ERR_CANT_DECLINE = 'Unable to decline this application, not in awaiting fee state';
 }

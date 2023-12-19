@@ -1,11 +1,11 @@
 <?php
 
-
 /**
  * Outstanding Fees Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\OutstandingFees;

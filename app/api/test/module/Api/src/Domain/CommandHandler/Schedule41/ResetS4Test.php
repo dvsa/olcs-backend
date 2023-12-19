@@ -3,6 +3,7 @@
 /**
  * ResetS4Test.php
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Schedule41;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41\ResetS4;

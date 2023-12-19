@@ -11,5 +11,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceType;
  */
 class LicenceTitle extends LicenceType
 {
-
 }

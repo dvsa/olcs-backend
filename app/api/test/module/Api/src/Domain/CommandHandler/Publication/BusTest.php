@@ -3,6 +3,7 @@
 /**
  * BusTest
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Doctrine\Common\Collections\ArrayCollection;

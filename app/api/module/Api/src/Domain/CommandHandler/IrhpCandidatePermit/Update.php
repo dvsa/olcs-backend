@@ -38,8 +38,10 @@ class Update extends AbstractCommandHandler implements TransactionedInterface
         /* @var $irhpPermitRange IrhpPermitRange */
         $irhpPermitRange = $this->getRepo('IrhpPermitRange')->fetchById($command->getIrhpPermitRange());
 
-        if ($irhpPermitRange->getIrhpPermitStock()->getId()
-            !== $irhpCandidatePermit->getIrhpPermitRange()->getIrhpPermitStock()->getId()) {
+        if (
+            $irhpPermitRange->getIrhpPermitStock()->getId()
+            !== $irhpCandidatePermit->getIrhpPermitRange()->getIrhpPermitStock()->getId()
+        ) {
             throw new ValidationException(['New range does not belong to same stock!']);
         }
 

@@ -9,8 +9,8 @@ use RuntimeException;
 
 class StockLicenceMaxPermittedCounter
 {
-    const ECMT_SHORT_TERM_MULTIPLIER = 2;
-    const ERR_INVALID_TYPE = 'LicenceMaxPermittedCounter is only applicable to short terms and annuals';
+    public const ECMT_SHORT_TERM_MULTIPLIER = 2;
+    public const ERR_INVALID_TYPE = 'LicenceMaxPermittedCounter is only applicable to short terms and annuals';
 
     /** @var IrhpPermitRepository */
     private $irhpPermitRepo;

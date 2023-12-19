@@ -6,7 +6,6 @@ use Doctrine\ORM\NoResultException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Template as Repo;
 use Dvsa\Olcs\Api\Entity\Template\Template;
-
 use Mockery as m;
 
 /**

@@ -14,9 +14,9 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class CreatePeopleTest extends CommandHandlerTestCase
 {
-    const ORG_PERSON_ID = 9001;
-    const PERSON_ID = 8001;
-    const LIC_ID = 7001;
+    public const ORG_PERSON_ID = 9001;
+    public const PERSON_ID = 8001;
+    public const LIC_ID = 7001;
 
     /** @var  CommandHandler */
     protected $sut;

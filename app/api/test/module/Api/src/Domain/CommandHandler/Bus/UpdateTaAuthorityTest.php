@@ -3,6 +3,7 @@
 /**
  * Update Ta Authority Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;
@@ -33,7 +34,7 @@ class UpdateTaAuthorityTest extends CommandHandlerTestCase
     {
         $this->references = [
             LocalAuthorityEntity::class => [
-                5 => m::mock( LocalAuthorityEntity::class)
+                5 => m::mock(LocalAuthorityEntity::class)
             ],
             TrafficAreaEntity::class => [
                 'M' => m::mock(TrafficAreaEntity::class)
@@ -74,7 +75,6 @@ class UpdateTaAuthorityTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(BusRegEntity::class))
             ->once();
-
 
         $result = $this->sut->handleCommand($command);
 

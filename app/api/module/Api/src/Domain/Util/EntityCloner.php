@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Util;
 
 use Doctrine\Instantiator\Instantiator;
@@ -75,7 +76,6 @@ class EntityCloner
         $ignoredProperties = array_merge(self::$alwaysIgnore, $ignoredProperties);
 
         if (!is_object($targetEntity)) {
-
             if ($targetEntity == get_class($sourceEntity)) {
                 return self::cloneEntity($sourceEntity, $ignoredProperties);
             }

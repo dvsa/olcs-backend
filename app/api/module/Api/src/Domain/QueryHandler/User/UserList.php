@@ -39,7 +39,8 @@ class UserList extends AbstractQueryHandler
 
         // if the user is internal and can't access all data filter list by ta,
         // Unless the request has an operator id, in which case all users for org are needed.
-        if ($userInfo['isInternal']
+        if (
+            $userInfo['isInternal']
             && !$userInfo['dataAccess']['canAccessAll']
             && empty($queryData['organisation'])
         ) {
@@ -48,7 +49,6 @@ class UserList extends AbstractQueryHandler
 
             return $this->getQueryHandler()->handleQuery($queryWithTa);
         }
-
 
         /** @var User $repo */
         $repo = $this->getRepo();

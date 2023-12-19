@@ -3,6 +3,7 @@
 /**
  * Annual Test History test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\AnnualTestHistory;

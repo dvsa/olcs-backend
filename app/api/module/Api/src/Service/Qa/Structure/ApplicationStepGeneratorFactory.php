@@ -15,7 +15,7 @@ class ApplicationStepGeneratorFactory implements FactoryInterface
      * @param array|null $options
      * @return ApplicationStepGenerator
      */
-public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ApplicationStepGenerator
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ApplicationStepGenerator
     {
         return new ApplicationStepGenerator(
             $container->get('FormControlServiceManager'),

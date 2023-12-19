@@ -3,6 +3,7 @@
 /**
  * Delete Abstract
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

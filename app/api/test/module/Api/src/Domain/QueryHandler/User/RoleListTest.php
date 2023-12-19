@@ -3,6 +3,7 @@
 /**
  * Role List Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\User;
 
 use Mockery as m;

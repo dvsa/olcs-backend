@@ -11,17 +11,17 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 abstract class DateDelta extends StaticBookmark
 {
-    const FORMAT = "d/m/Y";
-    const DELTA  = "+0";
+    public const FORMAT = "d/m/Y";
+    public const DELTA  = "+0";
 
     /**
-     * Render 
-     * 
+     * Render
+     *
      * @return string
      */
     public function render()
     {
         $timestamp = strtotime(static::DELTA . " days");
-        return (new DateTime('@'.$timestamp))->format(self::FORMAT);
+        return (new DateTime('@' . $timestamp))->format(self::FORMAT);
     }
 }

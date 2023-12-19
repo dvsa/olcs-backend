@@ -3,6 +3,7 @@
 /**
  * Create NonPi Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\NonPi;
 
 use Doctrine\ORM\Query;
@@ -13,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Repository\NonPi;
 use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**

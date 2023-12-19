@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\CompaniesHouse;
 
@@ -13,7 +14,6 @@ use Mockery as m;
 
 class ByNumberTest extends QueryHandlerTestCase
 {
-
     protected $sut;
 
     public function setUp(): void

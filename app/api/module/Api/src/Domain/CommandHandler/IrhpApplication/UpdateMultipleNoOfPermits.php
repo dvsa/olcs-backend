@@ -67,7 +67,7 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
                     default:
                         throw new RuntimeException('Unsupported permit type ' . $irhpApplicationTypeId);
                 }
-    
+
                 if (($permitsRequired < 0) || ($permitsRequired > $maxPermits)) {
                     throw new RuntimeException(
                         sprintf(
@@ -125,7 +125,7 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
     {
         $validToTimestamp = strtotime($row['validTo']);
         $year = date('Y', $validToTimestamp);
-    
+
         if (isset($permitsRequiredData[$year]) && is_numeric($permitsRequiredData[$year])) {
             return intval($permitsRequiredData[$year]);
         }

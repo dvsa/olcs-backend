@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Application;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

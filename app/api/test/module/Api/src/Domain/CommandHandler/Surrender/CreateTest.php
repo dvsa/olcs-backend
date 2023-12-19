@@ -15,7 +15,7 @@ use Mockery as m;
 
 class CreateTest extends CommandHandlerTestCase
 {
-    const LIC_ID = 111;
+    public const LIC_ID = 111;
 
     /** @var Sut */
     protected $sut;

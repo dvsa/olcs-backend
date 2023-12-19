@@ -18,9 +18,9 @@ use Mockery as m;
  */
 class GenerateNameTest extends CommandHandlerTestCase
 {
-    const PERSON_ID = 8001;
-    const APP_ID = 9001;
-    const ORG_ID = 7001;
+    public const PERSON_ID = 8001;
+    public const APP_ID = 9001;
+    public const ORG_ID = 7001;
 
     /** @var  GenerateName */
     protected $sut;

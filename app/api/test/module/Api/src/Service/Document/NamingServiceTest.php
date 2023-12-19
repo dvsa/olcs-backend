@@ -5,17 +5,18 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 
 /**
  * Naming Service Test
@@ -38,7 +39,17 @@ class NamingServiceTest extends MockeryTestCase
             ]
         ];
 
-        $sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
         $sm->setService('Config', $config);
 
         $this->sut = new NamingService();
@@ -51,7 +62,17 @@ class NamingServiceTest extends MockeryTestCase
 
         $config = [];
 
-        $sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
         $sm->setService('Config', $config);
 
         $this->sut = new NamingService();

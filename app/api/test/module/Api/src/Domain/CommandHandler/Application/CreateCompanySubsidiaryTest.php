@@ -15,9 +15,9 @@ use Mockery as m;
  */
 class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
 {
-    const ID = 666;
-    const APP_ID = 8888;
-    const LICENCE_ID = 7777;
+    public const ID = 666;
+    public const APP_ID = 8888;
+    public const LICENCE_ID = 7777;
 
     /** @var  CreateCompanySubsidiary|m\MockInterface */
     protected $sut;

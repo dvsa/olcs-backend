@@ -3,6 +3,7 @@
 /**
  * Admin Cancel BusReg
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;

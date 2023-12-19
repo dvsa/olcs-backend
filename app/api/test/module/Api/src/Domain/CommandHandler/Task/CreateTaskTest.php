@@ -184,7 +184,6 @@ class CreateTaskTest extends CommandHandlerTestCase
                     $this->assertSame($this->references[IrhpApplication::class][979], $task->getIrhpApplication());
                     $this->assertSame($this->references[Surrender::class][765], $task->getSurrender());
 
-
                     $this->assertEquals('2015-01-01', $task->getActionDate()->format('Y-m-d'));
                     $this->assertEquals('Some task', $task->getDescription());
                     $this->assertEquals(false, $task->getIsClosed());

@@ -34,15 +34,13 @@ class TmLinkedLicences extends DynamicBookmark
 
         if (!empty($this->data['result'])) {
             foreach ($this->data['result'] as $tmLic) {
-
-                if (isset($tmLic['licence']['licNo']) && isset($tmLic['licence']['organisation']['name']) ) {
+                if (isset($tmLic['licence']['licNo']) && isset($tmLic['licence']['organisation']['name'])) {
                     $result[] = sprintf(
                         '%s: %s',
                         $tmLic['licence']['licNo'],
                         $tmLic['licence']['organisation']['name']
                     );
                 }
-
             }
         }
 

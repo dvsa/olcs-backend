@@ -14,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
  */
 final class ProcessPack extends AbstractProcessPack
 {
-
     /**
      * Process the EBSR pack
      * Error information is added into the ebsr_submission_result column of the ebsr_submission table

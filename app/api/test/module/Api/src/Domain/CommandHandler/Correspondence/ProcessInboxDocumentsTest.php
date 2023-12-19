@@ -24,8 +24,8 @@ use Mockery as m;
  */
 class ProcessInboxDocumentsTest extends CommandHandlerTestCase
 {
-    const LIC_ID = 999;
-    const ORG_ID = 7777;
+    public const LIC_ID = 999;
+    public const ORG_ID = 7777;
 
     /** @var  m\MockInterface */
     private $mockTempRenderer;

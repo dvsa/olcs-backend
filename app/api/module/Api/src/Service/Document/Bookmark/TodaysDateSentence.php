@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DateDelta;
  */
 class TodaysDateSentence extends DateDelta
 {
-    const FORMAT = "j F Y";
+    public const FORMAT = "j F Y";
 }

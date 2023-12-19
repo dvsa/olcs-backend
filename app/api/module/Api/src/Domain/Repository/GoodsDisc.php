@@ -277,7 +277,6 @@ class GoodsDisc extends AbstractRepository
             ->setParameter('id', $id)
             ->setMaxResults(1);
 
-
         try {
             $count = $qb->getQuery()->getSingleScalarResult();
         } catch (NoResultException $exception) {

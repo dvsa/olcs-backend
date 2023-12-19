@@ -27,9 +27,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UpdateTest extends CommandHandlerTestCase
 {
-    const BODY = 'expect_body';
-    const IDENTIFIER = 'templates/fileName.rtf';
-    const USER_ID = 291;
+    public const BODY = 'expect_body';
+    public const IDENTIFIER = 'templates/fileName.rtf';
+    public const USER_ID = 291;
 
     protected $sut;
 
@@ -127,7 +127,6 @@ class UpdateTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(TransferCmd\Document\DeleteDocument::class, $data, $result);
 
-
         $docTemplate->shouldReceive('updateDocument')
             ->with(m::type(DocumentEntity::class))
             ->once();
@@ -223,7 +222,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->once()
             ->with(m::type(DocTemplateEntity::class))
             ->andReturn($docTemplate);
-
 
         $this->sut->handleCommand($command);
     }

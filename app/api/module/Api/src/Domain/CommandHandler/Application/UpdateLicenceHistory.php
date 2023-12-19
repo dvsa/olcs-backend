@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
@@ -83,8 +84,10 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
     {
         $method = 'get' . ucfirst($field);
         $value = $command->$method();
-        if ($value === 'Y' &&
-            !$this->hasOtherLicences($application, $type)) {
+        if (
+            $value === 'Y' &&
+            !$this->hasOtherLicences($application, $type)
+        ) {
             $errors[] = [
                 $field => [
                     'No licence added'

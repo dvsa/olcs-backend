@@ -6,6 +6,7 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

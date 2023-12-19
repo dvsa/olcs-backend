@@ -28,11 +28,11 @@ class DataRetentionRule extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb);
 
-        $qb->andWhere($qb->expr()->eq($this->alias .'.isEnabled', 1));
-        $qb->andWhere($qb->expr()->isNull($this->alias .'.deletedDate'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.isEnabled', 1));
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.deletedDate'));
 
         if ($isReview) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.actionType', ':actionType'));
+            $qb->andWhere($qb->expr()->eq($this->alias . '.actionType', ':actionType'));
             $qb->setParameter('actionType', 'Review');
         }
 

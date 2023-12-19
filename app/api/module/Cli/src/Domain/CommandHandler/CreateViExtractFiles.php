@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 final class CreateViExtractFiles extends AbstractCommandHandler
 {
-    const PHP_EOL_WIN = "\r\n";
+    public const PHP_EOL_WIN = "\r\n";
 
     protected $extraRepos = [
         'ViOcView',
@@ -83,8 +83,10 @@ final class CreateViExtractFiles extends AbstractCommandHandler
             $commandParam = $command->$method();
             $repo = $this->getRepo($settings['repo']);
             $fileName = $this->getFilename($settings['prefix']);
-            if (file_exists($fileName)
-                && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false) {
+            if (
+                file_exists($fileName)
+                && rename($fileName, $this->getBackupFilename($settings['prefix'])) === false
+            ) {
                 throw new \Exception(
                     'Error renaming record(s) for ' . $settings['name'] . ', please check the target path'
                 );

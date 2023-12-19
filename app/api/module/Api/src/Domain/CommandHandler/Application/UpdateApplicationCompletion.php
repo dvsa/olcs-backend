@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -75,7 +76,8 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
 
         $completion = $application->getApplicationCompletion();
         // If not declaration section and selfserve user changed an under consideration application
-        if ($command->getSection() !== 'undertakings'
+        if (
+            $command->getSection() !== 'undertakings'
             && $command->getSection() !== 'declarationsInternal'
             && $application->isNotSubmitted()
             && $this->isGranted(\Dvsa\Olcs\Api\Entity\User\Permission::SELFSERVE_USER)

@@ -20,11 +20,11 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
  */
 final class SendInspectionRequest extends AbstractCommandHandler implements EmailAwareInterface, AuthAwareInterface
 {
-    use EmailAwareTrait,
-        AuthAwareTrait;
+    use EmailAwareTrait;
+    use AuthAwareTrait;
 
-    const SUBJECT_LINE = "[ Maintenance Inspection ] REQUEST=%s,STATUS=";
-    const SUBJECT_LINE_W = '[ Archwiliad Cynnal a Chadw] CAIS=%s,STATWS=';
+    public const SUBJECT_LINE = "[ Maintenance Inspection ] REQUEST=%s,STATUS=";
+    public const SUBJECT_LINE_W = '[ Archwiliad Cynnal a Chadw] CAIS=%s,STATWS=';
 
     protected $repoServiceName = 'InspectionRequest';
 
@@ -181,8 +181,10 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
     protected function getLicenceType($inspectionRequest, $locale)
     {
         $licenceType = '';
-        if (!empty($inspectionRequest['application']) &&
-            isset($inspectionRequest['application']['licenceType']['id'])) {
+        if (
+            !empty($inspectionRequest['application']) &&
+            isset($inspectionRequest['application']['licenceType']['id'])
+        ) {
             $licenceType = $this->licenceTypes[$locale][$inspectionRequest['application']['licenceType']['id']];
         } elseif (isset($inspectionRequest['licence']['licenceType']['id'])) {
             $licenceType = $this->licenceTypes[$locale][$inspectionRequest['licence']['licenceType']['id']];

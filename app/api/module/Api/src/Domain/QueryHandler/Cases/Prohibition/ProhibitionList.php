@@ -3,12 +3,12 @@
 /**
  * ProhibitionList
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Prohibition;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\Prohibition as ProhibitionRepository;
-
 use Dvsa\Olcs\Transfer\Query\Cases\Prohibition\ProhibitionList as Query;
 use Doctrine\ORM\Query as DoctrineQuery;
 

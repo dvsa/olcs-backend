@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,7 +34,7 @@ use Mockery as m;
  */
 class EndIrhpPermitsTest extends CommandHandlerTestCase
 {
-    const LICENCE_ID = 52;
+    public const LICENCE_ID = 52;
 
     private $licence;
 

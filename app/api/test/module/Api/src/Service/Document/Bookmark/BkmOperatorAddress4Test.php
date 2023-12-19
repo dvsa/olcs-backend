@@ -3,6 +3,7 @@
 /**
  * BkmOperatorAddress4 Test
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\BkmOperatorAddress4 as Sut;

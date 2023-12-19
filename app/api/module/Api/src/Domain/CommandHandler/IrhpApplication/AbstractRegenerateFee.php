@@ -81,7 +81,7 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler
             $this->handleSideEffects($feeCommands)
         );
 
-        $this->result->addMessage('Refreshed ' . $this->feeName. ' list');
+        $this->result->addMessage('Refreshed ' . $this->feeName . ' list');
         $this->result->addId('irhpApplication', $irhpApplicationId);
         return $this->result;
     }

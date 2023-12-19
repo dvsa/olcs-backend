@@ -25,12 +25,12 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class ApplicationOperatingCentre extends AbstractApplicationOperatingCentre implements OrganisationProviderInterface
 {
-    const ACTION_ADD    = 'A';
-    const ACTION_UPDATE = 'U';
-    const ACTION_DELETE = 'D';
-    const AD_POST = 0;
-    const AD_UPLOAD_NOW = 1;
-    const AD_UPLOAD_LATER = 2;
+    public const ACTION_ADD    = 'A';
+    public const ACTION_UPDATE = 'U';
+    public const ACTION_DELETE = 'D';
+    public const AD_POST = 0;
+    public const AD_UPLOAD_NOW = 1;
+    public const AD_UPLOAD_LATER = 2;
 
     public function __construct(Application $application, OperatingCentre $operatingCentre)
     {

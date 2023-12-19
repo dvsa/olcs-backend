@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class CocNumber extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'vehicle-cert-of-compliance-number';
+    public const FIELD = 'vehicle-cert-of-compliance-number';
 }

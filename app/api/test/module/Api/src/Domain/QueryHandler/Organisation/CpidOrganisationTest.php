@@ -5,10 +5,10 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace module\Api\src\Domain\QueryHandler\Organisation;
 
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\CpidOrganisation;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
 use Dvsa\Olcs\Transfer\Query\Organisation\CpidOrganisation as Qry;

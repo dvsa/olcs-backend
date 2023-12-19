@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\TransportManagerBundle as Qry;
  */
 class TmId extends SingleValueAbstract
 {
-    const SRCH_VAL_KEY = 'transportManager';
-    const FIELD = 'id';
-    const QUERY_CLASS = Qry::class;
+    public const SRCH_VAL_KEY = 'transportManager';
+    public const FIELD = 'id';
+    public const QUERY_CLASS = Qry::class;
 }

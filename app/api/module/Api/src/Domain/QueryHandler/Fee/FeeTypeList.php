@@ -129,7 +129,8 @@ class FeeTypeList extends AbstractQueryHandler
             $ifroType = $ft->getIrfoFeeType();
             $key = ($ifroType ? $ifroType->getId() . '|' : '') . $ft->getFeeType()->getId();
 
-            if (!isset($filtered[$key])
+            if (
+                !isset($filtered[$key])
                 || $ft->getEffectiveFrom() > $filtered[$key]->getEffectiveFrom()
             ) {
                 $filtered[$key] = $ft;

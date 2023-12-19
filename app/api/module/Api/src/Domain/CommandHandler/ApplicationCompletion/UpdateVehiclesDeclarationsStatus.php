@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion;
 
 use Doctrine\ORM\Query;
@@ -59,9 +60,10 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     // 15b[ii]
     protected function validate15bii($application, $isScotland)
     {
-        if (!$application->isPsvVehicleSizeMediumLarge() && !$isScotland &&
+        if (
+            !$application->isPsvVehicleSizeMediumLarge() && !$isScotland &&
             $application->getPsvOperateSmallVhl() === 'Y'
-            ) {
+        ) {
             if (empty($application->getPsvSmallVhlNotes())) {
                 throw new \Exception('15bii');
             }
@@ -71,9 +73,10 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     // 15c/d
     protected function validate15cd(Application $application, $isScotland)
     {
-        if (!$application->isPsvVehicleSizeMediumLarge() && !$isScotland &&
+        if (
+            !$application->isPsvVehicleSizeMediumLarge() && !$isScotland &&
             $application->getPsvOperateSmallVhl() === 'N'
-            ) {
+        ) {
             if ($application->getPsvSmallVhlConfirmation() !== 'Y') {
                 throw new \Exception('15c');
             }
@@ -98,9 +101,10 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     // 8b[i]
     protected function validate8bi(Application $application)
     {
-        if ($application->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED &&
+        if (
+            $application->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED &&
             !$application->isPsvVehicleSizeSmall()
-            ) {
+        ) {
             if ($application->getPsvMediumVhlConfirmation() !== 'Y') {
                 throw new \Exception('8bi');
             }
@@ -110,9 +114,10 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
     // 8b[ii]
     protected function validate8bii($application)
     {
-        if ($application->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED &&
+        if (
+            $application->getLicenceType()->getId() === Licence::LICENCE_TYPE_RESTRICTED &&
             !$application->isPsvVehicleSizeSmall()
-            ) {
+        ) {
             if (empty($application->getPsvMediumVhlNotes())) {
                 throw new \Exception('8bii');
             }

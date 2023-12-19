@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
@@ -21,11 +21,11 @@ class ResetPasswordOpenAm extends AbstractCommandHandler
     private EventHistoryCreator $eventHistoryCreator;
     protected $repoServiceName = 'User';
 
-    const MSG_EXPIRED_LINK = 'auth.forgot-password-expired';
-    const MSG_GENERIC_FAIL = 'auth.reset-password.fail';
-    const MSG_GENERIC_SUCCESS = 'auth.reset-password.success';
-    const MSG_FAIL_DEBUG_LOG = '%s failed to reset password: %s';
-    const MSG_EXCEPTION_ERROR_LOG = 'Reset password exception for %s: %s';
+    public const MSG_EXPIRED_LINK = 'auth.forgot-password-expired';
+    public const MSG_GENERIC_FAIL = 'auth.reset-password.fail';
+    public const MSG_GENERIC_SUCCESS = 'auth.reset-password.success';
+    public const MSG_FAIL_DEBUG_LOG = '%s failed to reset password: %s';
+    public const MSG_EXCEPTION_ERROR_LOG = 'Reset password exception for %s: %s';
 
     public function __construct(ValidatableAdapterInterface $adapter, EventHistoryCreator $eventHistoryCreator)
     {

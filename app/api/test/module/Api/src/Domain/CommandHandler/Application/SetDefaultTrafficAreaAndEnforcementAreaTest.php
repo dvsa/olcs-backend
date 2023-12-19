@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -333,7 +334,7 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
             ->shouldReceive('fetchEnforcementAreaByPostcode')
             ->with('SW1A 1AA', $this->repoMap['PostcodeEnforcementArea'])
             ->once()
-            ->andThrow(new \Exception);
+            ->andThrow(new \Exception());
         $result = $this->sut->handleCommand($command);
         $expected = [
             'id' => [],
@@ -376,7 +377,7 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
             ->shouldReceive('fetchTrafficAreaByPostcode')
             ->with('SW1A 1AA', $this->repoMap['AdminAreaTrafficArea'])
             ->once()
-            ->andThrow(new \Exception);
+            ->andThrow(new \Exception());
         $result = $this->sut->handleCommand($command);
         $expected = [
             'id' => [],

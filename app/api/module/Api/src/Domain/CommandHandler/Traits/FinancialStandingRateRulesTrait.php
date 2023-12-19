@@ -29,7 +29,8 @@ trait FinancialStandingRateRulesTrait
         $vehicleType = $command->getVehicleType();
 
         $msg = null;
-        if ($licenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
+        if (
+            $licenceType == Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL &&
             $goodsOrPsv == Licence::LICENCE_CATEGORY_GOODS_VEHICLE
         ) {
             if (!in_array($vehicleType, [Entity::VEHICLE_TYPE_HGV, Entity::VEHICLE_TYPE_LGV])) {

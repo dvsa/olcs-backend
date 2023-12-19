@@ -67,10 +67,10 @@ class IrhpPermitTypeTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'INNER JOIN ipr.irhpPermits ip '
             . 'AND ip.status IN [[['
-                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
-                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+                . '"' . IrhpPermitEntity::STATUS_PENDING . '",'
+                . '"' . IrhpPermitEntity::STATUS_AWAITING_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_ERROR . '"'
             . ']]] '
             . 'ORDER BY rd.description ASC';
 

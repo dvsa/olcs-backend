@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class EcmtPermitUsageThreeOptionsRefDataSourceFactory extends AbstractEcmtPermitUsageRefDataSourceFactory
 {
-    const TRANSFORMATIONS = [
+    public const TRANSFORMATIONS = [
         RefData::ECMT_PERMIT_USAGE_THREE_BOTH => [
             EcmtPermitUsageRefDataSource::LABEL_KEY =>
                 'qanda.ecmt.permit-usage.three-options.option.both.label',

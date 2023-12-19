@@ -3,6 +3,7 @@
 /**
  * Clean up abandoned variations
  */
+
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

@@ -3,6 +3,7 @@
 /**
  * Update Recipient
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,7 +19,7 @@ use Doctrine\ORM\Query;
  */
 final class UpdateRecipient extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERROR_INVALID_SUBSCRIPTION = 'PUB-REC-1';
+    public const ERROR_INVALID_SUBSCRIPTION = 'PUB-REC-1';
 
     protected $repoServiceName = 'Recipient';
 

@@ -3,6 +3,7 @@
 /**
  * BusRegSearchViewContextList Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\BusRegSearchView;
 
 use Doctrine\ORM\Query;

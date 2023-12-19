@@ -3,6 +3,7 @@
 /**
  * Update Txc Inbox records for a bus reg id with TransXchange PDF
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;

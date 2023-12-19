@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Class
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\ImageBookmark;
@@ -16,9 +18,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrLogo extends ImageBookmark
 {
-    const CONTAINER_HEIGHT = 100;
+    public const CONTAINER_HEIGHT = 100;
 
-    const IMAGE_PREFIX = 'TC_LOGO_';
+    public const IMAGE_PREFIX = 'TC_LOGO_';
 
     /**
      * Get query

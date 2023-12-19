@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Complaint;
 
 use Doctrine\ORM\Query;
@@ -90,8 +91,10 @@ final class UpdateComplaint extends AbstractCommandHandler implements Transactio
      */
     private function updatePersonObject(Cmd $command, Person $person)
     {
-        if ($command->getComplainantForename() != $person->getForename() ||
-            $command->getComplainantFamilyName() != $person->getFamilyName()) {
+        if (
+            $command->getComplainantForename() != $person->getForename() ||
+            $command->getComplainantFamilyName() != $person->getFamilyName()
+        ) {
             $person->setForename($command->getComplainantForename());
             $person->setFamilyName($command->getComplainantFamilyName());
         }

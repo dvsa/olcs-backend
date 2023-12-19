@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 class CountryGenerator
 {
-    const PERIOD_LABELS = [
+    public const PERIOD_LABELS = [
         Behaviour::STANDARD => 'Select period',
         Behaviour::MOROCCO => 'Select stock',
     ];

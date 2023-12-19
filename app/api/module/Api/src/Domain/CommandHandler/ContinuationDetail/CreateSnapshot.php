@@ -17,7 +17,7 @@ use Interop\Container\ContainerInterface;
  */
 final class CreateSnapshot extends AbstractCommandHandler
 {
-    const SNAPSHOT_DESCRIPTION = 'Digital continuation snapshot';
+    public const SNAPSHOT_DESCRIPTION = 'Digital continuation snapshot';
 
     protected $repoServiceName = 'ContinuationDetail';
 
@@ -71,7 +71,6 @@ final class CreateSnapshot extends AbstractCommandHandler
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->reviewSnapshotService = $container->get('ContinuationReview');
         return parent::__invoke($fullContainer, $requestedName, $options);

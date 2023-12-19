@@ -16,8 +16,8 @@ use Dvsa\Olcs\Api\Service\Exception;
  */
 class Address implements AddressInterface
 {
-    const ERR_INVALID_RESP_BY_POSTCODE = 'PostCode API not response or Address was not found by postcode';
-    const ERR_INVALID_RESP_BY_UPRN = 'PostCode API not response or Address was not found by uprn';
+    public const ERR_INVALID_RESP_BY_POSTCODE = 'PostCode API not response or Address was not found by postcode';
+    public const ERR_INVALID_RESP_BY_UPRN = 'PostCode API not response or Address was not found by uprn';
 
     /**
      * @var Client

@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -66,17 +67,21 @@ final class CreateStay extends AbstractCommandHandler implements TransactionedIn
         );
 
         // If case doesn't have an appeal, raise exception
-        if (!($case->hasAppeal()
-        )) {
+        if (
+            !($case->hasAppeal()
+            )
+        ) {
             throw new ValidationException(
                 ['appeal' => 'An appeal must exist against the case before a stay can be added']
             );
         }
 
         // If stay type already exists raise exception
-        if ($case->hasStayType(
-            $this->getRepo()->getRefdataReference($command->getStayType())
-        )) {
+        if (
+            $case->hasStayType(
+                $this->getRepo()->getRefdataReference($command->getStayType())
+            )
+        ) {
             throw new ValidationException(['stayType' => 'Stay of this type already exists against this case']);
         }
 

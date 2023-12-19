@@ -9,8 +9,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\HearingBundle as Qry;
  */
 class Presidingstaffmember extends SingleValueAbstract
 {
-    const FIELD  = 'presidingStaffName';
-    const SRCH_FLD_KEY = 'case';
-    const SRCH_VAL_KEY = 'case';
-    const QUERY_CLASS = Qry::class;
+    public const FIELD  = 'presidingStaffName';
+    public const SRCH_FLD_KEY = 'case';
+    public const SRCH_VAL_KEY = 'case';
+    public const QUERY_CLASS = Qry::class;
 }

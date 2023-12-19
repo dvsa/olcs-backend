@@ -3,6 +3,7 @@
 /**
  * With Refdata Factory
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -23,7 +24,7 @@ class WithRefdataFactory implements FactoryInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      * @throws \Psr\Container\NotFoundExceptionInterface
      */
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null):  WithRefdata
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): WithRefdata
     {
         return new WithRefdata(
             $container->get('doctrine.entitymanager.orm_default'),

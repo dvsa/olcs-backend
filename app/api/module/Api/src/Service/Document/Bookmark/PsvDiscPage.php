@@ -15,20 +15,20 @@ class PsvDiscPage extends AbstractDiscList
     /**
      * Discs per row in a page
      */
-    const PER_ROW = 6;
+    public const PER_ROW = 6;
 
     /**
      * Bookmark variable prefix
      */
-    const BOOKMARK_PREFIX = 'PSV';
+    public const BOOKMARK_PREFIX = 'PSV';
 
     /**
      * Short version of standard placeholder
      * @see https://jira.i-env.net/browse/OLCS-5988
      */
-    const SHORT_PLACEHOLDER = 'XXXXXX';
+    public const SHORT_PLACEHOLDER = 'XXXXXX';
 
-    const QUERY_CLASS = Qry::class;
+    public const QUERY_CLASS = Qry::class;
 
     protected $discBundle = [
         'licence' => [
@@ -43,7 +43,6 @@ class PsvDiscPage extends AbstractDiscList
         }
 
         foreach ($this->data as $key => $disc) {
-
             $licence = $disc['licence'];
             $organisation = $licence['organisation'];
 
@@ -73,7 +72,6 @@ class PsvDiscPage extends AbstractDiscList
          * fill the rest up with placeholders
          */
         while (($length = count($discs) % self::PER_PAGE) !== 0) {
-
             $prefix = $this->getPrefix($length);
             $discs[] = [
                 $prefix . 'TITLE'       => self::PLACEHOLDER,

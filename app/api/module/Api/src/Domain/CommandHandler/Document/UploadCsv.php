@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
@@ -13,8 +13,8 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 
 final class UploadCsv extends AbstractCommandHandler
 {
-    const CONFIRM_MSG = 'CSV containing %d rows was uploaded';
-    const EMPTY_MSG = 'No data found. Creating empty file';
+    public const CONFIRM_MSG = 'CSV containing %d rows was uploaded';
+    public const EMPTY_MSG = 'No data found. Creating empty file';
 
     /**
      * Handle command

@@ -23,9 +23,9 @@ use org\bovigo\vfs\vfsStream;
  */
 class UploadTest extends CommandHandlerTestCase
 {
-    const BODY = 'expect_body';
-    const IDENTIFIER = '/some/identifier.pdf';
-    const USER_ID = 7001;
+    public const BODY = 'expect_body';
+    public const IDENTIFIER = '/some/identifier.pdf';
+    public const USER_ID = 7001;
 
     /** @var Upload */
     protected $sut;

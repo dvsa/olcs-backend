@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace OlcsTest\Db\Service;
 
 use Laminas\Http\Response;
@@ -16,7 +17,6 @@ use Laminas\Http\Response;
  */
 class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * Test that getNewResponse returns a new instance
      *

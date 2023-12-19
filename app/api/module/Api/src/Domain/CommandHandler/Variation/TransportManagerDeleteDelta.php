@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -59,7 +60,7 @@ final class TransportManagerDeleteDelta extends AbstractCommandHandler implement
 
             $this->tmaRepo->save($tma);
 
-            $result->addMessage('Transport manager application ID '. $tma->getId() .' delete Delata created');
+            $result->addMessage('Transport manager application ID ' . $tma->getId() . ' delete Delata created');
 
             $applicationIds[$tma->getApplication()->getId()] = $tma->getApplication()->getId();
         }

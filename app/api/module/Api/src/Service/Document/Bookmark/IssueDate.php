@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class IssueDate extends SingleValueAbstract
 {
-    const FORMATTER = 'Date';
-    const SRCH_VAL_KEY = 'licence';
-    const FIELD = 'inForceDate';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'Date';
+    public const SRCH_VAL_KEY = 'licence';
+    public const FIELD = 'inForceDate';
+    public const QUERY_CLASS = Qry::class;
 }

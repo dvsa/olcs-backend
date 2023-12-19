@@ -157,7 +157,6 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
     {
         $fullContainer = $container;
 
-
         $this->checkedValueUpdater = $container->get('PermitsCheckableCheckedValueUpdater');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         $this->bilateralApplicationUpdater = $container->get('PermitsBilateralInternalApplicationUpdater');

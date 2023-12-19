@@ -11,9 +11,9 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FormatterInterface;
  */
 class AbstractArrayList extends \PHPUnit\Framework\TestCase
 {
-    const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FORMATTER_CLASS_NAME';
-    const ARRAY_FIELD = '';
-    const EXPECTED_OUTPUT = '(3, abc, 2)'; //allows differing format to be configured for each
+    public const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\FORMATTER_CLASS_NAME';
+    public const ARRAY_FIELD = '';
+    public const EXPECTED_OUTPUT = '(3, abc, 2)'; //allows differing format to be configured for each
 
     /**
      * @dataProvider dpTestFormat

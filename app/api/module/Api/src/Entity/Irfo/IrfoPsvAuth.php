@@ -28,20 +28,20 @@ use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
  */
 class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInterface
 {
-    const STATUS_APPROVED = 'irfo_auth_s_approved';
-    const STATUS_CNS = 'irfo_auth_s_cns';
-    const STATUS_GRANTED = 'irfo_auth_s_granted';
-    const STATUS_PENDING = 'irfo_auth_s_pending';
-    const STATUS_REFUSED = 'irfo_auth_s_refused';
-    const STATUS_RENEW = 'irfo_auth_s_renew';
-    const STATUS_WITHDRAWN = 'irfo_auth_s_withdrawn';
+    public const STATUS_APPROVED = 'irfo_auth_s_approved';
+    public const STATUS_CNS = 'irfo_auth_s_cns';
+    public const STATUS_GRANTED = 'irfo_auth_s_granted';
+    public const STATUS_PENDING = 'irfo_auth_s_pending';
+    public const STATUS_REFUSED = 'irfo_auth_s_refused';
+    public const STATUS_RENEW = 'irfo_auth_s_renew';
+    public const STATUS_WITHDRAWN = 'irfo_auth_s_withdrawn';
 
-    const JOURNEY_FREQ_DAILY = 'psv_freq_daily';
-    const JOURNEY_FREQ_TWICE_WEEKLY = 'psv_freq_2_weekly';
-    const JOURNEY_FREQ_WEEKLY = 'psv_freq_weekly';
-    const JOURNEY_FREQ_FORTNIGHTLY = 'psv_freq_fortnight';
-    const JOURNEY_FREQ_MONTHLY = 'psv_freq_monthly';
-    const JOURNEY_FREQ_OTHER = 'psv_freq_other';
+    public const JOURNEY_FREQ_DAILY = 'psv_freq_daily';
+    public const JOURNEY_FREQ_TWICE_WEEKLY = 'psv_freq_2_weekly';
+    public const JOURNEY_FREQ_WEEKLY = 'psv_freq_weekly';
+    public const JOURNEY_FREQ_FORTNIGHTLY = 'psv_freq_fortnight';
+    public const JOURNEY_FREQ_MONTHLY = 'psv_freq_monthly';
+    public const JOURNEY_FREQ_OTHER = 'psv_freq_other';
 
     public function __construct(Organisation $organisation, IrfoPsvAuthType $type, RefData $status)
     {
@@ -347,15 +347,17 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
      */
     private function isWithdrawableState()
     {
-        if (in_array(
-            $this->getStatus()->getId(),
-            [
+        if (
+            in_array(
+                $this->getStatus()->getId(),
+                [
                 self::STATUS_RENEW,
                 self::STATUS_PENDING,
                 self::STATUS_CNS,
                 self::STATUS_APPROVED
-            ]
-        )) {
+                ]
+            )
+        ) {
             return true;
         }
 
@@ -487,15 +489,17 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
      */
     private function isRenewableState()
     {
-        if (in_array(
-            $this->getStatus()->getId(),
-            [
+        if (
+            in_array(
+                $this->getStatus()->getId(),
+                [
                 self::STATUS_APPROVED,
                 self::STATUS_GRANTED,
                 self::STATUS_PENDING,
                 self::STATUS_RENEW,
-            ]
-        )) {
+                ]
+            )
+        ) {
             return true;
         }
 

@@ -54,7 +54,8 @@ class Police implements \Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterf
      */
     private function addTransportManagers(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        if ($publicationLink->getApplication()->isNew() &&
+        if (
+            $publicationLink->getApplication()->isNew() &&
             $publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_NEW_SECTION &&
             $publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_GRANTED_SECTION
         ) {

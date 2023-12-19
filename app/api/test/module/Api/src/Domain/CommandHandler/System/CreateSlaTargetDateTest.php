@@ -151,8 +151,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
     private function getMockEntity($entityType, $entityId)
     {
         $mock = m::mock();
-        switch($entityType)
-        {
+        switch ($entityType) {
             case 'document':
                 $mock = m::mock(Document::class)->makePartial();
                 $mock->setId($entityId);

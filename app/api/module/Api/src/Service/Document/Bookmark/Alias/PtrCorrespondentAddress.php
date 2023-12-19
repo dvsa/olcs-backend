@@ -6,5 +6,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceHolderAddress;
 
 class PtrCorrespondentAddress extends LicenceHolderAddress
 {
-
 }

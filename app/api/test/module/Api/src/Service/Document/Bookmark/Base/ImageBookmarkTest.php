@@ -19,7 +19,7 @@ class ImageBookmarkTest extends MockeryTestCase
         $mockFs->shouldReceive('read')->andReturn(null);
 
         /** @var ImageBookmarkStub|m\MockInterface $sut */
-        $sut = new ImageBookmarkStub;
+        $sut = new ImageBookmarkStub();
         $sut->setFileStore($mockFs);
 
         //  expect
@@ -66,7 +66,7 @@ class ImageBookmarkTest extends MockeryTestCase
             ->getMock();
 
         /** @var ImageBookmarkStub $sut */
-        $sut = new ImageBookmarkStub;
+        $sut = new ImageBookmarkStub();
         $sut->setParser($mockParser);
         $sut->setFileStore($mockFs);
 

@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -35,9 +36,10 @@ final class RefundFee extends AbstractCommandHandler implements
     AuthAwareInterface,
     CpmsAwareInterface
 {
-    use AuthAwareTrait, CpmsAwareTrait;
+    use AuthAwareTrait;
+    use CpmsAwareTrait;
 
-    const REFUND_COMMENT = 'Non over payment refund';
+    public const REFUND_COMMENT = 'Non over payment refund';
 
     protected $repoServiceName = 'Fee';
 

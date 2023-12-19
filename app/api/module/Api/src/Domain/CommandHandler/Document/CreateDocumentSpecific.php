@@ -21,7 +21,7 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
 {
     use AuthAwareTrait;
 
-    const DEFAULT_OS = 'windows_7';
+    public const DEFAULT_OS = 'windows_7';
 
     /**
      * @var string

@@ -12,9 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Sla extends AbstractSla
 {
-    const WRITTEN_OUTCOME_DECISION = 'piwo_decision';
-    const WRITTEN_OUTCOME_REASON = 'piwo_reason';
-    const VERBAL_DECISION_ONLY = 'piwo_verbal';
+    public const WRITTEN_OUTCOME_DECISION = 'piwo_decision';
+    public const WRITTEN_OUTCOME_REASON = 'piwo_reason';
+    public const VERBAL_DECISION_ONLY = 'piwo_verbal';
 
     public function appliesTo(\DateTime $date)
     {

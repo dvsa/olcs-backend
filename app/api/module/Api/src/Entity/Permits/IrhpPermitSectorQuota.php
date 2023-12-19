@@ -31,7 +31,7 @@ class IrhpPermitSectorQuota extends AbstractIrhpPermitSectorQuota
      */
     public static function create(Sectors $sector, IrhpPermitStock $irhpPermitStock)
     {
-        $instance = new self;
+        $instance = new self();
 
         $instance->sector = $sector;
         $instance->irhpPermitStock = $irhpPermitStock;

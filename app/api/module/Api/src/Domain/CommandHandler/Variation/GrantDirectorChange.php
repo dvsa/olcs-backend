@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd;

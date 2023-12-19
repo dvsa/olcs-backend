@@ -102,7 +102,7 @@ final class Text3 implements ProcessInterface
                 /* @var $transportManager \Dvsa\Olcs\Api\Entity\Tm\TransportManager */
                 $tmNames[] = $transportManager->getHomeCd()->getPerson()->getFullName();
             }
-            $this->addText('Transport Manager(s): '. implode(', ', $tmNames));
+            $this->addText('Transport Manager(s): ' . implode(', ', $tmNames));
         }
     }
 

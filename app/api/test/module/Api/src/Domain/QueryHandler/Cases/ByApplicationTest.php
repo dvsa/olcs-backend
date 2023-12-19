@@ -3,6 +3,7 @@
 /**
  * ByApplication Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ByApplication;

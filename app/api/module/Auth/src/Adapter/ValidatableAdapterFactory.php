@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Adapter;
@@ -9,10 +10,10 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class ValidatableAdapterFactory implements FactoryInterface
 {
-    const CONFIG_NAMESPACE = 'auth';
-    const AUTH_CONFIG_DEFAULT_ADAPTER = 'default_adapter';
-    const AUTH_CONFIG_ADAPTERS = 'adapters';
-    const ADAPTER_CONFIG_ADAPTER = 'adapter';
+    public const CONFIG_NAMESPACE = 'auth';
+    public const AUTH_CONFIG_DEFAULT_ADAPTER = 'default_adapter';
+    public const AUTH_CONFIG_ADAPTERS = 'adapters';
+    public const ADAPTER_CONFIG_ADAPTER = 'adapter';
 
     /**
      * invoke method

@@ -3,6 +3,7 @@
 /**
  * Send Tm User Created Email
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -44,7 +45,7 @@ final class SendTmUserCreated extends AbstractCommandHandler implements \Dvsa\Ol
             'transport-manager-user-created',
             [
                 'organisation' => $tma->getApplication()->getLicence()->getOrganisation()->getName(),
-                'reference' => $tma->getApplication()->getLicence()->getLicNo() .'/'. $tma->getApplication()->getId(),
+                'reference' => $tma->getApplication()->getLicence()->getLicNo() . '/' . $tma->getApplication()->getId(),
                 'loginId' => $user->getLoginId(),
                 'url' => sprintf(
                     'http://selfserve/%s/%d/transport-managers/details/%d/edit-details/',

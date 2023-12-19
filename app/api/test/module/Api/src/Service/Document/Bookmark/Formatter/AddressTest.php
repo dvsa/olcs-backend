@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\Address;
  */
 class AddressTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * @dataProvider addressProvider
      */

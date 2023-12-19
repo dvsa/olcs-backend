@@ -24,8 +24,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
  */
 class Complaint extends AbstractComplaint
 {
-    const COMPLAIN_STATUS_CLOSED = 'ecst_closed';
-    const COMPLAIN_STATUS_OPEN = 'ecst_open';
+    public const COMPLAIN_STATUS_CLOSED = 'ecst_closed';
+    public const COMPLAIN_STATUS_OPEN = 'ecst_open';
 
     /**
      * Construct Complaint entity

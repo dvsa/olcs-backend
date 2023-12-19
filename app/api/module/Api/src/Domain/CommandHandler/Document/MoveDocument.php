@@ -2,9 +2,10 @@
 
 /**
  * Move document
- * 
+ *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -15,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Move document
- * 
+ *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 final class MoveDocument extends AbstractCommandHandler implements TransactionedInterface

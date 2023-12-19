@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -89,7 +90,8 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         if ($this->updatingForTheFirstTime($application)) {
             $sideEffects[] = $this->createCreateApplicationFeeCommand($application);
             $sideEffects[] = $this->createGenerateLicenceNumberCommand($application);
-        } elseif ($this->licenceTypeWillChange($application, $command)
+        } elseif (
+            $this->licenceTypeWillChange($application, $command)
             && $this->applicationFeeNotPaid($application)
         ) {
             $sideEffects[] = $this->createCancelLicenceFeesCommand($application->getLicence());
@@ -210,13 +212,15 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         $commandVehicleType = $command->getVehicleType();
         $applicationVehicleType = (string)$application->getVehicleType();
 
-        if ($commandVehicleType == RefData::APP_VEHICLE_TYPE_LGV &&
+        if (
+            $commandVehicleType == RefData::APP_VEHICLE_TYPE_LGV &&
             $applicationVehicleType == RefData::APP_VEHICLE_TYPE_MIXED
         ) {
             return true;
         }
 
-        if ($commandVehicleType == RefData::APP_VEHICLE_TYPE_MIXED &&
+        if (
+            $commandVehicleType == RefData::APP_VEHICLE_TYPE_MIXED &&
             $applicationVehicleType == RefData::APP_VEHICLE_TYPE_LGV
         ) {
             return true;
@@ -243,13 +247,15 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
         $commandVehicleType = $command->getVehicleType();
         $applicationVehicleType = (string)$application->getVehicleType();
 
-        if (in_array($commandVehicleType, $goodsStandardInternationalVehicleTypes) &&
+        if (
+            in_array($commandVehicleType, $goodsStandardInternationalVehicleTypes) &&
             !in_array($applicationVehicleType, $goodsStandardInternationalVehicleTypes)
         ) {
             return true;
         }
 
-        if (in_array($applicationVehicleType, $goodsStandardInternationalVehicleTypes) &&
+        if (
+            in_array($applicationVehicleType, $goodsStandardInternationalVehicleTypes) &&
             !in_array($commandVehicleType, $goodsStandardInternationalVehicleTypes)
         ) {
             return true;

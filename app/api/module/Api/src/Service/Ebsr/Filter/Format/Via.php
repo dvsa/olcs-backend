@@ -10,7 +10,6 @@ use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
  */
 class Via extends LaminasAbstractFilter
 {
-
     /**
      * Returns the result of filtering $value
      *

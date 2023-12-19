@@ -8,9 +8,9 @@ use Dvsa\Olcs\Api\Domain\Repository\ApplicationStep as ApplicationStepRepository
 
 class QaContextGenerator
 {
-    const ERR_ALREADY_SUBMITTED = 'This application has been submitted and cannot be edited';
-    const ERR_NOT_ACCESSIBLE = 'This question isn\'t yet accessible';
-    const ERR_QA_NOT_SUPPORTED = 'Entity does not support q&a';
+    public const ERR_ALREADY_SUBMITTED = 'This application has been submitted and cannot be edited';
+    public const ERR_NOT_ACCESSIBLE = 'This question isn\'t yet accessible';
+    public const ERR_QA_NOT_SUPPORTED = 'Entity does not support q&a';
 
     /** @var ApplicationStepRepository */
     private $applicationStepRepo;

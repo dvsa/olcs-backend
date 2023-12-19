@@ -5,6 +5,7 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\ORM\Query;
@@ -15,17 +16,13 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\SaveAddresses;
-
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\PhoneContact;
-
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
-
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 
@@ -903,7 +900,6 @@ class SaveAddressesTest extends CommandHandlerTestCase
                     ->getMock()
             )
             ->getMock();
-
 
         $result = $this->sut->handleCommand($command);
 

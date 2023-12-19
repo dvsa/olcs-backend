@@ -3,6 +3,7 @@
 /**
  * Create Recipient Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;

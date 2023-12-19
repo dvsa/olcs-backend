@@ -16,9 +16,9 @@ use Mockery as m;
  */
 class CreateTest extends CommandHandlerTestCase
 {
-    const ORG_ID = 9001;
-    const PERSON_ID = 8001;
-    const ORG_PERSON_ID = 7001;
+    public const ORG_ID = 9001;
+    public const PERSON_ID = 8001;
+    public const ORG_PERSON_ID = 7001;
 
     /** @var  CommandHandler\OrganisationPerson\Create */
     protected $sut;

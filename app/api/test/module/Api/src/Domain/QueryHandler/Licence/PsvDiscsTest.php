@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
 use Doctrine\Common\Collections\Criteria;

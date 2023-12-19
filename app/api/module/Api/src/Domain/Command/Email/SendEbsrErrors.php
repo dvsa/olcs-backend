@@ -3,6 +3,7 @@
 /**
  * Send email to notify of EBSR errors
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
@@ -12,5 +13,4 @@ use Dvsa\Olcs\Api\Domain\Command\AbstractIdOnlyCommand;
  */
 final class SendEbsrErrors extends AbstractIdOnlyCommand
 {
-
 }

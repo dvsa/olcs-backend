@@ -13,10 +13,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class DocumentToDelete extends AbstractDocumentToDelete
 {
+    public const MAX_ATTEMPTS = 3;
 
-    const MAX_ATTEMPTS = 3;
-
-    const PROCESS_AFTER_MINUTES = 2;
+    public const PROCESS_AFTER_MINUTES = 2;
 
     public function markAsFailed()
     {
@@ -32,7 +31,7 @@ class DocumentToDelete extends AbstractDocumentToDelete
         $now = new DateTime();
         $minutesToAdd = pow(self::PROCESS_AFTER_MINUTES, $this->getAttempts());
 
-        $now->add(new \DateInterval('PT'.$minutesToAdd.'M'));
+        $now->add(new \DateInterval('PT' . $minutesToAdd . 'M'));
 
         return $now;
     }

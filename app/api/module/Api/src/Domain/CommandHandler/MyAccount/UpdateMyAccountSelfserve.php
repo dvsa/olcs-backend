@@ -3,6 +3,7 @@
 /**
  * Update MyAccount Selfserve
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
@@ -18,5 +19,6 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\Identity;
  */
 final class EndIrhpPermits extends AbstractCommand
 {
-    use Identity, EndIrhpApplicationsAndPermitsContext;
+    use Identity;
+    use EndIrhpApplicationsAndPermitsContext;
 }

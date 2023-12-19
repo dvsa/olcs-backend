@@ -18,10 +18,10 @@ use Interop\Container\ContainerInterface;
  */
 class XmlStructureInputFactory implements FactoryInterface
 {
-    const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
-    const SCHEMA_VERSION_MSG = 'No config specified for transxchange schema version';
-    const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
-    const XSD_PATH = 'http://www.transxchange.org.uk/schema/%s/TransXChange_registration.xsd';
+    public const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
+    public const SCHEMA_VERSION_MSG = 'No config specified for transxchange schema version';
+    public const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
+    public const XSD_PATH = 'http://www.transxchange.org.uk/schema/%s/TransXChange_registration.xsd';
 
     /**
      * invoke method

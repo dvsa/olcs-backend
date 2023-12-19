@@ -12,7 +12,7 @@ use Laminas\ServiceManager\Exception\InvalidServiceException;
 
 class RepositoryServiceManager extends AbstractPluginManager
 {
-    const VALIDATE_ERROR = 'Plugin manager "%s" expected an instance of type RepositoryInterface or 
+    public const VALIDATE_ERROR = 'Plugin manager "%s" expected an instance of type RepositoryInterface or 
     ReadonlyRepositoryInterface, but "%s" was received';
 
     private array $exportRepos = [

@@ -16,7 +16,8 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
 {
     public function process(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
-        if ($publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_NEW_SECTION &&
+        if (
+            $publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_NEW_SECTION &&
             $publicationLink->getPublicationSection()->getId() !== PublicationSection::APP_GRANTED_SECTION
         ) {
             // if not in New (received) or granted section then no text
@@ -52,9 +53,9 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
 
         foreach ($this->getApplicationOperatingCentres($publicationLink) as $aoc) {
             $this->addTextLine(
-                'Operating Centre: '. Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
+                'Operating Centre: ' . Formatter\Address::format($aoc->getOperatingCentre()->getAddress())
             );
-            $this->addTextLine('Authorisation: '. Formatter\OcVehicleTrailer::format($aoc, $useHgvCaption));
+            $this->addTextLine('Authorisation: ' . Formatter\OcVehicleTrailer::format($aoc, $useHgvCaption));
         }
     }
 
@@ -82,7 +83,7 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
                 /* @var $transportManager \Dvsa\Olcs\Api\Entity\Tm\TransportManager */
                 $tmNames[] = $transportManager->getHomeCd()->getPerson()->getFullName();
             }
-            $this->addTextLine('Transport Manager(s): '. implode(', ', $tmNames));
+            $this->addTextLine('Transport Manager(s): ' . implode(', ', $tmNames));
         }
     }
 

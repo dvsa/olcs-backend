@@ -22,10 +22,10 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 class Queue extends AbstractQueue
 {
     // Message statuses
-    const STATUS_QUEUED = 'que_sts_queued';
-    const STATUS_PROCESSING = 'que_sts_processing';
-    const STATUS_COMPLETE = 'que_sts_complete';
-    const STATUS_FAILED = 'que_sts_failed';
+    public const STATUS_QUEUED = 'que_sts_queued';
+    public const STATUS_PROCESSING = 'que_sts_processing';
+    public const STATUS_COMPLETE = 'que_sts_complete';
+    public const STATUS_FAILED = 'que_sts_failed';
 
     protected $statuses = [
         self::STATUS_QUEUED,
@@ -35,42 +35,42 @@ class Queue extends AbstractQueue
     ];
 
     // Message types
-    const TYPE_COMPANIES_HOUSE_COMPARE = 'que_typ_ch_compare';
-    const TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER = 'que_typ_cont_check_rem_gen_let';
-    const TYPE_CPID_EXPORT_CSV = 'que_typ_cpid_export_csv';
-    const TYPE_CONT_CHECKLIST = 'que_typ_cont_checklist';
-    const TYPE_TM_SNAPSHOT = 'que_typ_tm_snapshot';
-    const TYPE_CPMS_REPORT_DOWNLOAD = 'que_typ_cpms_report_download';
-    const TYPE_EBSR_REQUEST_MAP = 'que_typ_ebsr_request_map';
-    const TYPE_EBSR_PACK = 'que_typ_ebsr_pack';
-    const TYPE_EBSR_PACK_FAILED = 'que_typ_ebsr_pack_failed';
-    const TYPE_SEND_MSI_RESPONSE = 'que_typ_msi_response';
-    const TYPE_EMAIL = 'que_typ_email';
-    const TYPE_PRINT = 'que_typ_print';
-    const TYPE_DISC_PRINTING_PRINT = 'que_typ_disc_printing_print';
-    const TYPE_DISC_PRINTING = 'que_typ_disc_printing';
-    const TYPE_PERMIT_GENERATE = 'que_typ_permit_generate';
-    const TYPE_PERMIT_PRINT = 'que_typ_permit_print';
-    const TYPE_PERMIT_REPORT = 'que_typ_permit_report';
-    const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehicle_list';
-    const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehicle_list';
-    const TYPE_UPDATE_NYSIIS_TM_NAME = 'que_typ_update_nysiis_tm_name';
-    const TYPE_CNS = 'que_typ_cns';
-    const TYPE_CNS_EMAIL = 'que_typ_cns_email';
-    const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
-    const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
-    const TYPE_CREATE_CONTINUATION_SNAPSHOT = 'que_typ_cont_shapshot';
-    const TYPE_CONT_DIGITAL_REMINDER = 'que_typ_cont_digital_reminder';
-    const TYPE_PERMITS_POST_SUBMIT = 'que_typ_permits_post_submit';
-    const TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE = 'que_typ_irhp_permits_allocate';
-    const TYPE_RUN_ECMT_SCORING = 'que_typ_run_ecmt_scoring';
-    const TYPE_ACCEPT_ECMT_SCORING = 'que_typ_accept_ecmt_scoring';
-    const TYPE_COMM_LIC_BULK_REPRINT = 'que_typ_comm_lic_bulk_reprint';
-    const TYPE_LETTER_BULK_UPLOAD = 'que_typ_letter_bulk_upload';
-    const TYPE_EMAIL_BULK_UPLOAD = 'que_typ_email_bulk_upload';
-    const TYPE_POST_SCORING_EMAIL = 'que_typ_post_scoring_email';
-    const TYPE_REFUND_INTERIM_FEES = 'que_typ_refund_interim_fees';
-    const TYPE_CREATE_TASK = 'que_typ_create_task';
+    public const TYPE_COMPANIES_HOUSE_COMPARE = 'que_typ_ch_compare';
+    public const TYPE_CONT_CHECKLIST_REMINDER_GENERATE_LETTER = 'que_typ_cont_check_rem_gen_let';
+    public const TYPE_CPID_EXPORT_CSV = 'que_typ_cpid_export_csv';
+    public const TYPE_CONT_CHECKLIST = 'que_typ_cont_checklist';
+    public const TYPE_TM_SNAPSHOT = 'que_typ_tm_snapshot';
+    public const TYPE_CPMS_REPORT_DOWNLOAD = 'que_typ_cpms_report_download';
+    public const TYPE_EBSR_REQUEST_MAP = 'que_typ_ebsr_request_map';
+    public const TYPE_EBSR_PACK = 'que_typ_ebsr_pack';
+    public const TYPE_EBSR_PACK_FAILED = 'que_typ_ebsr_pack_failed';
+    public const TYPE_SEND_MSI_RESPONSE = 'que_typ_msi_response';
+    public const TYPE_EMAIL = 'que_typ_email';
+    public const TYPE_PRINT = 'que_typ_print';
+    public const TYPE_DISC_PRINTING_PRINT = 'que_typ_disc_printing_print';
+    public const TYPE_DISC_PRINTING = 'que_typ_disc_printing';
+    public const TYPE_PERMIT_GENERATE = 'que_typ_permit_generate';
+    public const TYPE_PERMIT_PRINT = 'que_typ_permit_print';
+    public const TYPE_PERMIT_REPORT = 'que_typ_permit_report';
+    public const TYPE_CREATE_GOODS_VEHICLE_LIST = 'que_typ_create_gds_vehicle_list';
+    public const TYPE_CREATE_PSV_VEHICLE_LIST = 'que_typ_create_psv_vehicle_list';
+    public const TYPE_UPDATE_NYSIIS_TM_NAME = 'que_typ_update_nysiis_tm_name';
+    public const TYPE_CNS = 'que_typ_cns';
+    public const TYPE_CNS_EMAIL = 'que_typ_cns_email';
+    public const TYPE_CREATE_COM_LIC = 'que_typ_create_com_lic';
+    public const TYPE_REMOVE_DELETED_DOCUMENTS = 'que_typ_remove_deleted_docs';
+    public const TYPE_CREATE_CONTINUATION_SNAPSHOT = 'que_typ_cont_shapshot';
+    public const TYPE_CONT_DIGITAL_REMINDER = 'que_typ_cont_digital_reminder';
+    public const TYPE_PERMITS_POST_SUBMIT = 'que_typ_permits_post_submit';
+    public const TYPE_IRHP_APPLICATION_PERMITS_ALLOCATE = 'que_typ_irhp_permits_allocate';
+    public const TYPE_RUN_ECMT_SCORING = 'que_typ_run_ecmt_scoring';
+    public const TYPE_ACCEPT_ECMT_SCORING = 'que_typ_accept_ecmt_scoring';
+    public const TYPE_COMM_LIC_BULK_REPRINT = 'que_typ_comm_lic_bulk_reprint';
+    public const TYPE_LETTER_BULK_UPLOAD = 'que_typ_letter_bulk_upload';
+    public const TYPE_EMAIL_BULK_UPLOAD = 'que_typ_email_bulk_upload';
+    public const TYPE_POST_SCORING_EMAIL = 'que_typ_post_scoring_email';
+    public const TYPE_REFUND_INTERIM_FEES = 'que_typ_refund_interim_fees';
+    public const TYPE_CREATE_TASK = 'que_typ_create_task';
 
     protected $types = [
         self::TYPE_COMPANIES_HOUSE_COMPARE,
@@ -112,7 +112,7 @@ class Queue extends AbstractQueue
     ];
 
     // Errors
-    const ERR_MAX_ATTEMPTS = 'Maximum attempts exceeded';
+    public const ERR_MAX_ATTEMPTS = 'Maximum attempts exceeded';
 
     /**
      * Increment attempts

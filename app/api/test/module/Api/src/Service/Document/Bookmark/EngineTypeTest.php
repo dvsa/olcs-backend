@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\EngineType;
  */
 class EngineTypeTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = EngineType::class;
+    public const SUT_CLASS_NAME = EngineType::class;
 }

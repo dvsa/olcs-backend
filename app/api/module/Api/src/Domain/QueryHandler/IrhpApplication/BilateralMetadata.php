@@ -67,7 +67,6 @@ class BilateralMetadata extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->countryGenerator = $container->get('PermitsBilateralMetadataCountryGenerator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

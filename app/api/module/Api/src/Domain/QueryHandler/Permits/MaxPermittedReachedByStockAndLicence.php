@@ -75,7 +75,6 @@ class MaxPermittedReachedByStockAndLicence extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->stockLicenceMaxPermittedCounter = $container->get(
             'PermitsAvailabilityStockLicenceMaxPermittedCounter'
         );

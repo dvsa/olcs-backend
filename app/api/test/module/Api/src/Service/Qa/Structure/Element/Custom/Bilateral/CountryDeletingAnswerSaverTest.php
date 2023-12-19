@@ -18,9 +18,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class CountryDeletingAnswerSaverTest extends MockeryTestCase
 {
-    const YES_VALUE = 'yes_value';
+    public const YES_VALUE = 'yes_value';
 
-    const POST_DATA = [
+    public const POST_DATA = [
         'key1' => 'value1',
         'key2' => 'value2',
     ];

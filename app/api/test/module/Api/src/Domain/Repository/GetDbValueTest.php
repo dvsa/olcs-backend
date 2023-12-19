@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 
 class GetDbValueTest extends RepositoryTestCase
 {
-
     /** @var GetDbValueRepo */
     protected $sut;
 

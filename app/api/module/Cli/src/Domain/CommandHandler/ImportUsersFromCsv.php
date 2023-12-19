@@ -15,20 +15,20 @@ use Interop\Container\Containerinterface;
  */
 class ImportUsersFromCsv extends AbstractCommandHandler
 {
-    const CNT_FIELDS_IN_ROW = 6;
+    public const CNT_FIELDS_IN_ROW = 6;
 
-    const ERR_FILE_404 = 'Source CSV file not found by path %s';
-    const ERR_FILE_CANT_OPEN = 'Source CSV file can\'t be open for read (%s)';
-    const ERR_RES_FILE_CANT_OPEN = 'Result CSV file can\'t be open for write (%s)';
+    public const ERR_FILE_404 = 'Source CSV file not found by path %s';
+    public const ERR_FILE_CANT_OPEN = 'Source CSV file can\'t be open for read (%s)';
+    public const ERR_RES_FILE_CANT_OPEN = 'Result CSV file can\'t be open for write (%s)';
 
-    const CSV_ERR_USER_TYPE_INVALID = 'User type (%s) is not "%s"';
-    const CSV_ERR_USER_ALREADY_IN_DB = 'Cant find unique username in db after %d tries';
-    const CSV_ERR_USER_NOT_CREATED_IN_DB = 'User not created in DB. Fail with error "%s"';
-    const CSV_ERR_USER_NOT_CREATED_IN_OPENAM = 'User not created in OpenAm. Fail with error "%s"';
-    const CSV_ERR_USER_ROLE_INVALID = 'Invalid role "%s"';
-    const CSV_ERR_USER_TEAM_INVALID = 'Invalid team name "%s"';
-    const CSV_ERR_EMAIL_INVALID = 'Invalid email "%s"';
-    const CSV_ERR_INVALID_ROW = 'Row in csv file is empty or contains an incorrect count of elements';
+    public const CSV_ERR_USER_TYPE_INVALID = 'User type (%s) is not "%s"';
+    public const CSV_ERR_USER_ALREADY_IN_DB = 'Cant find unique username in db after %d tries';
+    public const CSV_ERR_USER_NOT_CREATED_IN_DB = 'User not created in DB. Fail with error "%s"';
+    public const CSV_ERR_USER_NOT_CREATED_IN_OPENAM = 'User not created in OpenAm. Fail with error "%s"';
+    public const CSV_ERR_USER_ROLE_INVALID = 'Invalid role "%s"';
+    public const CSV_ERR_USER_TEAM_INVALID = 'Invalid team name "%s"';
+    public const CSV_ERR_EMAIL_INVALID = 'Invalid email "%s"';
+    public const CSV_ERR_INVALID_ROW = 'Row in csv file is empty or contains an incorrect count of elements';
 
     protected $repoServiceName = 'User';
     protected $extraRepos = ['Team', 'Role'];

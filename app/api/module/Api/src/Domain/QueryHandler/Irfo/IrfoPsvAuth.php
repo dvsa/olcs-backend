@@ -3,11 +3,12 @@
 /**
  * Irfo Psv Auth
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use \Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
+use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
 
 /**
  * Irfo Psv Auth

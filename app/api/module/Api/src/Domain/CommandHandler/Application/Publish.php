@@ -90,7 +90,6 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
     {
         $fullContainer = $container;
 
-
         $this->applicationValidationService = $container->get('ApplicationPublishValidationService');
         $this->variationValidationService = $container->get('VariationPublishValidationService');
         return parent::__invoke($fullContainer, $requestedName, $options);

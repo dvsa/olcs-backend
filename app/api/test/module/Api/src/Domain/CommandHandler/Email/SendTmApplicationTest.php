@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -91,7 +92,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
                 'reference' => 'LIC01/442',
                 'username' => 'username1',
                 'isNi' => false,
-                'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
+                'signInLink' => 'http://selfserve/' . $uriPart . '/442/transport-managers/details/75/edit-details/'
             ],
             'default'
         );
@@ -150,7 +151,7 @@ class SendTmApplicationTest extends CommandHandlerTestCase
                 'reference' => 'LIC01/442',
                 'username' => 'not registered',
                 'isNi' => false,
-                'signInLink' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/75/edit-details/'
+                'signInLink' => 'http://selfserve/' . $uriPart . '/442/transport-managers/details/75/edit-details/'
             ],
             'default'
         );

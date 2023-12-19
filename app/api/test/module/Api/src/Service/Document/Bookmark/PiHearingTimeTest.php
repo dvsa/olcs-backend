@@ -5,6 +5,7 @@
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 /**
@@ -14,5 +15,5 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
  */
 class PiHearingTimeTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\PiHearingTime';
+    public const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\PiHearingTime';
 }

@@ -17,7 +17,8 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 
 abstract class AbstractSurrenderCommandHandler extends AbstractCommandHandler implements AuthAwareInterface, TransactionedInterface, ToggleRequiredInterface
 {
-    use AuthAwareTrait, ToggleAwareTrait;
+    use AuthAwareTrait;
+    use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::BACKEND_SURRENDER];
 

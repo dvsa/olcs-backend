@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
 
 class CanAccessDocumentsWithIds extends AbstractHandler
 {
-
     /**
      * Validate DTO
      *

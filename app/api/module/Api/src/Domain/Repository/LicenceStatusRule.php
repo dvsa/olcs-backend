@@ -32,9 +32,9 @@ class LicenceStatusRule extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($doctrineQb)->withRefdata()
             ->with('licenceStatus')->with('licence', 'l')->with('l.status');
 
-        $doctrineQb->andWhere($doctrineQb->expr()->isNull($this->alias .'.startProcessedDate'))
-            ->andWhere($doctrineQb->expr()->isNull($this->alias .'.deletedDate'))
-            ->andWhere($doctrineQb->expr()->lte($this->alias .'.startDate', ':startDate'));
+        $doctrineQb->andWhere($doctrineQb->expr()->isNull($this->alias . '.startProcessedDate'))
+            ->andWhere($doctrineQb->expr()->isNull($this->alias . '.deletedDate'))
+            ->andWhere($doctrineQb->expr()->lte($this->alias . '.startDate', ':startDate'));
 
         $doctrineQb->setParameter('startDate', $date);
 
@@ -56,10 +56,10 @@ class LicenceStatusRule extends AbstractRepository
             ->with('licence', 'l')
             ->with('l.status');
 
-        $doctrineQb->andWhere($doctrineQb->expr()->isNull($this->alias .'.endProcessedDate'))
-            ->andWhere($doctrineQb->expr()->isNotNull($this->alias .'.endDate'))
-            ->andWhere($doctrineQb->expr()->isNull($this->alias .'.deletedDate'))
-            ->andWhere($doctrineQb->expr()->lte($this->alias .'.endDate', ':endDate'));
+        $doctrineQb->andWhere($doctrineQb->expr()->isNull($this->alias . '.endProcessedDate'))
+            ->andWhere($doctrineQb->expr()->isNotNull($this->alias . '.endDate'))
+            ->andWhere($doctrineQb->expr()->isNull($this->alias . '.deletedDate'))
+            ->andWhere($doctrineQb->expr()->lte($this->alias . '.endDate', ':endDate'));
 
         $doctrineQb->setParameter('endDate', $date);
 

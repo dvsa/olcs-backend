@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;

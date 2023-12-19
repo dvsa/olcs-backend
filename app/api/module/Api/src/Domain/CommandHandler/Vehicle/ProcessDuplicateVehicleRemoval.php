@@ -104,7 +104,8 @@ final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler implem
             return;
         }
         usort(
-            $removedVehicles, function ($a, $b) {
+            $removedVehicles,
+            function ($a, $b) {
                 if ($a['vrm'] === $b['vrm']) {
                     return 0;
                 }

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Community Licence Withdrawal Reason
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawalReason as CommunityLicWithdrawalReasonEntity;

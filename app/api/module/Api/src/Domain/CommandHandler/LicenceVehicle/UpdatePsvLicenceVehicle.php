@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle;
 
 use Doctrine\ORM\Query;
@@ -30,7 +31,7 @@ final class UpdatePsvLicenceVehicle extends AbstractCommandHandler implements Tr
 {
     use AuthAwareTrait;
 
-    const ERR_PSV_VE_REMOVED_1 = 'ERR_PSV_VE_REMOVED_1';
+    public const ERR_PSV_VE_REMOVED_1 = 'ERR_PSV_VE_REMOVED_1';
 
     protected $repoServiceName = 'LicenceVehicle';
 
@@ -66,7 +67,6 @@ final class UpdatePsvLicenceVehicle extends AbstractCommandHandler implements Tr
         }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-
             if ($command->getSpecifiedDate() !== null) {
                 $licenceVehicle->setSpecifiedDate(
                     $licenceVehicle->processDate($command->getSpecifiedDate(), \DateTime::ISO8601, false)

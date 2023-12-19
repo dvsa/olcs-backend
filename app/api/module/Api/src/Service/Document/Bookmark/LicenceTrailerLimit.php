@@ -11,8 +11,8 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\LicenceBundle as Qry;
  */
 class LicenceTrailerLimit extends SingleValueAbstract
 {
-    const FORMATTER = null;
-    const SRCH_VAL_KEY = 'licence';
-    const FIELD = 'totAuthTrailers';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = null;
+    public const SRCH_VAL_KEY = 'licence';
+    public const FIELD = 'totAuthTrailers';
+    public const QUERY_CLASS = Qry::class;
 }

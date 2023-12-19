@@ -109,7 +109,6 @@ final class AssignSubmission extends AbstractCommandHandler implements
             $submission->setUrgent($command->getUrgent());
         }
 
-
         return $submission;
     }
 

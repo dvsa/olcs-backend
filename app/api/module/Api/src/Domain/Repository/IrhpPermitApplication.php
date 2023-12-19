@@ -3,6 +3,7 @@
 /**
  * IrhpPermitApplication
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
@@ -57,7 +58,7 @@ class IrhpPermitApplication extends AbstractRepository
         $fieldName = $mappings[$emissionsCategoryId];
 
         $requiredPermitCount = $this->getEntityManager()->createQueryBuilder()
-            ->select('sum(ipa.' . $fieldName .')')
+            ->select('sum(ipa.' . $fieldName . ')')
             ->from(Entity::class, 'ipa')
             ->innerJoin('ipa.irhpPermitWindow', 'ipw')
             ->innerJoin('ipa.irhpApplication', 'ia')

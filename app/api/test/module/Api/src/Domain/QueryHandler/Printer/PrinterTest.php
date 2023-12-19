@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Printer;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Printer\Printer as QueryHandler;

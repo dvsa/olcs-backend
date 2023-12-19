@@ -58,9 +58,9 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
 
         $documentsToDelete = [
             (new DocumentToDeleteEntity())->setDocumentStoreId('doc4.rtf'),
-            (new DocumentToDeleteEntity)->setDocumentStoreId('doc3.rtf'),
-            (new DocumentToDeleteEntity)->setDocumentStoreId('doc2.rtf'),
-            (new DocumentToDeleteEntity)->setDocumentStoreId('doc1.rtf'),
+            (new DocumentToDeleteEntity())->setDocumentStoreId('doc3.rtf'),
+            (new DocumentToDeleteEntity())->setDocumentStoreId('doc2.rtf'),
+            (new DocumentToDeleteEntity())->setDocumentStoreId('doc1.rtf'),
         ];
 
         $this->repoMap['SystemParameter']
@@ -92,7 +92,7 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
         $command = Cmd::create([]);
 
         $documentsToDelete = [
-            (new DocumentToDeleteEntity)->setDocumentStoreId('doc1.rtf'),
+            (new DocumentToDeleteEntity())->setDocumentStoreId('doc1.rtf'),
         ];
 
         $this->repoMap['SystemParameter']
@@ -150,12 +150,12 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([]);
 
-        $documentToDelete = (new DocumentToDeleteEntity);
+        $documentToDelete = (new DocumentToDeleteEntity());
         $documentToDelete->setDocumentStoreId('doc1.rtf');
         $documentToDelete->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P2D')));
 
         $documentsToDelete = [
-            (new DocumentToDeleteEntity)->setDocumentStoreId('doc1.rtf'),
+            (new DocumentToDeleteEntity())->setDocumentStoreId('doc1.rtf'),
         ];
 
         $this->repoMap['SystemParameter']
@@ -190,7 +190,7 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([]);
 
-        $documentToDelete = (new DocumentToDeleteEntity);
+        $documentToDelete = (new DocumentToDeleteEntity());
         $documentToDelete->setDocumentStoreId('doc1.rtf');
         $documentToDelete->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P2D')));
 
@@ -231,7 +231,7 @@ class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
     {
         $command = Cmd::create([]);
 
-        $documentToDelete = (new DocumentToDeleteEntity);
+        $documentToDelete = (new DocumentToDeleteEntity());
         $documentToDelete->setDocumentStoreId('doc1.rtf');
         $documentToDelete->setProcessAfterDate((new \DateTime())->add(new \DateInterval('P3D')));
 

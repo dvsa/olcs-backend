@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 
 final class ProcessPackFailed extends AbstractProcessPack
 {
-
     public function handleCommand(CommandInterface $command)
     {
         /** @var EbsrSubmissionEntity $ebsrSub */

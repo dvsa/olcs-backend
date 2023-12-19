@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -17,6 +18,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
  */
 class RepositoryServiceManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'repository_services';
+    public const CONFIG_KEY = 'repository_services';
     public const PLUGIN_MANAGER_CLASS = RepositoryServiceManager::class;
 }

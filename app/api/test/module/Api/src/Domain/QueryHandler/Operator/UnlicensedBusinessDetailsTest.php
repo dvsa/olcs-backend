@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Operator;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Operator\UnlicensedBusinessDetails as BusinessDetailsQueryHandler;

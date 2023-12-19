@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Adapter;
 
@@ -8,8 +9,8 @@ use Dvsa\Olcs\Auth\Adapter\ValidatableAdapterFactory;
 use InvalidArgumentException;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
 use stdClass;
 
@@ -20,17 +21,17 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
 
-    const CONFIG_WITHOUT_NAMESPACE = [];
-    const CONFIG_WITHOUT_DEFAULT_ADAPTER_DEFINED = [
+    public const CONFIG_WITHOUT_NAMESPACE = [];
+    public const CONFIG_WITHOUT_DEFAULT_ADAPTER_DEFINED = [
         LoginFactory::CONFIG_NAMESPACE => [],
     ];
-    const CONFIG_WITH_ADAPTER_NOT_DEFINED = [
+    public const CONFIG_WITH_ADAPTER_NOT_DEFINED = [
         LoginFactory::CONFIG_NAMESPACE => [
             LoginFactory::AUTH_CONFIG_DEFAULT_ADAPTER => 'some_adapter',
             LoginFactory::AUTH_CONFIG_ADAPTERS => []
         ]
     ];
-    const CONFIG_WITH_ADAPTER_DEFINED_AND_ADAPTER_CONFIG_ADAPTER_NOT_DEFINED = [
+    public const CONFIG_WITH_ADAPTER_DEFINED_AND_ADAPTER_CONFIG_ADAPTER_NOT_DEFINED = [
         LoginFactory::CONFIG_NAMESPACE => [
             LoginFactory::AUTH_CONFIG_DEFAULT_ADAPTER => 'some_adapter',
             LoginFactory::AUTH_CONFIG_ADAPTERS => [
@@ -38,7 +39,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
             ]
         ]
     ];
-    const CONFIG_WITH_ADAPTER_DEFINED = [
+    public const CONFIG_WITH_ADAPTER_DEFINED = [
         LoginFactory::CONFIG_NAMESPACE => [
             LoginFactory::AUTH_CONFIG_DEFAULT_ADAPTER => 'some_adapter',
             LoginFactory::AUTH_CONFIG_ADAPTERS => [

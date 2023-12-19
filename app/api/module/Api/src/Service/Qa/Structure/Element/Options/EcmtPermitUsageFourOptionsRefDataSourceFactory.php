@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class EcmtPermitUsageFourOptionsRefDataSourceFactory extends AbstractEcmtPermitUsageRefDataSourceFactory
 {
-    const TRANSFORMATIONS = [
+    public const TRANSFORMATIONS = [
         RefData::ECMT_PERMIT_USAGE_FOUR_CROSS_TRADE_ONLY => [
             EcmtPermitUsageRefDataSource::LABEL_KEY =>
                 'qanda.ecmt.permit-usage.four-options.option.cross-trade-only.label',

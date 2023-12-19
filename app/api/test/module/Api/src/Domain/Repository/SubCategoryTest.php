@@ -10,7 +10,7 @@ use Dvsa\Olcs\Transfer\Query as TransferQry;
  */
 class SubCategoryTest extends RepositoryTestCase
 {
-    const CATEGORY = 90001;
+    public const CATEGORY = 90001;
 
     public function setUp(): void
     {

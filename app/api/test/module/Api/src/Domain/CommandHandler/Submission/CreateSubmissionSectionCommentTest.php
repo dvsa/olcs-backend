@@ -16,7 +16,7 @@ use Mockery as m;
  */
 class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
 {
-    const COMMENT_ID = 9999;
+    public const COMMENT_ID = 9999;
 
     /** @var CreateSubmissionSectionComment */
     protected $sut;
@@ -48,7 +48,8 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
     public function testHandleCommandAlreadyExists()
     {
         $this->expectException(
-            ValidationException::class, CreateSubmissionSectionComment::ERR_COMMENT_EXISTS
+            ValidationException::class,
+            CreateSubmissionSectionComment::ERR_COMMENT_EXISTS
         );
 
         $cmd = Cmd::create([]);
@@ -106,6 +107,5 @@ class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
         );
 
         $this->assertEquals($data['comment'], $savedSubmissionSectionComment->getComment());
-
     }
 }

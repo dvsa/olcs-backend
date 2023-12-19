@@ -128,7 +128,6 @@ class SubmitFormTest extends CommandHandlerTestCase
             ->andReturn(1)
             ->getMock();
 
-
         $this->repoMap['Licence']
             ->shouldReceive('fetchById')
             ->with(65)

@@ -47,7 +47,6 @@ final class ProcessApplicationOperatingCentres extends AbstractCommandHandler im
 
         /** @var Aoc $aoc */
         foreach ($applicationOperatingCentres as $aoc) {
-
             if ($aoc->getIsInterim()) {
                 $aoc->setIsInterim(false);
                 $this->getRepo('ApplicationOperatingCentre')->save($aoc);

@@ -30,9 +30,9 @@ use Interop\Container\ContainerInterface;
  */
 class Email implements FactoryInterface
 {
-    const MISSING_FROM_ERROR = 'Email is missing a valid from address';
-    const MISSING_TO_ERROR = 'Email is missing a valid to address';
-    const NOT_SENT_ERROR = 'Email not sent: %s';
+    public const MISSING_FROM_ERROR = 'Email is missing a valid from address';
+    public const MISSING_TO_ERROR = 'Email is missing a valid to address';
+    public const NOT_SENT_ERROR = 'Email not sent: %s';
 
     private $mailTransport;
 

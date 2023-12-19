@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace module\Api\src\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\ChangeBusinessType;

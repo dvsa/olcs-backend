@@ -18,8 +18,8 @@ use Laminas\I18n\Translator\TextDomain;
  */
 class TranslationLoader implements RemoteLoaderInterface
 {
-    const ERR_CACHE_LOAD = 'Translation cache load failure: %s';
-    const DEFAULT_TEXT_DOMAIN = 'default';
+    public const ERR_CACHE_LOAD = 'Translation cache load failure: %s';
+    public const DEFAULT_TEXT_DOMAIN = 'default';
 
     /** @var CacheEncryption $cache */
     private $cache;

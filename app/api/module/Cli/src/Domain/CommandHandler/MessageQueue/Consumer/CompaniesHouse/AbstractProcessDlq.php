@@ -18,7 +18,7 @@ abstract class AbstractProcessDlq extends AbstractConsumer implements ConfigAwar
     use QueueAwareTrait;
     use ConfigAwareTrait;
 
-    const MAX_NUMBER_OF_MESSAGES = 10;
+    public const MAX_NUMBER_OF_MESSAGES = 10;
 
     /**
      * Subject line for the email.

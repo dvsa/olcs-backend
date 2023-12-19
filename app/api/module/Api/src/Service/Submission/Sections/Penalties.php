@@ -28,8 +28,10 @@ final class Penalties extends AbstractSection
         $tables['imposed-penalties'] = [];
         $tables['requested-penalties'] = [];
 
-        if (isset($case->getSeriousInfringements()[0]) &&
-            ($case->getSeriousInfringements()[0] instanceof SeriousInfringement)) {
+        if (
+            isset($case->getSeriousInfringements()[0]) &&
+            ($case->getSeriousInfringements()[0] instanceof SeriousInfringement)
+        ) {
             /** @var SeriousInfringement $si */
             $si = $case->getSeriousInfringements()[0];
 
@@ -82,7 +84,7 @@ final class Penalties extends AbstractSection
      * Method to extract SI Overview data
      *
      * @param CasesEntity $case Cases Entity
-     * 
+     *
      * @return array
      */
     private function extractOverview(CasesEntity $case)
@@ -110,8 +112,10 @@ final class Penalties extends AbstractSection
                 ->getCountryDesc() : '';
         }
 
-        if (isset($case->getSeriousInfringements()[0]) &&
-            ($case->getSeriousInfringements()[0] instanceof SeriousInfringement)) {
+        if (
+            isset($case->getSeriousInfringements()[0]) &&
+            ($case->getSeriousInfringements()[0] instanceof SeriousInfringement)
+        ) {
             /** @var SeriousInfringement $si */
             $si = $case->getSeriousInfringements()[0];
 

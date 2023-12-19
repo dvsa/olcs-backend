@@ -29,7 +29,8 @@ class CurrentFieldValuesGenerator
             ]
         ];
 
-        if (is_object($irhpPermitApplication) &&
+        if (
+            is_object($irhpPermitApplication) &&
             $irhpPermitApplication->getIrhpPermitWindow()->getIrhpPermitStock() === $irhpPermitStock
         ) {
             $permitUsageSelection = $irhpPermitApplication->getBilateralPermitUsageSelection();

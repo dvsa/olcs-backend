@@ -41,7 +41,6 @@ class GetListTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($permitRanges);
 
-
         $result = $this->sut->handleQuery($query);
 
         $expected = [

@@ -11,8 +11,8 @@ use Mockery as m;
  */
 class SubmissionSectionCommentTest extends RepositoryTestCase
 {
-    const SUBMISSION_ID = 8888;
-    const SUBMISSION_SECTION = 'submission_section';
+    public const SUBMISSION_ID = 8888;
+    public const SUBMISSION_SECTION = 'submission_section';
 
     /** @var SubmissionSectionComment  */
     protected $sut;
@@ -42,8 +42,8 @@ class SubmissionSectionCommentTest extends RepositoryTestCase
 
         //  check query
         $expect = 'QUERY ' .
-            'AND m.submission = [['. self::SUBMISSION_ID .']] ' .
-            'AND m.submissionSection = [['. self::SUBMISSION_SECTION .']] ' .
+            'AND m.submission = [[' . self::SUBMISSION_ID . ']] ' .
+            'AND m.submissionSection = [[' . self::SUBMISSION_SECTION . ']] ' .
             'LIMIT 1';
 
         static::assertEquals($expect, $this->query);

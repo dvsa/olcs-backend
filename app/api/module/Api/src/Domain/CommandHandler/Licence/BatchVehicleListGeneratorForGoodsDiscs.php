@@ -25,7 +25,7 @@ final class BatchVehicleListGeneratorForGoodsDiscs extends AbstractCommandHandle
 
     protected $repoServiceName = 'GoodsDisc';
 
-    const BATCH_SIZE = 30;
+    public const BATCH_SIZE = 30;
 
     public function handleCommand(CommandInterface $command)
     {

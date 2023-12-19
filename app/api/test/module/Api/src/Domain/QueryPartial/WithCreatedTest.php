@@ -39,17 +39,17 @@ class WithCreatedTest extends QueryPartialTestCase
     {
         return [
             [
-                'SELECT a, u, cd, p FROM foo a LEFT JOIN a.createdBy u LEFT JOIN u.contactDetails cd '.
+                'SELECT a, u, cd, p FROM foo a LEFT JOIN a.createdBy u LEFT JOIN u.contactDetails cd ' .
                     'LEFT JOIN cd.person p',
                 []
             ],
             [
-                'SELECT a, u, cd, p FROM foo a LEFT JOIN a.createdBy u LEFT JOIN u.contactDetails cd '.
+                'SELECT a, u, cd, p FROM foo a LEFT JOIN a.createdBy u LEFT JOIN u.contactDetails cd ' .
                     'LEFT JOIN cd.person p',
                 ['ENTITY']
             ],
             [
-                'SELECT a, u, cd, p FROM foo a LEFT JOIN ALIAS.createdBy u LEFT JOIN u.contactDetails cd '.
+                'SELECT a, u, cd, p FROM foo a LEFT JOIN ALIAS.createdBy u LEFT JOIN u.contactDetails cd ' .
                     'LEFT JOIN cd.person p',
                 ['ENTITY', 'ALIAS']
             ],

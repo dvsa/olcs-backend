@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -116,7 +117,6 @@ class TransactionTest extends QueryHandlerTestCase
             ],
             $result->serialize()
         );
-
     }
 
     public function testHandleQueryRefundMultiplePayments()
@@ -194,7 +194,6 @@ class TransactionTest extends QueryHandlerTestCase
             ],
             $result->serialize()
         );
-
     }
 
     private function getMockFee($id, $amount)

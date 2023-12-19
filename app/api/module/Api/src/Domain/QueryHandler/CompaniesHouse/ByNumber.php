@@ -71,7 +71,6 @@ class ByNumber extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->companiesHouseApi = $container->get(CompaniesHouseClient::class);
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

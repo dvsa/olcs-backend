@@ -137,7 +137,6 @@ class CompanyProfileTest extends CompaniesHouseConsumerTestCase
         ];
         $this->setupService();
 
-
         $command = CompanyProfileCmd::create([]);
         $response = $this->sut->handleCommand($command);
 
