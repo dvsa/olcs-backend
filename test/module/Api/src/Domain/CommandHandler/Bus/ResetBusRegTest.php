@@ -3,6 +3,7 @@
 /**
  * Reset BusReg Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;

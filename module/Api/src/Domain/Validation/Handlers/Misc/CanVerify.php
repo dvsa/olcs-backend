@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -19,7 +18,7 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
      *
      * @return bool
      */
-    public function isValid($dto):bool
+    public function isValid($dto): bool
     {
         return $this->isOperator() || $this->isValidAccess($dto);
     }
@@ -33,7 +32,8 @@ class CanVerify extends AbstractHandler implements AuthAwareInterface
      */
     private function isValidAccess($dto): bool
     {
-        if ($this->isTransportManager()
+        if (
+            $this->isTransportManager()
             && $dto instanceof ProcessSignatureResponse
             && method_exists($dto, 'getTransportManagerApplication')
         ) {

@@ -129,7 +129,6 @@ class EventHistoryTest extends RepositoryTestCase
             ->andReturn($irhpApplicationId)
             ->twice();
 
-
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);
 
@@ -343,7 +342,6 @@ class EventHistoryTest extends RepositoryTestCase
 
         $result = $this->sut->fetchPreviousLicenceStatus(1);
         $expectedResult = ['status' => $expectedStatus];
-
 
         self::assertEquals($expectedResult, $result);
     }

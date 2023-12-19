@@ -20,10 +20,10 @@ abstract class AbstractDataExport extends AbstractCommandHandler
 {
     use QueueAwareTrait;
 
-    const ERR_INVALID_REPORT = 'Invalid report name';
-    const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
+    public const ERR_INVALID_REPORT = 'Invalid report name';
+    public const ERR_NO_TRAFFIC_AREAS = 'Traffic areas is empty';
 
-    const FILE_DATETIME_FORMAT = 'Ymd_His';
+    public const FILE_DATETIME_FORMAT = 'Ymd_His';
 
     /**
      * @var array
@@ -95,7 +95,6 @@ abstract class AbstractDataExport extends AbstractCommandHandler
     {
         //  add rows
         while (($row = $dbalResult->fetchAssociative()) !== false) {
-
             $key = $row[$keyFld];
 
             if (!isset($this->csvPool[$key])) {

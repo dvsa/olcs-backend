@@ -3,6 +3,7 @@
 /**
  * Withdraw BusReg Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\Common\Collections\ArrayCollection;

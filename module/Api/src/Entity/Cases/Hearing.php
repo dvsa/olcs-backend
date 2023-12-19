@@ -24,5 +24,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Hearing extends AbstractHearing
 {
-
 }

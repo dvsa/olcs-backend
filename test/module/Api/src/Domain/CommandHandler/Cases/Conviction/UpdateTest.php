@@ -3,6 +3,7 @@
 /**
  * Update Conviction Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Conviction;
 
 use DateTime;

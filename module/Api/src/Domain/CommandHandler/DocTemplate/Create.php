@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use \Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * Create
@@ -32,13 +32,13 @@ class Create extends AbstractCommandHandler implements
     NamingServiceAwareInterface,
     AuthAwareInterface
 {
-    const ERR_MIME = 'ERR_MIME';
-    const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
+    public const ERR_MIME = 'ERR_MIME';
+    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
 
-    use UploaderAwareTrait,
-        NamingServiceAwareTrait,
-        AuthAwareTrait,
-        DocTemplateTrait;
+    use UploaderAwareTrait;
+    use NamingServiceAwareTrait;
+    use AuthAwareTrait;
+    use DocTemplateTrait;
 
     protected $repoServiceName = 'DocTemplate';
 
@@ -55,7 +55,7 @@ class Create extends AbstractCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         //Generate path identifier for docstore
-        $identifier = DocTemplate::TEMPLATE_PATH_PREFIXES[$command->getTemplateFolder()].$command->getFilename();
+        $identifier = DocTemplate::TEMPLATE_PATH_PREFIXES[$command->getTemplateFolder()] . $command->getFilename();
 
         //Dont overwrite exisitng documents on Create
         if ($this->identifierExists($identifier)) {

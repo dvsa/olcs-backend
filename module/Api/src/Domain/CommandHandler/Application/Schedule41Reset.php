@@ -3,6 +3,7 @@
 /**
  * Schedule41Reset.php
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;
@@ -72,7 +73,8 @@ class Schedule41Reset extends AbstractCommandHandler
     {
         foreach ($application->getPublicationLinks() as $publicationLink) {
             /* @var $publicationLink \Dvsa\Olcs\Api\Entity\Publication\PublicationLink */
-            if ($publicationLink->getPublication()->isNew() &&
+            if (
+                $publicationLink->getPublication()->isNew() &&
                 $publicationLink->getPublicationSection()->isSection3()
             ) {
                 $this->result->merge(

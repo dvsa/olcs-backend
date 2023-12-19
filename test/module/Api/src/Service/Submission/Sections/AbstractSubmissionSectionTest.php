@@ -214,7 +214,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $tm = new TransportManager($id);
         $tm->setId($id);
-        $tm->setVersion(($id+10));
+        $tm->setVersion(($id + 10));
         $tm->setTmType($this->generateRefDataEntity('tmType'));
 
         $tm->setHomeCd($this->generateContactDetails(533, ContactDetails::CONTACT_TYPE_REGISTERED_ADDRESS));
@@ -287,7 +287,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         $organisationLicences = new ArrayCollection();
         $applications = new ArrayCollection();
 
-        for ($i=1; $i < 3; $i++) {
+        for ($i = 1; $i < 3; $i++) {
             $licence = $this->generateLicence($organisation, $i);
             $application = $this->generateApplication($i, $licence, Application::APPLICATION_STATUS_GRANTED);
 
@@ -300,7 +300,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
             $applications->add($application);
 
             $applications->add(
-                $this->generateApplication((100+$i), $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
+                $this->generateApplication((100 + $i), $licence, Application::APPLICATION_STATUS_UNDER_CONSIDERATION)
             );
 
             $licence->setApplications($applications);
@@ -407,7 +407,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new OtherLicence();
         $entity->setId($id);
-        $entity->setVersion($id+2);
+        $entity->setVersion($id + 2);
         $entity->setLicNo($id . '-licNo');
         $entity->setHolderName($id . '-holderName');
 
@@ -473,7 +473,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new TmQualification();
         $entity->setId($id);
-        $entity->setVersion(($id+4));
+        $entity->setVersion(($id + 4));
         $entity->setQualificationType($this->generateRefDataEntity('tm-qual'));
         $entity->setCountryCode($this->generateCountry('GB'));
         $entity->setSerialNo('12344321');
@@ -486,7 +486,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $operatingCentres = new ArrayCollection();
 
-        for ($i=1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $operatingCentre = $this->generateOperatingCentre($i);
             $loc = new \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre($licence, $operatingCentre);
             $loc->setNoOfVehiclesRequired(6);
@@ -562,7 +562,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         $application->setIsVariation($isVariation);
 
         $application->setId($id);
-        $application->setVersion(($id*2));
+        $application->setVersion(($id * 2));
         $application->setReceivedDate(new \DateTime('2014-05-05'));
         $application->setGoodsOrPsv($this->generateRefDataEntity('goods'));
         $application->setVehicleType($this->generateRefDataEntity(RefData::APP_VEHICLE_TYPE_HGV));
@@ -683,7 +683,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         }
 
         $complaint->setId($id);
-        $complaint->setVersion(($id+2));
+        $complaint->setVersion(($id + 2));
         $complaint->setIsCompliance($isCompliance);
 
         if (!$isCompliance) {
@@ -707,7 +707,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new Statement($case, $this->generateRefDataEntity('statement_type1'));
         $entity->setId($id);
-        $entity->setVersion(($id+2));
+        $entity->setVersion(($id + 2));
         $entity->setRequestedDate(new \DateTime('2008-08-11'));
         $entity->setRequestorsContactDetails(
             $this->generateContactDetails(
@@ -758,7 +758,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
             0
         );
         $entity->setId($id);
-        $entity->setVersion(($id+2));
+        $entity->setVersion(($id + 2));
         $entity->setRaisedDate($raisedDate ? new \DateTime($raisedDate) : null);
 
         $grounds = new ArrayCollection();
@@ -781,7 +781,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
             $this->generateRefDataEntity('opposition_type1')
         );
         $entity->setId($id);
-        $entity->setVersion(($id+2));
+        $entity->setVersion(($id + 2));
 
         return $entity;
     }
@@ -805,7 +805,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new Conviction();
         $entity->setId($id);
-        $entity->setVersion(($id+2));
+        $entity->setVersion(($id + 2));
         $entity->setOffenceDate(new \DateTime('2007-06-03'));
         $entity->setConvictionDate(new \DateTime('2008-06-03'));
         $entity->setOperatorName('operator1');
@@ -826,7 +826,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new PreviousConviction();
         $entity->setId($id);
-        $entity->setVersion(($id+2));
+        $entity->setVersion(($id + 2));
         $entity->setConvictionDate(new \DateTime('2008-06-03'));
         $entity->setCategoryText('cat-text');
         $entity->setCourtFpn('courtFpn1');
@@ -865,7 +865,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         /** @var SeriousInfringement $entity */
         $entity = m::mock(SeriousInfringement::class)->makePartial();
         $entity->setId($id);
-        $entity->setVersion(($id+2));
+        $entity->setVersion(($id + 2));
         $entity->setSiCategory($this->generateSiCategory(274, 'sicatdesc'));
         $entity->setSiCategoryType($this->generateSiCategoryType(274, 'sicattypedesc'));
         $entity->setInfringementDate(new \DateTime('2009-11-30'));
@@ -882,7 +882,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $ac = new ArrayCollection();
         $method = 'generate' . ucfirst($entity);
-        for ($i=1; $i <= $count; $i++) {
+        for ($i = 1; $i <= $count; $i++) {
             $ac->add(
                 $this->$method($i)
             );
@@ -979,7 +979,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new SiCategory();
         $entity->setId($id);
-        $entity->setVersion(($id+5));
+        $entity->setVersion(($id + 5));
         $entity->setDescription($desc);
 
         return $entity;
@@ -989,7 +989,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new SiCategoryType();
         $entity->setId($id);
-        $entity->setVersion(($id+5));
+        $entity->setVersion(($id + 5));
         $entity->setDescription($desc);
 
         return $entity;
@@ -999,7 +999,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new Prohibition();
         $entity->setId($id);
-        $entity->setVersion(($id+5));
+        $entity->setVersion(($id + 5));
         $entity->setProhibitionDate(new \DateTime('2008-08-11'));
         $entity->setClearedDate(new \DateTime('2012-08-11'));
         $entity->setVrm('VR12 MAB');
@@ -1014,7 +1014,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     {
         $entity = new TmEmployment();
         $entity->setId($id);
-        $entity->setVersion(($id+5));
+        $entity->setVersion(($id + 5));
         $entity->setPosition('Some position');
         $entity->setEmployerName('Employer name');
         $entity->setHoursPerWeek(32);

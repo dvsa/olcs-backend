@@ -24,14 +24,14 @@ use Mockery as m;
  */
 class FeeTypeListTest extends QueryHandlerTestCase
 {
-    const IRFO_FEE_REF_ID = 'IRFO0001';
+    public const IRFO_FEE_REF_ID = 'IRFO0001';
 
-    const FEE_REF_1_ID = 'APP';
-    const FEE_REF_2_ID = 'GRANT';
+    public const FEE_REF_1_ID = 'APP';
+    public const FEE_REF_2_ID = 'GRANT';
 
-    const FEE_DESC = 'fee type ';
+    public const FEE_DESC = 'fee type ';
 
-    const ORG_ID = 9999;
+    public const ORG_ID = 9999;
 
     public function setUp(): void
     {

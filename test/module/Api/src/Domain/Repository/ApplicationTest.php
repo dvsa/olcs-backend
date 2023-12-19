@@ -27,8 +27,8 @@ use Mockery as m;
  */
 class ApplicationTest extends RepositoryTestCase
 {
-    const APP_ID = 8001;
-    const ORG_ID = 7001;
+    public const APP_ID = 8001;
+    public const ORG_ID = 7001;
 
     /** @var Repository\Application | m\MockInterface */
     protected $sut;

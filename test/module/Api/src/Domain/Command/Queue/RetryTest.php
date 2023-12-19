@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Command\Queue;
 
 use Dvsa\Olcs\Api\Domain\Command\Queue\Retry;

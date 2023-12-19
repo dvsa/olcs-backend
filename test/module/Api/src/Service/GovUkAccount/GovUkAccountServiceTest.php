@@ -10,7 +10,7 @@ use Mockery as m;
 
 class GovUkAccountServiceTest extends MockeryTestCase
 {
-    const CONFIG = [
+    public const CONFIG = [
         'redirect_uri' => [
             'logged_in' => 'logged_in_uri',
         ],
@@ -94,7 +94,7 @@ class GovUkAccountServiceTest extends MockeryTestCase
         $this->provider->expects('getState')->twice()->andReturn('some_state');
         $this->provider->expects('getNonce')->andReturn('some_nonce');
         $this->provider->expects('getAuthorizationUrl')->once()->with(
-            m::on(function($params) {
+            m::on(function ($params) {
                 $this->assertArrayHasKey('scope', $params);
                 $this->assertArrayHasKey('redirect_uri', $params);
                 $this->assertEquals($this->provider::DEFAULT_SCOPES, $params['scope']);
@@ -109,7 +109,6 @@ class GovUkAccountServiceTest extends MockeryTestCase
         $this->assertEquals('some_url', $result->getUrl());
         $this->assertEquals('some_state', $result->getState());
         $this->assertEquals('some_nonce', $result->getNonce());
-
     }
 
     public function testGetAuthorisationUrlWithIdentityAssurance(): void
@@ -121,7 +120,7 @@ class GovUkAccountServiceTest extends MockeryTestCase
         $this->provider->expects('getState')->twice()->andReturn('some_state');
         $this->provider->expects('getNonce')->andReturn('some_nonce');
         $this->provider->expects('getAuthorizationUrl')->once()->with(
-            m::on(function($params) {
+            m::on(function ($params) {
                 $this->assertArrayHasKey('scope', $params);
                 $this->assertArrayHasKey('redirect_uri', $params);
                 $this->assertArrayHasKey('vtr', $params);

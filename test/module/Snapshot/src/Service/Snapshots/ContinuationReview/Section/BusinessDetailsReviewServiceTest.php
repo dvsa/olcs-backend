@@ -82,7 +82,7 @@ class BusinessDetailsReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuation-review-business-details-company_number'],
                 ['value' => '12345678', 'header' => true]

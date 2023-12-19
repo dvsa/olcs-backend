@@ -11,7 +11,7 @@ use Laminas\Validator\Exception;
  */
 class ServiceClassification extends AbstractValidator
 {
-    const STRUCTURE_ERROR = 'classification-structure-error';
+    public const STRUCTURE_ERROR = 'classification-structure-error';
 
     /**
      * @var array

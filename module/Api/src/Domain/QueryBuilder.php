@@ -24,7 +24,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class QueryBuilder implements QueryBuilderInterface
 {
-    const ERR_QB_NOT_SET = 'Doctrine Query Builder is not set';
+    public const ERR_QB_NOT_SET = 'Doctrine Query Builder is not set';
 
     /**
      * @var DoctrineQueryBuilder

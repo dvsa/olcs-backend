@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch;
@@ -99,7 +100,8 @@ final class InForceInterim extends AbstractCommandHandler implements Transaction
 
         /** @var CommunityLic $commLic */
         foreach ($application->getLicence()->getCommunityLics() as $commLic) {
-            if ($commLic->getStatus() !== null
+            if (
+                $commLic->getStatus() !== null
                 && $commLic->getStatus()->getId() == CommunityLic::STATUS_PENDING
             ) {
                 $commLic->setStatus($this->getRepo()->getRefdataReference(CommunityLic::STATUS_ACTIVE));

@@ -13,7 +13,7 @@ class SystemParameter extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    const DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT = 21;
+    public const DIGITAL_CONTINUATION_REMINDER_PERIOD_DEFAULT = 21;
 
     /**
      * Fetch a system parameter value, return null if not found
@@ -116,7 +116,7 @@ class SystemParameter extends AbstractRepository
         $value = (int) $this->fetchValue(Entity::SYSTEM_DATA_RETENTION_USER);
         if ($value === 0) {
             throw new RuntimeException(
-                'System parameter "'. Entity::SYSTEM_DATA_RETENTION_USER .'" is not set'
+                'System parameter "' . Entity::SYSTEM_DATA_RETENTION_USER . '" is not set'
             );
         }
         return $value;

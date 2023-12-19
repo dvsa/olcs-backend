@@ -21,7 +21,7 @@ class CreateDefaultIrhpPermitApplicationsTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('IrhpPermitWindow', IrhpPermitWindowRepo::class);
         $this->sut = new CreateDefaultIrhpPermitApplications();
-     
+
         parent::setUp();
     }
 

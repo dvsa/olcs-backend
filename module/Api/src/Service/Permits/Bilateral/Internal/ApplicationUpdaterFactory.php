@@ -15,7 +15,7 @@ class ApplicationUpdaterFactory implements FactoryInterface
      * @param array|null $options
      * @return ApplicationUpdater
      */
-public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ApplicationUpdater
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ApplicationUpdater
     {
         return new ApplicationUpdater(
             $container->get('PermitsBilateralInternalApplicationCountryUpdater')

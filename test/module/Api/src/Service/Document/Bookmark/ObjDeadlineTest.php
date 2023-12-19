@@ -13,7 +13,7 @@ class ObjDeadlineTest extends MockeryTestCase
 {
     public function test()
     {
-        $sut = new ObjDeadline;
+        $sut = new ObjDeadline();
         $sut->setData(['pubDate' => '2003-02-01']);
 
         static::assertEquals('22/02/2003', $sut->render());

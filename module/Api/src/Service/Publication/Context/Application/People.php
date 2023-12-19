@@ -48,7 +48,6 @@ final class People extends AbstractContext
                 case 'A':
                     $people[$aop->getPerson()->getId()] = $aop->getPerson();
                     break;
-
             }
         }
 

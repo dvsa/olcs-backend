@@ -1,4 +1,5 @@
 <?php
+
 /**
  * DocTemplate shared methods trait
  *

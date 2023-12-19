@@ -2188,7 +2188,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage(
-            'Missing required definition of sections for irhpPermitTypeId: '.$irhpPermitTypeId
+            'Missing required definition of sections for irhpPermitTypeId: ' . $irhpPermitTypeId
         );
 
         $irhpPermitType = m::mock(IrhpPermitType::class)->makePartial();
@@ -3472,7 +3472,6 @@ class IrhpApplicationEntityTest extends EntityTester
         $irhpPermitApplicationIT->shouldReceive('getId')
             ->withNoArgs()
             ->andReturnNull();
-
 
         $irhpPermitApplicationDE = m::mock(IrhpPermitApplication::class);
         $irhpPermitApplicationDE->shouldReceive('getIrhpPermitWindow->getIrhpPermitStock->getCountry->getId')
@@ -6866,7 +6865,7 @@ class IrhpApplicationEntityTest extends EntityTester
             [RefData::BUSINESS_PROCESS_AG, false],
         ];
     }
-        
+
     /**
      * @dataProvider dpIsOngoing
      */

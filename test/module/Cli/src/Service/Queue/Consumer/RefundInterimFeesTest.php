@@ -17,7 +17,7 @@ use Mockery as m;
 
 class RefundInterimFeesTest extends AbstractConsumerTestCase
 {
-    const QUEUE_ITEM_ENTITY_ID = 17;
+    public const QUEUE_ITEM_ENTITY_ID = 17;
 
     /**
      * @var QueueEntity
@@ -100,7 +100,6 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             new Result(),
             false
         );
-
 
         $result = $this->sut->processMessage($this->item);
 
@@ -204,7 +203,6 @@ class RefundInterimFeesTest extends AbstractConsumerTestCase
             new Result(),
             false
         );
-
 
         $this->expectCommand(
             UpdateFeeStatus::class,

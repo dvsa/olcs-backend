@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Surrender;
 
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -31,7 +30,6 @@ class OpenBusRegTest extends QueryHandlerTestCase
         $this->repoMap['BusRegSearchView']->shouldReceive(
             'fetchActiveByLicence'
         )->andReturn($expected);
-
 
         $this->assertEquals([
             'count' => 1,

@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Publication\Process;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
@@ -95,7 +94,7 @@ class Text1 implements ProcessInterface
         $tradingNames = $organisation->getTradingNames();
 
         $licence = "\n" . sprintf(
-            '%s %s '. "\n" . '%s',
+            '%s %s ' . "\n" . '%s',
             $licence->getLicNo(),
             $licence->getLicenceTypeShortCode(),
             $organisation->getName()

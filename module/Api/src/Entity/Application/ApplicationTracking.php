@@ -22,10 +22,10 @@ use Laminas\Filter\Word\UnderscoreToCamelCase;
  */
 class ApplicationTracking extends AbstractApplicationTracking
 {
-    const STATUS_NOT_SET        = 0;
-    const STATUS_ACCEPTED       = 1;
-    const STATUS_NOT_ACCEPTED   = 2;
-    const STATUS_NOT_APPLICABLE = 3;
+    public const STATUS_NOT_SET        = 0;
+    public const STATUS_ACCEPTED       = 1;
+    public const STATUS_NOT_ACCEPTED   = 2;
+    public const STATUS_NOT_APPLICABLE = 3;
 
     protected $sections =  [
         'Addresses',
@@ -98,9 +98,9 @@ class ApplicationTracking extends AbstractApplicationTracking
     public function exchangeStatusArray(array $data)
     {
         foreach ($this->sections as $section) {
-            $key = lcfirst($section).'Status';
+            $key = lcfirst($section) . 'Status';
             if (isset($data[$key])) {
-                $method = 'set'.$section.'Status';
+                $method = 'set' . $section . 'Status';
                 $this->$method($data[$key]);
             }
         }

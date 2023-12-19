@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
  */
 class GoodsDisc extends AbstractGoodsDisc
 {
-    const ERROR_NO_DISCS_TO_PRINT = 'err_no_discs';
+    public const ERROR_NO_DISCS_TO_PRINT = 'err_no_discs';
 
     public function __construct(LicenceVehicle $licenceVehicle)
     {

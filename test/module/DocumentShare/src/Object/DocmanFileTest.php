@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\DocumentShare\Data\object;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;

@@ -6,6 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  * @note ported from olcs-internal Cli\Service\Queue
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue;
 
 use Doctrine\DBAL\Exception as DBALException;

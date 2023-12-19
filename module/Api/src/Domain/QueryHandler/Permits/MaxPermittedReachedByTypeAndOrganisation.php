@@ -91,7 +91,6 @@ class MaxPermittedReachedByTypeAndOrganisation extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->currentDateTimeFactory = $container->get('CommonCurrentDateTimeFactory');
         $this->stockLicenceMaxPermittedCounter = $container->get(
             'PermitsAvailabilityStockLicenceMaxPermittedCounter'

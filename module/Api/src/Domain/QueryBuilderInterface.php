@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain;
 
 use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;

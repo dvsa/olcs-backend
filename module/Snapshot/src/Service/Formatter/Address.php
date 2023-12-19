@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Snapshot\Service\Formatter;
 
 /**
@@ -35,7 +36,6 @@ class Address
     public static function format($data, $column = array())
     {
         if (isset($column['addressFields'])) {
-
             if ($column['addressFields'] == 'FULL') {
                 $fields = self::$allFields;
             } else {
@@ -69,9 +69,7 @@ class Address
         }
 
         foreach ($fields as $item) {
-
             if (isset($data[$item]) && !empty($data[$item])) {
-
                 $parts[] = $data[$item];
             }
         }

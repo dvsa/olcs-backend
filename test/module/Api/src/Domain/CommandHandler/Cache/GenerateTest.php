@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cache\Generate as Handler;
 use Dvsa\Olcs\Transfer\Query\Cache\ById;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Test generating a cache
@@ -18,6 +19,13 @@ class GenerateTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = m::mock(Handler::class)->makePartial()->shouldAllowMockingProtectedMethods();
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
+
         parent::setUp();
     }
 

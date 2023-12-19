@@ -3,6 +3,7 @@
 /**
  * EbsrSubmissionListList Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;

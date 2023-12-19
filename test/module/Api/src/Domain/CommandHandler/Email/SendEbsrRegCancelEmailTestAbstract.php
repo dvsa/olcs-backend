@@ -3,6 +3,7 @@
 /**
  * Abstract for testing ebsr registered and cancelled emails
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

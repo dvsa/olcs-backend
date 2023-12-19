@@ -3,6 +3,7 @@
 /**
  * Create User Selfserve Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
@@ -79,7 +80,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             ],
             'permission' => UserEntity::PERMISSION_ADMIN,
         ];
-
 
         $this->mockedAdapter->shouldReceive('register')->once()->byDefault();
 
@@ -350,7 +350,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
             'permission' => UserEntity::PERMISSION_ADMIN,
         ];
 
-
         $this->mockedAdapter->shouldReceive('register')
             ->once()
             ->andThrow(ClientException::class);
@@ -375,7 +374,6 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->repoMap['User']
             ->shouldReceive('delete')
             ->once();
-
 
         $this->repoMap['ContactDetails']->shouldReceive('populateRefDataReference')
             ->once()

@@ -45,7 +45,6 @@ final class CreateFromGrant extends AbstractCommandHandler implements Transactio
          */
         $application = $this->getRepo('Application')->fetchWithLicenceAndOc($command->getApplication());
 
-
         $inspectionRequest = $this->createInspectionRequestObject($command, $application);
         $hasType = $inspectionRequest->getRequestType() === $this->getRepo()->getRefdataReference(InspectionRequestEntity::REQUEST_TYPE_NEW_OP);
         if ($hasType) {

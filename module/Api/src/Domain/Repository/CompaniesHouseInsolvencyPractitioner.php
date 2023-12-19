@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseInsolvencyPractitioner as 
 
 class CompaniesHouseInsolvencyPractitioner extends AbstractRepository
 {
-
     protected $entity = Entity::class;
 
     public function fetchByCompany($companyId, $hydrateMode = Query::HYDRATE_OBJECT)

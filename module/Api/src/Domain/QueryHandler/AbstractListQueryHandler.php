@@ -3,6 +3,7 @@
 /**
  * Abstract List Query Handler
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Transfer\Query\QueryInterface;

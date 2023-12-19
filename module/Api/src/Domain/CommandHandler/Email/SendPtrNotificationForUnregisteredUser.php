@@ -1,10 +1,11 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 class SendPtrNotificationForUnregisteredUser extends AbstractEmailOnlyCommandHandler
 {
-
     protected function getEmailSubject(): string
     {
         return 'email.insolvent-company-notification.subject';

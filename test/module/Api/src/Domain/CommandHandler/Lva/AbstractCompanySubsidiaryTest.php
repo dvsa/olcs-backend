@@ -19,11 +19,11 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class AbstractCompanySubsidiaryTest extends CommandHandlerTestCase
 {
-    const ID = 1111;
-    const LICENCE_ID = 2222;
-    const TASK_ID = 7777;
-    const APP_ID = 8888;
-    const VERSION = 99;
+    public const ID = 1111;
+    public const LICENCE_ID = 2222;
+    public const TASK_ID = 7777;
+    public const APP_ID = 8888;
+    public const VERSION = 99;
 
     /** @var  AbstractCompanySubsidiaryStub */
     protected $sut;

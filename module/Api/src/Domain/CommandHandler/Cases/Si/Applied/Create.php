@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class Create extends AbstractCommandHandler
 {
-    const DATE_FORMAT = 'Y-m-d';
+    public const DATE_FORMAT = 'Y-m-d';
 
     protected $repoServiceName = 'SiPenalty';
     protected $extraRepos = ['SeriousInfringement'];

@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cpms;
 
 use Dvsa\Olcs\Api\Domain\CpmsAwareInterface;

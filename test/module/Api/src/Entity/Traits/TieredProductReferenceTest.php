@@ -12,7 +12,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class TieredProductReferenceTest extends MockeryTestCase
 {
-    const PROD_REFS = [
+    public const PROD_REFS = [
         'Jan' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
         'Feb' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
         'Mar' => FeeType::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,

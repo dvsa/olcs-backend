@@ -29,10 +29,12 @@ class DiscsNumbering extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         $result = [];
-        if (!$query->getNiFLag() ||
+        if (
+            !$query->getNiFLag() ||
             ($query->getNiFlag() === 'N' && !$query->getOperatorType()) ||
             !$query->getLicenceType() ||
-            !$query->getDiscSequence()) {
+            !$query->getDiscSequence()
+        ) {
             return ['result' => $result, 'count' => 0];
         }
 

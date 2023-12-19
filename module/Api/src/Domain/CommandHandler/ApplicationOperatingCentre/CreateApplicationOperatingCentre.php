@@ -30,7 +30,8 @@ final class CreateApplicationOperatingCentre extends AbstractCommandHandler impl
         $applicationOperatingCentre->setNoOfTrailersRequired($command->getNoOfTrailersRequired());
         $applicationOperatingCentre->setS4(
             $this->getRepo()->getReference(
-                S4::class, $command->getS4()
+                S4::class,
+                $command->getS4()
             )
         );
 

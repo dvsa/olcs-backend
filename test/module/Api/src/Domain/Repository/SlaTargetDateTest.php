@@ -5,12 +5,13 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
-use \Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * SlaTargetDate Repo Test
@@ -19,7 +20,6 @@ use \Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class SlaTargetDateTest extends RepositoryTestCase
 {
-
     /**
      * @var m\MockInterface|Repository\SlaTargetDate
      */
@@ -60,7 +60,7 @@ class SlaTargetDateTest extends RepositoryTestCase
 
         $result = $this->sut->fetchByDocumentId($documentId);
 
-        $this->assertEquals('QUERY AND m.document = [['.$documentId.']]', $this->query);
+        $this->assertEquals('QUERY AND m.document = [[' . $documentId . ']]', $this->query);
 
         $this->assertEquals('foobar', $result);
     }

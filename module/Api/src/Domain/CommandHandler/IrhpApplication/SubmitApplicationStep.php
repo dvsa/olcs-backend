@@ -65,7 +65,6 @@ class SubmitApplicationStep extends AbstractCommandHandler implements Transactio
     {
         $fullContainer = $container;
 
-
         $this->qaContextGenerator = $container->get('QaContextGenerator');
         $this->formControlServiceManager = $container->get('FormControlServiceManager');
         return parent::__invoke($fullContainer, $requestedName, $options);

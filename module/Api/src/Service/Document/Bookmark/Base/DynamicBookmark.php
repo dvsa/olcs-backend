@@ -14,8 +14,8 @@ abstract class DynamicBookmark extends AbstractBookmark implements RepositoryMan
 {
     use RepositoryManagerAwareTrait;
 
-    const TYPE = 'dynamic';
-    const PARAM_BUSREG_ID = 'busRegId';
+    public const TYPE = 'dynamic';
+    public const PARAM_BUSREG_ID = 'busRegId';
 
     protected $data = [];
 

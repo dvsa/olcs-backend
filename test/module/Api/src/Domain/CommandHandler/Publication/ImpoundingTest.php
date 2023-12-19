@@ -3,6 +3,7 @@
 /**
  * Publish Impounding Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,7 +16,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
-
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;

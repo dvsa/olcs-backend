@@ -9,6 +9,7 @@ use Laminas\Http\Request as HttpRequest;
 use Laminas\Http\Response as HttpResponse;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class NysiisRestClientTest
@@ -16,6 +17,16 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class NysiisRestClientTest extends MockeryTestCase
 {
+    public function setUp(): void
+    {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+
+        parent::setUp();
+    }
+
     /**
      * tests makeRequest
      *

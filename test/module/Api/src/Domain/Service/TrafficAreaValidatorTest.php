@@ -537,7 +537,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
             ->with($postcode, $this->adminAreaTrafficAreaRepo)
             ->once()
-            ->andThrow(new \Exception);
+            ->andThrow(new \Exception());
 
         $app = m::mock(Application::class);
 

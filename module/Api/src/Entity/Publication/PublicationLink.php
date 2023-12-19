@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Entity\Publication;
 
 use Doctrine\ORM\Mapping as ORM;
-
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddDays;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\AddWorkingDays;
@@ -43,8 +42,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class PublicationLink extends AbstractPublicationLink
 {
-    const ADD_ENTRY_ERROR = 'Can only create publication entries for publications with status new';
-    const EDIT_ENTRY_ERROR = 'Only publications with status of New may be edited';
+    public const ADD_ENTRY_ERROR = 'Can only create publication entries for publications with status new';
+    public const EDIT_ENTRY_ERROR = 'Only publications with status of New may be edited';
 
     /**
      * Creates Application publication entry

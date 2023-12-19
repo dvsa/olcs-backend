@@ -12,11 +12,11 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class IrhpStartDate extends SingleValueAbstract
 {
-    const FORMATTER = 'DateDayMonthYear';
-    const FIELD  = 'validFrom';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irhpPermitStock';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'DateDayMonthYear';
+    public const FIELD  = 'validFrom';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'irhpPermitStock';
+    public const QUERY_CLASS = Qry::class;
 
     public function render()
     {

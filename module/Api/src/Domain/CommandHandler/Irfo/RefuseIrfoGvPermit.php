@@ -3,6 +3,7 @@
 /**
  * Refuse Irfo Gv Permit
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelIrfoGvPermitFees as CancelFeesDto;

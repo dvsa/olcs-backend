@@ -77,7 +77,6 @@ class GetListByIrhpApplicationTest extends QueryHandlerTestCase
             'count' => 0,
         ];
 
-
         $result = $this->sut->handleQuery($query);
         $this->assertEquals($expectedResult, $result);
     }

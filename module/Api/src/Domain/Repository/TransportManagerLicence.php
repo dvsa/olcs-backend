@@ -66,10 +66,10 @@ class TransportManagerLicence extends AbstractRepository
     {
         $dqb = $this->createQueryBuilder();
 
-        $dqb->andWhere($dqb->expr()->eq($this->alias .'.licence', ':licenceId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias . '.licence', ':licenceId'))
             ->setParameter('licenceId', $licenceId);
 
-        $dqb->join($this->alias .'.transportManager', 'tm')
+        $dqb->join($this->alias . '.transportManager', 'tm')
             ->join('tm.homeCd', 'hcd')
             ->join('hcd.person', 'p')
             ->select($this->alias . '.id')
@@ -146,9 +146,9 @@ class TransportManagerLicence extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':tmId'))
             ->setParameter('tmId', $tmId);
-        $qb->andWhere($qb->expr()->eq($this->alias .'.licence', ':licenceId'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.licence', ':licenceId'))
             ->setParameter('licenceId', $licenceId);
 
         return $qb->getQuery()->getResult();

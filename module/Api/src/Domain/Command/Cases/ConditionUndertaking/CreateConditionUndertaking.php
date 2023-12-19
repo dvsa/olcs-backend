@@ -3,6 +3,7 @@
 /**
  * CreateConditionUndertaking.php
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

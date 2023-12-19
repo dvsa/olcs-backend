@@ -82,7 +82,6 @@ class QueueTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(CreateTask::class, $taskParams, $createTaskResult);
 
-
         $result = $this->sut->handleCommand($command);
         $messages = [
             'Queue created',

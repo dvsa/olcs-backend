@@ -3,6 +3,7 @@
 /**
  * IrfoDetails Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Irfo\IrfoDetails;
@@ -36,6 +37,5 @@ class IrfoDetailsTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
         $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
-
     }
 }

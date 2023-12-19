@@ -13,6 +13,7 @@ use Dvsa\Olcs\Cli\Domain\Command as CliCommand;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Enqueue;
 use Dvsa\Olcs\Cli\Domain\Query as CliQuery;
 use Dvsa\Olcs\Transfer\Command\Application\NotTakenUpApplication;
+use Olcs\Logging\Log\Logger;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\Console\Adapter\AdapterInterface;
@@ -54,6 +55,12 @@ class BatchControllerTest extends MockeryTestCase
         $this->sut
             ->setConsole($this->mockConsole)
             ->setPluginManager($this->pm);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testLicenceStatusRulesActionVerboseMessages()
@@ -866,7 +873,6 @@ class BatchControllerTest extends MockeryTestCase
         $this->mockConsole
             ->shouldReceive('writeLine')->once()->with(m::pattern('/' . addslashes(CliCommand\ImportUsersFromCsv::class) . '$/'))
             ->shouldReceive('writeLine')->once()->with(m::pattern('/unit_message$/'));
-
 
         $this->sut->importUsersFromCsvAction();
     }

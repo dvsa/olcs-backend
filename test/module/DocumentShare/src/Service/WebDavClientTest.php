@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
@@ -19,8 +18,8 @@ use org\bovigo\vfs\vfsStream;
  */
 class WebDavClientTest extends MockeryTestCase
 {
-    const BASE_URI = 'http://testing';
-    const WORKSPACE = 'unit_Workspace';
+    public const BASE_URI = 'http://testing';
+    public const WORKSPACE = 'unit_Workspace';
 
     /** @var  Client */
     protected $sut;

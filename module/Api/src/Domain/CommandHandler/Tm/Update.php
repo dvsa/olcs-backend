@@ -83,7 +83,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $result->addMessage('Transport Manager updated successfully');
         $result->merge($personResult);
 
-
         if ($workAddressResult->getFlag('hasChanged')) {
             $result->addId('workAddress', $workAddressResult->getId('address'));
             $result->addMessage('Work address updated');

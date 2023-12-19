@@ -13,7 +13,7 @@ use Laminas\View\Renderer\RendererInterface;
 
 class AnswersSummaryRowGenerator
 {
-    const TEMPLATE_DIRECTORY = 'answers-summary/';
+    public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
     /** @var AnswersSummaryRowFactory */
     private $answersSummaryRowFactory;

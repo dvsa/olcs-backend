@@ -12,10 +12,10 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrOtherServiceNos extends SingleValueAbstract
 {
-    const FORMATTER = 'BrOtherServiceNos';
-    const FIELD  = 'otherServices';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
-    const BUNDLE = ['otherServices'];
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'BrOtherServiceNos';
+    public const FIELD  = 'otherServices';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
+    public const BUNDLE = ['otherServices'];
+    public const QUERY_CLASS = Qry::class;
 }

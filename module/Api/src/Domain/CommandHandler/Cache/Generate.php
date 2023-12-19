@@ -18,9 +18,9 @@ use Olcs\Logging\Log\Logger;
  */
 class Generate extends AbstractCommandHandler
 {
-    const UPDATE_MSG = 'Cache updated for %s without a unique id';
-    const UPDATE_UNIQUE_MSG = 'Cache updated for %s with unique id of %s';
-    const UPDATE_ERROR_MSG = 'Cache update failed for %s with error message: %s';
+    public const UPDATE_MSG = 'Cache updated for %s without a unique id';
+    public const UPDATE_UNIQUE_MSG = 'Cache updated for %s with unique id of %s';
+    public const UPDATE_ERROR_MSG = 'Cache update failed for %s with error message: %s';
 
     /**
      * Handle command to generate a cache

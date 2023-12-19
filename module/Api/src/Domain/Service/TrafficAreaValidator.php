@@ -15,11 +15,11 @@ use Interop\Container\ContainerInterface;
  */
 class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInterface
 {
-    const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
-    const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
-    const ERR_TA_PSV_SR = 'ERR_TA_PSV_SR'; // Operator already has PSV SR licence/application in same Traffic Area
-    const ERR_TA_PSV_RES = 'ERR_TA_PSV_RES'; // Operator already has PSV Restricted licence/application in same Traffic Area
-    const ERR_TA_NI_APP = 'ERR_TA_NI_APP'; // GB application with NI traffic area
+    public const ERR_TA_GOODS = 'ERR_TA_GOODS';   // Operator already has Goods licence/application in same Traffic Area
+    public const ERR_TA_PSV = 'ERR_TA_PSV';       // Operator already has PSV licence/application in same Traffic Area
+    public const ERR_TA_PSV_SR = 'ERR_TA_PSV_SR'; // Operator already has PSV SR licence/application in same Traffic Area
+    public const ERR_TA_PSV_RES = 'ERR_TA_PSV_RES'; // Operator already has PSV Restricted licence/application in same Traffic Area
+    public const ERR_TA_NI_APP = 'ERR_TA_NI_APP'; // GB application with NI traffic area
 
     protected $messages = [];
 
@@ -66,7 +66,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         if ($entity instanceof Application && $entity->isNew()) {
             // new application
-            if ($trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
+            if (
+                $trafficArea->getId() === TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
                 && $entity->getNiFlag() === 'N'
             ) {
                 // GB application with NI traffic area
@@ -125,7 +126,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
             // orgLicence is Valid, suspended or curtailed AND
             // orgLicence does not have a queued revocation rule AND
             // orgLicence is same trafiic area
-            if ($orgLicence !== $application->getLicence() &&
+            if (
+                $orgLicence !== $application->getLicence() &&
                 in_array($orgLicence->getStatus()->getId(), $validLicenceStatuses) &&
                 !$orgLicence->hasQueuedRevocation() &&
                 $orgLicence->getTrafficArea()->getId() === $trafficAreaId
@@ -144,7 +146,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
                 // orgApplication is Not submitted, under consideration or granted AND
                 // orgApplication is a new application AND
                 // orgApplication is same trafiic area
-                if ($orgApplication !== $application &&
+                if (
+                    $orgApplication !== $application &&
                     in_array($orgApplication->getStatus()->getId(), $validApplicationStatuses) &&
                     $orgApplication->isNew() &&
                     $orgApplication->getTrafficArea() &&
@@ -183,7 +186,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
     {
         // if its a new goods application and there is an
         // existing application (not variation) with the same traffic area
-        if ($application->isGoods() &&
+        if (
+            $application->isGoods() &&
             $existingApplication->isGoods()
         ) {
             return self::ERR_TA_GOODS;
@@ -191,7 +195,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         // if its a new PSV application (excluding special restricted)
         // and there is an existing PSV application (not variation) with the same traffic area
-        if ($application->isPsv() &&
+        if (
+            $application->isPsv() &&
             !$application->isSpecialRestricted() &&
             $existingApplication->isPsv() &&
             !$existingApplication->isSpecialRestricted()
@@ -201,7 +206,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         // if its a new PSV special restricted application
         // and there is an existing Special restricted PSV application (not variation) with the same traffic area
-        if ($application->isPsv() &&
+        if (
+            $application->isPsv() &&
             $application->isSpecialRestricted() &&
             $existingApplication->isPsv() &&
             $existingApplication->isSpecialRestricted()
@@ -221,7 +227,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
     {
         // if its a new goods application and there is an 'active'
         // goods licence with the same traffic area
-        if ($application->isGoods() &&
+        if (
+            $application->isGoods() &&
             $licence->isGoods()
         ) {
             return self::ERR_TA_GOODS;
@@ -229,7 +236,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         // if its a new PSV application (excluding restricted and special restricted)
         // and there is an 'active' PSV licence with the same traffic area
-        if ($application->isPsv() &&
+        if (
+            $application->isPsv() &&
             !$application->isSpecialRestricted() &&
             !$application->isRestricted() &&
             $licence->isPsv() &&
@@ -241,7 +249,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         // if its a new PSV special restricted application and there is an 'active'
         // PSV Special restricted licence
-        if ($application->isPsv() &&
+        if (
+            $application->isPsv() &&
             $application->isSpecialRestricted() &&
             $licence->isPsv() &&
             $licence->isSpecialRestricted()
@@ -251,7 +260,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         // if its a new PSV special restricted application
         // and there is an 'active' PSV Restricted licence
-        if ($application->isPsv() &&
+        if (
+            $application->isPsv() &&
             $application->isRestricted() &&
             $licence->isPsv() &&
             $licence->isRestricted()

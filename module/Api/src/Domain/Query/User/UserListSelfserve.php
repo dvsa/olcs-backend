@@ -3,6 +3,7 @@
 /**
  * User List Selfserve
  */
+
 namespace Dvsa\Olcs\Api\Domain\Query\User;
 
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;

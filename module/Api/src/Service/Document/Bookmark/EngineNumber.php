@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class EngineNumber extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'vehicle-engine-number';
+    public const FIELD = 'vehicle-engine-number';
 }

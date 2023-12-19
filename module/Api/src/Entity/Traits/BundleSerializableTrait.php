@@ -90,7 +90,8 @@ trait BundleSerializableTrait
                 continue;
             }
 
-            if ($value instanceof Proxy
+            if (
+                $value instanceof Proxy
                 || $value instanceof ArrayCollection
                 || $value instanceof AbstractLazyCollection
                 || $value instanceof BundleSerializableInterface
@@ -126,7 +127,8 @@ trait BundleSerializableTrait
         // If we haven't asked for the property
         if ($propertyBundle === null) {
             // ...and it is a RefData entity
-            if ($value instanceof RefData
+            if (
+                $value instanceof RefData
                 // ...or initialized proxy
                 && (!($value instanceof Proxy) || $value->__isInitialized())
             ) {

@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
@@ -35,7 +37,6 @@ class SendPtrNotificationForUnregisteredUserTest extends CommandHandlerTestCase
             'emailAddress' => $emailAddress,
             'translateToWelsh' => 'N'
         ]);
-
 
         $this->mockedSmServices[TemplateRenderer::class]->shouldReceive('renderBody')->with(
             m::type(Message::class),

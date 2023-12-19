@@ -3,6 +3,7 @@
 /**
  * Create a new publication based on the previous one
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;

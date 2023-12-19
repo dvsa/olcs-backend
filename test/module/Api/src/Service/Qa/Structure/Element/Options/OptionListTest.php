@@ -15,13 +15,13 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class OptionListTest extends MockeryTestCase
 {
-    const ITEM_1_VALUE = '1';
-    const ITEM_1_LABEL = 'Food';
-    const ITEM_1_HINT = 'Hint for the Food item';
+    public const ITEM_1_VALUE = '1';
+    public const ITEM_1_LABEL = 'Food';
+    public const ITEM_1_HINT = 'Hint for the Food item';
 
-    const ITEM_2_VALUE = '3';
-    const ITEM_2_LABEL = 'Metals';
-    const ITEM_2_HINT = 'Hint for the Metals item';
+    public const ITEM_2_VALUE = '3';
+    public const ITEM_2_LABEL = 'Metals';
+    public const ITEM_2_HINT = 'Hint for the Metals item';
 
     private $option1;
 
@@ -68,7 +68,7 @@ class OptionListTest extends MockeryTestCase
 
         $this->option1->shouldReceive('getRepresentation')
             ->andReturn($option1Representation);
-        
+
         $this->option2->shouldReceive('getRepresentation')
             ->andReturn($option2Representation);
 

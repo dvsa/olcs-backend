@@ -3,6 +3,7 @@
 /**
  * Schedule41Refuse.php
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\Criteria;

@@ -16,7 +16,7 @@ class LicenceStatusRule extends AbstractQueryHandler
 
     /**
      * @param \Dvsa\Olcs\Transfer\Query\LicenceStatusRule\LicenceStatusRule $query
-     * 
+     *
      * @return \Dvsa\Olcs\Api\Domain\QueryHandler\Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

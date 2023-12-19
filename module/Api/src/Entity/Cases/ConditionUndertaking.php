@@ -33,26 +33,26 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ConditionUndertaking extends AbstractConditionUndertaking
 {
-    const ATTACHED_TO_LICENCE = 'cat_lic';
-    const ATTACHED_TO_OPERATING_CENTRE = 'cat_oc';
+    public const ATTACHED_TO_LICENCE = 'cat_lic';
+    public const ATTACHED_TO_OPERATING_CENTRE = 'cat_oc';
 
-    const ADDED_VIA_CASE = 'cav_case';
-    const ADDED_VIA_LICENCE = 'cav_lic';
-    const ADDED_VIA_APPLICATION = 'cav_app';
+    public const ADDED_VIA_CASE = 'cav_case';
+    public const ADDED_VIA_LICENCE = 'cav_lic';
+    public const ADDED_VIA_APPLICATION = 'cav_app';
 
-    const TYPE_CONDITION = 'cdt_con';
-    const TYPE_UNDERTAKING = 'cdt_und';
+    public const TYPE_CONDITION = 'cdt_con';
+    public const TYPE_UNDERTAKING = 'cdt_und';
 
-    const SMALL_VEHICLE_UNDERTAKINGS = 'Small vehicles undertakings';
+    public const SMALL_VEHICLE_UNDERTAKINGS = 'Small vehicles undertakings';
 
-    const LIGHT_GOODS_VEHICLE_UNDERTAKINGS =
+    public const LIGHT_GOODS_VEHICLE_UNDERTAKINGS =
         'All authorised vehicles shall not exceed 3,500 Kilograms (kg), including when combined with a trailer.';
 
-    const ACTION_ADD = 'A';
-    const ACTION_UPDATE = 'U';
-    const ACTION_DELETE = 'D';
+    public const ACTION_ADD = 'A';
+    public const ACTION_UPDATE = 'U';
+    public const ACTION_DELETE = 'D';
 
-    const CATEGORY_OTHER = 'cu_cat_other';
+    public const CATEGORY_OTHER = 'cu_cat_other';
 
     /**
      * Construct Condition Undertaking entity

@@ -518,7 +518,7 @@ class LicenceEntityTest extends EntityTester
         $licence->shouldReceive('getTotAuthHgvVehicles')
             ->withNoArgs()
             ->andReturn($totAuthHgvVehicles);
-        
+
         $this->assertEquals(
             $expected,
             $licence->getTotAuthHgvVehiclesZeroCoalesced()
@@ -2552,21 +2552,21 @@ class LicenceEntityTest extends EntityTester
             $communityLic = new CommunityLicEntity();
             $communityLic->setIssueNo(0);
             $communityLic->setStatus(new RefData($status));
-            $communityLics[$status .'-'. 0] = $communityLic;
+            $communityLics[$status . '-' . 0] = $communityLic;
 
             $communityLic = new CommunityLicEntity();
             $communityLic->setIssueNo(1);
             $communityLic->setStatus(new RefData($status));
-            $communityLics[$status .'-'. 1] = $communityLic;
+            $communityLics[$status . '-' . 1] = $communityLic;
         }
         $licence->setCommunityLics(new ArrayCollection($communityLics));
 
         $result = $licence->getActiveCommunityLicences();
 
         $this->assertCount(3, $result);
-        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_ACTIVE .'-1']));
-        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_PENDING .'-1']));
-        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_SUSPENDED .'-1']));
+        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_ACTIVE . '-1']));
+        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_PENDING . '-1']));
+        $this->assertTrue($result->contains($communityLics[CommunityLicEntity::STATUS_SUSPENDED . '-1']));
     }
 
     public function testGetActiveVariations()
@@ -2590,19 +2590,19 @@ class LicenceEntityTest extends EntityTester
             $application = m::mock(Application::class)->makePartial();
             $application->setIsVariation(false);
             $application->setStatus(new RefData($status));
-            $applications[$status .'-'. 0] = $application;
+            $applications[$status . '-' . 0] = $application;
 
             $application = m::mock(Application::class)->makePartial();
             $application->setIsVariation(true);
             $application->setStatus(new RefData($status));
-            $applications[$status .'-'. 1] = $application;
+            $applications[$status . '-' . 1] = $application;
         }
         $licence->setApplications(new ArrayCollection($applications));
 
         $result = $licence->getActiveVariations();
 
         $this->assertCount(1, $result);
-        $this->assertTrue($result->contains($applications[Application::APPLICATION_STATUS_UNDER_CONSIDERATION .'-1']));
+        $this->assertTrue($result->contains($applications[Application::APPLICATION_STATUS_UNDER_CONSIDERATION . '-1']));
     }
 
     /**

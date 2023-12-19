@@ -9,5 +9,5 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class MissingEmailException extends \Exception
 {
-    const MSG_NO_ORG_EMAIL = 'No email address available for the organisation';
+    public const MSG_NO_ORG_EMAIL = 'No email address available for the organisation';
 }

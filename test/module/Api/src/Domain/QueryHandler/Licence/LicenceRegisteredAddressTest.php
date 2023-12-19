@@ -3,6 +3,7 @@
 /**
  * LicenceRegisteredAddress Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;

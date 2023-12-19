@@ -7,6 +7,7 @@
  * 1. No team was specified in the team parameter
  * 2. The user has limited data access (GB/NI - not to be confused with read only access)
  */
+
 namespace Dvsa\Olcs\Api\Domain\Query\User;
 
 use Dvsa\Olcs\Transfer\FieldType\Traits\IsInternalOptional;

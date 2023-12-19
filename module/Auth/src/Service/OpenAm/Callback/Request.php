@@ -6,8 +6,8 @@ namespace Dvsa\Olcs\Auth\Service\OpenAm\Callback;
 
 class Request
 {
-    const STAGE_AUTHENTICATE = 'LDAP1';
-    const STAGE_EXPIRED_PASSWORD = 'LDAP2';
+    public const STAGE_AUTHENTICATE = 'LDAP1';
+    public const STAGE_EXPIRED_PASSWORD = 'LDAP2';
 
     /**
      * @var string

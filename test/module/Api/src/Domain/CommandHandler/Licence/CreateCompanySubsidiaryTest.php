@@ -18,8 +18,8 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
 {
-    const LICENCE_ID = 1111;
-    const TASK_ID = 877;
+    public const LICENCE_ID = 1111;
+    public const TASK_ID = 877;
 
     /** @var  CreateCompanySubsidiary|m\MockInterface */
     protected $sut;

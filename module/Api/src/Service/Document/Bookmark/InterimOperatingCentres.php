@@ -19,7 +19,7 @@ class InterimOperatingCentres extends DynamicBookmark
      * Let the parser know we've already formatted our content by the
      * time it has been rendered
      */
-    const PREFORMATTED = true;
+    public const PREFORMATTED = true;
 
     public function getQuery(array $data)
     {
@@ -80,7 +80,8 @@ class InterimOperatingCentres extends DynamicBookmark
              * We can't do this filtering at the DB level; if we did we'd miss delta updates
              * which could be relevant, i.e. a record which was fulfilled but isn't in the delta
              */
-            if ($condition['isFulfilled'] === 'N'
+            if (
+                $condition['isFulfilled'] === 'N'
                 && $condition['attachedTo']['id'] === ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE
                 && $condition['action'] !== 'D'
                 && (

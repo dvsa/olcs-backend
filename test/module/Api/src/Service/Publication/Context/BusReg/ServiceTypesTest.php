@@ -43,7 +43,7 @@ class ServiceTypesTest extends MockeryTestCase
         $sut = new ServiceTypes(m::mock(\Dvsa\Olcs\Api\Domain\QueryHandlerManager::class));
 
         $output = [
-            'busServiceTypes' => $description. ' / ' . $description2
+            'busServiceTypes' => $description . ' / ' . $description2
         ];
 
         $expectedOutput = new \ArrayObject($output);

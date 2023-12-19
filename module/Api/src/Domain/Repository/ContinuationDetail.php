@@ -238,7 +238,8 @@ class ContinuationDetail extends AbstractRepository
             $fees = $entity->getLicence()->getFees();
             if (count($fees)) {
                 foreach ($fees as $fee) {
-                    if ($fee->getFeeType()->getFeeType()->getId() === $feeType
+                    if (
+                        $fee->getFeeType()->getFeeType()->getId() === $feeType
                         && in_array($fee->getFeeStatus()->getId(), $feeStatuses, true) !== false
                     ) {
                         continue 2;
@@ -412,7 +413,7 @@ class ContinuationDetail extends AbstractRepository
         );
 
         // Continuation date is x days or less away but is not in the past; AND
-        $interval = new \DateInterval('P'.$numOfDays .'D');
+        $interval = new \DateInterval('P' . $numOfDays . 'D');
         $qb->andWhere($qb->expr()->gte('l.expiryDate', ':NOW'))
             ->setParameter('NOW', (new DateTime())->format('Y-m-d'));
         $qb->andWhere($qb->expr()->lte('l.expiryDate', ':maxExpiryDate'))
@@ -421,15 +422,15 @@ class ContinuationDetail extends AbstractRepository
         // Continuation status is not 'Complete'; AND
         // The month and year of the associated continuation_detail and continuation records should match the month
         // and year of licence.continuation_date
-        $qb->andWhere($qb->expr()->notIn($this->alias .'.status', [Entity::STATUS_COMPLETE]));
+        $qb->andWhere($qb->expr()->notIn($this->alias . '.status', [Entity::STATUS_COMPLETE]));
         $qb->andWhere($qb->expr()->eq('c.month', 'MONTH(l.expiryDate)'));
         $qb->andWhere($qb->expr()->eq('c.year', 'YEAR(l.expiryDate)'));
 
         // An email has been sent
-        $qb->andWhere($qb->expr()->eq($this->alias .'.digitalNotificationSent', '1'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.digitalNotificationSent', '1'));
 
         // A reminder has not already been sent
-        $qb->andWhere($qb->expr()->eq($this->alias .'.digitalReminderSent', '0'));
+        $qb->andWhere($qb->expr()->eq($this->alias . '.digitalReminderSent', '0'));
 
         return $qb->getQuery()->getResult();
     }

@@ -11,7 +11,6 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\Name;
  */
 class NameTest extends \PHPUnit\Framework\TestCase
 {
-
     /**
      * @dataProvider nameProvider
      */

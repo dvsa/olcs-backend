@@ -3,6 +3,7 @@
 /**
  * Request new Ebsr map
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -50,16 +51,16 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use FileProcessorAwareTrait;
     use QueueAwareTrait;
 
-    const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
-    const MISSING_PACK_FILE_ERROR = 'Could not fetch EBSR pack file';
-    const MISSING_TEMPLATE_ERROR = 'Missing template: %s';
+    public const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
+    public const MISSING_PACK_FILE_ERROR = 'Could not fetch EBSR pack file';
+    public const MISSING_TEMPLATE_ERROR = 'Missing template: %s';
 
-    const TASK_DESC = '%s created: %s';
-    const SCALE_DESC = ' (%s Scale)';
-    const PDF_GENERATED = "The following PDFs %s: %s";
+    public const TASK_DESC = '%s created: %s';
+    public const SCALE_DESC = ' (%s Scale)';
+    public const PDF_GENERATED = "The following PDFs %s: %s";
 
-    const TXC_INBOX_TYPE_ROUTE = 'Route';
-    const TXC_INBOX_TYPE_PDF = 'Pdf';
+    public const TXC_INBOX_TYPE_ROUTE = 'Route';
+    public const TXC_INBOX_TYPE_PDF = 'Pdf';
 
     protected $repoServiceName = 'Bus';
 
@@ -338,7 +339,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->templateBuilder = $container->get(TemplateBuilder::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

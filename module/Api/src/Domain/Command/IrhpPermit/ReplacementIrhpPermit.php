@@ -5,6 +5,7 @@
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\IrhpPermit;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

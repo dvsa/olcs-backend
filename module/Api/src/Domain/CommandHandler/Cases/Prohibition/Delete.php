@@ -3,6 +3,7 @@
 /**
  * Delete Conviction
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler;

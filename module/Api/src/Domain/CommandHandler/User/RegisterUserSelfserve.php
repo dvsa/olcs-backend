@@ -3,6 +3,7 @@
 /**
  * Register User Selfserve
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
@@ -37,6 +38,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
     OpenAmUserAwareInterface
 {
     use OpenAmUserAwareTrait;
+
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails', 'Licence', 'Organisation'];

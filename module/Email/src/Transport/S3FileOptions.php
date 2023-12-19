@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Email\Transport;
 
 use Laminas\Stdlib\AbstractOptions;

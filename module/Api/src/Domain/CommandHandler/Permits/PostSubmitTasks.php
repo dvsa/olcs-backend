@@ -59,7 +59,6 @@ final class PostSubmitTasks extends AbstractCommandHandler
     {
         $fullContainer = $container;
 
-
         $this->irhpCandidatePermitsCreator = $container->get(
             'PermitsCandidatePermitsIrhpCandidatePermitsCreator'
         );

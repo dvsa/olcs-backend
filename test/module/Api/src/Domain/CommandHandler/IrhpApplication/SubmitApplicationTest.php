@@ -19,12 +19,12 @@ use Mockery as m;
 
 class SubmitApplicationTest extends CommandHandlerTestCase
 {
-    const TASK_CREATION_MESSAGE = 'Task created';
-    const SUBMISSION_TASK_DESCRIPTION = 'Submission task description';
+    public const TASK_CREATION_MESSAGE = 'Task created';
+    public const SUBMISSION_TASK_DESCRIPTION = 'Submission task description';
 
-    const IRHP_APPLICATION_ID = 44;
-    const LICENCE_ID = 7;
-    const IRHP_PERMIT_TYPE_ID = 11;
+    public const IRHP_APPLICATION_ID = 44;
+    public const LICENCE_ID = 7;
+    public const IRHP_PERMIT_TYPE_ID = 11;
 
     private $irhpApplication;
 
@@ -84,7 +84,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             self::TASK_CREATION_MESSAGE,
             'IRHP application submitted'
         ];
- 
+
         parent::setUp();
     }
 

@@ -11,5 +11,4 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Conditions;
  */
 class SpecificLicenceConditions extends Conditions
 {
-
 }

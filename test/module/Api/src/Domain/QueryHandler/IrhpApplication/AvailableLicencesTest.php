@@ -42,7 +42,6 @@ class AvailableLicencesTest extends QueryHandlerTestCase
         $permitType->shouldReceive('getId')->once()->withNoArgs()->andReturn($permitTypeId);
         $permitType->shouldReceive('isMultiStock')->once()->withNoArgs()->andReturn($isMultiStock);
 
-
         $application = m::mock(IrhpApplication::class);
         $application->shouldReceive('getIrhpPermitType')->once()->withNoArgs()->andReturn($permitType);
         $application->shouldReceive('getAssociatedStock->getId')

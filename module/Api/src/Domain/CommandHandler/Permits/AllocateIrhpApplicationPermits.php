@@ -291,7 +291,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     {
         $fullContainer = $container;
 
-
         $this->emissionsStandardCriteriaFactory = $container->get(
             'PermitsAllocateEmissionsStandardCriteriaFactory'
         );

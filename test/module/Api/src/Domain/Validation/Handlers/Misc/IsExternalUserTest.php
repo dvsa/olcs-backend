@@ -3,6 +3,7 @@
 /**
  * Is External User Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Entity\User\Permission;

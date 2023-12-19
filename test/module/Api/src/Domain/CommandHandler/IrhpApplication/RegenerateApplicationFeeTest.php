@@ -23,7 +23,7 @@ class RegenerateApplicationFeeTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpApplication', IrhpApplicationRepo::class);
         $this->mockRepo('FeeType', FeeTypeRepo::class);
         $this->sut = new RegenerateApplicationFee();
-     
+
         parent::setUp();
     }
 

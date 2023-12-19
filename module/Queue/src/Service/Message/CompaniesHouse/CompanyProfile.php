@@ -6,7 +6,7 @@ use Dvsa\Olcs\Queue\Service\Message\AbstractMessage;
 
 class CompanyProfile extends AbstractMessage
 {
-    const MESSAGE_DELAY = 1;
+    public const MESSAGE_DELAY = 1;
 
     public function processMessageData(): void
     {

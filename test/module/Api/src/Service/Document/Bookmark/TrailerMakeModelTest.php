@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\TrailerMakeModel;
  */
 class TrailerMakeModelTest extends AbstractQuestionAnswerData
 {
-    const SUT_CLASS_NAME = TrailerMakeModel::class;
+    public const SUT_CLASS_NAME = TrailerMakeModel::class;
 }

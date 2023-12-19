@@ -306,8 +306,8 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
         return strtr(
             $text,
             [
-                'http://selfserve/' => $this->getSelfServeUri().'/',
-                'http://internal/' => $this->getInternalUri().'/',
+                'http://selfserve/' => $this->getSelfServeUri() . '/',
+                'http://internal/' => $this->getInternalUri() . '/',
             ]
         );
     }

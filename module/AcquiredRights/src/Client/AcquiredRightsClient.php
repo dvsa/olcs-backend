@@ -10,7 +10,7 @@ use Dvsa\Olcs\AcquiredRights\Model\ApplicationReference;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
-use \InvalidArgumentException;
+use InvalidArgumentException;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Uri;
 use Psr\Http\Message\UriInterface;
@@ -53,7 +53,7 @@ class AcquiredRightsClient
                 0,
                 $clientException
             );
-        } catch (ConnectException|RequestException $exception) {
+        } catch (ConnectException | RequestException $exception) {
             throw new ServiceException(
                 'There was an error when communicating with the Acquired Rights API',
                 0,

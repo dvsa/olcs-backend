@@ -3,6 +3,7 @@
 /**
  * History List Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
 use Doctrine\ORM\Query;

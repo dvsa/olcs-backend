@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use \Dvsa\Olcs\Transfer\Command\Application\CreateTaxiPhv as Command;
+use Dvsa\Olcs\Transfer\Command\Application\CreateTaxiPhv as Command;
 use Interop\Container\Containerinterface;
 
 /**

@@ -15,7 +15,7 @@ use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
  */
 class FileProcessor implements FileProcessorInterface
 {
-    const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
+    public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
     /**
      * @var Filesystem

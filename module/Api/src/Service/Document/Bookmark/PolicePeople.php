@@ -1,8 +1,10 @@
 <?php
+
 /** Police People
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
@@ -17,11 +19,11 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\Date as DateFormatter;
  */
 class PolicePeople extends DynamicBookmark
 {
-    const BOLD_START = '{\b ';
-    const BOLD_END = '\b0}';
-    const PREFORMATTED = true;
-    const HEADING_LINE = '{\b People associated with Licences in this document \b0\par\par }';
-    const NO_ENTRIES = 'No entries';
+    public const BOLD_START = '{\b ';
+    public const BOLD_END = '\b0}';
+    public const PREFORMATTED = true;
+    public const HEADING_LINE = '{\b People associated with Licences in this document \b0\par\par }';
+    public const NO_ENTRIES = 'No entries';
 
     /**
      * Query to retrieve data

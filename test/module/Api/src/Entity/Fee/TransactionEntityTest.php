@@ -19,13 +19,13 @@ use Mockery as m;
  */
 class TransactionEntityTest extends EntityTester
 {
-    const FEE_1_ID = 9001;
-    const FEE_2_ID = 9002;
-    const FEE_3_ID = 9003;
+    public const FEE_1_ID = 9001;
+    public const FEE_2_ID = 9002;
+    public const FEE_3_ID = 9003;
 
-    const ORG_1_ID = 8001;
-    const TRANSACTION_1_ID = 70001;
-    const TRANSACTION_2_ID = 70002;
+    public const ORG_1_ID = 8001;
+    public const TRANSACTION_1_ID = 70001;
+    public const TRANSACTION_2_ID = 70002;
 
     /**
      * Define the entity to test

@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Team;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -72,8 +73,10 @@ final class UpdateTeam extends AbstractCommandHandler implements TransactionedIn
     protected function processDefaultPrinter($team, $command)
     {
         $currentDefaultTeamPrinter = $team->getDefaultTeamPrinter();
-        if (!$currentDefaultTeamPrinter ||
-            ($currentDefaultTeamPrinter->getPrinter()->getId() !== $command->getDefaultPrinter())) {
+        if (
+            !$currentDefaultTeamPrinter ||
+            ($currentDefaultTeamPrinter->getPrinter()->getId() !== $command->getDefaultPrinter())
+        ) {
             $newDefaultPrinter = $this->getRepo('Printer')->fetchById($command->getDefaultPrinter());
             $team->updateDefaultPrinter($newDefaultPrinter);
         }

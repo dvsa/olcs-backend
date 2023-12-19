@@ -4,6 +4,7 @@
  * Upload content of scoring log
  *
  */
+
 namespace Dvsa\Olcs\Cli\Domain\Command\Permits;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

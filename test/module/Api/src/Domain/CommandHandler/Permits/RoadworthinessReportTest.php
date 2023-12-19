@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
@@ -227,8 +227,7 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
         bool $isTrailer,
         ArrayCollection $documents,
         ArrayCollection $notes
-    ): m\MockInterface
-    {
+    ): m\MockInterface {
         $qaData = [
             'custom-check-answers' => 'aaa',
             'custom-declaration' => 'bbb',
@@ -374,7 +373,7 @@ class RoadworthinessReportTest extends CommandHandlerTestCase
      * two questions from the Q&A system. This method prevents duplicate assertions and also allows the test
      * code to be more easily altered if extra apps or questions are needed
      */
-    private function addTranlatorAssertions ($numApps, $numQuestions): void
+    private function addTranlatorAssertions($numApps, $numQuestions): void
     {
         for ($i = 0; $i < $numApps; $i++) {
             for ($j = 1; $j <= $numQuestions; $j++) {

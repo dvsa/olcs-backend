@@ -3,6 +3,7 @@
 /**
  * Paginate
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Doctrine\ORM\QueryBuilder;

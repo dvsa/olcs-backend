@@ -17,9 +17,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class BusNoticePeriod extends AbstractBusNoticePeriod
 {
-    const NOTICE_PERIOD_SCOTLAND = 1;
-    const NOTICE_PERIOD_OTHER = 2;
-    const NOTICE_PERIOD_WALES = 3;
+    public const NOTICE_PERIOD_SCOTLAND = 1;
+    public const NOTICE_PERIOD_OTHER = 2;
+    public const NOTICE_PERIOD_WALES = 3;
 
     /**
      * Create a new bus notice period

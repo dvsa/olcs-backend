@@ -11,9 +11,9 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class DeclarationReviewService extends AbstractReviewService
 {
-    const SIGNATURE = 'markup-continuation_signature';
-    const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
-    const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
+    public const SIGNATURE = 'markup-continuation_signature';
+    public const SIGNATURE_ADDRESS_GB = 'markup-application_undertakings_signature_address_gb';
+    public const SIGNATURE_ADDRESS_NI = 'markup-application_undertakings_signature_address_ni';
 
     /**
      * Format the readonly config from the given data
@@ -53,7 +53,8 @@ class DeclarationReviewService extends AbstractReviewService
                 'items' => $items
             ]
         ];
-        if ($continuationDetail->getSignatureType() !== null
+        if (
+            $continuationDetail->getSignatureType() !== null
             && $continuationDetail->getSignatureType()->getId() === RefData::SIG_PHYSICAL_SIGNATURE
         ) {
             $mainItems[] = [

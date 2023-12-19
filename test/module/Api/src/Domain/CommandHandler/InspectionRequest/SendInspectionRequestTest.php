@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\InspectionRequest;
 
 use Doctrine\ORM\Query;
@@ -255,7 +256,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ],
             'inspectorNotes' => 'Dolor lorem ipsum',
             'requestorNotes' => 'Lorem ipsum dolor',
-            'operatingCentre' =>[
+            'operatingCentre' => [
                 'id' => 74,
                 'address' => [
                     'addressLine1' => 'DVSA',
@@ -425,7 +426,7 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             ],
             'inspectorNotes' => 'Dolor lorem ipsum',
             'requestorNotes' => 'Lorem ipsum dolor',
-            'operatingCentre' =>[
+            'operatingCentre' => [
                 'id' => 74,
                 'address' => [
                     'addressLine1' => 'DVSA',

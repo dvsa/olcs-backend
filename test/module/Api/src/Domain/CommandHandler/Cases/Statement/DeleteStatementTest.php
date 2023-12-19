@@ -3,6 +3,7 @@
 /**
  * Delete Statement Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Statement;
 
 use Doctrine\ORM\Query;
@@ -13,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**

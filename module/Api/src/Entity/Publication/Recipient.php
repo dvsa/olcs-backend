@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Exception;
  */
 class Recipient extends AbstractRecipient
 {
-    const ERROR_INVALID_SUBSCRIPTION = 'PUB-REC-1';
+    public const ERROR_INVALID_SUBSCRIPTION = 'PUB-REC-1';
 
     public function __construct($isObjector, $contactName, $emailAddress, $sendAppDecision, $sendNoticesProcs)
     {

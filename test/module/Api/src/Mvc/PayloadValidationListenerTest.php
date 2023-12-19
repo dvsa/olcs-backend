@@ -70,7 +70,6 @@ class PayloadValidationListenerTest extends MockeryTestCase
         $mockHttpRequest = m::mock(HttpRequest::class);
         $mockHttpRequest->expects('getQuery->toArray')->withNoArgs()->andReturn([]);
 
-
         $mockRouteMatch = m::mock(RouteMatch::class);
         $mockRouteMatch->expects('getParams')->withNoArgs()->andReturn([]);
         $mockRouteMatch->shouldReceive('getParam')

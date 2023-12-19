@@ -3,6 +3,7 @@
 /**
  * Note
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Processing;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

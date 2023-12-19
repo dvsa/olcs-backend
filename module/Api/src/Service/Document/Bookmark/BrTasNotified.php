@@ -12,10 +12,10 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrTasNotified extends SingleValueAbstract
 {
-    const FORMATTER = 'BrTasNotified';
-    const FIELD  = 'trafficAreas';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
-    const BUNDLE = ['trafficAreas'];
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'BrTasNotified';
+    public const FIELD  = 'trafficAreas';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
+    public const BUNDLE = ['trafficAreas'];
+    public const QUERY_CLASS = Qry::class;
 }

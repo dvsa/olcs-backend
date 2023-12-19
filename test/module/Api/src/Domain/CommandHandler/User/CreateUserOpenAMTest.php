@@ -3,6 +3,7 @@
 /**
  * Create User Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Rbac\Identity;

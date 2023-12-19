@@ -3,6 +3,7 @@
 /**
  * Schedule41Cancel.php
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre;
@@ -28,7 +29,6 @@ class Schedule41Cancel extends AbstractCommandHandler
 
         /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
         foreach ($application->getS4s() as $s4) {
-
             // if NOT empty or approved then continue
             if (!($s4->getOutcome() === null || $s4->getOutcome()->getId() === S4::STATUS_APPROVED)) {
                 continue;

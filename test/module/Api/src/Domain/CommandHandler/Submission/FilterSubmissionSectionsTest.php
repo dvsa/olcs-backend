@@ -103,9 +103,9 @@ class FilterSubmissionSectionsTest extends CommandHandlerTestCase
             'id' => 122,
             'version' => 3,
             'case' => '24',
-            'submissionType'=> 'submission_type_o_mlh_otc',
+            'submissionType' => 'submission_type_o_mlh_otc',
             'section' => 'operating-centres',
-            'rowsToFilter'=> [72]
+            'rowsToFilter' => [72]
         ];
 
         /** @var SubmissionEntity $submissionMock */
@@ -155,10 +155,10 @@ class FilterSubmissionSectionsTest extends CommandHandlerTestCase
             'id' => 122,
             'version' => 3,
             'case' => '24',
-            'submissionType'=> 'submission_type_o_mlh_otc',
+            'submissionType' => 'submission_type_o_mlh_otc',
             'section' => 'conditions-and-undertakings',
             'subSection' => 'conditions',
-            'rowsToFilter'=> [3]
+            'rowsToFilter' => [3]
         ];
 
         /** @var SubmissionEntity $submissionMock */

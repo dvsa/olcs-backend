@@ -5,6 +5,7 @@
  *
  * @author Someone <someone@somewhere.co.uk>
  */
+
 namespace Olcs\Db\Utility;
 
 /**

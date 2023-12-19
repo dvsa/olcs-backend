@@ -32,7 +32,7 @@ class EmailTest extends CommandHandlerTestCase
         $fileContents = "1\n" .
             "4\n" .
             "8\n" .
-            "10\n".
+            "10\n" .
             "10\n";
 
         $file = m::mock(ContentStoreFile::class);

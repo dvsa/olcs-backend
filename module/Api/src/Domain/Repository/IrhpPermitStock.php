@@ -3,6 +3,7 @@
 /**
  * IrhpPermitStock
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use DateTime;
@@ -89,7 +90,7 @@ class IrhpPermitStock extends AbstractRepository
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->innerJoin('ips.irhpPermitWindows', 'ipw')
             ->innerJoin('ips.country', 'c')
-            ->where($qb->expr()->eq($this->alias.'.country', ':country'))
+            ->where($qb->expr()->eq($this->alias . '.country', ':country'))
             ->andWhere($qb->expr()->lte('ipw.startDate', ':now'))
             ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
             ->andWhere($qb->expr()->eq('ipt.id', ':type'))

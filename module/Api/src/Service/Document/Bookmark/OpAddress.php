@@ -9,5 +9,4 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class OpAddress extends LicenceHolderAddress
 {
-
 }

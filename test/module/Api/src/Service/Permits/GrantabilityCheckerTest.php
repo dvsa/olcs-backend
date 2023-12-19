@@ -34,7 +34,7 @@ class GrantabilityCheckerTest extends MockeryTestCase
         $this->emissionsCategoriesGrantabilityChecker = m::mock(EmissionsCategoriesGrantabilityChecker::class);
 
         $this->candidatePermitsGrantabilityChecker = m::mock(CandidatePermitsGrantabilityChecker::class);
-    
+
         $this->grantabilityChecker = new GrantabilityChecker(
             $this->emissionsCategoriesGrantabilityChecker,
             $this->candidatePermitsGrantabilityChecker

@@ -3,6 +3,7 @@
 /**
  * Tm Hearing text 1
  */
+
 namespace Dvsa\Olcs\Api\Service\Publication\Process\PiHearing;
 
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;

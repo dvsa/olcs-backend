@@ -11,9 +11,9 @@ use Laminas\Validator\Exception;
  */
 class SupportingDocuments extends AbstractValidator
 {
-    const MISSING_DOCUMENT_ERROR = 'missing-document-error';
+    public const MISSING_DOCUMENT_ERROR = 'missing-document-error';
 
-    const DOC_IN_TAG = '"%s" specified in tag name "%s"';
+    public const DOC_IN_TAG = '"%s" specified in tag name "%s"';
 
     /**
      * error message templates

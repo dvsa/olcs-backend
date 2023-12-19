@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\DataRetention\AssignItems as AssignItemsCommand;
  */
 final class AssignItems extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_USER = 'can\'t assign data retention record to this user';
+    public const ERR_USER = 'can\'t assign data retention record to this user';
 
     protected $repoServiceName = 'DataRetention';
 

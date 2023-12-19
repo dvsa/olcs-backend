@@ -1,11 +1,11 @@
 <?php
 
-
 /**
  * Resolve Outstanding Payments Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
-use OlcsTest\Bootstrap;
+use Olcs\Logging\Log\Logger;
 
 /**
 * Resolve Outstanding Payments Test
@@ -111,7 +111,11 @@ class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        Bootstrap::setupLogger();
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
 
         // expectations
         $this->repoMap['SystemParameter']

@@ -6,6 +6,7 @@
  * @author Nick Payne <nick.payne@valtech.co.uk>
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as Entity;
@@ -51,7 +52,7 @@ class PreviousConviction extends AbstractRepository
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
         if ($query->getTransportManager()) {
-            $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+            $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':tmId'))
                 ->setParameter('tmId', $query->getTransportManager());
         }
     }

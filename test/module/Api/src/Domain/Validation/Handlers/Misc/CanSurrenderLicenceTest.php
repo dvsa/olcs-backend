@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -12,7 +13,6 @@ use Dvsa\Olcs\Transfer\Command\Surrender\Create;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanSurrenderLicence;
-
 
 class CanSurrenderLicenceTest extends AbstractHandlerTestCase
 {

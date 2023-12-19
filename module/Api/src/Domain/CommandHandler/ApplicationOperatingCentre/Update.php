@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre;
 
 use Doctrine\ORM\Query;
@@ -92,7 +93,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->helper = $container->get('OperatingCentreHelper');
         return parent::__invoke($fullContainer, $requestedName, $options);

@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as Comman
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
 use LmcRbacMvc\Service\AuthorizationService;

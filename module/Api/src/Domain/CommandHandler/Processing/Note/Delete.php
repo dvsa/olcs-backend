@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Note as NoteRepository;
 use Dvsa\Olcs\Transfer\Command\Processing\Note\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**

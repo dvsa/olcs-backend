@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\ConditionsUndertakings as Qry;
  */
 abstract class AbstractConditionsUndertakings extends DynamicBookmark
 {
-    const CONDITION_TYPE = null;
+    public const CONDITION_TYPE = null;
 
     public function getQuery(array $data)
     {

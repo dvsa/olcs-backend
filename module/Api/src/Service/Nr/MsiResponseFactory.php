@@ -12,7 +12,7 @@ use Interop\Container\ContainerInterface;
  */
 class MsiResponseFactory implements FactoryInterface
 {
-    const XML_NS_MSG = 'No config specified for xml ns';
+    public const XML_NS_MSG = 'No config specified for xml ns';
 
     /**
      * invoke method

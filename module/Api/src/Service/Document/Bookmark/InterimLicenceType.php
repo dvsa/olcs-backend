@@ -11,6 +11,6 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\ApplicationBundle as Qry;
  */
 class InterimLicenceType extends AbstractLicenceType
 {
-    const QUERY_CLASS  = Qry::class;
-    const DATA_KEY = 'application';
+    public const QUERY_CLASS  = Qry::class;
+    public const DATA_KEY = 'application';
 }

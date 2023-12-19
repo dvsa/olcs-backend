@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository\Query\Discs;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\AbstractRawQuery;

@@ -424,7 +424,7 @@ class PrintJobTest extends CommandHandlerTestCase
                 " -H 'PRINT_SERVER'" .
                 " -C 'PrintJob-QUEUE_ID-print.pdf'" .
                 " -h -P 'QUEUE1'" .
-                " -U 'PRINT_USER'".
+                " -U 'PRINT_USER'" .
                 " -#1" .
                 " -o collate=true" .
                 " 2>&1",
@@ -526,7 +526,7 @@ class PrintJobTest extends CommandHandlerTestCase
                 " -H 'PRINT_SERVER'" .
                 " -C 'PrintJob-QUEUE_ID-print.pdf'" .
                 " -h -P 'QUEUE1'" .
-                " -U 'PRINT_USER'".
+                " -U 'PRINT_USER'" .
                 " -#1" .
                 " -o collate=true" .
                 " 2>&1",
@@ -657,7 +657,7 @@ class PrintJobTest extends CommandHandlerTestCase
                 " -H 'PRINT_SERVER'" .
                 " -C 'TEMP_FILE.pdf'" .
                 " -h -P 'QUEUE1'" .
-                " -U '{$userName}'".
+                " -U '{$userName}'" .
                 " -#{$copies}" .
                 " -o collate=true" .
                 " 2>&1",

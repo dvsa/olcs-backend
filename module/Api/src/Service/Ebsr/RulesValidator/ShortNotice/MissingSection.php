@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class MissingSection extends AbstractValidator
 {
-    const SHORT_NOTICE_MISSING_SECTION_ERROR = 'short-notice-missing-section-error';
+    public const SHORT_NOTICE_MISSING_SECTION_ERROR = 'short-notice-missing-section-error';
 
     /**
      * @var array

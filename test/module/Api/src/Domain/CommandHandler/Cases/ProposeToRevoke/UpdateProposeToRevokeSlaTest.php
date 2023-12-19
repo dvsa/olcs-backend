@@ -108,7 +108,6 @@ class UpdateProposeToRevokeSlaTest extends CommandHandlerTestCase
             }
 
             $this->assertSame($value, $savedValue, $key);
-
         }
 
         $expectedResult = [

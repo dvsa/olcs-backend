@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Opposition;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Opposition\Opposition;

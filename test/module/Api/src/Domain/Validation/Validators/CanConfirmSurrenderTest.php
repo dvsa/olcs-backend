@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use \Mockery as m;
+use Mockery as m;
 
 class CanConfirmSurrenderTest extends AbstractValidatorsTestCase
 {

@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrTasNotified;
  */
 class BrTasNotifiedTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = BrTasNotified::class;
+    public const SUT_CLASS_NAME = BrTasNotified::class;
 }

@@ -294,7 +294,8 @@ class FinancialStandingHelperService implements FactoryInterface
     public function getFirstVehicleRate($licenceType, $goodsOrPsv, $vehicleType)
     {
         foreach ($this->getRates() as $rate) {
-            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv &&
+            if (
+                $rate->getGoodsOrPsv()->getId() == $goodsOrPsv &&
                 $rate->getLicenceType()->getId() == $licenceType &&
                 $rate->getVehicleType()->getId() == $vehicleType
             ) {
@@ -315,7 +316,8 @@ class FinancialStandingHelperService implements FactoryInterface
     public function getAdditionalVehicleRate($licenceType, $goodsOrPsv, $vehicleType)
     {
         foreach ($this->getRates() as $rate) {
-            if ($rate->getGoodsOrPsv()->getId() == $goodsOrPsv &&
+            if (
+                $rate->getGoodsOrPsv()->getId() == $goodsOrPsv &&
                 $rate->getLicenceType()->getId() == $licenceType &&
                 $rate->getVehicleType()->getId() == $vehicleType
             ) {

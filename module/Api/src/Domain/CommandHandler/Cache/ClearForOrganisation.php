@@ -19,7 +19,7 @@ class ClearForOrganisation extends AbstractCommandHandler implements CacheAwareI
 {
     use CacheAwareTrait;
 
-    const UPDATE_MSG = 'Cache cleared for %s, Organisation ID %d';
+    public const UPDATE_MSG = 'Cache cleared for %s, Organisation ID %d';
 
     protected $repoServiceName = 'Organisation';
 

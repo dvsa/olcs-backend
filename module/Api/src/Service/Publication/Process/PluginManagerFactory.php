@@ -1,4 +1,5 @@
 <?php
+
 namespace Dvsa\Olcs\Api\Service\Publication\Process;
 
 use Laminas\Mvc\Service\AbstractPluginManagerFactory;
@@ -9,5 +10,5 @@ use Laminas\Mvc\Service\AbstractPluginManagerFactory;
  */
 class PluginManagerFactory extends AbstractPluginManagerFactory
 {
-    const PLUGIN_MANAGER_CLASS = PluginManager::class;
+    public const PLUGIN_MANAGER_CLASS = PluginManager::class;
 }

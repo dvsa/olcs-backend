@@ -179,7 +179,6 @@ class CreateFull extends AbstractCommandHandler implements TransactionedInterfac
     {
         $fullContainer = $container;
 
-
         $this->bilateralApplicationUpdater = $container->get('PermitsBilateralInternalApplicationUpdater');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);

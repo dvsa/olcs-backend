@@ -18,7 +18,7 @@ class AbstractMessageTest extends TestCase
             'attribute3' => 'value'
         ];
 
-        $message = new class($messageBody, $queueUrl) extends AbstractMessage
+        $message = new class ($messageBody, $queueUrl) extends AbstractMessage
         {
         };
 
@@ -37,7 +37,7 @@ class AbstractMessageTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage("messageData is empty");
 
-        new class([], 'someUrl') extends AbstractMessage
+        new class ([], 'someUrl') extends AbstractMessage
         {
         };
     }

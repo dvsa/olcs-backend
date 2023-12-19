@@ -31,13 +31,13 @@ class Update extends AbstractCommandHandler implements
     NamingServiceAwareInterface,
     AuthAwareInterface
 {
-    const ERR_MIME = 'ERR_MIME';
-    const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
+    public const ERR_MIME = 'ERR_MIME';
+    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
 
-    use UploaderAwareTrait,
-        NamingServiceAwareTrait,
-        AuthAwareTrait,
-        DocTemplateTrait;
+    use UploaderAwareTrait;
+    use NamingServiceAwareTrait;
+    use AuthAwareTrait;
+    use DocTemplateTrait;
 
     protected $repoServiceName = 'DocTemplate';
 
@@ -116,7 +116,7 @@ class Update extends AbstractCommandHandler implements
         $this->result->merge($this->handleSideEffect($cmd));
 
         //Generate identifier and upload file to store, create document record in DB
-        $identifier = DocTemplate::TEMPLATE_PATH_PREFIXES[$command->getTemplateFolder()].$command->getFilename();
+        $identifier = DocTemplate::TEMPLATE_PATH_PREFIXES[$command->getTemplateFolder()] . $command->getFilename();
         $file = $this->uploadFile($command, $identifier);
         $this->result->merge($this->createDocument($command, $file, $identifier));
     }

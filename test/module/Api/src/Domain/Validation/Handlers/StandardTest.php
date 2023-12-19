@@ -5,12 +5,13 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Standard;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Standard Test
@@ -28,7 +29,11 @@ class StandardTest extends MockeryTestCase
     {
         $this->sut = new Standard();
 
-        Bootstrap::setupLogger();
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testIsValid()

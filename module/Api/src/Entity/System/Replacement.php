@@ -24,7 +24,7 @@ class Replacement extends AbstractReplacement
      */
     public static function create(string $placeholder, string $replacementText)
     {
-        $instance = new self;
+        $instance = new self();
         $instance->placeholder = $placeholder;
         $instance->replacementText = $replacementText;
         return $instance;

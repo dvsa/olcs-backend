@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class Opposition extends AbstractOpposition
 {
-    const OPPOSITION_TYPE_ENV = 'otf_eob';
+    public const OPPOSITION_TYPE_ENV = 'otf_eob';
 
     public function __construct(
         Cases $case,

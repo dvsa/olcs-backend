@@ -19,7 +19,7 @@ class OperatingCentres extends DynamicBookmark
      * Let the parser know we've already formatted our content by the
      * time it has been rendered
      */
-    const PREFORMATTED = true;
+    public const PREFORMATTED = true;
 
     public function getQuery(array $data)
     {

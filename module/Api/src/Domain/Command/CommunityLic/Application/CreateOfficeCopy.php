@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\CommunityLic\Application;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;

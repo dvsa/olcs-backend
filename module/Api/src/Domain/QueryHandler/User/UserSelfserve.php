@@ -3,6 +3,7 @@
 /**
  * User Selfserve
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

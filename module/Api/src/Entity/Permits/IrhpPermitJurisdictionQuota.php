@@ -34,7 +34,7 @@ class IrhpPermitJurisdictionQuota extends AbstractIrhpPermitJurisdictionQuota
      */
     public static function create(TrafficArea $trafficArea, IrhpPermitStock $irhpPermitStock)
     {
-        $instance = new self;
+        $instance = new self();
 
         $instance->trafficArea = $trafficArea;
         $instance->irhpPermitStock = $irhpPermitStock;

@@ -3,6 +3,7 @@
 /**
  * Update User Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -159,7 +160,6 @@ class UpdateUserOpenAMTest extends CommandHandlerTestCase
         /** @var ContactDetailsEntity|m\Mock $contactDetails */
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
-
 
         /** @var UserEntity|m\Mock $user */
         $user = m::mock(UserEntity::class)->makePartial();
@@ -551,7 +551,6 @@ class UpdateUserOpenAMTest extends CommandHandlerTestCase
         $contactDetails = m::mock(ContactDetailsEntity::class)->makePartial();
         $contactDetails->shouldReceive('ssetId');
         $contactDetails->shouldReceive('getEmailAddress')->andReturn('test1@test.me');
-
 
         $licId = 123;
         /** @var LicenceEntity $licence */

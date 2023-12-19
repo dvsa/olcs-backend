@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class DateWithThreshold implements ElementInterface
 {
-    const DATE_THRESHOLD_FORMAT = 'Y-m-d';
+    public const DATE_THRESHOLD_FORMAT = 'Y-m-d';
 
     /** @var DateTime */
     private $dateThreshold;

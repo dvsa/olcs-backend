@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
  */
 class UpdateSection26Test extends CommandHandlerTestCase
 {
-
     public function setUp(): void
     {
         $this->sut = new CommandHandler();

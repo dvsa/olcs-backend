@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\Discs;
 
 use Dvsa\Olcs\Transfer\FieldType\Traits\Licence;

@@ -27,7 +27,7 @@ class CommunityLicTest extends RepositoryTestCase
 
     public function testFetchOfficeCopy()
     {
-        $licenceId =1;
+        $licenceId = 1;
         $issueNo = 0;
         $mockQb = m::mock();
         $mockQb->shouldReceive('expr->eq')->with('m.licence', ':licence')->once()->andReturn('foo');

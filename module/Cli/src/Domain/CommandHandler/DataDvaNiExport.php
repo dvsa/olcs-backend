@@ -15,8 +15,8 @@ final class DataDvaNiExport extends AbstractDataExport
 {
     use QueueAwareTrait;
 
-    const FILE_DATETIME_FORMAT = 'YmdHis';
-    const NI_OPERATOR_LICENCE = 'ni-operator-licence';
+    public const FILE_DATETIME_FORMAT = 'YmdHis';
+    public const NI_OPERATOR_LICENCE = 'ni-operator-licence';
 
 
     /**

@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\Grant as GrantCmd;
@@ -38,7 +39,7 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
 
         $result = new Result();
 
-        switch($currentStatus->getId()) {
+        switch ($currentStatus->getId()) {
             case Application::APPLICATION_STATUS_NOT_TAKEN_UP:
                 $application->setStatus(
                     $this->getRepo()

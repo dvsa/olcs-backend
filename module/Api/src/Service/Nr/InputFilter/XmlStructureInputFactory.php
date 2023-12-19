@@ -14,9 +14,9 @@ use Interop\Container\ContainerInterface;
  */
 class XmlStructureInputFactory implements FactoryInterface
 {
-    const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
-    const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
-    const XML_NS_MSG = 'No config specified for xml ns';
+    public const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
+    public const XML_VALID_EXCLUDE_MSG = 'No config specified for xml messages to exclude';
+    public const XML_NS_MSG = 'No config specified for xml ns';
 
     /**
      * invoke method

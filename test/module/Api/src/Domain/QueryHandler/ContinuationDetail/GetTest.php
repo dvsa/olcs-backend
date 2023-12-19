@@ -107,7 +107,7 @@ class GetTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = Qry::create(['id'=> 123]);
+        $query = Qry::create(['id' => 123]);
 
         $continuationDetail = $this->mockContinuationDetail();
 
@@ -194,7 +194,7 @@ class GetTest extends QueryHandlerTestCase
 
     public function testHandleQueryNoTransaction()
     {
-        $query = Qry::create(['id'=> 123]);
+        $query = Qry::create(['id' => 123]);
 
         $continuationDetail = $this->mockContinuationDetail();
 
@@ -270,7 +270,7 @@ class GetTest extends QueryHandlerTestCase
 
     public function testHandleQueryWithSignature()
     {
-        $query = Qry::create(['id'=> 123]);
+        $query = Qry::create(['id' => 123]);
 
         $continuationDetail = $this->mockContinuationDetail(
             [
@@ -364,7 +364,7 @@ class GetTest extends QueryHandlerTestCase
 
     public function testHandleQueryWithSignatureContinuationFeeNotPaid()
     {
-        $query = Qry::create(['id'=> 123]);
+        $query = Qry::create(['id' => 123]);
 
         $continuationDetail = $this->mockContinuationDetail(
             [

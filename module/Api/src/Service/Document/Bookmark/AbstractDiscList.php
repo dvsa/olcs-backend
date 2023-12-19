@@ -14,23 +14,23 @@ abstract class AbstractDiscList extends DynamicBookmark
     /**
      * We have to split some fields if they exceed this length
      */
-    const MAX_LINE_LENGTH = 23;
+    public const MAX_LINE_LENGTH = 23;
 
     /**
      * No disc content? No problem
      */
-    const PLACEHOLDER = 'XXXXXXXXXX';
+    public const PLACEHOLDER = 'XXXXXXXXXX';
 
     /**
      * Discs per page - any shortfall will be voided with placeholders
      */
-    const PER_PAGE = 6;
+    public const PER_PAGE = 6;
 
     /**
      * Let the parser know we've already formatted our content by the
      * time it has been rendered
      */
-    const PREFORMATTED = true;
+    public const PREFORMATTED = true;
 
     protected $discBundle = [];
 

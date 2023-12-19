@@ -42,7 +42,6 @@ class GetListTest extends QueryHandlerTestCase
             ->once()
             ->andReturn($permitJurisdictions);
 
-
         $result = $this->sut->handleQuery($query);
 
         $expected = [

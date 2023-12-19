@@ -3,6 +3,7 @@
 /**
  * Create IrfoPermitStock Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Irfo;
 
 use Mockery as m;

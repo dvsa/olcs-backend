@@ -19,9 +19,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
 {
-    const LICENCE_ID = 1111;
-    const TASK_ID = 877;
-    const VERSION = 99;
+    public const LICENCE_ID = 1111;
+    public const TASK_ID = 877;
+    public const VERSION = 99;
 
     /** @var  DeleteCompanySubsidiary|m\MockInterface */
     protected $sut;
@@ -88,7 +88,6 @@ class DeleteCompanySubsidiaryTest extends CommandHandlerTestCase
                         ->addId('task', self::TASK_ID)
                         ->addMessage('Unit Task created')
                 );
-
         } else {
             $this->repoMap['CompanySubsidiary']
                 ->shouldReceive('fetchByIds')->never();

@@ -13,10 +13,10 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class BrNumDays extends SingleValueAbstract
 {
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
-    const BUNDLE = ['busNoticePeriod', 'status'];
-    const QUERY_CLASS = Qry::class;
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = DynamicBookmark::PARAM_BUSREG_ID;
+    public const BUNDLE = ['busNoticePeriod', 'status'];
+    public const QUERY_CLASS = Qry::class;
 
     /**
      * Render bookmark

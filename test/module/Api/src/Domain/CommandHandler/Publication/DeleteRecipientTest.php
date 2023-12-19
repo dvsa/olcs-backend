@@ -3,6 +3,7 @@
 /**
  * DeleteRecipientTest.php
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;

@@ -3,6 +3,7 @@
 /**
  * PublicationLink
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

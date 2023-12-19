@@ -70,7 +70,8 @@ class PaginateTest extends QueryPartialTestCase
      * @dataProvider dpTestModifyQueryEmptyExpect
      * @doesNotPerformAssertions
      */
-    public function testModifyQueryEmptyExpect($page, $limit, $expect) {
+    public function testModifyQueryEmptyExpect($page, $limit, $expect)
+    {
         $this->sut->modifyQuery($this->qb, [$page, $limit]);
     }
 

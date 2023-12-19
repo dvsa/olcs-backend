@@ -58,8 +58,8 @@ class CreatePsvDiscsTest extends BaseAbstractDbQueryTestCase
         $this->connection->shouldReceive('quote')->with(0)->times(4)->andReturn("'0'");
 
         $sql =
-            'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by, last_modified_on, last_modified_by) '.
-            'VALUES (\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1), '.
+            'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by, last_modified_on, last_modified_by) ' .
+            'VALUES (\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1), ' .
             '(\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1)';
 
         $this->connection->shouldReceive('executeUpdate')
@@ -83,8 +83,8 @@ class CreatePsvDiscsTest extends BaseAbstractDbQueryTestCase
         $this->connection->shouldReceive('quote')->with(0)->times(4)->andReturn("'0'");
 
         $sql =
-            'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by, last_modified_on, last_modified_by) '.
-            'VALUES (\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1), '.
+            'INSERT INTO psv_disc (licence_id, is_copy, created_on, created_by, last_modified_on, last_modified_by) ' .
+            'VALUES (\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1), ' .
             '(\'1102\', \'0\', NOW(), 1, NOW(), 1), (\'1102\', \'0\', NOW(), 1, NOW(), 1)';
 
         $this->connection->shouldReceive('executeUpdate')

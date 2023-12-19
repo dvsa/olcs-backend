@@ -151,7 +151,6 @@ class SubmitTest extends CommandHandlerTestCase
             new Result()
         );
 
-
         $this->sut->handleCommand($command);
     }
 
@@ -249,7 +248,6 @@ class SubmitTest extends CommandHandlerTestCase
         $tma->setId(12);
         $tma->shouldReceive('getCreatedBy')->with()->andReturn($creator);
 
-
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
 
@@ -267,7 +265,6 @@ class SubmitTest extends CommandHandlerTestCase
         $tma->shouldReceive('getApplication')->times(7)
             ->andReturn($application);
 
-
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
         $this->repoMap['TransportManagerApplication']->shouldReceive('save')->once();
@@ -284,7 +281,7 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/' . $uriSegment . '/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
@@ -301,14 +298,13 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/' . $uriSegment . '/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
                 $this->assertSame('default', $layout);
             }
         );
-
 
         $result = new Result();
         $this->expectedSideEffect(
@@ -359,7 +355,6 @@ class SubmitTest extends CommandHandlerTestCase
         $tma->setId(12);
         $tma->shouldReceive('getCreatedBy')->with()->andReturn($creator);
 
-
         $this->applicationId = 76;
         $application = m::mock(Application::class);
         $application->shouldReceive('getLicence->getLicNo')->andReturn('LIC01');
@@ -371,14 +366,11 @@ class SubmitTest extends CommandHandlerTestCase
         $application->shouldReceive('getStatus')->andReturn(new RefData(Application::APPLICATION_STATUS_UNDER_CONSIDERATION));
         $this->mockTask();
 
-
         $tma->shouldReceive('getApplication')->times(7)
             ->andReturn($application);
 
-
         $tma->shouldReceive('getTransportManager->getHomeCd->getPerson->getFullName')->with()->once()
             ->andReturn('Bob Smith');
-
 
         $this->repoMap['TransportManagerApplication']->shouldReceive('fetchUsingId')->once()
             ->with($command)->andReturn($tma);
@@ -396,7 +388,7 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/' . $uriSegment . '/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
@@ -413,7 +405,7 @@ class SubmitTest extends CommandHandlerTestCase
                         'tmFullName' => 'Bob Smith',
                         'licNo' => 'LIC01',
                         'applicationId' => 76,
-                        'tmaUrl' => 'http://selfserve/'.$uriSegment.'/76/transport-managers/details/12/'
+                        'tmaUrl' => 'http://selfserve/' . $uriSegment . '/76/transport-managers/details/12/'
                     ],
                     $vars
                 );
@@ -469,7 +461,6 @@ class SubmitTest extends CommandHandlerTestCase
                 );
             }
         );
-
 
         $this->sut->handleCommand($command);
     }

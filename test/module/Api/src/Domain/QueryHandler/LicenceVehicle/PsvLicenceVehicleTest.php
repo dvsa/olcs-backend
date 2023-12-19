@@ -5,8 +5,8 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\LicenceVehicle;
 
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\LicenceVehicle;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\LicenceVehicle\PsvLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Repository;

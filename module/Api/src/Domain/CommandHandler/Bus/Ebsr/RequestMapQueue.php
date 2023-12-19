@@ -3,6 +3,7 @@
 /**
  * Request new Ebsr map
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -25,7 +26,7 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
     use AuthAwareTrait;
     use QueueAwareTrait;
 
-    const CONFIRM_MESSAGE = 'New PDF(s) requested';
+    public const CONFIRM_MESSAGE = 'New PDF(s) requested';
 
     protected $repoServiceName = 'Bus';
 

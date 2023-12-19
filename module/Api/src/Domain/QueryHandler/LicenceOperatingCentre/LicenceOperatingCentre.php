@@ -21,8 +21,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  */
 class LicenceOperatingCentre extends AbstractQueryHandler
 {
-
-
     protected $repoServiceName = 'LicenceOperatingCentre';
 
     /**

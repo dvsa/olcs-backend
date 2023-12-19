@@ -5,6 +5,7 @@
  *
  * @author Craig R <uk@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Doctrine\ORM\Query;
@@ -40,9 +41,9 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
 {
     use EmailAwareTrait;
 
-    const DATE_FORMAT = 'l F jS Y';
+    public const DATE_FORMAT = 'l F jS Y';
 
-    const UNKNOWN_REG_NO = 'unknown reg no';
+    public const UNKNOWN_REG_NO = 'unknown reg no';
 
     protected $repoServiceName = 'EbsrSubmission';
 

@@ -5,6 +5,7 @@
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Permits\PostSubmitTasks as Cmd;

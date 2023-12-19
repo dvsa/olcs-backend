@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Email\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -22,8 +23,8 @@ use Dvsa\Olcs\Email\Service\Imap as Mailbox;
  */
 final class ProcessInspectionRequestEmail extends AbstractCommandHandler
 {
-    const SUBJECT_REGEX = '/\[ Maintenance Inspection \] REQUEST=([\d]+),STATUS=([SU]?)$/';
-    const MAILBOX_ID = 'inspection_request';
+    public const SUBJECT_REGEX = '/\[ Maintenance Inspection \] REQUEST=([\d]+),STATUS=([SU]?)$/';
+    public const MAILBOX_ID = 'inspection_request';
 
     /**
      * @var Mailbox
@@ -128,7 +129,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
      */
     protected function deleteEmail($id)
     {
-        $this->outputLine('==Deleting email '.$id);
+        $this->outputLine('==Deleting email ' . $id);
         return $this->getMailbox()->removeMessage($id);
     }
 

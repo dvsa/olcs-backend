@@ -12,7 +12,7 @@ use Mockery as m;
  */
 class DataServiceTest extends RepositoryTestCase
 {
-    const ORG_ID = 9001;
+    public const ORG_ID = 9001;
 
     /** @var Repository\DataService | m\MockInterface  */
     protected $sut;
@@ -42,7 +42,7 @@ class DataServiceTest extends RepositoryTestCase
 
         static::assertEquals(
             '{{QUERY}}' .
-            ' INNER JOIN ' . Entity\Application\Application::class .' a WITH a.status = m.id' .
+            ' INNER JOIN ' . Entity\Application\Application::class . ' a WITH a.status = m.id' .
             ' INNER JOIN a.licence l WITH l.organisation = [[' . self::ORG_ID . ']]',
             $this->query
         );

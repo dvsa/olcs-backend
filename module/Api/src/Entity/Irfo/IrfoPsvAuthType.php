@@ -20,11 +20,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class IrfoPsvAuthType extends AbstractIrfoPsvAuthType
 {
-    const IRFO_FEE_TYPE_EU_REG_17 = 'irfo_psv_eu_reg_17';
-    const IRFO_FEE_TYPE_EU_REG_19A = 'irfo_psv_eu_reg_19A';
-    const IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19 = 'irfo_psv_non_eu_occasional_19';
-    const IRFO_FEE_TYPE_NON_EU_REG_18 = 'irfo_psv_non_eu_reg_18';
-    const IRFO_FEE_TYPE_NON_EU_REG_19 = 'irfo_psv_non_eu_reg_19';
-    const IRFO_FEE_TYPE_OWN_AC_21 = 'irfo_psv_own_ac_21';
-    const IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20 = 'irfo_psv_shuttle_operator_20';
+    public const IRFO_FEE_TYPE_EU_REG_17 = 'irfo_psv_eu_reg_17';
+    public const IRFO_FEE_TYPE_EU_REG_19A = 'irfo_psv_eu_reg_19A';
+    public const IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19 = 'irfo_psv_non_eu_occasional_19';
+    public const IRFO_FEE_TYPE_NON_EU_REG_18 = 'irfo_psv_non_eu_reg_18';
+    public const IRFO_FEE_TYPE_NON_EU_REG_19 = 'irfo_psv_non_eu_reg_19';
+    public const IRFO_FEE_TYPE_OWN_AC_21 = 'irfo_psv_own_ac_21';
+    public const IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20 = 'irfo_psv_shuttle_operator_20';
 }

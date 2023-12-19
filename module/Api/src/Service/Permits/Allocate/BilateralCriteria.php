@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 
 class BilateralCriteria implements RangeMatchingCriteriaInterface
 {
-    const CABOTAGE_MAPPINGS = [
+    public const CABOTAGE_MAPPINGS = [
         IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED => false,
         IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => true,
     ];

@@ -22,22 +22,22 @@ use Laminas\Filter\Word\UnderscoreToCamelCase;
  */
 class ApplicationCompletion extends AbstractApplicationCompletion
 {
-    const STATUS_NOT_STARTED = 0;
-    const STATUS_INCOMPLETE = 1;
-    const STATUS_COMPLETE = 2;
+    public const STATUS_NOT_STARTED = 0;
+    public const STATUS_INCOMPLETE = 1;
+    public const STATUS_COMPLETE = 2;
 
     // On a variation the statuses mean difference things
-    const STATUS_VARIATION_REQUIRES_ATTENTION = 1;
-    const STATUS_VARIATION_UPDATED = 2;
+    public const STATUS_VARIATION_REQUIRES_ATTENTION = 1;
+    public const STATUS_VARIATION_UPDATED = 2;
 
-    const SECTION_PEOPLE = 'people';
-    const SECTION_TRANSPORT_MANAGER = 'transport_managers';
-    const SECTION_LICENCE_HISTORY = 'licence_history';
-    const SECTION_FINANCIAL_HISTORY = 'financial_history';
-    const SECTION_DECLARATION_INTERNAL = 'declarations_internal';
-    const SECTION_CONVICTIONS_AND_PENALTIES = 'convictions_penalties';
+    public const SECTION_PEOPLE = 'people';
+    public const SECTION_TRANSPORT_MANAGER = 'transport_managers';
+    public const SECTION_LICENCE_HISTORY = 'licence_history';
+    public const SECTION_FINANCIAL_HISTORY = 'financial_history';
+    public const SECTION_DECLARATION_INTERNAL = 'declarations_internal';
+    public const SECTION_CONVICTIONS_AND_PENALTIES = 'convictions_penalties';
     // For some reason declaration section is called 'undertakings'?
-    const SECTION_DECLARATION = 'undertakings';
+    public const SECTION_DECLARATION = 'undertakings';
 
     /**
      * ApplicationCompletion constructor.

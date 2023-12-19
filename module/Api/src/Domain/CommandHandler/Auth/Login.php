@@ -1,5 +1,6 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
@@ -84,19 +85,27 @@ class Login extends AbstractCommandHandler
             }
         } catch (UserNotFoundException | UserSoftDeletedException $e) {
             $result = new \Laminas\Authentication\Result(
-                \Laminas\Authentication\Result::FAILURE_IDENTITY_NOT_FOUND, [], [$e->getMessage()]
+                \Laminas\Authentication\Result::FAILURE_IDENTITY_NOT_FOUND,
+                [],
+                [$e->getMessage()]
             );
         } catch (UserIdentityAmbiguousException $e) {
             $result = new \Laminas\Authentication\Result(
-                \Laminas\Authentication\Result::FAILURE_IDENTITY_AMBIGUOUS, [], [$e->getMessage()]
+                \Laminas\Authentication\Result::FAILURE_IDENTITY_AMBIGUOUS,
+                [],
+                [$e->getMessage()]
             );
         } catch (UserIsNotEnabledException $e) {
             $result = new \Laminas\Authentication\Result(
-                self::FAILURE_ACCOUNT_DISABLED, [], [$e->getMessage()]
+                self::FAILURE_ACCOUNT_DISABLED,
+                [],
+                [$e->getMessage()]
             );
         } catch (UserRealmMismatchException | UserHasNoOrganisationException $e) {
             $result = new \Laminas\Authentication\Result(
-                \Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID, [], [$e->getMessage()]
+                \Laminas\Authentication\Result::FAILURE_CREDENTIAL_INVALID,
+                [],
+                [$e->getMessage()]
             );
         }
 
@@ -212,7 +221,7 @@ class Login extends AbstractCommandHandler
      */
     protected function checkUserCanAccessRealmOrFail(User $user, string $realm): bool
     {
-        $userRealm = $user->isInternal() ? static::REALM_INTERNAL: static::REALM_SELFSERVE;
+        $userRealm = $user->isInternal() ? static::REALM_INTERNAL : static::REALM_SELFSERVE;
         if ($userRealm !== $realm) {
             throw new UserRealmMismatchException(sprintf(
                 'User with login_id "%s" with realm "%s" is attempting to log in to realm "%s"',

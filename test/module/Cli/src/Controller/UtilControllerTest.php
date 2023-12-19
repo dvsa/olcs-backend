@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Cli\Controller\UtilController;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use OlcsTest\Bootstrap;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
@@ -33,7 +33,18 @@ class UtilControllerTest extends MockeryTestCase
         $this->routeMatch = new RouteMatch([]);
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
         $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
         $this->mockQueryHandlerManager = m::mock(QueryHandlerManager::class);
 

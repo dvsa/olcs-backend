@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Cpms;
 
 use Dvsa\Olcs\Api\Domain\Exception\Exception as DomainException;
@@ -23,7 +24,7 @@ use Dvsa\Olcs\Transfer\Query\Cpms\ReportStatus as ReportStatusQry;
  */
 class ReportDownload extends AbstractConsumer
 {
-    const MAX_ATTEMPTS = 10;
+    public const MAX_ATTEMPTS = 10;
 
     /** @var QueryHandlerManager */
     protected $queryHandlerManager;
@@ -73,7 +74,7 @@ class ReportDownload extends AbstractConsumer
             [$reference, $result['token'], $result['extension']]
         );
 
-        $extension = $result['extension'] ? ('.'.$result['extension']) : '';
+        $extension = $result['extension'] ? ('.' . $result['extension']) : '';
         $filename = $options['name'] . $extension;
         $command = DownloadReportCmd::create(
             [

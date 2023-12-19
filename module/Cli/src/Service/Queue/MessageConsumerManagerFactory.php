@@ -6,6 +6,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 
 class MessageConsumerManagerFactory extends AbstractServiceManagerFactory
 {
-    const PLUGIN_MANAGER_CLASS = MessageConsumerManager::class;
-    const CONFIG_KEY = 'message_consumer_manager';
+    public const PLUGIN_MANAGER_CLASS = MessageConsumerManager::class;
+    public const CONFIG_KEY = 'message_consumer_manager';
 }

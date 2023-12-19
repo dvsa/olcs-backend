@@ -19,9 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DiscSequence extends AbstractDiscSequence
 {
-    const DISCS_ON_PAGE = 6;
+    public const DISCS_ON_PAGE = 6;
 
-    const ERROR_DECREASING = 'err_decr';
+    public const ERROR_DECREASING = 'err_decr';
     /**
      * Licence type to prefixes mapping
      *

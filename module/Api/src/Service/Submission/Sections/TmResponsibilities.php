@@ -79,7 +79,6 @@ final class TmResponsibilities extends AbstractSection
             $thisRow['organisationName'] = !empty($applicationLicenceOrganisation) ?
                 $applicationLicenceOrganisation->getName() : '';
             $thisRow['status'] = $application->getStatus()->getDescription();
-
         } elseif ($entity instanceof TransportManagerLicence) {
 
             /** @var TransportManagerLicence $entity */
@@ -92,7 +91,6 @@ final class TmResponsibilities extends AbstractSection
             $thisRow['organisationName'] = !empty($organisation) ?
                 $organisation->getName() : '';
             $thisRow['status'] = !empty($licence) ? $licence->getStatus()->getDescription() : '';
-
         }
 
         return $thisRow;

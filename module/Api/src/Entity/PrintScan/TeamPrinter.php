@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
  */
 class TeamPrinter extends AbstractTeamPrinter
 {
-    const ERROR_PRINTER_EXCEPTION_EXISTS = 'err_printer_exception_exist';
+    public const ERROR_PRINTER_EXCEPTION_EXISTS = 'err_printer_exception_exist';
 
     /**
      * Constructor for TeamPrinter

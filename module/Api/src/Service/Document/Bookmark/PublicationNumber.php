@@ -9,5 +9,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class PublicationNumber extends PublicationFlatAbstract
 {
-    const FIELD  = 'publicationNo';
+    public const FIELD  = 'publicationNo';
 }

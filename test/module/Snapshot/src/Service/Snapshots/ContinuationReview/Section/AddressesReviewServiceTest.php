@@ -92,7 +92,7 @@ class AddressesReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuation-review-addresses-correspondence-address'],
                 ['value' => 'Flat 1, Foo house, Leeds, LS9 6NF', 'header' => true]
@@ -159,7 +159,7 @@ class AddressesReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuation-review-addresses-correspondence-address'],
                 ['value' => 'Flat 1, Foo house, Leeds, LS9 6NF', 'header' => true]
@@ -218,7 +218,7 @@ class AddressesReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuation-review-addresses-correspondence-address'],
                 ['value' => 'Flat 1, Foo house, Leeds, LS9 6NF', 'header' => true]

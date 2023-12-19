@@ -63,7 +63,6 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     {
         $fullContainer = $container;
 
-
         $this->nysiisClient = $container->get(NysiisRestClient::class);
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

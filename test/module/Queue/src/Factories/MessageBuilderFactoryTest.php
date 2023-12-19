@@ -18,9 +18,9 @@ class MessageBuilderFactoryTest extends TestCase
         $this->mockSl = m::mock(ContainerInterface::class);
         $this->sut = new MessageBuilderFactory();
     }
-    
+
     public function testCreateService()
     {
-        $this->assertInstanceOf(MessageBuilder::class, $this->sut->__invoke($this->mockSl,MessageBuilder::class));
+        $this->assertInstanceOf(MessageBuilder::class, $this->sut->__invoke($this->mockSl, MessageBuilder::class));
     }
 }

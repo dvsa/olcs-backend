@@ -3,6 +3,7 @@
 /**
  * IRHP Permit Type
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use DateTime;
@@ -31,8 +32,8 @@ class IrhpPermitType extends AbstractRepository
 
         $qb
             ->select($this->alias, 'rd')
-            ->innerJoin($this->alias.'.name', 'rd')
-            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin($this->alias . '.name', 'rd')
+            ->innerJoin($this->alias . '.irhpPermitStocks', 'ips')
             ->innerJoin('ips.irhpPermitWindows', 'ipw')
             ->where($qb->expr()->lte('ipw.startDate', ':now'))
             ->andWhere($qb->expr()->gt('ipw.endDate', ':now'))
@@ -55,8 +56,8 @@ class IrhpPermitType extends AbstractRepository
         $qb
             ->select($this->alias, 'rd')
             ->distinct()
-            ->innerJoin($this->alias.'.name', 'rd')
-            ->innerJoin($this->alias.'.irhpPermitStocks', 'ips')
+            ->innerJoin($this->alias . '.name', 'rd')
+            ->innerJoin($this->alias . '.irhpPermitStocks', 'ips')
             ->innerJoin('ips.irhpPermitRanges', 'ipr')
             ->innerJoin('ipr.irhpPermits', 'ip')
             ->where($qb->expr()->in('ip.status', ':statuses'))

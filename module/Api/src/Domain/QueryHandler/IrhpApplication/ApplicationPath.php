@@ -54,7 +54,6 @@ class ApplicationPath extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->formFragmentGenerator = $container->get('QaFormFragmentGenerator');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

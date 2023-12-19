@@ -29,7 +29,7 @@ class TranslationKeyText extends AbstractTranslationKeyText implements Deletable
      */
     public static function create(Language $language, TranslationKey $translationKey, string $translatedText)
     {
-        $instance = new self;
+        $instance = new self();
 
         $instance->language = $language;
         $instance->translationKey = $translationKey;

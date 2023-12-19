@@ -62,7 +62,6 @@ class GetGrantability extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->grantabilityChecker = $container->get('PermitsGrantabilityChecker');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

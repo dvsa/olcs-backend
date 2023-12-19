@@ -44,13 +44,15 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     CpmsAwareInterface,
     ConfigAwareInterface
 {
-    use AuthAwareTrait, CpmsAwareTrait, ConfigAwareTrait;
+    use AuthAwareTrait;
+    use CpmsAwareTrait;
+    use ConfigAwareTrait;
 
-    const ERR_WAIT = 'ERR_WAIT';
+    public const ERR_WAIT = 'ERR_WAIT';
 
-    const ERR_NO_FEES = 'ERR_NO_FEES';
+    public const ERR_NO_FEES = 'ERR_NO_FEES';
 
-    const DEFAULT_PENDING_PAYMENTS_TIMEOUT = 3600;
+    public const DEFAULT_PENDING_PAYMENTS_TIMEOUT = 3600;
 
     /**
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
@@ -80,7 +82,8 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
             : self::DEFAULT_PENDING_PAYMENTS_TIMEOUT;
 
         // if payment method in CARD_ONLINE (ie it came from external) and disable card payments is set
-        if ($command->getPaymentMethod()===FeeEntity::METHOD_CARD_ONLINE &&
+        if (
+            $command->getPaymentMethod() === FeeEntity::METHOD_CARD_ONLINE &&
             $this->getRepo('SystemParameter')->getDisableSelfServeCardPayments()
         ) {
             $this->result->addMessage('Card payments are disabled');
@@ -654,7 +657,6 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->feesHelper = $container->get('FeesHelperService');
         return parent::__invoke($fullContainer, $requestedName, $options);

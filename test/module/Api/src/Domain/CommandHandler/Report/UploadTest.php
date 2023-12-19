@@ -28,10 +28,10 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UploadTest extends CommandHandlerTestCase
 {
-    const FILENAME = 'fileName.csv';
-    const BODY = 'expect_body';
-    const IDENTIFIER = '/some/identifier.csv';
-    const USER_ID = 7001;
+    public const FILENAME = 'fileName.csv';
+    public const BODY = 'expect_body';
+    public const IDENTIFIER = '/some/identifier.csv';
+    public const USER_ID = 7001;
 
     /** @var Upload */
     protected $sut;

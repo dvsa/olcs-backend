@@ -17,7 +17,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UpdateBusinessDetailsTest extends CommandHandlerTestCase
 {
-    const ID = 111;
+    public const ID = 111;
 
     /** @var  UpdateBusinessDetails */
     protected $sut;

@@ -12,7 +12,6 @@ use Mockery as m;
 
 class UpdateTest extends CommandHandlerTestCase
 {
-
     /** @var Sut */
     protected $sut;
 
@@ -56,8 +55,10 @@ class UpdateTest extends CommandHandlerTestCase
                 if (array_key_exists('licenceDocumentStatus', $data)) {
                     $surrenderEntity->shouldReceive('setLicenceDocumentStatus')->once();
                     $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
-                    if ($data['licenceDocumentStatus'] == SurrenderEntity::SURRENDER_DOC_STATUS_DESTROYED
-                        && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))) {
+                    if (
+                        $data['licenceDocumentStatus'] == SurrenderEntity::SURRENDER_DOC_STATUS_DESTROYED
+                        && (array_key_exists('licenceDocumentInfo', $data) && !empty($data['licenceDocumentInfo']))
+                    ) {
                         $surrenderEntity->shouldReceive('setLicenceDocumentInfo')->with(null)->once();
                     } else {
                         if (array_key_exists('licenceDocumentInfo', $data)) {
@@ -110,7 +111,6 @@ class UpdateTest extends CommandHandlerTestCase
             ->shouldReceive('save')
             ->with(m::type(SurrenderEntity::class))
             ->once();
-
 
         $result = $this->sut->handleCommand($command);
 

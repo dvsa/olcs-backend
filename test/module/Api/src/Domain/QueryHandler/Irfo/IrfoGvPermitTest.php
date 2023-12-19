@@ -3,6 +3,7 @@
 /**
  * IrfoGvPermit Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Irfo;
 
 use Mockery as m;

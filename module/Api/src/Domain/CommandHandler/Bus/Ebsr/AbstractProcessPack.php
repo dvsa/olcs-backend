@@ -3,6 +3,7 @@
 /**
  * Process Ebsr pack
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -650,7 +651,6 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->xmlStructureInput = $container->get(XmlStructureInputFactory::class);
         $this->busRegInput = $container->get(BusRegistrationInputFactory::class);

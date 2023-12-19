@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\EndInterim;
@@ -70,7 +71,6 @@ class EndInterimTest extends CommandHandlerTestCase
             ->andReturn([$mockLicence])
             ->once()
             ->getMock();
-
 
         $this->repoMap['Application']->shouldReceive('save')
             ->with($mockApplication)

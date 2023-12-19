@@ -272,7 +272,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
             ->setLicenceType(new \Dvsa\Olcs\Api\Entity\System\RefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL))
             ->setInterimStatus(new RefData(1));
 
-
         $this->repoMap['Application']->shouldReceive('fetchById')->with(532)->andReturn($application);
         $this->repoMap['Application']->shouldReceive('save')->once()->with(m::type(Application::class));
 
@@ -463,7 +462,6 @@ class RefuseApplicationTest extends CommandHandlerTestCase
         $feeEntity->shouldReceive('getId')->andReturn(1);
 
         $application->setFees(new ArrayCollection([$feeEntity]));
-
 
         $this->repoMap['Application']->shouldReceive('fetchById')->with($command->getId())->once()->andReturn($application)
             ->shouldReceive('save')->with($application)->once();

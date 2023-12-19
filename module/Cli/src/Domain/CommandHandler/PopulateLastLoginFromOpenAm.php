@@ -18,7 +18,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
     use OpenAmUserAwareTrait;
     use AuthAwareTrait;
 
-    const DEFAULT_BATCH_SIZE = 50;
+    public const DEFAULT_BATCH_SIZE = 50;
 
     protected $repoServiceName = 'User';
 
@@ -177,7 +177,7 @@ final class PopulateLastLoginFromOpenAm extends AbstractCommandHandler implement
      * @return int
      * @throws RuntimeException
      */
-    protected function getNumberOfUsersToProcess(CommandInterface $command) : int
+    protected function getNumberOfUsersToProcess(CommandInterface $command): int
     {
         $numberOfUsersToProcess = $this->getRepo()->fetchUsersCountWithoutLastLoginTime();
         $limit = $command->getLimit();

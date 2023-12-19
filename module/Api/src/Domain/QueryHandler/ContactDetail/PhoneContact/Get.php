@@ -24,7 +24,8 @@ class Get extends AbstractQueryHandler
     public function handleQuery(QueryInterface $query)
     {
         return $this->result(
-            $this->getRepo()->fetchUsingId($query), ['contactDetails']
+            $this->getRepo()->fetchUsingId($query),
+            ['contactDetails']
         );
     }
 }

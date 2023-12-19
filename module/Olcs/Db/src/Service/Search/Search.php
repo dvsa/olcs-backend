@@ -27,7 +27,7 @@ class Search implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
-    const MAX_NUMBER_OF_RESULTS = 10000;
+    public const MAX_NUMBER_OF_RESULTS = 10000;
 
     /**
      * @var Client

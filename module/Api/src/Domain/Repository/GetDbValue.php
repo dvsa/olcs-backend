@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: parthvyas
@@ -10,7 +11,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 class GetDbValue extends AbstractReadonlyRepository
 {
-
     protected $entity;
 
     /**

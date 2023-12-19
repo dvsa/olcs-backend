@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrOtherServiceNos;
  */
 class BrOtherServiceNosTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = BrOtherServiceNos::class;
+    public const SUT_CLASS_NAME = BrOtherServiceNos::class;
 }

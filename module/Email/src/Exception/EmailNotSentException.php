@@ -9,5 +9,4 @@ namespace Dvsa\Olcs\Email\Exception;
  */
 class EmailNotSentException extends \Exception
 {
-
 }

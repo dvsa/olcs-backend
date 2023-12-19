@@ -7,6 +7,6 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class MotExpiryDate extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'vehicle-mot-expiry-date';
-    const FORMATTER = 'Date';
+    public const FIELD = 'vehicle-mot-expiry-date';
+    public const FORMATTER = 'Date';
 }

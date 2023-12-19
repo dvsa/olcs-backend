@@ -3,6 +3,7 @@
 /**
  * Venue Bundle Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bookmark;
 
 use Mockery as m;

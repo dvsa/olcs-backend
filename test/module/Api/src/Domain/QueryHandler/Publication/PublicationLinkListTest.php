@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Publication\PublicationLinkList;

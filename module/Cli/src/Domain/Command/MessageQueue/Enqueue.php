@@ -22,7 +22,7 @@ class Enqueue extends AbstractCommand implements LoggerOmitContentInterface
     /**
      * @return array
      */
-    public function getMessageData() : array
+    public function getMessageData(): array
     {
         return $this->messageData;
     }
@@ -30,7 +30,7 @@ class Enqueue extends AbstractCommand implements LoggerOmitContentInterface
     /**
      * @return string
      */
-    public function getQueueType() : string
+    public function getQueueType(): string
     {
         return $this->queueType;
     }
@@ -38,7 +38,7 @@ class Enqueue extends AbstractCommand implements LoggerOmitContentInterface
     /**
      * @return mixed
      */
-    public function getMessageType() : string
+    public function getMessageType(): string
     {
         return $this->messageType;
     }

@@ -3,6 +3,7 @@
 /**
  * WithPersonContactDetails Factory
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;

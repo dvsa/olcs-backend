@@ -22,7 +22,7 @@ use Dvsa\Olcs\Transfer\Query\IrhpPermit\GetListByLicence;
  */
 class EndIrhpPermits extends AbstractCommandHandler implements TransactionedInterface
 {
-    const CONTEXT_TASK_DESCRIPTION_LOOKUP = [
+    public const CONTEXT_TASK_DESCRIPTION_LOOKUP = [
         EndIrhpApplicationsAndPermitsCmd::CONTEXT_SURRENDER => 'licence surrendered',
         EndIrhpApplicationsAndPermitsCmd::CONTEXT_REVOKE => 'licence revoked',
         EndIrhpApplicationsAndPermitsCmd::CONTEXT_CNS => 'CNS processing of licence',

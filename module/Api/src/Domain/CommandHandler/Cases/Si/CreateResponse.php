@@ -28,7 +28,7 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     use AuthAwareTrait;
     use QueueAwareTrait;
 
-    const RESPONSE_DOCUMENT_DESCRIPTION = 'ERRU MSI response for business case ID: %s';
+    public const RESPONSE_DOCUMENT_DESCRIPTION = 'ERRU MSI response for business case ID: %s';
 
     protected $repoServiceName = 'Cases';
 
@@ -116,7 +116,6 @@ final class CreateResponse extends AbstractCommandHandler implements AuthAwareIn
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->msiResponseService = $container->get(MsiResponseService::class);
         return parent::__invoke($fullContainer, $requestedName, $options);

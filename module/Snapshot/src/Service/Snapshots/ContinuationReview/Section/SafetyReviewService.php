@@ -29,7 +29,7 @@ class SafetyReviewService extends AbstractReviewService
         $licence = $continuationDetail->getLicence();
         $workshops = $licence->getWorkshops();
 
-        $header =[
+        $header = [
             [
                 ['value' => 'continuations.safety-section.table.inspector', 'header' => true],
                 ['value' => 'continuations.safety-section.table.address', 'header' => true],

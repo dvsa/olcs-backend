@@ -3,6 +3,7 @@
 /**
  * Create Note Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Processing\Note;
 
 use Doctrine\ORM\Query;
@@ -13,7 +14,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Note;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-
 use Dvsa\Olcs\Api\Entity;
 
 /**

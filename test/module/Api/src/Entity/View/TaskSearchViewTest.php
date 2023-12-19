@@ -73,7 +73,7 @@ class TaskSearchViewTest extends \PHPUnit\Framework\TestCase
     {
         // test all teh getters
         foreach ($this->testData as $property => $value) {
-            $getter = 'get'.ucfirst($property);
+            $getter = 'get' . ucfirst($property);
             $this->assertEquals($value, $this->entity->$getter());
         }
     }

@@ -26,10 +26,10 @@ class DateTo extends DynamicBookmark
 
     public function render()
     {
-        if (isset($this->data[1]['interimStatus']['id'])
+        if (
+            isset($this->data[1]['interimStatus']['id'])
             && $this->data[1]['interimStatus']['id'] == Application::INTERIM_STATUS_INFORCE
         ) {
-
             if ($this->data[1]['interimEnd'] instanceof \DateTime) {
                 return $this->data[1]['interimEnd']->format('d/m/Y');
             }

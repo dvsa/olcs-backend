@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
  */
 class InterimSpecificLicenceUndertakings extends AbstractInterimConditionsUndertakings
 {
-    const CONDITION_TYPE = ConditionUndertaking::TYPE_UNDERTAKING;
+    public const CONDITION_TYPE = ConditionUndertaking::TYPE_UNDERTAKING;
 }

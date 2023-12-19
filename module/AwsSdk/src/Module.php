@@ -9,7 +9,6 @@ namespace Dvsa\Olcs\AwsSdk;
  */
 class Module
 {
-
     /**
      * @codeCoverageIgnore
      * @return mixed

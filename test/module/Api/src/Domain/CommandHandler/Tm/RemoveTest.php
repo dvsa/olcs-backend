@@ -5,6 +5,7 @@
  *
  * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
@@ -13,7 +14,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Remove;
 use Dvsa\Olcs\Transfer\Command\Tm\Remove as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
-use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 
 /**
  * Class UpdateTest

@@ -14,8 +14,8 @@ use org\bovigo\vfs\vfsStream;
  */
 class AbstractDownloadTest extends QueryHandlerTestCase
 {
-    const MIME_TYPE = 'unit_mime';
-    const MIME_TYPE_EXCLUDE = 'unit_EXC_mime';
+    public const MIME_TYPE = 'unit_mime';
+    public const MIME_TYPE_EXCLUDE = 'unit_EXC_mime';
 
     /** @var  AbstractDownloadStub */
     protected $sut;

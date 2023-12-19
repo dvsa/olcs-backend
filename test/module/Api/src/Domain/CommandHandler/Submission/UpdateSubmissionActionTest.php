@@ -3,6 +3,7 @@
 /**
  * Update SubmissionAction Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Mockery as m;

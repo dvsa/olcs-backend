@@ -3,6 +3,7 @@
 /**
  * Create Variation
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Doctrine\ORM\Query;

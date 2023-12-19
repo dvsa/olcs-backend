@@ -5,6 +5,7 @@
  *
  * @author Craig Reasbeck <craig.reasbeck@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
@@ -16,9 +17,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
  */
 class BrFinishPoint extends SingleValueAbstract
 {
-    const FORMATTER = null;
-    const FIELD  = 'finishPoint';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'busRegId';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = null;
+    public const FIELD  = 'finishPoint';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'busRegId';
+    public const QUERY_CLASS = Qry::class;
 }

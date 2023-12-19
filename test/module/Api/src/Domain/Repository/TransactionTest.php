@@ -102,7 +102,7 @@ class TransactionTest extends RepositoryTestCase
             . ' AND t.type = [[trt_payment]]'
             . ' AND t.status = [[pay_s_os]]'
             . ' AND t.paymentMethod IN [[["fpm_card_online","fpm_card_offline"]]]'
-            . ' AND t.createdOn < [['.$expectedDateTime.']]';
+            . ' AND t.createdOn < [[' . $expectedDateTime . ']]';
 
         $this->assertEquals(['RESULTS'], $this->sut->fetchOutstandingCardPayments(60));
 

@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\GdsVerify\Service;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Log\LoggerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use \RobRichards\XMLSecLibs;
+use RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
 use Interop\Container\ContainerInterface;
 
@@ -18,13 +18,13 @@ use Interop\Container\ContainerInterface;
  */
 class GdsVerify implements FactoryInterface
 {
-    const CONFIG_KEY = 'gds_verify';
-    const CONFIG_ENTITY_ID = 'entity_identifier';
-    const CONFIG_SIGNATURE_KEY = 'signature_key';
-    const CONFIG_ENCRYPTION_KEYS = 'encryption_keys';
-    const CONFIG_MSA_METADATA_URL = 'msa_metadata_url';
-    const CONFIG_ENABLED_DEBUG_LOG = 'enable_debug_log';
-    const CONFIG_CACHE = 'cache';
+    public const CONFIG_KEY = 'gds_verify';
+    public const CONFIG_ENTITY_ID = 'entity_identifier';
+    public const CONFIG_SIGNATURE_KEY = 'signature_key';
+    public const CONFIG_ENCRYPTION_KEYS = 'encryption_keys';
+    public const CONFIG_MSA_METADATA_URL = 'msa_metadata_url';
+    public const CONFIG_ENABLED_DEBUG_LOG = 'enable_debug_log';
+    public const CONFIG_CACHE = 'cache';
 
     /**
      * @var array Config
@@ -253,7 +253,8 @@ class GdsVerify implements FactoryInterface
      */
     public function getEncryptionKey($indexNumber = 0)
     {
-        if (isset($this->encryptionKeys[$indexNumber])
+        if (
+            isset($this->encryptionKeys[$indexNumber])
             && $this->encryptionKeys[$indexNumber] instanceof XMLSecLibs\XMLSecurityKey
         ) {
             return $this->encryptionKeys[$indexNumber];

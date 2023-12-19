@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -88,7 +89,7 @@ class Transaction extends AbstractQueryHandler
      */
     protected function getReversingTransactionData(FeeTransactionEntity $ft)
     {
-        if (count($ft->getReversingFeeTransactions())>0) {
+        if (count($ft->getReversingFeeTransactions()) > 0) {
             $reversal = $ft->getReversingFeeTransactions()->first();
             return [
                 'id' => $reversal->getTransaction()->getId(),

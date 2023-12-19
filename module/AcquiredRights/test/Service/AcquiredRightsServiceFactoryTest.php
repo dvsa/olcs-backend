@@ -5,14 +5,15 @@ namespace Dvsa\Olcs\AcquiredRights\Client;
 use Dvsa\Olcs\AcquiredRights\Service\AcquiredRightsService;
 use Dvsa\Olcs\AcquiredRights\Service\AcquiredRightsServiceFactory;
 use Laminas\ServiceManager\ServiceManager;
-use Olcs\TestHelpers\MockeryTestCase;
 use Mockery as m;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Laminas\Log\LoggerInterface;
 
 class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 {
     use MocksServicesTrait;
+
     protected AcquiredRightsServiceFactory $sut;
 
     /**

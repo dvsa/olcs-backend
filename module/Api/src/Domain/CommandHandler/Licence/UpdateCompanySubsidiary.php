@@ -31,7 +31,8 @@ class UpdateCompanySubsidiary extends AbstractCompanySubsidiary implements AuthA
         $this->result = $this->update($command);
 
         //  create task
-        if ($this->result->getFlag('hasChanged') === true
+        if (
+            $this->result->getFlag('hasChanged') === true
             && $this->isGranted(Permission::SELFSERVE_USER)
         ) {
             $this->result->merge(

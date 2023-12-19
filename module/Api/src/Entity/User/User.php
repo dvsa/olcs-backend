@@ -31,26 +31,26 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
  */
 class User extends AbstractUser implements OrganisationProviderInterface
 {
-    const PERMISSION_ADMIN = 'admin';
-    const PERMISSION_USER = 'user';
-    const PERMISSION_TM = 'tm';
+    public const PERMISSION_ADMIN = 'admin';
+    public const PERMISSION_USER = 'user';
+    public const PERMISSION_TM = 'tm';
 
-    const USER_TYPE_INTERNAL = 'internal';
-    const USER_TYPE_ANON = 'anon';
-    const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
-    const USER_TYPE_OPERATOR = 'operator';
-    const USER_TYPE_PARTNER = 'partner';
-    const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
+    public const USER_TYPE_INTERNAL = 'internal';
+    public const USER_TYPE_ANON = 'anon';
+    public const USER_TYPE_LOCAL_AUTHORITY = 'local-authority';
+    public const USER_TYPE_OPERATOR = 'operator';
+    public const USER_TYPE_PARTNER = 'partner';
+    public const USER_TYPE_TRANSPORT_MANAGER = 'transport-manager';
 
-    const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
-    const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
+    public const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
+    public const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
 
     // user operating system
-    const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
-    const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
-    const USER_OS_TYPE_NORTHERN_I = 'northern_i';
+    public const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
+    public const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
+    public const USER_OS_TYPE_NORTHERN_I = 'northern_i';
 
-    const ANON_USERNAME = 'anon';
+    public const ANON_USERNAME = 'anon';
 
     /**
      * List of all roles available by user type

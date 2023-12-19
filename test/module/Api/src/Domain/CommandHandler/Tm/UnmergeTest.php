@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Unmerge as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Tm\Unmerge as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use \Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
 
 /**

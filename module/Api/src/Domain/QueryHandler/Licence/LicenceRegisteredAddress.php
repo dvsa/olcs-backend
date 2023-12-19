@@ -3,6 +3,7 @@
 /**
  * Licence Registered Address
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Licence;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

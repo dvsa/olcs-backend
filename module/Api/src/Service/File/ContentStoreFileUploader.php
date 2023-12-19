@@ -16,7 +16,7 @@ use Interop\Container\ContainerInterface;
  */
 class ContentStoreFileUploader implements FileUploaderInterface, FactoryInterface
 {
-    const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
+    public const ERR_UNABLE_UPLOAD = 'Unable to store uploaded file: %s';
 
     /**
      * @var DocumentStoreInterface

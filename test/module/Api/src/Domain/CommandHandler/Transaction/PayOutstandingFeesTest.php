@@ -1,11 +1,11 @@
 <?php
 
-
 /**
  * Pay Outstanding Fees Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
 use Doctrine\Common\Collections\ArrayCollection;

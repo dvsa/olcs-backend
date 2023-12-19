@@ -82,7 +82,10 @@ class IrhpApplication extends AbstractIrhpApplication implements
     CheckableApplicationInterface,
     QaEntityInterface
 {
-    use SectionTrait, CandidatePermitCreationTrait, FetchPermitAppSubmissionTaskTrait, TieredProductReference;
+    use SectionTrait;
+    use CandidatePermitCreationTrait;
+    use FetchPermitAppSubmissionTaskTrait;
+    use TieredProductReference;
 
     use PermitAppReviveFromWithdrawnTrait {
         canBeRevivedFromWithdrawn as baseCanBeRevivedFromWithdrawn;
@@ -92,25 +95,25 @@ class IrhpApplication extends AbstractIrhpApplication implements
         canBeRevivedFromUnsuccessful as baseCanBeRevivedFromUnsuccessful;
     }
 
-    const NON_SCALAR_ANSWER_PRESENT = 'Answer is present but has non-scalar representation';
+    public const NON_SCALAR_ANSWER_PRESENT = 'Answer is present but has non-scalar representation';
 
-    const ERR_CANT_CANCEL = 'Unable to cancel this application';
-    const ERR_CANT_TERMINATE = 'Unable to terminate this application';
-    const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
-    const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
-    const ERR_CANT_SUBMIT = 'This application cannot be submitted';
-    const ERR_CANT_ISSUE = 'This application cannot be issued';
-    const ERR_CANT_GRANT = 'Unable to grant this application';
+    public const ERR_CANT_CANCEL = 'Unable to cancel this application';
+    public const ERR_CANT_TERMINATE = 'Unable to terminate this application';
+    public const ERR_CANT_CHECK_ANSWERS = 'Unable to check answers: the sections of the application have not been completed.';
+    public const ERR_CANT_MAKE_DECLARATION = 'Unable to make declaration: the sections of the application have not been completed.';
+    public const ERR_CANT_SUBMIT = 'This application cannot be submitted';
+    public const ERR_CANT_ISSUE = 'This application cannot be issued';
+    public const ERR_CANT_GRANT = 'Unable to grant this application';
 
-    const ERR_ROADWORTHINESS_ONLY = 'This method is only for roadworthiness certificates';
-    const ERR_ROADWORTHINESS_MOT_EXPIRY = 'The MOT has not yet expired on this record';
+    public const ERR_ROADWORTHINESS_ONLY = 'This method is only for roadworthiness certificates';
+    public const ERR_ROADWORTHINESS_MOT_EXPIRY = 'The MOT has not yet expired on this record';
 
-    const COUNTRY_PROPERTY_CODE = 'code';
-    const COUNTRY_PROPERTY_NAME = 'name';
-    const COUNTRY_PROPERTY_STATUS = 'status';
-    const COUNTRY_PROPERTY_IPA_ID = 'irhpPermitApplication';
+    public const COUNTRY_PROPERTY_CODE = 'code';
+    public const COUNTRY_PROPERTY_NAME = 'name';
+    public const COUNTRY_PROPERTY_STATUS = 'status';
+    public const COUNTRY_PROPERTY_IPA_ID = 'irhpPermitApplication';
 
-    const SECTIONS = [
+    public const SECTIONS = [
         IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL => [
             'countries' => [
                 'validator' => 'areBilateralCountriesCompleted',
@@ -147,7 +150,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         ],
     ];
 
-    const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
+    public const ISSUE_FEE_PRODUCT_REFERENCE_MONTH_ARRAY = [
         'Jan' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
         'Feb' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
         'Mar' => FeeTypeEntity::FEE_TYPE_ECMT_ISSUE_100_PRODUCT_REF,
@@ -1831,7 +1834,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
         foreach ($this->countrys as $country) {
             $countryIds[] = $country->getId();
         }
-    
+
         return $countryIds;
     }
 
@@ -2373,7 +2376,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function proceedToUnsuccessful(RefData $unsuccessfulStatus)
     {
         if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful ('.$this->status->getId().')');
+            throw new ForbiddenException('This application is not in the correct state to proceed to unsuccessful (' . $this->status->getId() . ')');
         }
 
         $this->status = $unsuccessfulStatus;
@@ -2389,7 +2392,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     public function proceedToAwaitingFee(RefData $awaitingFeeStatus)
     {
         if (!$this->isUnderConsideration()) {
-            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee ('.$this->status->getId().')');
+            throw new ForbiddenException('This application is not in the correct state to proceed to awaiting fee (' . $this->status->getId() . ')');
         }
 
         $this->status = $awaitingFeeStatus;
@@ -2407,7 +2410,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         if (!$this->isUnderConsideration() && !$this->isAwaitingFee()) {
             throw new ForbiddenException(
-                'This application is not in the correct state to return permits awarded ('.$this->status->getId().')'
+                'This application is not in the correct state to return permits awarded (' . $this->status->getId() . ')'
             );
         }
 
@@ -2673,7 +2676,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
         $matchingDocuments = new ArrayCollection();
 
         foreach ($this->documents as $document) {
-            if ($document->getCategory()->getId() == $categoryId &&
+            if (
+                $document->getCategory()->getId() == $categoryId &&
                 is_object($document->getSubCategory()) &&
                 $document->getSubCategory()->getId() == $subCategoryId
             ) {

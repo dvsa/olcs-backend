@@ -19,7 +19,8 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
  */
 final class PostScoringEmail extends AbstractCommandHandler implements UploaderAwareInterface
 {
-    use QueueAwareTrait, UploaderAwareTrait;
+    use QueueAwareTrait;
+    use UploaderAwareTrait;
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -103,7 +104,7 @@ final class PostScoringEmail extends AbstractCommandHandler implements UploaderA
         $licence = $irhpApplication->getLicence();
         if (!$licence->hasStatusRequiredForPostScoringEmail()) {
             return sprintf(
-                'Ignored due to the licence associated with application id %s not '.
+                'Ignored due to the licence associated with application id %s not ' .
                 'being in the correct state for post scoring email',
                 $irhpApplicationId
             );

@@ -31,13 +31,13 @@ use Psr\Container\ContainerExceptionInterface;
 
 class TransXChangeConsumer extends AbstractConsumer
 {
-    const TYPES = [
+    public const TYPES = [
         'RouteMap' => 'RouteMap',
         'Timetable' => 'Timetable',
         'DvsaRecord' => 'DvsaRecord',
     ];
 
-    const DESCRIPTIONS = [
+    public const DESCRIPTIONS = [
         self::TYPES['RouteMap'] => 'Route Track Map PDF',
         self::TYPES['Timetable'] => 'Timetable PDF',
         self::TYPES['DvsaRecord'] => 'DVSA Record PDF',

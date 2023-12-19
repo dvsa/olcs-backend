@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\DiscPrinting;
 
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractCommandConsumer;

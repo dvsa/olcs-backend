@@ -9,9 +9,9 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter;
  */
 class AbstractArrayList implements FormatterInterface
 {
-    const FORMAT = '(%s)';
-    const SEPARATOR = ', ';
-    const COLUMN = '';
+    public const FORMAT = '(%s)';
+    public const SEPARATOR = ', ';
+    public const COLUMN = '';
 
     /**
      * format a list which comes from an array, where the same array key is needed from each iteration

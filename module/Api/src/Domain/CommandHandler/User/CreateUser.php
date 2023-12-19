@@ -3,6 +3,7 @@
 /**
  * Create User
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
@@ -108,7 +109,8 @@ final class CreateUser extends AbstractUserCommandHandler implements
             $data['organisations'] = [$application->getLicence()->getOrganisation()];
         }
 
-        if (in_array($command->getUserType(), [User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER])
+        if (
+            in_array($command->getUserType(), [User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER])
             && (empty($data['organisations']))
         ) {
             throw new ValidationException(['New user must belong to an organisation']);

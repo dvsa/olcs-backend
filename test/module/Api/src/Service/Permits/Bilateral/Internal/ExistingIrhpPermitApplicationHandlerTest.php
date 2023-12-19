@@ -22,9 +22,9 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ExistingIrhpPermitApplicationHandlerTest extends MockeryTestCase
 {
-    const EXISTING_STOCK_ID = 10;
+    public const EXISTING_STOCK_ID = 10;
 
-    const REQUIRED_PERMITS = [
+    public const REQUIRED_PERMITS = [
         'requiredPermitsKey1' => 'requiredPermitsValue1',
         'requiredPermitsKey2' => 'requiredPermitsValue2'
     ];

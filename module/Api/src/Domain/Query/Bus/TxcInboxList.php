@@ -3,6 +3,7 @@
 /**
  * TxcInboxList
  */
+
 namespace Dvsa\Olcs\Api\Domain\Query\Bus;
 
 use Dvsa\Olcs\Transfer\Query\AbstractQuery;

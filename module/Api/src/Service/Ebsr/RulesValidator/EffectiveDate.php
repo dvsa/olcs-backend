@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class EffectiveDate extends AbstractValidator
 {
-    const RULES_ERROR = 'effective-date-error';
+    public const RULES_ERROR = 'effective-date-error';
 
     /**
      * @var array

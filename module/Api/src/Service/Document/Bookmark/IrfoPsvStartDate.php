@@ -9,9 +9,9 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\IrfoPsvAuthBundle as Qry;
  */
 class IrfoPsvStartDate extends SingleValueAbstract
 {
-    const FORMATTER = 'Date';
-    const FIELD  = 'inForceDate';
-    const SRCH_FLD_KEY = 'id';
-    const SRCH_VAL_KEY = 'irfoPsvAuth';
-    const QUERY_CLASS = Qry::class;
+    public const FORMATTER = 'Date';
+    public const FIELD  = 'inForceDate';
+    public const SRCH_FLD_KEY = 'id';
+    public const SRCH_VAL_KEY = 'irfoPsvAuth';
+    public const QUERY_CLASS = Qry::class;
 }

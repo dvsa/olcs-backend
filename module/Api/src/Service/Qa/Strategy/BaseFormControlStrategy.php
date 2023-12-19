@@ -14,7 +14,7 @@ use RuntimeException;
 
 class BaseFormControlStrategy implements FormControlStrategyInterface
 {
-    const FRONTEND_DESTINATION_NEXT_STEP = 'NEXT_STEP';
+    public const FRONTEND_DESTINATION_NEXT_STEP = 'NEXT_STEP';
 
     /** @var string */
     private $frontendType;

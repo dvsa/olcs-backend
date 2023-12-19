@@ -12,6 +12,7 @@ use Laminas\Mime\Mime as LaminasMime;
 use Laminas\Mime\Part as LaminasMimePart;
 use Laminas\Mail\AddressList;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
+use Olcs\Logging\Log\Logger;
 
 class EmailTest extends MockeryTestCase
 {
@@ -23,6 +24,12 @@ class EmailTest extends MockeryTestCase
     public function setUp(): void
     {
         $this->sut = new Email();
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testCreateServiceMissingConfig()

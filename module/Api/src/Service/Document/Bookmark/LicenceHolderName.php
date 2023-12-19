@@ -14,7 +14,7 @@ class LicenceHolderName extends DynamicBookmark
 {
     protected $params = ['licence'];
 
-    const MAX_TRADING_NAME_LINE_LENGTH = 40;
+    public const MAX_TRADING_NAME_LINE_LENGTH = 40;
 
     public function getQuery(array $data)
     {

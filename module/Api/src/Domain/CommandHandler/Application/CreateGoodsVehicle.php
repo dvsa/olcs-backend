@@ -21,6 +21,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 final class CreateGoodsVehicle extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
+
     protected $repoServiceName = 'Application';
 
     /**

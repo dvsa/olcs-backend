@@ -7,8 +7,8 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class ClientReturnCodeHandler
 {
-    const FRONTEND_DESTINATION_OVERVIEW = 'OVERVIEW';
-    const FRONTEND_DESTINATION_CANCEL = 'CANCEL';
+    public const FRONTEND_DESTINATION_OVERVIEW = 'OVERVIEW';
+    public const FRONTEND_DESTINATION_CANCEL = 'CANCEL';
 
     /** @var ApplicationCountryRemover */
     private $applicationCountryRemover;

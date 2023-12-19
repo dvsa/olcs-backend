@@ -15,7 +15,7 @@ class DataGovUkExportTest extends MockeryTestCase
     {
         $params = [
             'reportName' => 'unit_ReportName',
-            'path'=> 'unit_Path',
+            'path' => 'unit_Path',
         ];
 
         $sut = DataGovUkExport::create($params);

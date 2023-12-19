@@ -12,7 +12,6 @@ use Interop\Container\ContainerInterface;
 
 class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedInterface
 {
-
     /**
      * @var Generator
      */

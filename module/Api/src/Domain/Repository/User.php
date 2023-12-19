@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class User extends AbstractRepository
 {
-    const USERNAME_GEN_TRY_COUNT = 100;
+    public const USERNAME_GEN_TRY_COUNT = 100;
 
     protected $entity = Entity::class;
     protected $alias = 'u';
@@ -327,7 +327,7 @@ class User extends AbstractRepository
         $idx = 0;
         $user = $base;
 
-        while (($isExist = (count($this->fetchByLoginId($user)) !== 0))&& ++$idx < $tryCnt) {
+        while (($isExist = (count($this->fetchByLoginId($user)) !== 0)) && ++$idx < $tryCnt) {
             $user = $fncSfx($base, $idx);
         }
 
@@ -407,7 +407,7 @@ class User extends AbstractRepository
      *
      * @return \Iterator
      */
-    public function fetchUsersWithoutLastLoginTime() : \Iterator
+    public function fetchUsersWithoutLastLoginTime(): \Iterator
     {
         $qb = $this->createQueryBuilder();
 

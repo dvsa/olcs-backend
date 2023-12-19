@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -30,10 +31,10 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
 
     protected $template = null;
 
-    const TO_EMAIL = 'notifications@vehicle-operator-licensing.service.gov.uk';
-    const EMAIL_TEMPLATE = 'publication-published';
-    const EMAIL_SUBJECT = 'email.send-publication';
-    const EMAIL_POLICE_SUBJECT = 'email.send-publication-police';
+    public const TO_EMAIL = 'notifications@vehicle-operator-licensing.service.gov.uk';
+    public const EMAIL_TEMPLATE = 'publication-published';
+    public const EMAIL_SUBJECT = 'email.send-publication';
+    public const EMAIL_POLICE_SUBJECT = 'email.send-publication-police';
 
     /**
      * Sends an email, with a copy of the publication attached

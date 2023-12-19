@@ -102,7 +102,6 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
     {
         $fullContainer = $container;
 
-
         $this->reviewSnapshotService = $container->get('TmReviewSnapshot');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

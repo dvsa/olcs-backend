@@ -15,13 +15,13 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class ApplicationStepTest extends MockeryTestCase
 {
-    const TYPE = 'checkbox';
+    public const TYPE = 'checkbox';
 
-    const FIELDSET_NAME = 'fieldset123';
+    public const FIELDSET_NAME = 'fieldset123';
 
-    const SHORT_NAME = 'Cabotage';
+    public const SHORT_NAME = 'Cabotage';
 
-    const SLUG = 'slug';
+    public const SLUG = 'slug';
 
     private $elementRepresentation;
 

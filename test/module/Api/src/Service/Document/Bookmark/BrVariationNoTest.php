@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\BrVariationNo;
  */
 class BrVariationNoTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = BrVariationNo::class;
+    public const SUT_CLASS_NAME = BrVariationNo::class;
 }

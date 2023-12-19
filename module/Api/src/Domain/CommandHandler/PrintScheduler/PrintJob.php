@@ -23,10 +23,10 @@ use Laminas\Stdlib\Glob;
  */
 class PrintJob extends AbstractCommandHandler
 {
-    const DEF_PRINT_COPIES_CNT = 1;
+    public const DEF_PRINT_COPIES_CNT = 1;
 
-    const TEMP_DIR = '/tmp/';
-    const TEMP_FILE_PREFIX = 'PrintJob';
+    public const TEMP_DIR = '/tmp/';
+    public const TEMP_FILE_PREFIX = 'PrintJob';
 
     protected $repoServiceName = 'Document';
 
@@ -128,7 +128,7 @@ class PrintJob extends AbstractCommandHandler
 
         $this->result->addMessage(
             isset($this->stubPrintToLicenceId)
-            ? 'Printed successfully (stub to licence '. $this->stubPrintToLicenceId .')'
+            ? 'Printed successfully (stub to licence ' . $this->stubPrintToLicenceId . ')'
             : 'Printed successfully'
         );
 
@@ -364,7 +364,7 @@ class PrintJob extends AbstractCommandHandler
             }
         }
 
-        throw new Exception('Cannot find printer for User '. $user->getLoginId());
+        throw new Exception('Cannot find printer for User ' . $user->getLoginId());
     }
 
     /**
@@ -433,7 +433,7 @@ class PrintJob extends AbstractCommandHandler
             try {
                 $this->convertToPdfService->convert($fileName, $pdfFileName);
             } catch (\Exception $e) {
-                $exception = new NotReadyException('Error generating the PDF '. $fileName .' : '. $e->getMessage());
+                $exception = new NotReadyException('Error generating the PDF ' . $fileName . ' : ' . $e->getMessage());
                 $exception->setRetryAfter(60);
                 throw $exception;
             }
@@ -468,7 +468,7 @@ class PrintJob extends AbstractCommandHandler
     {
         $printDocument = new \Dvsa\Olcs\Api\Entity\Doc\Document($document->getIdentifier());
 
-        $printDocument->setDescription("PRINT ". $document->getDescription());
+        $printDocument->setDescription("PRINT " . $document->getDescription());
         $printDocument->setFilename(str_replace(' ', '_', $document->getDescription()) . '.rtf');
         // hard coded simply so we can demo against *something*
         $printDocument->setLicence(

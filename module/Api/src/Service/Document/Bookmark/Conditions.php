@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
  */
 class Conditions extends AbstractConditionsUndertakings
 {
-    const CONDITION_TYPE = ConditionUndertaking::TYPE_CONDITION;
+    public const CONDITION_TYPE = ConditionUndertaking::TYPE_CONDITION;
 }

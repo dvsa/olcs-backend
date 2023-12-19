@@ -12,7 +12,7 @@ use League\Flysystem\FilesystemInterface;
  */
 class WebDavClient implements DocumentStoreInterface
 {
-    const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
+    public const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
 
     /**
      * @var FilesystemInterface

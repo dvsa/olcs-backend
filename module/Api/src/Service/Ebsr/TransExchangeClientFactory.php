@@ -17,7 +17,7 @@ use Interop\Container\ContainerInterface;
  */
 class TransExchangeClientFactory implements FactoryInterface
 {
-    const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
+    public const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
 
     /**
      * invoke method

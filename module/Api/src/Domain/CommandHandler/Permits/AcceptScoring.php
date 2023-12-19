@@ -27,7 +27,8 @@ use Exception;
  */
 class AcceptScoring extends AbstractCommandHandler
 {
-    use QueueAwareTrait, AcceptScoringFeeCreationTrait;
+    use QueueAwareTrait;
+    use AcceptScoringFeeCreationTrait;
 
     protected $repoServiceName = 'IrhpApplication';
 
@@ -170,7 +171,8 @@ class AcceptScoring extends AbstractCommandHandler
     {
         $successLevel = $irhpApplication->getSuccessLevel();
 
-        if ($successLevel === ApplicationAcceptConsts::SUCCESS_LEVEL_NONE
+        if (
+            $successLevel === ApplicationAcceptConsts::SUCCESS_LEVEL_NONE
             && $this->getRepo('SystemParameter')->fetchValue(SystemParameter::DISABLE_ECMT_ALLOC_EMAIL_NONE)
         ) {
             $this->result->addMessage(sprintf('- email sending disabled for %s', $successLevel));

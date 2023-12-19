@@ -1,4 +1,5 @@
 <?php
+
 use Dvsa\Olcs\GdsVerify;
 
 return [
@@ -9,9 +10,9 @@ return [
     ],
     'gds_verify' => [
         // URL of hub metadata
-        'federation_metadata_url' => __DIR__ .'/../data/compliance-tool/federation.xml',
+        'federation_metadata_url' => __DIR__ . '/../data/compliance-tool/federation.xml',
         // URL of Matching Service Adapter metadata
-        'msa_metadata_url' => __DIR__ .'/../data/compliance-tool/msa-certs/metadata.xml',
+        'msa_metadata_url' => __DIR__ . '/../data/compliance-tool/msa-certs/metadata.xml',
         // Cache settings used to cache the above two metadata documents
         //'cache' => [
         //    'adapter' => [

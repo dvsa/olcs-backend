@@ -7,5 +7,5 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class TrailerVin extends AbstractIrhpAppQuestionAnswerData
 {
-    const FIELD = 'trailer-vehicle-identification-number';
+    public const FIELD = 'trailer-vehicle-identification-number';
 }

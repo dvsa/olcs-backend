@@ -3,6 +3,7 @@
 /**
  * Create SubmissionSectionComment Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Mockery as m;
@@ -92,8 +93,8 @@ class CreateSubmissionTest extends CommandHandlerTestCase
     {
         $data = [
             'case' => '24',
-            'submissionType'=> 'submission_type_o_mlh_otc',
-            'sections'=> [
+            'submissionType' => 'submission_type_o_mlh_otc',
+            'sections' => [
                 'introduction'
             ]
         ];

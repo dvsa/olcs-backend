@@ -1,9 +1,11 @@
 <?php
+
 /**
  * Delete a Document Template
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\DocTemplate;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Adapter;
@@ -255,7 +256,7 @@ class CognitoAdapter extends AbstractAdapter
 
     public function deleteUser(string $identifier): DeleteUserResult
     {
-        try{
+        try {
             $this->client->deleteUser($identifier);
             $code = DeleteUserResult::SUCCESS;
             $message = DeleteUserResult::MESSAGE_SUCCESS;
@@ -265,7 +266,7 @@ class CognitoAdapter extends AbstractAdapter
             $previous = $previousException->getAwsErrorCode();
 
             switch ($previous) {
-                case'UserNotFoundException':
+                case 'UserNotFoundException':
                     $code = DeleteUserResult::FAILURE_USER_NOT_FOUND;
                     $message = DeleteUserResult::MESSAGE_FAILURE_NOT_FOUND;
                     break;

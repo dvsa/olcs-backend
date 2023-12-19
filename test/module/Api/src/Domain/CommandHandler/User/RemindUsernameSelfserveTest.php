@@ -3,6 +3,7 @@
 /**
  * Remind Username Selfserve Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;

@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\ConvertToPdf;
 
 use Laminas\Http\Client as HttpClient;
-use \Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
+use Dvsa\Olcs\Api\Domain\Exception\RestResponseException;
 
 /**
  * Class InrClient
@@ -71,7 +71,7 @@ class WebServiceClient
                 $response->getReasonPhrase();
 
             throw new RestResponseException(
-                'ConvertToPdf failed, web service response : '. $message,
+                'ConvertToPdf failed, web service response : ' . $message,
                 $response->getStatusCode()
             );
         }

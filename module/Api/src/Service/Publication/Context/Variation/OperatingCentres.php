@@ -17,8 +17,8 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
 {
     use AddressFormatterAwareTrait;
 
-    const INCREASE = 'Increase';
-    const DECREASE = 'Decrease';
+    public const INCREASE = 'Increase';
+    public const DECREASE = 'Decrease';
 
     /**
      * @param PublicationLink $publicationLink
@@ -104,7 +104,7 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
             $text[] = $aoc->getNoOfVehiclesRequired() . $suffix;
         }
         if ((int) $aoc->getNoOfTrailersRequired() > 0) {
-            $text[] = $aoc->getNoOfTrailersRequired() .' trailer(s)';
+            $text[] = $aoc->getNoOfTrailersRequired() . ' trailer(s)';
         }
 
         return implode(', ', $text);

@@ -17,11 +17,11 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
  */
 class GrantValidationService implements FactoryInterface
 {
-    const ERROR_S4_EMPTY = 'APP-GRA-S4-EMPTY';
-    const ERROR_OOOD_UNKNOWN = 'APP-GRA-OOOD-UNKNOWN';
-    const ERROR_OORD_UNKNOWN = 'APP-GRA-OORD-UNKNOWN';
-    const ERROR_OOOD_NOT_PASSED = 'APP-GRA-OOOD-NOT-PASSED';
-    const ERROR_OORD_NOT_PASSED = 'APP-GRA-OORD-NOT-PASSED';
+    public const ERROR_S4_EMPTY = 'APP-GRA-S4-EMPTY';
+    public const ERROR_OOOD_UNKNOWN = 'APP-GRA-OOOD-UNKNOWN';
+    public const ERROR_OORD_UNKNOWN = 'APP-GRA-OORD-UNKNOWN';
+    public const ERROR_OOOD_NOT_PASSED = 'APP-GRA-OOOD-NOT-PASSED';
+    public const ERROR_OORD_NOT_PASSED = 'APP-GRA-OORD-NOT-PASSED';
 
     /**
      * @var SectionAccessService
@@ -69,7 +69,8 @@ class GrantValidationService implements FactoryInterface
         }
 
         // check enforcement area status
-        if ($this->shouldValidateEnforcementArea($application)
+        if (
+            $this->shouldValidateEnforcementArea($application)
             && !$this->enforcementAreaIsValid($application)
         ) {
             $errors['application-grant-error-enforcement-area'] = 'application-grant-error-enforcement-area';
@@ -216,14 +217,16 @@ class GrantValidationService implements FactoryInterface
         }
 
         // Display an additional error if the Out of opposition date is after the current date
-        if ($oood instanceof \DateTime && $oood > new \DateTime()
-            ) {
+        if (
+            $oood instanceof \DateTime && $oood > new \DateTime()
+        ) {
             $errors[self::ERROR_OOOD_NOT_PASSED] = 'The out of opposition period has not yet passed';
         }
 
         // Display an additional error if the Out of representation date is after the current date
-        if ($oord instanceof \DateTime && $oord > new \DateTime()
-            ) {
+        if (
+            $oord instanceof \DateTime && $oord > new \DateTime()
+        ) {
             $errors[self::ERROR_OORD_NOT_PASSED] = 'The out of representation date has not yet passed';
         }
 

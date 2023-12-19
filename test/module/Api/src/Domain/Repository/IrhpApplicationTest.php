@@ -1158,7 +1158,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 'left join irhp_permit_stock ips on ipw.irhp_permit_stock_id = ips.id ' .
                 'where l.`id` = :filterByColumnValue ' .
                 'and ia.status in (:applicationStatus1, :applicationStatus2, :applicationStatus3, :applicationStatus4, :applicationStatus5, :applicationStatus6, :applicationStatus7, :applicationStatus8, :applicationStatus9, :applicationStatus10, :applicationStatus11, :applicationStatus12) ' .
-                'group by ia.id '.
+                'group by ia.id ' .
                 'order by ia.`id` DESC',
                 [
                     'filterByColumnValue' => $licenceId,
@@ -1228,7 +1228,7 @@ class IrhpApplicationTest extends RepositoryTestCase
                 'left join irhp_permit_stock ips on ipw.irhp_permit_stock_id = ips.id ' .
                 'where l.`id` = :filterByColumnValue ' .
                 'and ia.status in (:applicationStatus1) ' .
-                'group by ia.id '.
+                'group by ia.id ' .
                 'order by ia.`id` DESC',
                 [
                     'filterByColumnValue' => $licenceId,

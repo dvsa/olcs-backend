@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\Update as CommandHandler;
@@ -52,7 +53,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommand()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'version' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
@@ -131,7 +132,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommandTrafficAreaUpdate()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'version' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
@@ -185,7 +186,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommandTrafficAreaWithOnePhl()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'version' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',
@@ -243,7 +244,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     public function testHandleCommandTrafficAreaValidationError()
     {
-        $params =[
+        $params = [
             'id' => 323,
             'version' => 323,
             'privateHireLicenceNo' => 'TOPDOG 1',

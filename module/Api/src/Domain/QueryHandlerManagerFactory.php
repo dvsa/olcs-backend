@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
@@ -16,6 +17,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
  */
 class QueryHandlerManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'query_handlers';
-    const PLUGIN_MANAGER_CLASS = QueryHandlerManager::class;
+    public const CONFIG_KEY = 'query_handlers';
+    public const PLUGIN_MANAGER_CLASS = QueryHandlerManager::class;
 }

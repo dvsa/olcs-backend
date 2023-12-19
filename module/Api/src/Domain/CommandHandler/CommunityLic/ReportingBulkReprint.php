@@ -18,8 +18,8 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class ReportingBulkReprint extends AbstractCommandHandler implements UploaderAwareInterface
 {
-    const UPLOAD_PATH = 'documents/Report/';
-    const FILENAME_EXTENSION = 'log';
+    public const UPLOAD_PATH = 'documents/Report/';
+    public const FILENAME_EXTENSION = 'log';
 
     use UploaderAwareTrait;
 
@@ -44,7 +44,7 @@ final class ReportingBulkReprint extends AbstractCommandHandler implements Uploa
 
         $documentIdentifierComponents = explode('/', $documentIdentifier);
         $filenameComponents = explode('.', end($documentIdentifierComponents));
-        $filenameComponents[count($filenameComponents)-1] = self::FILENAME_EXTENSION;
+        $filenameComponents[count($filenameComponents) - 1] = self::FILENAME_EXTENSION;
         $uploadPath = self::UPLOAD_PATH . implode('.', $filenameComponents);
 
         $content = implode(

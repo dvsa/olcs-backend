@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
 use Doctrine\ORM\Query;
-
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 

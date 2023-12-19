@@ -15,8 +15,8 @@ use Mockery as m;
  */
 class GoodsVehiclesExportTest extends QueryHandlerTestCase
 {
-    const ID = 1111;
-    const LICENCE_ID = 777;
+    public const ID = 1111;
+    public const LICENCE_ID = 777;
 
     /** @var GoodsVehiclesExport|m\MockInterface */
     protected $sut;

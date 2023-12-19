@@ -3,6 +3,7 @@
 /**
  * Generate Permits Test
  */
+
 namespace Dvsa\OlcsTest\Cli\Service\Queue\Consumer\Permits;
 
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;

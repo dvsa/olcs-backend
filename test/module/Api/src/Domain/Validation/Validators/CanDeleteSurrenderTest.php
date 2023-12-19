@@ -11,7 +11,6 @@ use Mockery as m;
 
 class CanDeleteSurrenderTest extends AbstractValidatorsTestCase
 {
-
     /**
      * @var CanDeleteSurrender
      */

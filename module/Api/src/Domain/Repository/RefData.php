@@ -23,9 +23,9 @@ class RefData extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        $qb->andWhere($qb->expr()->eq($this->alias .'.refDataCategoryId', ':category'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.refDataCategoryId', ':category'))
             ->setParameter('category', $query->getRefDataCategory());
-        $qb->orderBy($this->alias. '.displayOrder');
+        $qb->orderBy($this->alias . '.displayOrder');
         $qb->addOrderBy($this->alias . '.description');
 
         $q = $qb->getQuery();

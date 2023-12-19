@@ -10,7 +10,8 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class NoOfPermitsAnswerSummaryProvider implements AnswerSummaryProviderInterface
 {
-    use AlwaysIncludeSlugTrait, IrhpPermitApplicationOnlyTrait;
+    use AlwaysIncludeSlugTrait;
+    use IrhpPermitApplicationOnlyTrait;
 
     /**
      * {@inheritdoc}

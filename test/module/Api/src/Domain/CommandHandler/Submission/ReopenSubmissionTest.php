@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Submission;
 
 use Doctrine\ORM\Query;
@@ -65,7 +66,6 @@ class ReopenSubmissionTest extends CommandHandlerTestCase
         $this->assertTrue(property_exists($result, 'messages'));
         $this->assertContains('Submission reopened', $result->getMessages());
         $this->assertNull($savedSubmission->getClosedDate());
-
     }
 
     /**

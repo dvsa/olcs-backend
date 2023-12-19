@@ -36,17 +36,19 @@ class CreateDefaultIrhpPermitApplications extends AbstractCommandHandler
         $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
         $permitTypeId = $irhpApplication->getIrhpPermitType()->getId();
 
-        if (!in_array(
-            $permitTypeId,
-            [
+        if (
+            !in_array(
+                $permitTypeId,
+                [
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE,
                 IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER,
-            ]
-        )) {
+                ]
+            )
+        ) {
             $this->result->addMessage('No default irhp permit applications need to be created');
             return $this->result;
         }

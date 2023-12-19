@@ -3,6 +3,7 @@
 /**
  * Single NonPi
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Cases\NonPi;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;

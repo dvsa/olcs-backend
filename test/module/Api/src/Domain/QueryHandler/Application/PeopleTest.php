@@ -48,7 +48,7 @@ class PeopleTest extends QueryHandlerTestCase
 
         $application = new Entity\Application\Application(
             $licence,
-            new Entity\System\RefData,
+            new Entity\System\RefData(),
             1
         );
         $application->setId($appId);

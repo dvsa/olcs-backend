@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\PreviousConviction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\PreviousConviction\PreviousConviction;

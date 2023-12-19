@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -19,7 +20,6 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Doctrine\ORM\EntityRepository;
 use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkList;
 use Dvsa\Olcs\Transfer\Query\Publication\PublicationLinkTmList;
-
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedApplication;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedPi;
@@ -473,8 +473,8 @@ class PublicationLinkTest extends RepositoryTestCase
         $mockQb->shouldReceive('getQuery->getResult');
 
         $expectedQuery = '[QUERY]' .
-            ' AND m.publication = [[' . $publicationEntityId . ']]'.
-            ' AND m.publishAfterDate IS NOT NULL'.
+            ' AND m.publication = [[' . $publicationEntityId . ']]' .
+            ' AND m.publishAfterDate IS NOT NULL' .
             ' AND m.publishAfterDate > [[' . $today . ']]';
 
         /** @var PublicationEntity $publicationEntity */

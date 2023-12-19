@@ -18,10 +18,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class EmissionsCategoryConditionalAdderTest extends MockeryTestCase
 {
-    const TYPE = 'euro5';
-    const VALUE = 45;
-    const EMISSIONS_CATEGORY_ID = RefData::EMISSIONS_CATEGORY_EURO5_REF;
-    const STOCK_ID = 28;
+    public const TYPE = 'euro5';
+    public const VALUE = 45;
+    public const EMISSIONS_CATEGORY_ID = RefData::EMISSIONS_CATEGORY_EURO5_REF;
+    public const STOCK_ID = 28;
 
     private $emissionsCategoryFactory;
 

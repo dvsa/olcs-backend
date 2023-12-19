@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Permits\RunScoring as Cmd;

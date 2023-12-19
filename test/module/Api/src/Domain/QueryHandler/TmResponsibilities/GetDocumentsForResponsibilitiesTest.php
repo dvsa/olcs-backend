@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmResonsibilities;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TmResponsibilities\GetDocumentsForResponsibilities as QueryHandler;

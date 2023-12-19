@@ -26,7 +26,7 @@ class CompaniesHouseOfficer extends AbstractCompaniesHouseOfficer
 
         foreach ($fields as $field) {
             if (isset($data[$field])) {
-                $method = 'set'.ucfirst($field);
+                $method = 'set' . ucfirst($field);
                 $this->$method($data[$field]);
             }
         }

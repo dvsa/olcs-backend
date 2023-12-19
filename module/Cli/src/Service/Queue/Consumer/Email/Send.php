@@ -3,6 +3,7 @@
 /**
  * Send
  */
+
 namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Email;
 
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\CommandConsumer;

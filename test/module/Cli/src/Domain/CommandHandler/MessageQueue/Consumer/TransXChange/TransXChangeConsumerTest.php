@@ -28,6 +28,7 @@ use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
@@ -80,6 +81,12 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
     {
         $this->sut = new TransXChangeConsumer();
         $this->mockRepo('EbsrSubmission', EbsrSubmission::class);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testEmptyQueue()

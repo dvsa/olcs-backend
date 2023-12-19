@@ -23,7 +23,7 @@ class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CompaniesHouseVsOlcsDiffsExport;
+        $this->sut = new CompaniesHouseVsOlcsDiffsExport();
 
         //  mock repos
         $this->mockRepo('CompanyHouseVsOlcsDiffs', Repository\CompaniesHouseVsOlcsDiffs::class);

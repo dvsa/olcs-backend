@@ -22,9 +22,9 @@ use Olcs\Logging\Log\Logger;
 
 class ProcessAuthResponse extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_MISSING_KEY_CLAIM = 'Unable to verify user identity OR key claims core identity does not exist';
-    const ERR_MISSING_JOURNEY = 'Journey not matched or not specified';
-    const ERR_INSUFFICIENT_TRUST = 'We require %s level of trust, actual level of trust was %s';
+    public const ERR_MISSING_KEY_CLAIM = 'Unable to verify user identity OR key claims core identity does not exist';
+    public const ERR_MISSING_JOURNEY = 'Journey not matched or not specified';
+    public const ERR_INSUFFICIENT_TRUST = 'We require %s level of trust, actual level of trust was %s';
 
     protected $repoServiceName = 'DigitalSignature';
 

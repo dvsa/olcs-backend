@@ -14,8 +14,8 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class DeleteListTest extends CommandHandlerTestCase
 {
-    const CU_ID = 8001;
-    const CU2_ID = 8002;
+    public const CU_ID = 8001;
+    public const CU2_ID = 8002;
 
     /** @var  CommandHandler\ConditionUndertaking\DeleteList */
     protected $sut;

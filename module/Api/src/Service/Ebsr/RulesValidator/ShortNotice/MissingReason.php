@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
  */
 class MissingReason extends AbstractValidator
 {
-    const SHORT_NOTICE_MISSING_REASON_ERROR = 'short-notice-missing-reason-error';
+    public const SHORT_NOTICE_MISSING_REASON_ERROR = 'short-notice-missing-reason-error';
 
     /**
      * @var array

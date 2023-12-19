@@ -70,7 +70,7 @@ class ExistingIrhpPermitApplicationHandler
                 $requiredPermits
             );
         }
-        
+
         $irhpPermitApplication->updateCheckAnswers();
         $this->irhpPermitApplicationRepo->save($irhpPermitApplication);
     }

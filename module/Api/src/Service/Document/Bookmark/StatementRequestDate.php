@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class StatementRequestDate extends StatementFlatAbstract
 {
-    const FORMATTER = 'Date';
-    const FIELD  = 'requestedDate';
-    const SRCH_VAL_KEY = 'statement';
+    public const FORMATTER = 'Date';
+    public const FIELD  = 'requestedDate';
+    public const SRCH_VAL_KEY = 'statement';
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanMakeVerifyRequest as Sut;
@@ -11,7 +10,6 @@ use Mockery as m;
 
 class CanMakeVerifyRequestTest extends AbstractHandlerTestCase
 {
-
     /**
      * @var Sut
      */
@@ -59,7 +57,6 @@ class CanMakeVerifyRequestTest extends AbstractHandlerTestCase
         $this->setIsGranted(Permission::OPERATOR_ADMIN, false);
         $this->setIsGranted(Permission::OPERATOR_USER, false);
         $this->setIsGranted(Permission::TRANSPORT_MANAGER, true);
-
 
         $this->assertTrue($this->sut->isValid($dto));
     }

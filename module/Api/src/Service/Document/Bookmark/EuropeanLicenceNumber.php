@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\CommunityLicBundle as Qry;
  */
 class EuropeanLicenceNumber extends DynamicBookmark
 {
-    const ISSUE_NO_PAD_LENGTH = 5;
+    public const ISSUE_NO_PAD_LENGTH = 5;
 
     public function getQuery(array $data)
     {

@@ -23,14 +23,14 @@ class SendErruErrors extends AbstractCommandHandler implements EmailAwareInterfa
 {
     use EmailAwareTrait;
 
-    const EMAIL_ADDRESS = 'ERRU-UK@vosa.gsi.gov.uk';
-    const EMAIL_TEMPLATE = 'erru-failure';
-    const EMAIL_SUBJECT = 'email.erru-errors.subject';
-    const SUBJECT_DATE_FORMAT = 'd/m/Y';
-    const BODY_DATE_FORMAT = 'd/m/Y H:i:s';
-    const MISSING_INPUT = 'Unknown';
-    const UNKNOWN_DATE = 'unknown date';
-    const UNKNOWN_BUSINESS_CASE = 'Unknown business case ID';
+    public const EMAIL_ADDRESS = 'ERRU-UK@vosa.gsi.gov.uk';
+    public const EMAIL_TEMPLATE = 'erru-failure';
+    public const EMAIL_SUBJECT = 'email.erru-errors.subject';
+    public const SUBJECT_DATE_FORMAT = 'd/m/Y';
+    public const BODY_DATE_FORMAT = 'd/m/Y H:i:s';
+    public const MISSING_INPUT = 'Unknown';
+    public const UNKNOWN_DATE = 'unknown date';
+    public const UNKNOWN_BUSINESS_CASE = 'Unknown business case ID';
 
     /**
      * @var string

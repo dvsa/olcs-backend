@@ -8,9 +8,9 @@ namespace Dvsa\Olcs\GdsVerify\Data;
  */
 class Attributes extends \ArrayObject
 {
-    const DATE_OF_BIRTH = 'dateofbirth';
-    const FIRST_NAME = 'firstname';
-    const SURNAME = 'surname';
+    public const DATE_OF_BIRTH = 'dateofbirth';
+    public const FIRST_NAME = 'firstname';
+    public const SURNAME = 'surname';
 
     /**
      * Get full name

@@ -8,8 +8,8 @@ use Dvsa\Contracts\Auth\Exceptions\ClientException;
 
 class UriBuilder
 {
-    const MSG_REALM_NOT_SET = "'setRealm()' must be called before calling 'build()'";
-    const MSG_REALM_INCORRECT = "Invalid realm. Must be 'selfserve' or 'internal'";
+    public const MSG_REALM_NOT_SET = "'setRealm()' must be called before calling 'build()'";
+    public const MSG_REALM_INCORRECT = "Invalid realm. Must be 'selfserve' or 'internal'";
     /**
      * @var string
      */

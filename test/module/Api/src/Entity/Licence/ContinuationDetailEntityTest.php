@@ -70,8 +70,7 @@ class ContinuationDetailEntityTest extends EntityTester
         $overdraftAmount,
         $factoringAmount,
         $otherFinancesAmount
-    ): void
-    {
+    ): void {
         $continuationDetail = new Entity();
         $continuationDetail->setAverageBalanceAmount($averageBalanceAmount);
         $continuationDetail->setOverdraftAmount($overdraftAmount);

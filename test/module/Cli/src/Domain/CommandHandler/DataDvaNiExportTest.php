@@ -55,7 +55,7 @@ class DataDvaNiExportTest extends CommandHandlerTestCase
             ],
         ];
 
-        $this->sut = new DataDvaNiExport;
+        $this->sut = new DataDvaNiExport();
 
         parent::setUp();
 

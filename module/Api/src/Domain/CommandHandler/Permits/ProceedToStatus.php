@@ -36,7 +36,7 @@ final class ProceedToStatus extends AbstractCommandHandler
             $this->result->addId($status->getId(), $permit->getId(), true);
         }
 
-        $this->result->addMessage('Permits proceeded to '.$status->getDescription());
+        $this->result->addMessage('Permits proceeded to ' . $status->getDescription());
 
         return $this->result;
     }

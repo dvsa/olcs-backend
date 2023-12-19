@@ -6,5 +6,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DateDelta;
 
 class DateDeltaStub extends DateDelta
 {
-    const DELTA  = "-1";
+    public const DELTA  = "-1";
 }

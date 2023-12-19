@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule;
 
 /**
@@ -12,5 +13,4 @@ namespace Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule;
  */
 final class ProcessToRevokeCurtailSuspend extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
 {
-
 }

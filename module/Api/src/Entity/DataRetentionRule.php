@@ -19,5 +19,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DataRetentionRule extends AbstractDataRetentionRule
 {
-
 }

@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -266,7 +267,8 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
      */
     private function validateLinkedEntity(Cmd $command)
     {
-        if (empty($command->getLicence())
+        if (
+            empty($command->getLicence())
             && empty($command->getApplication())
             && empty($command->getBusReg())
             && empty($command->getTask())

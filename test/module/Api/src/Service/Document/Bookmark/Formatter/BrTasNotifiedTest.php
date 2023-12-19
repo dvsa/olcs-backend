@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Formatter\BrTasNotified;
  */
 class BrTasNotifiedTest extends AbstractArrayList
 {
-    const SUT_CLASS_NAME = BrTasNotified::class;
-    const ARRAY_FIELD = 'name';
-    const EXPECTED_OUTPUT = '3, abc, 2';
+    public const SUT_CLASS_NAME = BrTasNotified::class;
+    public const ARRAY_FIELD = 'name';
+    public const EXPECTED_OUTPUT = '3, abc, 2';
 }

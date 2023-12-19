@@ -3,6 +3,7 @@
 /**
  * Update Note Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Processing\Note;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Processing\Note\Update as UpdateCommandHandler;

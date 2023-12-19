@@ -131,7 +131,6 @@ class UpdateCountries extends AbstractCommandHandler implements TransactionedInt
     {
         $fullContainer = $container;
 
-
         $this->applicationAnswersClearer = $container->get('QaApplicationAnswersClearer');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

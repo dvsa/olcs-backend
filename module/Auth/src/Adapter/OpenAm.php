@@ -13,9 +13,9 @@ use Olcs\Logging\Log\Logger;
 
 class OpenAm extends AbstractAdapter
 {
-    const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
-    const SUCCESS_WITH_CHALLENGE = 2;
-    const CHALLENGE_NEW_PASSWORD_REQUIRED = 'NEW_PASSWORD_REQUIRED';
+    public const OPEN_AM_EXCEPTION = 'OpenAm returned exception';
+    public const SUCCESS_WITH_CHALLENGE = 2;
+    public const CHALLENGE_NEW_PASSWORD_REQUIRED = 'NEW_PASSWORD_REQUIRED';
 
     /**
      * @var OpenAmClient

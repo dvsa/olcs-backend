@@ -21,9 +21,9 @@ use RuntimeException;
  */
 class Answer extends AbstractAnswer
 {
-    const BILATERAL_CABOTAGE_ONLY = 'qanda.bilaterals.cabotage.answer.cabotage-only';
-    const BILATERAL_STANDARD_AND_CABOTAGE = 'qanda.bilaterals.cabotage.answer.standard-and-cabotage';
-    const BILATERAL_STANDARD_ONLY = 'qanda.bilaterals.cabotage.answer.standard-only';
+    public const BILATERAL_CABOTAGE_ONLY = 'qanda.bilaterals.cabotage.answer.cabotage-only';
+    public const BILATERAL_STANDARD_AND_CABOTAGE = 'qanda.bilaterals.cabotage.answer.standard-and-cabotage';
+    public const BILATERAL_STANDARD_ONLY = 'qanda.bilaterals.cabotage.answer.standard-only';
 
     /**
      * Create a new instance for use against an IRHP application

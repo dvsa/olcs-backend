@@ -17,10 +17,10 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
  */
 class PublishValidationService implements FactoryInterface
 {
-    const ERROR_MUST_COMPETE_OC = 'APP-PUB-OC';
-    const ERROR_MUST_COMPETE_TM = 'APP-PUB-TM';
-    const ERROR_OUSTANDING_FEE = 'APP-PUB-OUSTANDING-FEE';
-    const ERROR_NOT_PUBLISHABLE = 'APP-PUB-NOT-PUBLISHABLE';
+    public const ERROR_MUST_COMPETE_OC = 'APP-PUB-OC';
+    public const ERROR_MUST_COMPETE_TM = 'APP-PUB-TM';
+    public const ERROR_OUSTANDING_FEE = 'APP-PUB-OUSTANDING-FEE';
+    public const ERROR_NOT_PUBLISHABLE = 'APP-PUB-NOT-PUBLISHABLE';
 
     /**
      * @var FeesHelperService
@@ -47,8 +47,10 @@ class PublishValidationService implements FactoryInterface
 
         // The application licence type is standard national or international and
         // the transport manager section is NOT complete
-        if (($application->isStandardNational() || $application->isStandardInternational()) &&
-            $applicationCompletion->getTransportManagersStatus() !== ApplicationCompletion::STATUS_COMPLETE) {
+        if (
+            ($application->isStandardNational() || $application->isStandardInternational()) &&
+            $applicationCompletion->getTransportManagersStatus() !== ApplicationCompletion::STATUS_COMPLETE
+        ) {
             $errors[self::ERROR_MUST_COMPETE_TM] = 'Must complete Transport Managers';
         }
 

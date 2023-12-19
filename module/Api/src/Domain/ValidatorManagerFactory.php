@@ -6,6 +6,6 @@ use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
 
 class ValidatorManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'validator_services';
+    public const CONFIG_KEY = 'validator_services';
     public const PLUGIN_MANAGER_CLASS = ValidatorManager::class;
 }

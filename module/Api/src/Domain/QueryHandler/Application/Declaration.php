@@ -156,7 +156,6 @@ class Declaration extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->sectionAccessService = $container->get('SectionAccessService');
         $this->feesHelper = $container->get('FeesHelperService');
         $this->reviewService = $container->get('Review\ApplicationUndertakings');

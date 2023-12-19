@@ -7,11 +7,11 @@ use Aws\Exception\AwsException;
 use Aws\Result;
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Service\Queue;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
 
-class QueueTest extends TestCase
+class QueueTest extends MockeryTestCase
 {
     protected $sut;
 
@@ -24,6 +24,8 @@ class QueueTest extends TestCase
     {
         $this->queue = m::mock(SqsClient::class);
         $this->sut = new Queue($this->queue);
+
+        parent::setUp();
     }
 
     public function testSendMessage()
@@ -112,11 +114,6 @@ class QueueTest extends TestCase
                     ]
                 ]
             ]));
-
-        $this->queue->shouldReceive('deleteMessage')->once()->with([
-            'QueueUrl' => 'queueUrl',
-            'ReceiptHandle' => 'abc1234'
-        ]);
 
         $messages = $this->sut->fetchMessages('queueUrl', 1);
         $this->assertCount(1, $messages);

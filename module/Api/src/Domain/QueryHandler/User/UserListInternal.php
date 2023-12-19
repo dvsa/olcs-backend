@@ -29,7 +29,7 @@ class UserListInternal extends AbstractQueryHandler
         }
 
         $repo = $this->getRepo();
-        assert ($repo instanceof UserRepo);
+        assert($repo instanceof UserRepo);
 
         return [
             'result' => $this->resultList(

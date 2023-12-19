@@ -33,18 +33,18 @@ class ContinuationDetail extends AbstractContinuationDetail implements
     OrganisationProviderInterface,
     ContextProviderInterface
 {
-    const STATUS_PREPARED     = 'con_det_sts_prepared';
-    const STATUS_PRINTING     = 'con_det_sts_printing';
-    const STATUS_PRINTED      = 'con_det_sts_printed';
-    const STATUS_UNACCEPTABLE = 'con_det_sts_unacceptable';
-    const STATUS_ACCEPTABLE   = 'con_det_sts_acceptable';
-    const STATUS_COMPLETE     = 'con_det_sts_complete';
-    const STATUS_ERROR        = 'con_det_sts_error';
+    public const STATUS_PREPARED     = 'con_det_sts_prepared';
+    public const STATUS_PRINTING     = 'con_det_sts_printing';
+    public const STATUS_PRINTED      = 'con_det_sts_printed';
+    public const STATUS_UNACCEPTABLE = 'con_det_sts_unacceptable';
+    public const STATUS_ACCEPTABLE   = 'con_det_sts_acceptable';
+    public const STATUS_COMPLETE     = 'con_det_sts_complete';
+    public const STATUS_ERROR        = 'con_det_sts_error';
 
-    const METHOD_EMAIL = 'email';
-    const METHOD_POST  = 'post';
+    public const METHOD_EMAIL = 'email';
+    public const METHOD_POST  = 'post';
 
-    const RESULT_LICENCE_CONTINUED = 'licence_continued';
+    public const RESULT_LICENCE_CONTINUED = 'licence_continued';
 
     /**
      * Updates the digital signature for the continuation, runs as a side effect of govuk signin

@@ -8,7 +8,7 @@ class GetAuthorisationUrlResponse
     private string $state;
     private string $nonce;
 
-    public function  __construct(string $url, string $state, string $nonce)
+    public function __construct(string $url, string $state, string $nonce)
     {
         $this->url = $url;
         $this->state = $state;

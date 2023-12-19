@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence;
 use Dvsa\Olcs\Transfer\Query\Application\Application;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Laminas\Http\Response as HttpResponse;
 use Laminas\Mvc\Controller\Plugin\Params;
@@ -30,6 +31,12 @@ class GenericControllerTest extends TestCase
     {
         $this->commandHandlerManager = m::mock(CommandHandlerManager::class);
         $this->queryHandlerManager = m::mock(QueryHandlerManager::class);
+
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+
+        Logger::setLogger($logger);
     }
 
     public function testGet()

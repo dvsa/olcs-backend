@@ -5,6 +5,7 @@
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
@@ -30,7 +31,7 @@ class ErruRequest extends AbstractRepository
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->where($qb->expr()->eq($this->alias .'.workflowId', ':workflowId'));
+        $qb->where($qb->expr()->eq($this->alias . '.workflowId', ':workflowId'));
         $qb->setParameter('workflowId', $workflowId);
         $qb->setMaxResults(1);
 

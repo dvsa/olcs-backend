@@ -27,7 +27,8 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
     public function provide(PublicationLink $publicationLink, \ArrayObject $context)
     {
         // only add data if we are working on certain sections
-        if ($publicationLink->getPublicationSection()->getId() !== PublicationSection::VAR_NEW_SECTION &&
+        if (
+            $publicationLink->getPublicationSection()->getId() !== PublicationSection::VAR_NEW_SECTION &&
             $publicationLink->getPublicationSection()->getId() !== PublicationSection::VAR_GRANTED_SECTION
         ) {
             return $context;
@@ -95,9 +96,11 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
     private function getAttachedToText(ConditionUndertakingEntity $conditionUndertaking)
     {
         $text = null;
-        if ($conditionUndertaking->getAttachedTo()->getId() ===
-            ConditionUndertakingEntity::ATTACHED_TO_OPERATING_CENTRE) {
-            $text = 'Attached to Operating: '.
+        if (
+            $conditionUndertaking->getAttachedTo()->getId() ===
+            ConditionUndertakingEntity::ATTACHED_TO_OPERATING_CENTRE
+        ) {
+            $text = 'Attached to Operating: ' .
                 $this->getAddressFormatter()->format($conditionUndertaking->getOperatingCentre()->getAddress());
         } elseif ($conditionUndertaking->getAttachedTo()->getId() === ConditionUndertakingEntity::ATTACHED_TO_LICENCE) {
             $text = 'Attached to licence';

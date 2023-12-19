@@ -24,7 +24,7 @@ class VehiclesReviewServiceTest extends MockeryTestCase
     public function setUp(): void
     {
         $mockTranslator = m::mock(TranslatorInterface::class);
-        
+
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);
         $abstractReviewServiceServices->shouldReceive('getTranslator')
             ->withNoArgs()
@@ -102,7 +102,7 @@ class VehiclesReviewServiceTest extends MockeryTestCase
 
         $continuationDetail->setLicence($mockLicence);
 
-        $expected =[
+        $expected = [
             [
                 ['value' => 'continuations.vehicles-section.table.vrm', 'header' => true],
                 ['value' => 'continuations.vehicles-section.table.weight', 'header' => true]

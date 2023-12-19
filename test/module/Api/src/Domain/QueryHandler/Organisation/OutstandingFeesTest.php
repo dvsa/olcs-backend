@@ -1,11 +1,11 @@
 <?php
 
-
 /**
  * Outstanding Fees Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\OutstandingFees;

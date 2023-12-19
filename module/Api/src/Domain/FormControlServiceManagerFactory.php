@@ -5,6 +5,7 @@
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory;
@@ -17,6 +18,6 @@ use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
  */
 class FormControlServiceManagerFactory extends AbstractServiceManagerFactory
 {
-    const CONFIG_KEY = 'form_control_services';
+    public const CONFIG_KEY = 'form_control_services';
     public const PLUGIN_MANAGER_CLASS =  FormControlServiceManager::class;
 }

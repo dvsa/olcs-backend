@@ -50,7 +50,6 @@ class CanVerifyTest extends AbstractHandlerTestCase
         $dto = m::mock(CommandInterface::class);
         $this->setIsGranted(Permission::OPERATOR_ADMIN, true);
 
-
         $dto->shouldReceive('getTransportManagerApplication')->andReturn(0);
         $this->assertTrue($this->sut->isValid($dto));
     }

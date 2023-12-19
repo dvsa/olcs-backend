@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Doctrine\ORM\Query;
@@ -48,7 +49,8 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
         }
 
         // Can't update specified date or received date of removed vehicle
-        if ($licenceVehicle->getRemovalDate() !== null
+        if (
+            $licenceVehicle->getRemovalDate() !== null
             && ($command->getSpecifiedDate() !== null || $command->getReceivedDate() !== null)
         ) {
             throw new BadRequestException('You cannot update a removed vehicle');
@@ -68,7 +70,6 @@ final class UpdateGoodsVehicle extends AbstractCommandHandler implements Transac
         }
 
         if ($this->isGranted(Permission::INTERNAL_USER)) {
-
             $date = $command->getSeedDate();
 
             if ($date !== null) {

@@ -21,7 +21,7 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         $this->mockRepo('IrhpPermitApplication', IrhpPermitApplicationRepo::class);
         $this->mockRepo('IrhpPermit', IrhpPermitRepo::class);
         $this->sut = new AllocateCandidatePermits();
-     
+
         parent::setUp();
     }
 
@@ -106,13 +106,15 @@ class AllocateCandidatePermitsTest extends CommandHandlerTestCase
         $this->repoMap['IrhpPermit']->shouldReceive('save')
             ->with(m::on(function ($irhpPermit) use (&$permitSaveExpectations, &$permitSaveCount, $expectedExpiryDate, $expectedStatus, $expectedIssueDate) {
                 foreach ($permitSaveExpectations as &$expectation) {
-                    if (($irhpPermit->getIrhpCandidatePermit() === $expectation[0]) &&
+                    if (
+                        ($irhpPermit->getIrhpCandidatePermit() === $expectation[0]) &&
                         ($irhpPermit->getIrhpPermitRange() === $expectation[1]) &&
                         ($irhpPermit->getIrhpPermitApplication() === $expectation[2]) &&
                         ($irhpPermit->getPermitNumber() == $expectation[3]) &&
                         ($irhpPermit->getExpiryDate() == $expectedExpiryDate) &&
                         ($expectedIssueDate === null || $irhpPermit->getIssueDate() == $expectedIssueDate) &&
-                        ($irhpPermit->getStatus() == $expectedStatus)) {
+                        ($irhpPermit->getStatus() == $expectedStatus)
+                    ) {
                         $expectation[4] = true;
                     }
                 }

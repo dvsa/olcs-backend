@@ -140,19 +140,19 @@ class IrhpPermitWindow extends AbstractRepository
 
         $qb
             ->select($this->alias)
-            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin($this->alias . '.irhpPermitStock', 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->where($qb->expr()->eq('ipt.id', ':irhpPermitTypeId'))
-            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
-            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->lte($this->alias . '.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias . '.endDate', ':now'))
             ->setParameter('irhpPermitTypeId', $irhpPermitTypeId)
             ->setParameter('now', $now)
-            ->orderBy($this->alias.'.endDate', 'DESC')
+            ->orderBy($this->alias . '.endDate', 'DESC')
             ->setMaxResults(1);
 
         if ($year) {
-            $fromDate = new DateTime($year.'-01-01 00:00:00');
-            $toDate = new DateTime($year.'-12-31 23:59:59');
+            $fromDate = new DateTime($year . '-01-01 00:00:00');
+            $toDate = new DateTime($year . '-12-31 23:59:59');
 
             $qb->andWhere('ips.validTo BETWEEN :fromDate AND :toDate')
                 ->setParameter('fromDate', $fromDate)
@@ -183,8 +183,8 @@ class IrhpPermitWindow extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb
-            ->where($qb->expr()->gte($this->alias.'.endDate', ':periodStart'))
-            ->andWhere($qb->expr()->lt($this->alias.'.endDate', ':periodEnd'))
+            ->where($qb->expr()->gte($this->alias . '.endDate', ':periodStart'))
+            ->andWhere($qb->expr()->lt($this->alias . '.endDate', ':periodEnd'))
             ->setParameter('periodStart', $clonedDateTime->modify($since)->setTime(0, 0, 0))
             ->setParameter('periodEnd', $currentDateTime);
 
@@ -207,12 +207,12 @@ class IrhpPermitWindow extends AbstractRepository
         $qb
             ->select($this->alias)
             ->distinct()
-            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin($this->alias . '.irhpPermitStock', 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->innerJoin('ips.country', 'c')
             ->where($qb->expr()->eq('ipt.id', ':type'))
-            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
-            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->lte($this->alias . '.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias . '.endDate', ':now'))
             ->andWhere($qb->expr()->in('c.id', ':countries'))
             ->setParameter('type', $type)
             ->setParameter('now', $now)
@@ -235,11 +235,11 @@ class IrhpPermitWindow extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $qb->select($this->alias)
-            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin($this->alias . '.irhpPermitStock', 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->where($qb->expr()->eq('ipt.id', ':type'))
-            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
-            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->lte($this->alias . '.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias . '.endDate', ':now'))
             ->setParameter('type', $type)
             ->setParameter('now', $now);
 
@@ -263,18 +263,18 @@ class IrhpPermitWindow extends AbstractRepository
      */
     public function fetchOpenWindowsByTypeYear($type, DateTime $now, $year, $internalUser = false)
     {
-        $fromDate = new DateTime($year.'-01-01 00:00:00');
-        $toDate = new DateTime($year.'-12-31 23:59:59');
+        $fromDate = new DateTime($year . '-01-01 00:00:00');
+        $toDate = new DateTime($year . '-12-31 23:59:59');
 
         $qb = $this->createQueryBuilder();
 
         $qb->select($this->alias, 'ipr', 'ips')
-            ->innerJoin($this->alias.'.irhpPermitStock', 'ips')
+            ->innerJoin($this->alias . '.irhpPermitStock', 'ips')
             ->innerJoin('ips.irhpPermitType', 'ipt')
             ->innerJoin('ips.irhpPermitRanges', 'ipr')
             ->where($qb->expr()->eq('ipt.id', ':type'))
-            ->andWhere($qb->expr()->lte($this->alias.'.startDate', ':now'))
-            ->andWhere($qb->expr()->gt($this->alias.'.endDate', ':now'))
+            ->andWhere($qb->expr()->lte($this->alias . '.startDate', ':now'))
+            ->andWhere($qb->expr()->gt($this->alias . '.endDate', ':now'))
             ->andWhere($qb->expr()->between('ips.validTo', ':fromDate', ':toDate'))
             ->setParameter('type', $type)
             ->setParameter('now', $now)

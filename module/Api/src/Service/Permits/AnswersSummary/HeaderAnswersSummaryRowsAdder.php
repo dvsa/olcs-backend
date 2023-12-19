@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {
-    const TEMPLATE_DIRECTORY = 'answers-summary/';
+    public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
     /** @var AnswersSummaryRowFactory */
     private $answersSummaryRowFactory;

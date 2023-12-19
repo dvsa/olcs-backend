@@ -17,5 +17,4 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DocBookmark extends AbstractDocBookmark
 {
-
 }

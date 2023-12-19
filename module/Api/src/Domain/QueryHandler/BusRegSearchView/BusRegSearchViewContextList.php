@@ -5,6 +5,7 @@
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\BusRegSearchView;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -41,7 +42,7 @@ class BusRegSearchViewContextList extends AbstractQueryHandler
         $organisationId = null;
         $localAuthorityId = null;
 
-        if ($this->isOperator() ) {
+        if ($this->isOperator()) {
             // fetch for Organisation
             $organisationId = $this->getCurrentOrganisation()->getId();
         } elseif ($this->isLocalAuthority()) {

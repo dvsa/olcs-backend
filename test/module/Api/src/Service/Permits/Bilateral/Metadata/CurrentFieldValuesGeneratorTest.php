@@ -16,7 +16,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class CurrentFieldValuesGeneratorTest extends MockeryTestCase
 {
-    const PERIOD_NAME_KEY = 'period.name.key';
+    public const PERIOD_NAME_KEY = 'period.name.key';
 
     private $irhpPermitApplication;
 

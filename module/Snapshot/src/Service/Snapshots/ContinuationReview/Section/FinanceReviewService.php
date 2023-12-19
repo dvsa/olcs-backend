@@ -123,7 +123,7 @@ class FinanceReviewService extends AbstractReviewService
         if ((int)$amount === 0) {
             return $this->translate('None');
         }
-        return '&pound;'. number_format($amount, 2);
+        return '&pound;' . number_format($amount, 2);
     }
 
     /**

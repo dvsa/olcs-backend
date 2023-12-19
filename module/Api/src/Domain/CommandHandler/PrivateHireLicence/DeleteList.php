@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -38,8 +39,10 @@ final class DeleteList extends AbstractCommandHandler implements TransactionedIn
             $phl = $this->getRepo()->fetchById($tmeId);
             $this->getRepo()->delete($phl);
             $result->addMessage("PrivateHireLicence ID {$tmeId} deleted");
-            if ($this->isGranted(Permission::SELFSERVE_USER) &&
-                ($command->getLva() === 'licence')) {
+            if (
+                $this->isGranted(Permission::SELFSERVE_USER) &&
+                ($command->getLva() === 'licence')
+            ) {
                 $data = [
                     'licence' => $command->getLicence(),
                     'category' => CategoryEntity::CATEGORY_APPLICATION,

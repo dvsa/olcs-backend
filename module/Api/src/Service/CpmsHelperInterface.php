@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\Olcs\Api\Service;
 
 use CpmsClient\Service\ApiService;
@@ -18,23 +19,23 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
  */
 interface CpmsHelperInterface
 {
-    const PAYMENT_IN_PROGRESS  = 800;
-    const PAYMENT_SUCCESS      = 801;
-    const PAYMENT_FAILURE      = 802;
-    const PAYMENT_CANCELLATION = 807;
-    const PAYMENT_REFUNDED     = 809;
-    const PAYMENT_REFUND_REQUESTED = 822;
-    const PAYMENT_GATEWAY_ERROR = 810;
-    const PAYMENT_PAYMENT_CHARGED_BACK = 820;
-    const PAYMENT_AWAITING_GATEWAY_URL = 824;
-    const PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED = 825;
-    const PAYMENT_END_OF_FLOW_SIGNALLED = 826;
-    const PAYMENT_CARD_PAYMENT_CONFIRMED = 827;
-    const PAYMENT_SYSTEM_ERROR = 828;
-    const PAYMENT_ACTIVELY_BEING_TAKEN = 830;
-    const PAYMENT_ABANDONED = 834;
+    public const PAYMENT_IN_PROGRESS  = 800;
+    public const PAYMENT_SUCCESS      = 801;
+    public const PAYMENT_FAILURE      = 802;
+    public const PAYMENT_CANCELLATION = 807;
+    public const PAYMENT_REFUNDED     = 809;
+    public const PAYMENT_REFUND_REQUESTED = 822;
+    public const PAYMENT_GATEWAY_ERROR = 810;
+    public const PAYMENT_PAYMENT_CHARGED_BACK = 820;
+    public const PAYMENT_AWAITING_GATEWAY_URL = 824;
+    public const PAYMENT_GATEWAY_REDIRECT_URL_RECEIVED = 825;
+    public const PAYMENT_END_OF_FLOW_SIGNALLED = 826;
+    public const PAYMENT_CARD_PAYMENT_CONFIRMED = 827;
+    public const PAYMENT_SYSTEM_ERROR = 828;
+    public const PAYMENT_ACTIVELY_BEING_TAKEN = 830;
+    public const PAYMENT_ABANDONED = 834;
 
-    const RESPONSE_SUCCESS = '000';
+    public const RESPONSE_SUCCESS = '000';
 
     /**
      * Initiate a card payment

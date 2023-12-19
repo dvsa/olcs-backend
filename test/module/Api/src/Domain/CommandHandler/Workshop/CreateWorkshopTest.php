@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Workshop;
 
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;

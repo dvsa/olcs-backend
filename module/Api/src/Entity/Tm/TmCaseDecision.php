@@ -25,9 +25,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class TmCaseDecision extends AbstractTmCaseDecision
 {
-    const DECISION_DECLARE_UNFIT = 'tm_decision_rl';
-    const DECISION_NO_FURTHER_ACTION = 'tm_decision_noa';
-    const DECISION_REPUTE_NOT_LOST = 'tm_decision_rnl';
+    public const DECISION_DECLARE_UNFIT = 'tm_decision_rl';
+    public const DECISION_NO_FURTHER_ACTION = 'tm_decision_noa';
+    public const DECISION_REPUTE_NOT_LOST = 'tm_decision_rnl';
 
     public function __construct(CasesEntity $case, RefData $decision)
     {
@@ -56,7 +56,8 @@ class TmCaseDecision extends AbstractTmCaseDecision
     public function update(array $data)
     {
         // validate
-        if (($data['notifiedDate'] !== null)
+        if (
+            ($data['notifiedDate'] !== null)
             && (new \DateTime($data['notifiedDate']) < new \DateTime($data['decisionDate']))
         ) {
             throw new ValidationException(['Date of notification must be after or the same as date of decision']);
@@ -71,7 +72,7 @@ class TmCaseDecision extends AbstractTmCaseDecision
         }
 
         // each decision may have different update
-        switch($this->getDecision()->getId()) {
+        switch ($this->getDecision()->getId()) {
             case self::DECISION_REPUTE_NOT_LOST:
                 $this->updateReputeNotLost($data);
                 break;
@@ -112,7 +113,8 @@ class TmCaseDecision extends AbstractTmCaseDecision
     private function updateDeclareUnfit(array $data)
     {
         // validate
-        if (($data['unfitnessEndDate'] !== null)
+        if (
+            ($data['unfitnessEndDate'] !== null)
             && (new \DateTime($data['unfitnessEndDate']) < new \DateTime($data['unfitnessStartDate']))
         ) {
             throw new ValidationException(['Unfitness end date must be after or the same as unfitness start date']);

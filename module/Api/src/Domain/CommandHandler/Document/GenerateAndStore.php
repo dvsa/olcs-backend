@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -33,9 +34,9 @@ final class GenerateAndStore extends AbstractCommandHandler implements
     AuthAwareInterface,
     NamingServiceAwareInterface
 {
-    use DocumentGeneratorAwareTrait,
-        AuthAwareTrait,
-        NamingServiceAwareTrait;
+    use DocumentGeneratorAwareTrait;
+    use AuthAwareTrait;
+    use NamingServiceAwareTrait;
 
     protected $repoServiceName = 'Document';
 

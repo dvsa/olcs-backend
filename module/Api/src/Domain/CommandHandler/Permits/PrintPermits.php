@@ -23,13 +23,14 @@ final class PrintPermits extends AbstractCommandHandler implements
     ConfigAwareInterface,
     TransactionedInterface
 {
-    use AuthAwareTrait, ConfigAwareTrait;
+    use AuthAwareTrait;
+    use ConfigAwareTrait;
 
     protected $repoServiceName = 'Queue';
 
-    const MAX_BATCH_SIZE = 100;
-    const ERR_MAX_BATCH_SIZE_REACHED = 'ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED';
-    const ERR_ALREADY_IN_PROGRESS = 'ERR_PERMIT_PRINTING_ALREADY_IN_PROGRESS';
+    public const MAX_BATCH_SIZE = 100;
+    public const ERR_MAX_BATCH_SIZE_REACHED = 'ERR_PERMIT_PRINTING_MAX_BATCH_SIZE_REACHED';
+    public const ERR_ALREADY_IN_PROGRESS = 'ERR_PERMIT_PRINTING_ALREADY_IN_PROGRESS';
 
     /**
      * @param CommandInterface $command
@@ -51,10 +52,12 @@ final class PrintPermits extends AbstractCommandHandler implements
         }
 
         // check if the message is already in the queue
-        if ($this->getRepo('Queue')->isItemInQueue(
-            [Queue::TYPE_PERMIT_GENERATE, Queue::TYPE_PERMIT_PRINT],
-            [Queue::STATUS_QUEUED, Queue::STATUS_PROCESSING]
-        )) {
+        if (
+            $this->getRepo('Queue')->isItemInQueue(
+                [Queue::TYPE_PERMIT_GENERATE, Queue::TYPE_PERMIT_PRINT],
+                [Queue::STATUS_QUEUED, Queue::STATUS_PROCESSING]
+            )
+        ) {
             throw new ValidationException([self::ERR_ALREADY_IN_PROGRESS]);
         }
 

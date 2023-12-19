@@ -16,8 +16,8 @@ use Laminas\Http\Request;
  */
 class DocManClientTest extends MockeryTestCase
 {
-    const BASE_URI = 'http://testing';
-    const WORKSPACE = 'unit_Workspace';
+    public const BASE_URI = 'http://testing';
+    public const WORKSPACE = 'unit_Workspace';
 
     /** @var  DocManClient */
     protected $sut;
@@ -134,7 +134,7 @@ class DocManClientTest extends MockeryTestCase
         $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
 
-        $expectedLog = json_encode(["error" =>DocManClient::ERR_RESP_FAIL, "reason"=>$mockResponse->getStatusCode(), "path" => 'test']);
+        $expectedLog = json_encode(["error" => DocManClient::ERR_RESP_FAIL, "reason" => $mockResponse->getStatusCode(), "path" => 'test']);
         ;
         $this->logger
             ->shouldReceive('log')

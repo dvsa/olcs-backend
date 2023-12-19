@@ -77,7 +77,7 @@ class TranslateableTextTest extends MockeryTestCase
         $newKey = 'new-key';
 
         $this->translateableText->setKey($newKey);
-    
+
         $expectedRepresentation = [
             'key' => $newKey,
             'parameters' => [

@@ -5,13 +5,14 @@ namespace Dvsa\Olcs\Api\Entity\Types;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Types\StringType;
 use phpseclib\Crypt;
+use phpseclib\Crypt\Base;
 
 /**
  * Class EncryptedStringType
  */
 class EncryptedStringType extends StringType
 {
-    const TYPE = 'encrypted_string';
+    public const TYPE = 'encrypted_string';
 
     /**
      * @var Crypt\Base
@@ -57,11 +58,11 @@ class EncryptedStringType extends StringType
     /**
      * Set the Encrypter to use
      *
-     * @param Crypt\Base $ciper Cipher to use for encryption
+     * @param Base|null $ciper Cipher to use for encryption
      *
      * @return void
      */
-    public function setEncrypter(Crypt\Base $ciper)
+    public function setEncrypter(?Base $ciper)
     {
         $this->encrypter = $ciper;
     }

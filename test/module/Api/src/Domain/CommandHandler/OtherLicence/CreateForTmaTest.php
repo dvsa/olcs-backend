@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OtherLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence\CreateForTma as CommandHandler;

@@ -30,14 +30,14 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
  */
 class ErruRequest extends AbstractErruRequest
 {
-    const DEFAULT_CASE_TYPE = 'erru_case_t_msinre'; //MSI with no response entered
-    const QUEUED_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with response queued
-    const FAILED_CASE_TYPE = 'erru_case_t_msirsf'; //MSI with response failure
-    const SENT_CASE_TYPE = 'erru_case_t_msirs'; //MSI with no response sent
+    public const DEFAULT_CASE_TYPE = 'erru_case_t_msinre'; //MSI with no response entered
+    public const QUEUED_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with response queued
+    public const FAILED_CASE_TYPE = 'erru_case_t_msirsf'; //MSI with response failure
+    public const SENT_CASE_TYPE = 'erru_case_t_msirs'; //MSI with no response sent
 
     /**
      * ErruRequest constructor.
-     * 
+     *
      * @param CaseEntity $case
      * @param RefData $msiType
      * @param CountryEntity $memberStateCode

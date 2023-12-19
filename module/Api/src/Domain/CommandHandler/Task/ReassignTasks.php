@@ -18,13 +18,13 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 final class ReassignTasks extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_TEAM_INVALID = 'task.edit.team.invalid';
+    public const ERR_TEAM_INVALID = 'task.edit.team.invalid';
 
     protected $repoServiceName = 'Task';
 
     /**
      * Command Handler
-     * 
+     *
      * @param TransferCmd\Task\ReassignTasks $command Command
      *
      * @return Result

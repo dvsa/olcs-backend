@@ -39,7 +39,8 @@ class Opposer extends AbstractOpposer
 
     private function checkObjectionOpposerType($opposerType, $oppositionType)
     {
-        if ((!is_null($oppositionType) &&
+        if (
+            (!is_null($oppositionType) &&
                 ($oppositionType->getId() == Opposition::OPPOSITION_TYPE_ENV)) &&
             (empty($opposerType->getId()))
         ) {

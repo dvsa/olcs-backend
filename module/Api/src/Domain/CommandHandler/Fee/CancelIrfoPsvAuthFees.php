@@ -3,6 +3,7 @@
 /**
  * Cancel Irfo Psv Auth Fees
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCommand;

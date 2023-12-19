@@ -30,9 +30,9 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
 {
     use AuthAwareTrait;
 
-    const STATUS_UNCHANGED = Application::VARIATION_STATUS_UNCHANGED;
-    const STATUS_UPDATED = Application::VARIATION_STATUS_UPDATED;
-    const STATUS_REQUIRES_ATTENTION = Application::VARIATION_STATUS_REQUIRES_ATTENTION;
+    public const STATUS_UNCHANGED = Application::VARIATION_STATUS_UNCHANGED;
+    public const STATUS_UPDATED = Application::VARIATION_STATUS_UPDATED;
+    public const STATUS_REQUIRES_ATTENTION = Application::VARIATION_STATUS_REQUIRES_ATTENTION;
 
     protected $repoServiceName = 'Application';
 
@@ -634,7 +634,8 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
             }
         }
 
-        if (($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres'))
+        if (
+            ($this->application->isPsvDowngrade() && $this->isUnchanged('operating_centres'))
             || ($this->application->isLicenceChangeWhichRequiresOperatingCentre()
                 && $this->application->getOperatingCentres()->isEmpty()
             )
@@ -980,7 +981,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         $this->updateHelper = $container->get('UpdateOperatingCentreHelper');
         $this->variationHelper = $container->get('VariationOperatingCentreHelper');

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Dvsa\Olcs\Cpms\Client;
@@ -12,11 +13,11 @@ use Psr\Log\LoggerInterface as Logger;
  */
 class HttpClient
 {
-    const CONTENT_TYPE_FORMAT = 'application/vnd.dvsa-gov-uk.v%d%s; charset=UTF-8';
+    public const CONTENT_TYPE_FORMAT = 'application/vnd.dvsa-gov-uk.v%d%s; charset=UTF-8';
 
-    const METHOD_GET = 'get';
-    const METHOD_PUT = 'put';
-    const METHOD_POST = 'post';
+    public const METHOD_GET = 'get';
+    public const METHOD_PUT = 'put';
+    public const METHOD_POST = 'post';
 
     /**
      * @var Client
@@ -197,7 +198,7 @@ class HttpClient
         }
     }
 
-    protected function filterResponseBody(string $responseBody) : ?string
+    protected function filterResponseBody(string $responseBody): ?string
     {
         return preg_replace('/(access_token":")([\d|\w]*)/', '$1****', $responseBody);
     }

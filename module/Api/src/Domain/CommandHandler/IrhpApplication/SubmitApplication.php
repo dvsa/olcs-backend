@@ -84,7 +84,6 @@ final class SubmitApplication extends AbstractCommandHandler
     {
         $fullContainer = $container;
 
-
         $this->createTaskCommandGenerator = $container->get('PermitsCheckableCreateTaskCommandGenerator');
         $this->eventHistoryCreator = $container->get('EventHistoryCreator');
         return parent::__invoke($fullContainer, $requestedName, $options);

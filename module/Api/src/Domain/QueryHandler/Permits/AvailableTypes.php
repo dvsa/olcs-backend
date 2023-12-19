@@ -68,7 +68,6 @@ class AvailableTypes extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-
         $this->windowAvailabilityChecker = $container->get('PermitsAvailabilityWindowAvailabilityChecker');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }

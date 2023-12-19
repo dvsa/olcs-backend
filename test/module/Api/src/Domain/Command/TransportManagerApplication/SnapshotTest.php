@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\Command\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;

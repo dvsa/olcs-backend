@@ -89,7 +89,7 @@ class DateTimeType extends DoctrineDateTimeType
 
     /**
      * Get the timezoe that the application is running in
-     * 
+     *
      * @return \DateTimeZone
      */
     private function getApplicationTimeZone()

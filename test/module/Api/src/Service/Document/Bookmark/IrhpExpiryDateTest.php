@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrhpExpiryDate;
  */
 class IrhpExpiryDateTest extends \PHPUnit\Framework\TestCase
 {
-    const SUT_CLASS_NAME = IrhpExpiryDate::class;
+    public const SUT_CLASS_NAME = IrhpExpiryDate::class;
 
     public function testGetQuery()
     {

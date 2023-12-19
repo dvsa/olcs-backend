@@ -3,6 +3,7 @@
 /**
  * Creates the police version of a publication
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as GenerateDocCommand
  */
 final class CreatePoliceDocument extends AbstractCommandHandler implements TransactionedInterface
 {
-    const DOCUMENT_DESCRIPTION = '%s %d police version';
+    public const DOCUMENT_DESCRIPTION = '%s %d police version';
 
     protected $repoServiceName = 'Publication';
 

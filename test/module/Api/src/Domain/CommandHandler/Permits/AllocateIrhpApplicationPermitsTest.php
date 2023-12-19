@@ -47,7 +47,7 @@ class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
         $this->command = m::mock(Cmd::class);
         $this->command->shouldReceive('getId')
             ->andReturn($this->irhpApplicationId);
-     
+
         parent::setUp();
     }
 

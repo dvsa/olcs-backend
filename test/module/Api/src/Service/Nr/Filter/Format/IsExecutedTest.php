@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Nr\Filter\Format;
 
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
-use \PHPUnit\Framework\TestCase as TestCase;
+use PHPUnit\Framework\TestCase as TestCase;
 
 /**
  * Class IsExecutedTest
@@ -11,7 +11,6 @@ use \PHPUnit\Framework\TestCase as TestCase;
  */
 class IsExecutedTest extends TestCase
 {
-
     /**
      * Tests the filter
      *

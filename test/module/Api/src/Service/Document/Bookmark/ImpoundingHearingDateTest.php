@@ -3,6 +3,7 @@
 /**
  * Impounding Hearing Date Test
  */
+
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 /**
@@ -10,5 +11,5 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
  */
 class ImpoundingHearingDateTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\ImpoundingHearingDate';
+    public const SUT_CLASS_NAME = '\Dvsa\Olcs\Api\Service\Document\Bookmark\ImpoundingHearingDate';
 }

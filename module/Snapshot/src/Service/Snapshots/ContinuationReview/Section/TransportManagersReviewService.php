@@ -25,7 +25,7 @@ class TransportManagersReviewService extends AbstractReviewService
     {
         $tmLicences = $continuationDetail->getLicence()->getTmLicences();
 
-        $header =[
+        $header = [
             [
                 ['value' => 'continuations.tm-section.table.name', 'header' => true],
                 ['value' => 'continuations.tm-section.table.dob', 'header' => true],

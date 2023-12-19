@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Cli\Domain\Command;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+
 final class InterimEndDateEnforcement extends AbstractCommand
 {
     protected bool $dryRun = false;

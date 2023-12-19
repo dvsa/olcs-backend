@@ -43,7 +43,7 @@ class BusRegHistoryViewTest extends \PHPUnit\Framework\TestCase
     public function testGetters()
     {
         foreach ($this->testData as $property => $value) {
-            $getter = 'get'.ucfirst($property);
+            $getter = 'get' . ucfirst($property);
             $this->assertEquals($value, $this->entity->$getter());
         }
     }

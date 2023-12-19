@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceVehicle;
 
 use Doctrine\ORM\Query;
@@ -217,7 +218,8 @@ class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
 
         $this->assertEquals('2015-01-01', $licenceVehicle->getReceivedDate()->format('Y-m-d'));
         $this->assertEquals(
-            '2015-01-01 12:00:00', $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
+            '2015-01-01 12:00:00',
+            $licenceVehicle->getSpecifiedDate()->format('Y-m-d H:i:s')
         );
 
         $this->assertEquals('Foo', $vehicle->getMakeModel());

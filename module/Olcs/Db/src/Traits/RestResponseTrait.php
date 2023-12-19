@@ -5,6 +5,7 @@
  *
  * @author Someone <someone@valtech.co.uk>
  */
+
 namespace Olcs\Db\Traits;
 
 use Laminas\Http\Response;

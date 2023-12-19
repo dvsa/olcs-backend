@@ -11,7 +11,7 @@ class PermitStartDateGenerator implements ElementGeneratorInterface
 {
     use AnyTrait;
 
-    const DATE_THRESHOLD = 'P60D';
+    public const DATE_THRESHOLD = 'P60D';
 
     /** @var DateWithThresholdGenerator */
     private $dateWithThresholdGenerator;

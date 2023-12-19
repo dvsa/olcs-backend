@@ -77,7 +77,9 @@ class GrantPsvTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffectAsSystemUser(
-            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
         );
 
         $result2 = new Result();
@@ -99,7 +101,9 @@ class GrantPsvTest extends CommandHandlerTestCase
         $this->expectedSideEffectAsSystemUser(CommonGrant::class, $data, $result5);
 
         $this->expectedSideEffectAsSystemUser(
-            CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result()
+            CreateSvConditionUndertakingCmd::class,
+            ['applicationId' => 111],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);
@@ -154,7 +158,9 @@ class GrantPsvTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('CreateSnapshot');
         $this->expectedSideEffectAsSystemUser(
-            CreateSnapshot::class, ['id' => 111, 'event' => CreateSnapshot::ON_GRANT], $result1
+            CreateSnapshot::class,
+            ['id' => 111, 'event' => CreateSnapshot::ON_GRANT],
+            $result1
         );
 
         $result2 = new Result();
@@ -187,7 +193,9 @@ class GrantPsvTest extends CommandHandlerTestCase
         );
 
         $this->expectedSideEffectAsSystemUser(
-            CreateSvConditionUndertakingCmd::class, ['applicationId' => 111], new Result()
+            CreateSvConditionUndertakingCmd::class,
+            ['applicationId' => 111],
+            new Result()
         );
 
         $result = $this->sut->handleCommand($command);

@@ -29,6 +29,7 @@ use RuntimeException;
 class IrhpPermitStockEntityTest extends EntityTester
 {
     use ProcessDateTrait;
+
     /**
      * Define the entity to test
      *

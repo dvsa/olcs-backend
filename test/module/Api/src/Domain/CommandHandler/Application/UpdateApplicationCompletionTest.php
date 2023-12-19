@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateApplicationCompletion;
@@ -104,7 +105,9 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
             ->andReturn($application);
 
         $this->expectedSideEffect(
-            UpdateVariationCompletionCommand::class, ['id' => 111, 'section' => 'section1'], new Result()
+            UpdateVariationCompletionCommand::class,
+            ['id' => 111, 'section' => 'section1'],
+            new Result()
         );
 
         $this->sut->handleCommand($command);
@@ -146,8 +149,9 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Tol updated');
         $this->expectedSideEffect(
-            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update'. ucfirst($section) .'Status',
-            ['id' => 111], $result1
+            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update' . ucfirst($section) . 'Status',
+            ['id' => 111],
+            $result1
         );
 
         if ($expectResetSignature) {
@@ -165,7 +169,6 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
             $this->assertSame($digitalSignature, $application->getDigitalSignature());
             $this->assertSame('FOO', $application->getSignatureType());
         }
-
     }
 
     public function dpTestHandleCommandResetSignature()
@@ -217,8 +220,9 @@ class UpdateApplicationCompletionTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Tol updated');
         $this->expectedSideEffect(
-            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update'. ucfirst($section) .'Status',
-            ['id' => 111], $result1
+            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update' . ucfirst($section) . 'Status',
+            ['id' => 111],
+            $result1
         );
 
         $this->sut->handleCommand($command);

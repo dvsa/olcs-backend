@@ -9,7 +9,7 @@ use Laminas\Validator\AbstractValidator;
  */
 class ServiceNo extends AbstractValidator
 {
-    const RULES_ERROR = 'empty-service-code-error';
+    public const RULES_ERROR = 'empty-service-code-error';
 
     /**
      * @var array

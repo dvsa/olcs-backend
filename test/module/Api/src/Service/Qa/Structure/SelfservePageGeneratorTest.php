@@ -90,7 +90,7 @@ class SelfservePageGeneratorTest extends MockeryTestCase
                 $nextStepSlug
             )
             ->andReturn($selfservePage);
-       
+
         $applicationStepGenerator = m::mock(ApplicationStepGenerator::class);
         $applicationStepGenerator->shouldReceive('generate')
             ->with($qaContext, ElementContainer::SELFSERVE_PAGE)

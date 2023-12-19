@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
  */
 class NoticePeriod extends AbstractFilter
 {
-
-
     /**
      * Returns the result of filtering $value
      *

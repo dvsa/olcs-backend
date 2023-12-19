@@ -24,9 +24,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class DeleteUserSelfserveTest extends CommandHandlerTestCase
 {
-    const USER_ID = 8888;
-    const LOGIN_ID = 'usr8888';
-    const ADMIN_USER_ID = 8880;
+    public const USER_ID = 8888;
+    public const LOGIN_ID = 'usr8888';
+    public const ADMIN_USER_ID = 8880;
 
     /** @var  DeleteUserSelfserve */
     protected $sut;

@@ -29,7 +29,8 @@ class CreateGoodsDiscs extends AbstractRawQuery
     {
         // build query in two parts, as Insert part cannot use aliases
         return $this->buildQueryFromTemplate(
-            'INSERT INTO {gd} ({gd.licenceVehicle}, {gd.isCopy}, {gd.createdOn}, {gd.createdBy}) ', false
-        ) .parent::getQueryTemplate();
+            'INSERT INTO {gd} ({gd.licenceVehicle}, {gd.isCopy}, {gd.createdOn}, {gd.createdBy}) ',
+            false
+        ) . parent::getQueryTemplate();
     }
 }

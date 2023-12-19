@@ -46,7 +46,8 @@ class ConditionUndertakingTest extends MockeryTestCase
 
         $this->sut->provide($publicationLink, $context);
 
-        if ($publicationSectionId === PublicationSection::VAR_GRANTED_SECTION ||
+        if (
+            $publicationSectionId === PublicationSection::VAR_GRANTED_SECTION ||
             $publicationSectionId === PublicationSection::VAR_NEW_SECTION
         ) {
             $this->assertNotEmpty($context);
@@ -224,7 +225,7 @@ class ConditionUndertakingTest extends MockeryTestCase
 
         if ($action == 'U') {
             $origConditionUndertaking =
-                $this->getConditionUndertaking(!$isCondition, 'A', $notes .'_ORIG', $ocAddress);
+                $this->getConditionUndertaking(!$isCondition, 'A', $notes . '_ORIG', $ocAddress);
             $conditionUndertaking->setLicConditionVariation($origConditionUndertaking);
         }
 

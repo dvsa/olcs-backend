@@ -175,7 +175,7 @@ class ConditionUndertakingTest extends RepositoryTestCase
         );
 
         $expectedQuery
-            = 'BLAH AND m.licence = [[95]] AND m.conditionType = [['.ConditionUndertakingEntity::TYPE_CONDITION.']]';
+            = 'BLAH AND m.licence = [[95]] AND m.conditionType = [[' . ConditionUndertakingEntity::TYPE_CONDITION . ']]';
         $this->assertEquals($expectedQuery, $this->query);
     }
 

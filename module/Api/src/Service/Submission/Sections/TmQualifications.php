@@ -24,7 +24,6 @@ final class TmQualifications extends AbstractSection
         $data = [];
 
         if (!empty($case->getTransportManager())) {
-
             $tmQualifications = $case->getTransportManager()->getQualifications();
 
             /** @var TmQualification $entity */

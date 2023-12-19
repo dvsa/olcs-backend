@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Dvsa\Olcs\Cpms\Test\Client;
 
 use Dvsa\Olcs\Cpms\Client\HttpClient;

@@ -19,7 +19,7 @@ class SystemParameter extends AbstractQueryHandler implements CacheAwareInterfac
 
     public function handleQuery(QueryInterface $query): Result
     {
-        assert ($query instanceof SysParamQry);
+        assert($query instanceof SysParamQry);
         $id = $query->getId();
 
         if ($this->cacheService->hasCustomItem(CacheEncryption::SYS_PARAM_IDENTIFIER, $id)) {

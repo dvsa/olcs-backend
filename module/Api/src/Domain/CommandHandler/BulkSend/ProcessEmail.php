@@ -89,7 +89,7 @@ class ProcessEmail extends AbstractEmailHandler
         $taskData = [
             'category' => Category::CATEGORY_PERMITS,
             'subCategory' => Category::TASK_SUB_CATEGORY_PERMITS_GENERAL_TASK,
-            'description' => 'Unable to send email - no organisation recipients found for Org: '. $recordObject->getOrganisation()->getName(). ' - Please update the organisation admin user contacts to ensure at least one has a valid email address.',
+            'description' => 'Unable to send email - no organisation recipients found for Org: ' . $recordObject->getOrganisation()->getName() . ' - Please update the organisation admin user contacts to ensure at least one has a valid email address.',
             'actionDate' => (new DateTime())->format('Y-m-d'),
             'licence' => $recordObject->getId(),
             'urgent' => 'Y'

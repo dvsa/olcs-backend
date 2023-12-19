@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Transaction;
 
-
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee as PayFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as Cmd;

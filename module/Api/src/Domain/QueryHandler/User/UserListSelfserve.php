@@ -3,6 +3,7 @@
 /**
  * User List Selfserve
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;

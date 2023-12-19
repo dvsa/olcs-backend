@@ -3,6 +3,7 @@
 /**
  * BusRegWithTxcInbox
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -88,7 +89,8 @@ class BusRegWithTxcInbox extends AbstractQueryHandler
                     'otherServices',
                     'variationReasons',
                     'npPublicationNo'
-                ], $txcInboxResult
+                ],
+                $txcInboxResult
             ),
             [
                 'npPublicationNo' => $result->getLicence()->determineNpNumber()

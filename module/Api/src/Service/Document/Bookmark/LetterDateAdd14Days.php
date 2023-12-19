@@ -11,5 +11,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DateDelta;
  */
 class LetterDateAdd14Days extends DateDelta
 {
-    const DELTA = "+14";
+    public const DELTA = "+14";
 }

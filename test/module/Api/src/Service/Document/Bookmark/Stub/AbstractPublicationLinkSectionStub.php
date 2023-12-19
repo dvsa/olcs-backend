@@ -6,9 +6,9 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\AbstractPublicationLinkSection;
 
 class AbstractPublicationLinkSectionStub extends AbstractPublicationLinkSection
 {
-    const TEST_PUB_TYPE_SECTION = 'unit_pubTypeSctn';
+    public const TEST_PUB_TYPE_SECTION = 'unit_pubTypeSctn';
 
-    const TEST_SECTION_ID = 7777;
+    public const TEST_SECTION_ID = 7777;
 
     protected $pubTypeSection = [
         self::TEST_PUB_TYPE_SECTION => [

@@ -3,6 +3,7 @@
 /**
  * Reset to Not Yet Submitted from Cancelled test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;

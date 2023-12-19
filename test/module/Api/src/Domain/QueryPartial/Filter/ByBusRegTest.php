@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryPartial\Filter;
 
 use Dvsa\Olcs\Api\Domain\QueryPartial\Filter\ByBusReg;

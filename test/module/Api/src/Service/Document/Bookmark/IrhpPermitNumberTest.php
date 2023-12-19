@@ -9,5 +9,5 @@ use Dvsa\Olcs\Api\Service\Document\Bookmark\IrhpPermitNumber;
  */
 class IrhpPermitNumberTest extends SingleValueTestAbstract
 {
-    const SUT_CLASS_NAME = IrhpPermitNumber::class;
+    public const SUT_CLASS_NAME = IrhpPermitNumber::class;
 }

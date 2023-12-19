@@ -3,6 +3,7 @@
 /**
  * Register User Selfserve Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
@@ -427,6 +428,5 @@ class RegisterUserSelfserveTest extends CommandHandlerTestCase
         $this->expectException(\Exception::class);
 
         $this->sut->handleCommand($command);
-
     }
 }

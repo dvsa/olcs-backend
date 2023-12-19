@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Domain\Exception;
  */
 class DisabledHandlerException extends Exception
 {
-    const MSG_TEMPLATE = 'Handler %s is currently disabled via feature toggle';
+    public const MSG_TEMPLATE = 'Handler %s is currently disabled via feature toggle';
 
     public function __construct(string $class)
     {

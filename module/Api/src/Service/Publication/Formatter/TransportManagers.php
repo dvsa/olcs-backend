@@ -21,6 +21,6 @@ class TransportManagers
             $tmNames[] = $transportManager->getHomeCd()->getPerson()->getFullName();
         }
 
-        return 'Transport Manager(s): '. implode(', ', $tmNames);
+        return 'Transport Manager(s): ' . implode(', ', $tmNames);
     }
 }

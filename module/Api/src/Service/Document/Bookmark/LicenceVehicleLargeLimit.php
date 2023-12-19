@@ -13,8 +13,8 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  */
 class LicenceVehicleLargeLimit extends DynamicBookmark
 {
-    const EMPTY_AUTH = 'Total number (if any)';
-    const NA = 'N/A';
+    public const EMPTY_AUTH = 'Total number (if any)';
+    public const NA = 'N/A';
 
     public function getQuery(array $data)
     {

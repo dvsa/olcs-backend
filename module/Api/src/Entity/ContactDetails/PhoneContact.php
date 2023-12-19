@@ -26,8 +26,8 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  */
 class PhoneContact extends AbstractPhoneContact
 {
-    const TYPE_PRIMARY = 'phone_t_primary';
-    const TYPE_SECONDARY = 'phone_t_secondary';
+    public const TYPE_PRIMARY = 'phone_t_primary';
+    public const TYPE_SECONDARY = 'phone_t_secondary';
 
     /**
      * PhoneContact constructor.

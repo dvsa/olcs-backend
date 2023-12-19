@@ -3,6 +3,7 @@
 /**
  * Repute Url test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Nr;
 
 use Doctrine\Common\Collections\ArrayCollection;

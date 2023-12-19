@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
@@ -310,7 +311,9 @@ class GrantInterimTest extends CommandHandlerTestCase
         $result1 = new Result();
         $result1->addId('fee', 444);
         $this->expectedSideEffect(
-            CreateApplicationFeeCmd::class, ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT], $result1
+            CreateApplicationFeeCmd::class,
+            ['id' => 111, 'feeTypeFeeType' => FeeType::FEE_TYPE_GRANTINT],
+            $result1
         );
 
         $expectedGenerate = [

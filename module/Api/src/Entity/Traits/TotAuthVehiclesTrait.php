@@ -174,7 +174,8 @@ trait TotAuthVehiclesTrait
             return [];
         }
 
-        if ((string)$this->vehicleType == RefData::APP_VEHICLE_TYPE_MIXED &&
+        if (
+            (string)$this->vehicleType == RefData::APP_VEHICLE_TYPE_MIXED &&
             is_null($this->totAuthLgvVehicles)
         ) {
             return [

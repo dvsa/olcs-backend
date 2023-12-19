@@ -31,11 +31,11 @@ use Mockery as m;
  */
 class SubmitApplicationTest extends CommandHandlerTestCase
 {
-    const APP_ID = 9001;
-    const LIC_ID = 8001;
-    const TASK_ID = 6001;
-    const VERSION = 10;
-    const TRAFFIC_AREA = 'TA';
+    public const APP_ID = 9001;
+    public const LIC_ID = 8001;
+    public const TASK_ID = 6001;
+    public const VERSION = 10;
+    public const TRAFFIC_AREA = 'TA';
 
     /** @var SubmitApplication  */
     protected $sut;
@@ -215,7 +215,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             $result1
         );
 
-        if (!$isInternalUser
+        if (
+            !$isInternalUser
             && !(
                 $isVariation
                 && $goodOrPsv === LicenceEntity::LICENCE_CATEGORY_PSV
@@ -600,7 +601,6 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $expectedTaskData['description'] = $expectedDescription;
         $expectedTaskData['actionDate'] = $now->format('Y-m-d');
 
-
         $command = Cmd::create(
             [
                 'id' =>  self::APP_ID,
@@ -653,8 +653,6 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         if (!empty($tmaStat)) {
             $this->mockTmaRepo->shouldReceive('fetchStatByAppId')->once()->with(self::APP_ID)->andReturn($tmaStat);
         }
-
-
 
         $taskResult = new Result();
         $taskResult->addId('task', self::TASK_ID);
@@ -806,7 +804,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 $expectedTaskData,
                 'TEST CODE'
             ],
-            'GV80A' =>[
+            'GV80A' => [
                 [
                     ApplicationCompletion::SECTION_PEOPLE => ApplicationCompletion::STATUS_COMPLETE,
                     ApplicationCompletion::SECTION_TRANSPORT_MANAGER => ApplicationCompletion::STATUS_COMPLETE,
@@ -819,7 +817,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 [],
                 'GV80A Application',
                 \Dvsa\Olcs\Api\Entity\System\Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
-                array_merge($expectedTaskData, ['urgent' =>'Y']),
+                array_merge($expectedTaskData, ['urgent' => 'Y']),
                 'GV80A'
             ]
         ];

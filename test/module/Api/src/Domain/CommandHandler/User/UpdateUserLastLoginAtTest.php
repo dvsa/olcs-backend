@@ -13,7 +13,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 
 class UpdateUserLastLoginAtTest extends CommandHandlerTestCase
 {
-    const USER_ID = 123456;
+    public const USER_ID = 123456;
 
     /** @var UpdateUserLastLoginAt|m\Mock sut */
     protected $sut;

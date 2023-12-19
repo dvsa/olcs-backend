@@ -5,6 +5,7 @@
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Transaction;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Transaction\TransactionByReference as QueryHandler;

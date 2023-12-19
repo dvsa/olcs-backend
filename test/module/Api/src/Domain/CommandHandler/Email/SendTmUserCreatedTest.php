@@ -3,6 +3,7 @@
 /**
  * Send TM User Created Email Test
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -106,7 +107,7 @@ class SendTmUserCreatedTest extends CommandHandlerTestCase
                     'organisation' => 'ORGANISATION',
                     'reference' => 'LIC01/442',
                     'loginId' => $loginId,
-                    'url' => 'http://selfserve/'. $uriPart .'/442/transport-managers/details/'.$tmaId.'/edit-details/'
+                    'url' => 'http://selfserve/' . $uriPart . '/442/transport-managers/details/' . $tmaId . '/edit-details/'
                 ],
                 'default'
             );

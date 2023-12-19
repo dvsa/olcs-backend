@@ -10,7 +10,7 @@ use Laminas\Http\Client as HttpClient;
 
 class ClientFactory implements FactoryInterface
 {
-    const CONFIG_NAMESPACE = 'companies_house';
+    public const CONFIG_NAMESPACE = 'companies_house';
 
     /**
      * @var array

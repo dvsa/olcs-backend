@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TeamPrinter;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -32,7 +33,9 @@ final class UpdateTeamPrinter extends AbstractCommandHandler
         $this->checkIfPrinterExceptionExists($command);
 
         $teamPrinter = $this->getRepo()->fetchById(
-            $command->getId(), Query::HYDRATE_OBJECT, $command->getVersion()
+            $command->getId(),
+            Query::HYDRATE_OBJECT,
+            $command->getVersion()
         );
         $teamPrinter->setTeam(
             $this->getRepo()->getReference(TeamEntity::class, $command->getTeam())

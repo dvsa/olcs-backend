@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
  */
 class LocalAuthorityMissing extends AbstractValidator
 {
-    const LA_MISSING_ERROR = 'la-missing-error';
+    public const LA_MISSING_ERROR = 'la-missing-error';
 
     /**
      * @var array

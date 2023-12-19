@@ -5,6 +5,7 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\QueryBuilder;
@@ -49,7 +50,7 @@ class TmEmployment extends AbstractRepository
             ->with('cd.address')
             ->withRefdata();
 
-        $dqb->andWhere($dqb->expr()->eq($this->alias .'.transportManager', ':tmId'))
+        $dqb->andWhere($dqb->expr()->eq($this->alias . '.transportManager', ':tmId'))
             ->setParameter('tmId', $tmId);
 
         return $dqb->getQuery()->getResult();
@@ -65,7 +66,7 @@ class TmEmployment extends AbstractRepository
 
     protected function applyListFilters(QueryBuilder $qb, \Dvsa\Olcs\Transfer\Query\QueryInterface $query)
     {
-        $qb->andWhere($qb->expr()->eq($this->alias .'.transportManager', ':transportManager'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.transportManager', ':transportManager'))
             ->setParameter('transportManager', $query->getTransportManager());
     }
 }

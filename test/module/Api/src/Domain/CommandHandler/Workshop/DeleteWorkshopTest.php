@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Workshop;
 
 use Dvsa\Olcs\Api\Domain\Repository\Address;
@@ -14,7 +15,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Workshop\DeleteWorkshop;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Workshop\DeleteWorkshop as Cmd;
-use \Dvsa\Olcs\Api\Entity\Licence\Workshop as WorkshopEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Workshop as WorkshopEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 

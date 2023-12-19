@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\FeeBundle as Qry;
  */
 class GvLicFee2 extends SingleValueAbstract
 {
-    const SRCH_VAL_KEY = 'fee';
-    const FIELD = 'amount';
-    const QUERY_CLASS = Qry::class;
+    public const SRCH_VAL_KEY = 'fee';
+    public const FIELD = 'amount';
+    public const QUERY_CLASS = Qry::class;
 }

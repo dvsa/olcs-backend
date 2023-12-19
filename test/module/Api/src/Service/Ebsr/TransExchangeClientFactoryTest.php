@@ -14,7 +14,6 @@ use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
 
 class TransExchangeClientFactoryTest extends TestCase
 {
-
     public function testInvokeNoConfig()
     {
         $this->expectException(\RuntimeException::class);
@@ -50,7 +49,7 @@ class TransExchangeClientFactoryTest extends TestCase
             ->with(TransExchangeClientFactory::PUBLISH_XSD);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr'=>$config]);
+        $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr' => $config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('TransExchangePublisherXmlMapping')->andReturn($mockSpec);

@@ -80,7 +80,7 @@ class CountryTest extends RepositoryTestCase
             . 'INNER JOIN m.irhpPermitStocks ips '
             . 'INNER JOIN ips.irhpPermitType ipt '
             . 'INNER JOIN ips.irhpPermitWindows ipw '
-            . 'AND ipt.id = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ipt.id = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
             . 'AND ipw.startDate <= [[2018-10-25T13:21:10+00:00]] '
             . 'AND ipw.endDate > [[2018-10-25T13:21:10+00:00]] '
             . 'ORDER BY m.countryDesc ASC';
@@ -108,12 +108,12 @@ class CountryTest extends RepositoryTestCase
             . 'INNER JOIN ips.irhpPermitRanges ipr '
             . 'INNER JOIN ipr.irhpPermits ip '
             . 'AND ip.status IN [[['
-                . '"'.IrhpPermitEntity::STATUS_PENDING.'",'
-                . '"'.IrhpPermitEntity::STATUS_AWAITING_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_PRINTING.'",'
-                . '"'.IrhpPermitEntity::STATUS_ERROR.'"'
+                . '"' . IrhpPermitEntity::STATUS_PENDING . '",'
+                . '"' . IrhpPermitEntity::STATUS_AWAITING_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_PRINTING . '",'
+                . '"' . IrhpPermitEntity::STATUS_ERROR . '"'
             . ']]] '
-            . 'AND ips.irhpPermitType = [['.IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL.']] '
+            . 'AND ips.irhpPermitType = [[' . IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL . ']] '
             . 'ORDER BY m.countryDesc ASC';
 
         $this->assertEquals($expectedQuery, $this->query);

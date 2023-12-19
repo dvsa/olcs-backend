@@ -5,6 +5,7 @@
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
@@ -28,7 +29,7 @@ use Dvsa\Olcs\Transfer\Command\CommunityLic\Stop as Cmd;
  */
 final class Stop extends AbstractCommandHandler implements TransactionedInterface
 {
-    const STOP_TYPE_WITHDRAWN = 'withdrawal';
+    public const STOP_TYPE_WITHDRAWN = 'withdrawal';
 
     protected $repoServiceName = 'CommunityLic';
 
@@ -205,7 +206,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
                            $status == CommunityLicEntity::STATUS_ACTIVE &&
                            !in_array($communityLicence->getId(), $ids)
                         )
-                    ) {
+                ) {
                         $messages['communityLicence'][CommunityLicEntity::ERROR_CANT_STOP] =
                             'Please annul, withdraw or suspend the other pending/active ' .
                             'licences before the office copy';

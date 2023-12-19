@@ -3,6 +3,7 @@
 /**
  * Role List
  */
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
@@ -22,7 +23,8 @@ class RoleList extends AbstractQueryHandler
 
         return [
             'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT), ['rolePermissions' => ['permission']]
+                $repo->fetchList($query, Query::HYDRATE_OBJECT),
+                ['rolePermissions' => ['permission']]
             ),
             'count' => $repo->fetchCount($query)
         ];

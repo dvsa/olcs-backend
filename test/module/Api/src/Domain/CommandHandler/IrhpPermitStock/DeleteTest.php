@@ -25,7 +25,7 @@ class DeleteTest extends CommandHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new DeleteHandler;
+        $this->sut = new DeleteHandler();
         $this->mockRepo('IrhpPermitStock', PermitStockRepo::class);
         $this->mockRepo('IrhpPermitJurisdictionQuota', IrhpPermitJurisdictionQuotaRepo::class);
         $this->mockRepo('IrhpPermitSectorQuota', IrhpPermitSectorQuotaRepo::class);

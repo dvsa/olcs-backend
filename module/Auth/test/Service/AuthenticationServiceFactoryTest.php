@@ -1,13 +1,14 @@
 <?php
-declare(strict_types = 1);
+
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Test\Service;
 
 use Dvsa\Olcs\Auth\Service\AuthenticationService;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceFactory;
-use Olcs\TestHelpers\MockeryTestCase;
-use Olcs\TestHelpers\Service\MocksServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class AuthenticationServiceFactoryTest

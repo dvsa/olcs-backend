@@ -411,13 +411,13 @@ EOT;
 
         $fromDate = (new DateTime())->format('Y-m-d');
         $toDate = (new DateTime())->add(new \DateInterval('P54D'))->format('Y-m-d');
-        $expectedQuery = 'BLAH AND l.status IN ["lsts_valid","lsts_curtailed","lsts_suspended"] '.
-            'AND l.expiryDate >= [['. $fromDate .']] '.
-            'AND l.expiryDate <= [['. $toDate .']] '.
-            'AND m.status NOT IN ["con_det_sts_complete"] '.
-            'AND c.month = MONTH(l.expiryDate) '.
-            'AND c.year = YEAR(l.expiryDate) '.
-            'AND m.digitalNotificationSent = 1 '.
+        $expectedQuery = 'BLAH AND l.status IN ["lsts_valid","lsts_curtailed","lsts_suspended"] ' .
+            'AND l.expiryDate >= [[' . $fromDate . ']] ' .
+            'AND l.expiryDate <= [[' . $toDate . ']] ' .
+            'AND m.status NOT IN ["con_det_sts_complete"] ' .
+            'AND c.month = MONTH(l.expiryDate) ' .
+            'AND c.year = YEAR(l.expiryDate) ' .
+            'AND m.digitalNotificationSent = 1 ' .
             'AND m.digitalReminderSent = 0';
 
         static::assertEquals($expectedQuery, $this->query);

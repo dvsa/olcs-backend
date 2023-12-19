@@ -400,8 +400,10 @@ class Generator extends AbstractGenerator
         foreach ($sections as $key => $section) {
             $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
 
-            if (array_search($section, $this->displayedAlwaysVariationSections) === false &&
-                $completion->$getter() !== Application::VARIATION_STATUS_UPDATED) {
+            if (
+                array_search($section, $this->displayedAlwaysVariationSections) === false &&
+                $completion->$getter() !== Application::VARIATION_STATUS_UPDATED
+            ) {
                 unset($sections[$key]);
             }
         }

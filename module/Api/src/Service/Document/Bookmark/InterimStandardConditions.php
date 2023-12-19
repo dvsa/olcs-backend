@@ -9,7 +9,7 @@ namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
  */
 class InterimStandardConditions extends StandardConditions
 {
-    const DATA_KEY = 'application';
+    public const DATA_KEY = 'application';
 
-    const SERVICE = 'application';
+    public const SERVICE = 'application';
 }

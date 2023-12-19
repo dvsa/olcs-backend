@@ -5,6 +5,7 @@
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
@@ -98,7 +99,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             }
         }
 
-        if ($application->isGoods() &&
+        if (
+            $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));

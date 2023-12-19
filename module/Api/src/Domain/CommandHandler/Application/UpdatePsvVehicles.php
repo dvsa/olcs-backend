@@ -5,6 +5,7 @@
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -23,7 +24,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdatePsvVehicles as Cmd;
  */
 final class UpdatePsvVehicles extends AbstractCommandHandler implements TransactionedInterface
 {
-    const ERR_PSV_VE_NO_ROWS = 'ERR_PSV_VE_NO_ROWS';
+    public const ERR_PSV_VE_NO_ROWS = 'ERR_PSV_VE_NO_ROWS';
 
     protected $repoServiceName = 'Application';
 

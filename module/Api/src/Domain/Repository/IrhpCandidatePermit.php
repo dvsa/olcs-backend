@@ -29,7 +29,8 @@ class IrhpCandidatePermit extends AbstractRepository
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {
-        if (($query instanceof GetListByIrhpApplication || $query instanceof GetListByIrhpApplicationUnpaged)
+        if (
+            ($query instanceof GetListByIrhpApplication || $query instanceof GetListByIrhpApplicationUnpaged)
             && $query->getIsPreGrant()
         ) {
             $qb->andWhere($qb->expr()->in('ia.status', ':status'))

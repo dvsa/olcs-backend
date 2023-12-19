@@ -312,7 +312,6 @@ class CasesTest extends RepositoryTestCase
             ->shouldReceive('withRefdata')->with()->times(2)->andReturnSelf()
             ->shouldReceive('with')->with('caseType', 'ct')->times(2)->andReturnSelf();
 
-
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
                 ->shouldReceive('getResult')
@@ -322,7 +321,6 @@ class CasesTest extends RepositoryTestCase
 
         $this->mockQi->shouldReceive('getId')->andReturn(95);
         $this->assertEquals(['RESULTS'], $this->sut->fetchOpenCasesForSurrender($this->mockQi));
-
 
         $expectedQuery = 'BLAH SELECT CONCAT(ct.description, m.id) as HIDDEN caseType AND m.licence = [[95]] AND m.closedDate IS NULL';
         $this->assertEquals($expectedQuery, $this->query);
@@ -338,7 +336,6 @@ class CasesTest extends RepositoryTestCase
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
-
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')
@@ -361,7 +358,6 @@ class CasesTest extends RepositoryTestCase
         $this->queryBuilder
             ->shouldReceive('modifyQuery')->with($qb)->times(1)->andReturnSelf()
             ->shouldReceive('with')->with('application', 'a')->andReturnSelf();
-
 
         $qb->shouldReceive('getQuery')->andReturn(
             m::mock()->shouldReceive('execute')

@@ -18,9 +18,9 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class SaveBusinessDetailsTest extends CommandHandlerTestCase
 {
-    const ID = 1111;
-    const VERSION = 99;
-    const CONTACT_DETAILS_ID = 8888;
+    public const ID = 1111;
+    public const VERSION = 99;
+    public const CONTACT_DETAILS_ID = 8888;
 
     /** @var  SaveBusinessDetails */
     protected $sut;

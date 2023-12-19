@@ -6,10 +6,10 @@ use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Cli\Controller\QueueController;
-use OlcsTest\Bootstrap;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Router\RouteMatch;
 
@@ -42,7 +42,18 @@ class QueueControllerTest extends MockeryTestCase
         $this->routeMatch = new RouteMatch([]);
         $this->event = new MvcEvent();
         $this->event->setRouteMatch($this->routeMatch);
-        $this->sm = Bootstrap::getServiceManager();
+        $sm = m::mock(ServiceManager::class);
+
+        $sm->shouldReceive('setService')
+            ->andReturnUsing(
+                function ($alias, $service) use ($sm) {
+                    $sm->shouldReceive('get')->with($alias)->andReturn($service);
+                    $sm->shouldReceive('has')->with($alias)->andReturn(true);
+                    return $sm;
+                }
+            );
+
+        $this->sm = $sm;
         $this->console = m::mock('Laminas\Console\Adapter\AdapterInterface');
 
         $this->mockQueueService = m::mock(QueueProcessor::class);

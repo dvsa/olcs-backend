@@ -4,7 +4,10 @@
  * Requests to Dvsa\Olcs\Transfer\Query\Team\TeamListData are passed to
  * this query when the user has limited traffic area permissions
  */
-namespace Dvsa\Olcs\Api\Domain\Query\Team;;
+
+namespace Dvsa\Olcs\Api\Domain\Query\Team;
+
+;
 
 use Dvsa\Olcs\Transfer\FieldType\Traits\TrafficAreas;
 use Dvsa\Olcs\Transfer\Query\AbstractListData;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Update translation key text record
  *

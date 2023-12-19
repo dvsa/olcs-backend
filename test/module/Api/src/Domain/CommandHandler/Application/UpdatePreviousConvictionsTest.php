@@ -5,6 +5,7 @@
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\ORM\Query;
@@ -56,7 +57,9 @@ class UpdatePreviousConvictionsTest extends CommandHandlerTestCase
             ->getMock();
 
         $this->expectedSideEffect(
-            UpdateApplicationCompletionCommand::class, ['id' => 627, 'section' => 'convictionsPenalties'], new Result()
+            UpdateApplicationCompletionCommand::class,
+            ['id' => 627, 'section' => 'convictionsPenalties'],
+            new Result()
         );
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')

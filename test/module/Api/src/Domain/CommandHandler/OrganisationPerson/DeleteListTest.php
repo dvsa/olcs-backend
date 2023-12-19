@@ -16,13 +16,13 @@ use Mockery as m;
  */
 class DeleteListTest extends CommandHandlerTestCase
 {
-    const ORG_ID = 6001;
+    public const ORG_ID = 6001;
 
-    const ORG_PERSON_ID = 9001;
-    const ORG_PERSON_2_ID = 9002;
+    public const ORG_PERSON_ID = 9001;
+    public const ORG_PERSON_2_ID = 9002;
 
-    const PERSON_ID = 7001;
-    const PERSON_2_ID = 7002;
+    public const PERSON_ID = 7001;
+    public const PERSON_2_ID = 7002;
 
     /** @var CommandHandler\OrganisationPerson\DeleteList  */
     protected $sut;

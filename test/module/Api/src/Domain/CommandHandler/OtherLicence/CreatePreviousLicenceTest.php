@@ -5,11 +5,12 @@
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OtherLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence\CreatePreviousLicence as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\OtherLicence;
-use \Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreatePreviousLicence as Command;

@@ -1,7 +1,9 @@
 <?php
+
 /**
  * Prohibition Entity
  */
+
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as ProhibitionEntity;
