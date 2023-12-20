@@ -264,7 +264,7 @@ class AlignEntitiesToSchema
 
             $this->createUnitTests();
 
-            $this->importEntities();
+            //$this->importEntities();
 
             $this->rebuildDbUsingLiquidbase();
 

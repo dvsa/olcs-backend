@@ -20,7 +20,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @Gedmo\SoftDeleteable(fieldName="deletedDate", timeAware=true)
  * @ORM\Table(name="presiding_tc",
  *    indexes={
- *        @ORM\Index(name="fk_presiding_tc_user_id_user_id", columns={"user_id"})
+ *        @ORM\Index(name="presiding_tc_user_id_fk", columns={"user_id"})
  *    }
  * )
  */
