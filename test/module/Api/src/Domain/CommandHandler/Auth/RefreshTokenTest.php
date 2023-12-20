@@ -59,7 +59,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandReturnsExpectedResult()
     {

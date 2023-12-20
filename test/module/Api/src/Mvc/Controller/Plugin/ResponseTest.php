@@ -152,7 +152,7 @@ class ResponseTest extends MockeryTestCase
 
         $mockSteam = m::mock(HttpResponse\Stream::class);
         $mockSteam->shouldReceive('getHeaders')->once()->andReturn($mockHeaders);
-        $mockSteam->shouldReceive('getStream')->times(2)->andReturn($fh);
+        $mockSteam->shouldReceive('getStream')->times(1)->andReturn($fh);
 
         ob_start();
         $actual = $this->sut->streamResult($mockSteam);

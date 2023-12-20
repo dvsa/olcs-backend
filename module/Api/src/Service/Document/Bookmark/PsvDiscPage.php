@@ -100,4 +100,9 @@ class PsvDiscPage extends AbstractDiscList
 
         return $this->renderSnippets($discGroups);
     }
+
+    protected function getQueryClass(): string
+    {
+        return Qry::class;
+    }
 }

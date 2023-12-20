@@ -9,6 +9,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -26,6 +27,9 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
 
     protected $repoServiceName = 'InspectionRequest';
 
+    /**
+     * @param \Dvsa\Olcs\Transfer\Command\InspectionRequest\Update $command
+     */
     public function handleCommand(CommandInterface $command)
     {
         $result = new Result();
@@ -40,7 +44,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * @param Cmd $command
+     * @param \Dvsa\Olcs\Transfer\Command\InspectionRequest\Update $command
      * @return InspectionRequest
      */
     private function updateInspectionRequest($command)

@@ -22,7 +22,7 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $this->mockRepo('Vehicle', \Dvsa\Olcs\Api\Domain\Repository\Vehicle::class);
 
         $this->mockedSmServices = [
-            'ElasticSearch\Search' => m::mock()
+            'Elasticsearch\Search' => m::mock()
         ];
 
         parent::setUp();
@@ -62,7 +62,7 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle222)->once();
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle333)->once();
 
-        $this->mockedSmServices['ElasticSearch\Search']->shouldReceive('updateVehicleSection26')->
+        $this->mockedSmServices['Elasticsearch\Search']->shouldReceive('updateVehicleSection26')->
             with($data['ids'], true)->once()->andReturn(true);
 
         $result = $this->sut->handleCommand($command);
@@ -107,7 +107,7 @@ class UpdateSection26Test extends CommandHandlerTestCase
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle222)->once();
         $this->repoMap['Vehicle']->shouldReceive('save')->with($vehicle333)->once();
 
-        $this->mockedSmServices['ElasticSearch\Search']->shouldReceive('updateVehicleSection26')->
+        $this->mockedSmServices['Elasticsearch\Search']->shouldReceive('updateVehicleSection26')->
             with($data['ids'], false)->once()->andReturn(false);
 
         $result = $this->sut->handleCommand($command);

@@ -59,7 +59,7 @@ class DvlaSearchServiceFactory implements FactoryInterface
         $options = isset($this->options[$key]) ? $this->options[$key] : $default;
 
         if (null === $options) {
-            throw new RuntimeException("Option could not be found: {$key}");
+            throw new \RuntimeException("Option could not be found: {$key}");
         }
 
         return $options;

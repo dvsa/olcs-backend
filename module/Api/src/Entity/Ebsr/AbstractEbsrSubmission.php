@@ -348,7 +348,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDistributeEnd($asDateTime = false)
     {
@@ -378,7 +379,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDistributeExpire($asDateTime = false)
     {
@@ -408,7 +410,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDistributeStart($asDateTime = false)
     {
@@ -678,7 +681,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getProcessEnd($asDateTime = false)
     {
@@ -708,7 +712,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getProcessStart($asDateTime = false)
     {
@@ -738,7 +743,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPublishEnd($asDateTime = false)
     {
@@ -768,7 +774,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPublishStart($asDateTime = false)
     {
@@ -822,7 +829,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getSubmittedDate($asDateTime = false)
     {
@@ -852,7 +860,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getValidationEnd($asDateTime = false)
     {
@@ -882,7 +891,8 @@ abstract class AbstractEbsrSubmission implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getValidationStart($asDateTime = false)
     {

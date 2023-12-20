@@ -18,8 +18,6 @@ class ElementGeneratorContextGenerator
      *
      * @param ValidatorListGenerator $validatorListGenerator
      * @param ElementGeneratorContextFactory $elementGeneratorContextFactory
-     *
-     * @return ApplicationStepGenerator
      */
     public function __construct(
         ValidatorListGenerator $validatorListGenerator,

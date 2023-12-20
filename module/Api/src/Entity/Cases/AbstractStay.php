@@ -226,7 +226,8 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDecisionDate($asDateTime = false)
     {
@@ -376,7 +377,8 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRequestDate($asDateTime = false)
     {
@@ -454,7 +456,8 @@ abstract class AbstractStay implements BundleSerializableInterface, JsonSerializ
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWithdrawnDate($asDateTime = false)
     {

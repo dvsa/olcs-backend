@@ -2,7 +2,7 @@
 
 namespace Olcs\Db\Service\Search;
 
-use ElasticSearch\Client;
+use Elasticsearch\Client;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;

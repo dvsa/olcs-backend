@@ -26,7 +26,7 @@ class Schedule41Approve extends AbstractCommandHandler implements TransactionedI
     /**
      * Handle command
      *
-     * @param \Dvsa\Olcs\Transfer\Command\Application\Schedule41\Approve $command command
+     * @param \Dvsa\Olcs\Transfer\Command\Application\Schedule41Approve $command command
      *
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException

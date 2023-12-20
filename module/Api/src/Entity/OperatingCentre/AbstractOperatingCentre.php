@@ -212,7 +212,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the complaint
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being set as the value
+     * @param ArrayCollection $complaints collection being set as the value
      *
      * @return OperatingCentre
      */
@@ -226,7 +226,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Get the complaints
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getComplaints()
     {
@@ -236,7 +236,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a complaints
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being added
+     * @param ArrayCollection|mixed $complaints collection being added
      *
      * @return OperatingCentre
      */
@@ -371,7 +371,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the opposition
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being set as the value
+     * @param ArrayCollection $oppositions collection being set as the value
      *
      * @return OperatingCentre
      */
@@ -385,7 +385,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Get the oppositions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOppositions()
     {
@@ -395,7 +395,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a oppositions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being added
+     * @param ArrayCollection|mixed $oppositions collection being added
      *
      * @return OperatingCentre
      */
@@ -458,7 +458,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the application
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications collection being set as the value
+     * @param ArrayCollection $applications collection being set as the value
      *
      * @return OperatingCentre
      */
@@ -472,7 +472,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Get the applications
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplications()
     {
@@ -482,7 +482,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applications collection being added
+     * @param ArrayCollection|mixed $applications collection being added
      *
      * @return OperatingCentre
      */
@@ -521,7 +521,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the condition undertaking
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being set as the value
+     * @param ArrayCollection $conditionUndertakings collection being set as the value
      *
      * @return OperatingCentre
      */
@@ -535,7 +535,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Get the condition undertakings
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getConditionUndertakings()
     {
@@ -545,7 +545,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being added
+     * @param ArrayCollection|mixed $conditionUndertakings collection being added
      *
      * @return OperatingCentre
      */
@@ -584,7 +584,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Set the ad document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments collection being set as the value
+     * @param ArrayCollection $adDocuments collection being set as the value
      *
      * @return OperatingCentre
      */
@@ -598,7 +598,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Get the ad documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getAdDocuments()
     {
@@ -608,7 +608,7 @@ abstract class AbstractOperatingCentre implements BundleSerializableInterface, J
     /**
      * Add a ad documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $adDocuments collection being added
+     * @param ArrayCollection|mixed $adDocuments collection being added
      *
      * @return OperatingCentre
      */

@@ -269,7 +269,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the irfo psv auth
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being set as the value
+     * @param ArrayCollection $irfoPsvAuths collection being set as the value
      *
      * @return Country
      */
@@ -283,7 +283,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Get the irfo psv auths
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrfoPsvAuths()
     {
@@ -293,7 +293,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Add a irfo psv auths
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuths collection being added
+     * @param ArrayCollection|mixed $irfoPsvAuths collection being added
      *
      * @return Country
      */
@@ -332,7 +332,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the irhp application
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being set as the value
+     * @param ArrayCollection $irhpApplications collection being set as the value
      *
      * @return Country
      */
@@ -346,7 +346,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Get the irhp applications
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpApplications()
     {
@@ -356,7 +356,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Add a irhp applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpApplications collection being added
+     * @param ArrayCollection|mixed $irhpApplications collection being added
      *
      * @return Country
      */
@@ -395,7 +395,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the irhp permit stock range
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being set as the value
+     * @param ArrayCollection $irhpPermitStockRanges collection being set as the value
      *
      * @return Country
      */
@@ -409,7 +409,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Get the irhp permit stock ranges
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitStockRanges()
     {
@@ -419,7 +419,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Add a irhp permit stock ranges
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStockRanges collection being added
+     * @param ArrayCollection|mixed $irhpPermitStockRanges collection being added
      *
      * @return Country
      */
@@ -602,7 +602,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Set the irhp permit stock
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being set as the value
+     * @param ArrayCollection $irhpPermitStocks collection being set as the value
      *
      * @return Country
      */
@@ -616,7 +616,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Get the irhp permit stocks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitStocks()
     {
@@ -626,7 +626,7 @@ abstract class AbstractCountry implements BundleSerializableInterface, JsonSeria
     /**
      * Add a irhp permit stocks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being added
+     * @param ArrayCollection|mixed $irhpPermitStocks collection being added
      *
      * @return Country
      */

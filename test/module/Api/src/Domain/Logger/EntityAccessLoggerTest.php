@@ -70,7 +70,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      */
     public function logAccessToEntityDoesNotLogAnythingWhenUserDoesNotHaveRequiredPermissionsAndReturnsFalse()
     {
@@ -105,7 +105,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
     /**
      * @param object $entity
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithTheInternalUserPermissionDataProvider
      */
     public function logAccessToEntityLogsEntryWhenUserHasInternalUserPermissionAndEntityIsEnabledForLoggingAndReturnsTrue(object $entity)
@@ -125,7 +125,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      */
     public function logAccessToEntityThrowsExceptionWhenUserHasInternalUserPermissionAndEntityIsNotEnabledForLogging()
     {
@@ -144,7 +144,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      */
     public function logAccessToEntityDoesNotLogAnythingWhenUserIsAnonymousAndHasInternalUserPermissionAndEntityIsEnabledForLoggingAndReturnsFalse()
     {
@@ -164,7 +164,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      */
     public function logAccessToEntityDoesNotLogAnythingWhenIdentityIsNotSetAndHasInternalUserPermissionAndEntityIsEnabledForLoggingAndReturnsFalse()
     {
@@ -195,7 +195,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
     /**
      * @param object $entity
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithThePartnerUserPermissionDataProvider
      */
     public function logAccessToEntityLogsEntryWhenUserHasPartnerUserPermissionAndEntityIsEnabledForLoggingAndReturnsTrue(object $entity)
@@ -230,7 +230,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatHaveNotBeenEnabledForUsersThatHavePartnerUserPermissionDataProvider
      */
     public function logAccessToEntityThrowsExceptionWhenUserHasPartnerUserPermissionAndEntityIsNotEnabledForLogging(object $entity)
@@ -261,7 +261,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
     /**
      * @param object $entity
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithThePartnerAdminPermissionDataProvider
      */
     public function logAccessToEntityLogsEntryWhenUserHasPartnerAdminPermissionAndEntityIsEnabledForLoggingAndReturnsTrue(object $entity)
@@ -296,7 +296,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends logAccessToEntity_IsCallable
+     * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatHaveNotBeenEnabledForUsersThatHavePartnerAdminPermissionDataProvider
      */
     public function logAccessToEntityThrowsExceptionWhenUserHasPartnerAdminPermissionAndEntityIsNotEnabledForLogging(object $entity)

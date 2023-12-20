@@ -23,7 +23,7 @@ class SearchControllerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SearchController
     {
-        $elasticSearchService = $container->get('ElasticSearch\Search');
+        $elasticSearchService = $container->get('Elasticsearch\Search');
 
         return new SearchController(
             $elasticSearchService

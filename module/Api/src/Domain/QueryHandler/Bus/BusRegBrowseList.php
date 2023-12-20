@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegBrowseView;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -22,7 +23,7 @@ class BusRegBrowseList extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Repository $repo */
+        /** @var BusRegBrowseView $repo */
         $repo = $this->getRepo();
 
         return [

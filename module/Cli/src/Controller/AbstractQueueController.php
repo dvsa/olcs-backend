@@ -20,7 +20,7 @@ class AbstractQueueController extends AbstractCliController
      *
      * @param array $config Config
      *
-     * @return number Queue duration in seconds
+     * @return int Queue duration in seconds
      */
     protected function getQueueDuration(array $config)
     {

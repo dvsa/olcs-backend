@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Permits\UpdateCountries as UpdateCountriesCmd;
+use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries as UpdateCountriesCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;

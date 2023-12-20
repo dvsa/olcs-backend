@@ -285,7 +285,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCheckDate($asDateTime = false)
     {
@@ -363,7 +364,8 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getInfringementDate($asDateTime = false)
     {
@@ -593,7 +595,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the applied penaltie
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties collection being set as the value
+     * @param ArrayCollection $appliedPenalties collection being set as the value
      *
      * @return SeriousInfringement
      */
@@ -607,7 +609,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the applied penalties
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getAppliedPenalties()
     {
@@ -617,7 +619,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Add a applied penalties
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $appliedPenalties collection being added
+     * @param ArrayCollection|mixed $appliedPenalties collection being added
      *
      * @return SeriousInfringement
      */
@@ -656,7 +658,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the imposed erru
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus collection being set as the value
+     * @param ArrayCollection $imposedErrus collection being set as the value
      *
      * @return SeriousInfringement
      */
@@ -670,7 +672,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the imposed errus
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getImposedErrus()
     {
@@ -680,7 +682,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Add a imposed errus
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $imposedErrus collection being added
+     * @param ArrayCollection|mixed $imposedErrus collection being added
      *
      * @return SeriousInfringement
      */
@@ -719,7 +721,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Set the requested erru
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus collection being set as the value
+     * @param ArrayCollection $requestedErrus collection being set as the value
      *
      * @return SeriousInfringement
      */
@@ -733,7 +735,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Get the requested errus
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getRequestedErrus()
     {
@@ -743,7 +745,7 @@ abstract class AbstractSeriousInfringement implements BundleSerializableInterfac
     /**
      * Add a requested errus
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $requestedErrus collection being added
+     * @param ArrayCollection|mixed $requestedErrus collection being added
      *
      * @return SeriousInfringement
      */

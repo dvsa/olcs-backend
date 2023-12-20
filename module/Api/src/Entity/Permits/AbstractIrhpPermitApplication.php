@@ -650,7 +650,8 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getStartDate($asDateTime = false)
     {
@@ -712,7 +713,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the answer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being set as the value
+     * @param ArrayCollection $answers collection being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -726,7 +727,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the answers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getAnswers()
     {
@@ -736,7 +737,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Add a answers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being added
+     * @param ArrayCollection|mixed $answers collection being added
      *
      * @return IrhpPermitApplication
      */
@@ -775,7 +776,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the fee
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     * @param ArrayCollection $fees collection being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -789,7 +790,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the fees
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getFees()
     {
@@ -799,7 +800,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Add a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     * @param ArrayCollection|mixed $fees collection being added
      *
      * @return IrhpPermitApplication
      */
@@ -838,7 +839,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the irhp candidate permit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being set as the value
+     * @param ArrayCollection $irhpCandidatePermits collection being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -852,7 +853,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the irhp candidate permits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpCandidatePermits()
     {
@@ -862,7 +863,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Add a irhp candidate permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being added
+     * @param ArrayCollection|mixed $irhpCandidatePermits collection being added
      *
      * @return IrhpPermitApplication
      */
@@ -901,7 +902,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the irhp permit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being set as the value
+     * @param ArrayCollection $irhpPermits collection being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -915,7 +916,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the irhp permits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermits()
     {
@@ -925,7 +926,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Add a irhp permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being added
+     * @param ArrayCollection|mixed $irhpPermits collection being added
      *
      * @return IrhpPermitApplication
      */
@@ -964,7 +965,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Set the irhp permit request
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being set as the value
+     * @param ArrayCollection $irhpPermitRequests collection being set as the value
      *
      * @return IrhpPermitApplication
      */
@@ -978,7 +979,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Get the irhp permit requests
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitRequests()
     {
@@ -988,7 +989,7 @@ abstract class AbstractIrhpPermitApplication implements BundleSerializableInterf
     /**
      * Add a irhp permit requests
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being added
+     * @param ArrayCollection|mixed $irhpPermitRequests collection being added
      *
      * @return IrhpPermitApplication
      */

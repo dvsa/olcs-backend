@@ -343,7 +343,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     /**
      * Set the licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being set as the value
+     * @param ArrayCollection $licences collection being set as the value
      *
      * @return Decision
      */
@@ -357,7 +357,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     /**
      * Get the licences
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getLicences()
     {
@@ -367,7 +367,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     /**
      * Add a licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being added
+     * @param ArrayCollection|mixed $licences collection being added
      *
      * @return Decision
      */
@@ -406,7 +406,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     /**
      * Set the pi
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being set as the value
+     * @param ArrayCollection $pis collection being set as the value
      *
      * @return Decision
      */
@@ -420,7 +420,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     /**
      * Get the pis
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPis()
     {
@@ -430,7 +430,7 @@ abstract class AbstractDecision implements BundleSerializableInterface, JsonSeri
     /**
      * Add a pis
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being added
+     * @param ArrayCollection|mixed $pis collection being added
      *
      * @return Decision
      */

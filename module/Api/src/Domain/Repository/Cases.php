@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
@@ -26,7 +27,7 @@ class Cases extends AbstractRepository
      *
      * @param QryCmd $query       Http Query
      * @param int    $hydrateMode Hydrate mode
-     * @param null   $version     Version
+     * @param int|null   $version     Version
      *
      * @return mixed
      * @throws Exception\NotFoundException
@@ -49,7 +50,7 @@ class Cases extends AbstractRepository
             throw new Exception\NotFoundException('Resource not found');
         }
 
-        if ($hydrateMode === Query::HYDRATE_OBJECT && $version !== null) {
+        if ($hydrateMode === AbstractQuery::HYDRATE_OBJECT && $version !== null) {
             $this->lock($results[0], $version);
         }
 

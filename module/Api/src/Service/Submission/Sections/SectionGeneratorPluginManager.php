@@ -4,6 +4,9 @@ namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Laminas\ServiceManager\AbstractPluginManager;
 
+/**
+ * @template-extends AbstractPluginManager<SectionGeneratorInterface>
+ */
 class SectionGeneratorPluginManager extends AbstractPluginManager
 {
     protected $instanceOf = SectionGeneratorInterface::class;

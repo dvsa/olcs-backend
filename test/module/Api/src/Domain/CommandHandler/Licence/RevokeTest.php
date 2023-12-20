@@ -411,7 +411,7 @@ class RevokeTest extends CommandHandlerTestCase
 
     /**
      *
-     * @param Licence $licence
+     * @param LicenceEntity $licence
      * @param int     $id
      * @param string  $status
      * @param bool    $isVariation

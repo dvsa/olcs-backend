@@ -6,6 +6,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
 
 /**
@@ -23,7 +24,7 @@ class FinancialStandingRate extends AbstractRepository
      * @param \DateTime $date
      *
      * @return array \Dvsa\Olcs\Api\Entity\System\FinancialStandingRate
-     * @throws Exception\NotFoundException
+     * @throws NotFoundException
      */
     public function fetchRatesInEffect(\DateTime $date)
     {
@@ -40,7 +41,7 @@ class FinancialStandingRate extends AbstractRepository
         $results = $qb->getQuery()->execute();
 
         if (empty($results)) {
-            throw new Exception\NotFoundException('No effective rates found');
+            throw new NotFoundException('No effective rates found');
         }
 
         return $results;

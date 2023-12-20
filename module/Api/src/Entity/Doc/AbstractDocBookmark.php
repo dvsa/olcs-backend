@@ -276,7 +276,7 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Set the doc paragraph bookmark
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks collection being set as the value
+     * @param ArrayCollection $docParagraphBookmarks collection being set as the value
      *
      * @return DocBookmark
      */
@@ -290,7 +290,7 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Get the doc paragraph bookmarks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocParagraphBookmarks()
     {
@@ -300,7 +300,7 @@ abstract class AbstractDocBookmark implements BundleSerializableInterface, JsonS
     /**
      * Add a doc paragraph bookmarks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docParagraphBookmarks collection being added
+     * @param ArrayCollection|mixed $docParagraphBookmarks collection being added
      *
      * @return DocBookmark
      */

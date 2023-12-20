@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\TmEmployment;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
+use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**
  * Modify TmEmployment list

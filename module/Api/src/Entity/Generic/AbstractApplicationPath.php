@@ -230,7 +230,8 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getEffectiveFrom($asDateTime = false)
     {
@@ -364,7 +365,7 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
     /**
      * Set the application step
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationSteps collection being set as the value
+     * @param ArrayCollection $applicationSteps collection being set as the value
      *
      * @return ApplicationPath
      */
@@ -378,7 +379,7 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
     /**
      * Get the application steps
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationSteps()
     {
@@ -388,7 +389,7 @@ abstract class AbstractApplicationPath implements BundleSerializableInterface, J
     /**
      * Add a application steps
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationSteps collection being added
+     * @param ArrayCollection|mixed $applicationSteps collection being added
      *
      * @return ApplicationPath
      */

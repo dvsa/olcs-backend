@@ -23,7 +23,7 @@ trait TotAuthVehiclesTraitTest
 
     /**
      * @test
-     * @depends updateTotAuthHgvVehicles_IsCallable
+     * @depends updateTotAuthHgvVehiclesIsCallable
      */
     public function updateTotAuthHgvVehiclesReturnsSelf()
     {
@@ -53,7 +53,7 @@ trait TotAuthVehiclesTraitTest
     /**
      * @param mixed $count
      * @test
-     * @depends updateTotAuthHgvVehicles_IsCallable
+     * @depends updateTotAuthHgvVehiclesIsCallable
      * @dataProvider validTotAuthHgvVehiclesCountsDataProvider
      */
     public function updateTotAuthHgvVehiclesSetsTotAuthHgvVehicles($count)
@@ -84,7 +84,7 @@ trait TotAuthVehiclesTraitTest
     /**
      * @param mixed $count
      * @test
-     * @depends updateTotAuthHgvVehicles_IsCallable
+     * @depends updateTotAuthHgvVehiclesIsCallable
      * @dataProvider invalidTotAuthHgvVehiclesCountsDataProvider
      */
     public function updateTotAuthHgvVehiclesRejectsInvalidValues($count)
@@ -102,7 +102,7 @@ trait TotAuthVehiclesTraitTest
 
     /**
      * @test
-     * @depends updateTotAuthHgvVehicles_IsCallable
+     * @depends updateTotAuthHgvVehiclesIsCallable
      */
     public function updateTotAuthHgvVehiclesSetsTotAuthVehiclesToTheTotalOfLgvsAndHgvs()
     {
@@ -133,7 +133,7 @@ trait TotAuthVehiclesTraitTest
 
     /**
      * @test
-     * @depends updateTotAuthLgvVehicles_IsCallable
+     * @depends updateTotAuthLgvVehiclesIsCallable
      */
     public function updateTotAuthLgvVehiclesReturnsSelf()
     {
@@ -163,7 +163,7 @@ trait TotAuthVehiclesTraitTest
     /**
      * @param mixed $count
      * @test
-     * @depends updateTotAuthLgvVehicles_IsCallable
+     * @depends updateTotAuthLgvVehiclesIsCallable
      * @dataProvider validTotAuthLgvVehiclesCountsDataProvider
      */
     public function updateTotAuthLgvVehiclesSetsTotAuthHgvVehicles($count)
@@ -194,7 +194,7 @@ trait TotAuthVehiclesTraitTest
     /**
      * @param mixed $count
      * @test
-     * @depends updateTotAuthLgvVehicles_IsCallable
+     * @depends updateTotAuthLgvVehiclesIsCallable
      * @dataProvider invalidTotAuthLgvVehiclesCountsDataProvider
      */
     public function updateTotAuthLgvVehiclesRejectsInvalidValues($count)
@@ -212,7 +212,7 @@ trait TotAuthVehiclesTraitTest
 
     /**
      * @test
-     * @depends updateTotAuthLgvVehicles_IsCallable
+     * @depends updateTotAuthLgvVehiclesIsCallable
      */
     public function updateTotAuthLgvVehiclesSetsTotAuthVehiclesToTheTotalOfLgvsAndHgvs()
     {

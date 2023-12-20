@@ -8,6 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Command\Queue;
 
+use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 
 /**
@@ -18,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
 final class Retry extends AbstractCommand
 {
     /**
-     * @var Dvsa\Olcs\Api\Entity\Queue
+     * @var Queue
      */
     protected $item;
 
@@ -33,7 +34,7 @@ final class Retry extends AbstractCommand
     protected $lastError;
 
     /**
-     * @return Dvsa\Olcs\Api\Entity\Queue
+     * @return Queue
      */
     public function getItem()
     {

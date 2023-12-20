@@ -7,6 +7,9 @@ use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 
+/**
+ * @template-extends AbstractPluginManager<FormControlStrategyInterface>
+ */
 class FormControlServiceManager extends AbstractPluginManager
 {
     protected $instanceOf = FormControlStrategyInterface::class;

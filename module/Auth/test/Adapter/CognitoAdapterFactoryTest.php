@@ -40,7 +40,7 @@ class CognitoAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfCognitoAdapter()
     {

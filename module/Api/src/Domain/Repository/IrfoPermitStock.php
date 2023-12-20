@@ -6,6 +6,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\QueryException;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as Entity;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -44,8 +45,7 @@ class IrfoPermitStock extends AbstractRepository
      *
      * @param Query|QryCmd $query
      * @return mixed
-     * @throws Exception\NotFoundException
-     * @throws Exception\VersionConflictException
+     * @throws QueryException
      */
     public function fetchUsingSerialNoStartEnd(QryCmd $query)
     {

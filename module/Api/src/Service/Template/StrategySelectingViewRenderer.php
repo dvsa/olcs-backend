@@ -14,7 +14,7 @@ class StrategySelectingViewRenderer
     /** @var TwigRenderer */
     private $twigRenderer;
 
-    /** @var LoaderInterface */
+    /** @var TwigLoader */
     private $twigLoader;
 
     /**

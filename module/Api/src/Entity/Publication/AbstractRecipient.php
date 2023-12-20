@@ -432,7 +432,7 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Set the traffic area
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being set as the value
+     * @param ArrayCollection $trafficAreas collection being set as the value
      *
      * @return Recipient
      */
@@ -446,7 +446,7 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Get the traffic areas
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTrafficAreas()
     {
@@ -456,7 +456,7 @@ abstract class AbstractRecipient implements BundleSerializableInterface, JsonSer
     /**
      * Add a traffic areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being added
+     * @param ArrayCollection|mixed $trafficAreas collection being added
      *
      * @return Recipient
      */

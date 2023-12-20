@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Permits\CanAccessIrhpApplicationWit
 
 return [
     QueryHandler\IrhpCandidatePermit\ById::class => IsInternalUser::class,
-    QueryHandler\IrhpCandidatePermit\GetList::class => IsInternalUser::class,
     QueryHandler\IrhpCandidatePermit\GetListByIrhpApplication::class
         => CanAccessIrhpApplicationWithIrhpApplication::class,
     CommandHandler\IrhpCandidatePermit\Delete::class => IsInternalUser::class,

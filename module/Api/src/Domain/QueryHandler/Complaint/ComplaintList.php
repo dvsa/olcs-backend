@@ -15,7 +15,7 @@ final class ComplaintList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var ComplaintRepo $repo */
+        /** @var \Dvsa\Olcs\Api\Domain\Repository\Complaint $repo */
         $repo = $this->getRepo();
         return [
             'result' => $this->resultList(

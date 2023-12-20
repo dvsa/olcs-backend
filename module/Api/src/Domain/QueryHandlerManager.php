@@ -11,6 +11,9 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
 
+/**
+ * @template-extends AbstractPluginManager<QueryHandlerInterface>
+ */
 class QueryHandlerManager extends AbstractPluginManager
 {
     protected $instanceOf = QueryHandlerInterface::class;

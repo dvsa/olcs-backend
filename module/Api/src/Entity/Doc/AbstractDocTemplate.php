@@ -454,7 +454,7 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Set the doc template bookmark
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks collection being set as the value
+     * @param ArrayCollection $docTemplateBookmarks collection being set as the value
      *
      * @return DocTemplate
      */
@@ -468,7 +468,7 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Get the doc template bookmarks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocTemplateBookmarks()
     {
@@ -478,7 +478,7 @@ abstract class AbstractDocTemplate implements BundleSerializableInterface, JsonS
     /**
      * Add a doc template bookmarks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $docTemplateBookmarks collection being added
+     * @param ArrayCollection|mixed $docTemplateBookmarks collection being added
      *
      * @return DocTemplate
      */

@@ -561,7 +561,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Set the irhp permit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being set as the value
+     * @param ArrayCollection $irhpPermits collection being set as the value
      *
      * @return IrhpCandidatePermit
      */
@@ -575,7 +575,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Get the irhp permits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermits()
     {
@@ -585,7 +585,7 @@ abstract class AbstractIrhpCandidatePermit implements BundleSerializableInterfac
     /**
      * Add a irhp permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being added
+     * @param ArrayCollection|mixed $irhpPermits collection being added
      *
      * @return IrhpCandidatePermit
      */

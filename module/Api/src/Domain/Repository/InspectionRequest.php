@@ -81,8 +81,8 @@ class InspectionRequest extends AbstractRepository
     }
 
     /**
-     * @param QueryBuilder             $qb
-     * @param InspectionRequestListDTO $query
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {

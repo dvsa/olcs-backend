@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegBrowseView;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -21,7 +22,7 @@ class BusRegBrowseContextList extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Repository $repo */
+        /** @var BusRegBrowseView $repo */
         $repo = $this->getRepo();
 
         $results = $repo->fetchDistinctList($query->getContext());

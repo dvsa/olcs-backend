@@ -430,7 +430,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getIssuedDate($asDateTime = false)
     {
@@ -556,7 +557,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRequestedDate($asDateTime = false)
     {
@@ -658,7 +660,8 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getStoppedDate($asDateTime = false)
     {
@@ -720,7 +723,7 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     * @param ArrayCollection $slaTargetDates collection being set as the value
      *
      * @return Statement
      */
@@ -734,7 +737,7 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Get the sla target dates
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSlaTargetDates()
     {
@@ -744,7 +747,7 @@ abstract class AbstractStatement implements BundleSerializableInterface, JsonSer
     /**
      * Add a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     * @param ArrayCollection|mixed $slaTargetDates collection being added
      *
      * @return Statement
      */

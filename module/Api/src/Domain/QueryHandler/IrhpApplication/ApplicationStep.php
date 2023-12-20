@@ -4,7 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpApplication;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
-use Dvsa\Olcs\Transfer\Query\Qa\ApplicationStep as ApplicationStepQry;
+use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep as ApplicationStepQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;

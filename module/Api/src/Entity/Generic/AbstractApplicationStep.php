@@ -453,7 +453,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Set the application validation
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationValidations collection being set as the value
+     * @param ArrayCollection $applicationValidations collection being set as the value
      *
      * @return ApplicationStep
      */
@@ -467,7 +467,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Get the application validations
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationValidations()
     {
@@ -477,7 +477,7 @@ abstract class AbstractApplicationStep implements BundleSerializableInterface, J
     /**
      * Add a application validations
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationValidations collection being added
+     * @param ArrayCollection|mixed $applicationValidations collection being added
      *
      * @return ApplicationStep
      */

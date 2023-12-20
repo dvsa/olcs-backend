@@ -10,12 +10,12 @@ use Dvsa\Olcs\Api\Service\CpmsHelperInterface;
 interface CpmsAwareInterface
 {
     /**
-     * @param Dvsa\Olcs\Api\Service\CpmsHelperInterface $service
+     * @param CpmsHelperInterface $service
      */
     public function setCpmsService(CpmsHelperInterface $service);
 
     /**
-     * @return Dvsa\Olcs\Api\Service\CpmsHelperInterface
+     * @return CpmsHelperInterface
      */
     public function getCpmsService();
 }

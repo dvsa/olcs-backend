@@ -279,7 +279,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     /**
      * Set the translation key text
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTexts collection being set as the value
+     * @param ArrayCollection $translationKeyTexts collection being set as the value
      *
      * @return TranslationKey
      */
@@ -293,7 +293,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     /**
      * Get the translation key texts
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTranslationKeyTexts()
     {
@@ -303,7 +303,7 @@ abstract class AbstractTranslationKey implements BundleSerializableInterface, Js
     /**
      * Add a translation key texts
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $translationKeyTexts collection being added
+     * @param ArrayCollection|mixed $translationKeyTexts collection being added
      *
      * @return TranslationKey
      */

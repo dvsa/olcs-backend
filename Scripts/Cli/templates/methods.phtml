@@ -4,7 +4,7 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatParamName($item); ?> collection being set as the value
+     * @param ArrayCollection $<?php echo $this->formatParamName($item); ?> collection being set as the value
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatParamName($item); ?> entity being set as the value
 <?php else: ?>
@@ -26,12 +26,12 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @return \Doctrine\Common\Collections\ArrayCollection<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
+     * @return ArrayCollection<?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @return \<?php echo $field['@attributes']['target-entity']; ?>
 <?php elseif ($this->getPhpTypeFromType($field['@attributes']['type']) === '\DateTime'): ?>
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
+     * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>|string
 <?php else: ?>
      * @return <?php echo $this->getPhpTypeFromType($field['@attributes']['type']); ?>
 <?php endif; ?>
@@ -61,7 +61,7 @@
 
      *
 <?php if (in_array($item['type'], array('oneToMany', 'manyToMany'))): ?>
-     * @param \Doctrine\Common\Collections\ArrayCollection $<?php echo $this->formatPropertyName($item); ?> collection being added
+     * @param ArrayCollection|mixed $<?php echo $this->formatPropertyName($item); ?> collection being added
 <?php elseif (in_array($item['type'], array('oneToOne', 'manyToOne'))): ?>
      * @param \<?php echo $field['@attributes']['target-entity']; ?> $<?php echo $this->formatPropertyName($item); ?> entity being added
 <?php else: ?>

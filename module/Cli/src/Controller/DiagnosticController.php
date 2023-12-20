@@ -386,7 +386,7 @@ class DiagnosticController extends AbstractConsoleController
             $this->outputMessage('Fetch company by number ' . self::COMPANIES_HOUSE_SEARCH_NUMBER . ' : ');
             $result = $this->companiesHouseService->getCompanyProfile(self::COMPANIES_HOUSE_SEARCH_NUMBER, true);
             if (!is_array($result) || count($result) === 0) {
-                $this->outputFail('No results found for search term: ' . self::COMPANIES_HOUSE_SEARCH_NAME);
+                $this->outputFail('No results found for search term');
             } else {
                 $this->outputPass();
             }

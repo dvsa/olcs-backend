@@ -389,7 +389,8 @@ abstract class AbstractPublication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPubDate($asDateTime = false)
     {
@@ -523,7 +524,7 @@ abstract class AbstractPublication implements BundleSerializableInterface, JsonS
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     * @param ArrayCollection $publicationLinks collection being set as the value
      *
      * @return Publication
      */
@@ -537,7 +538,7 @@ abstract class AbstractPublication implements BundleSerializableInterface, JsonS
     /**
      * Get the publication links
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPublicationLinks()
     {
@@ -547,7 +548,7 @@ abstract class AbstractPublication implements BundleSerializableInterface, JsonS
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     * @param ArrayCollection|mixed $publicationLinks collection being added
      *
      * @return Publication
      */

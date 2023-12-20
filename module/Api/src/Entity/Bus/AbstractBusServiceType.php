@@ -90,7 +90,7 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Set the bus reg
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being set as the value
+     * @param ArrayCollection $busRegs collection being set as the value
      *
      * @return BusServiceType
      */
@@ -104,7 +104,7 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Get the bus regs
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getBusRegs()
     {
@@ -114,7 +114,7 @@ abstract class AbstractBusServiceType implements BundleSerializableInterface, Js
     /**
      * Add a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being added
+     * @param ArrayCollection|mixed $busRegs collection being added
      *
      * @return BusServiceType
      */

@@ -373,7 +373,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getApplicationSentDate($asDateTime = false)
     {
@@ -483,7 +484,7 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the country
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     * @param ArrayCollection $countrys collection being set as the value
      *
      * @return IrfoPsvAuth
      */
@@ -497,7 +498,7 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the countrys
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCountrys()
     {
@@ -507,7 +508,7 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Add a countrys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     * @param ArrayCollection|mixed $countrys collection being added
      *
      * @return IrfoPsvAuth
      */
@@ -610,7 +611,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getExpiryDate($asDateTime = false)
     {
@@ -664,7 +666,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getInForceDate($asDateTime = false)
     {
@@ -838,7 +841,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getLastDateCopiesReq($asDateTime = false)
     {
@@ -916,7 +920,8 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRenewalDate($asDateTime = false)
     {
@@ -1074,7 +1079,7 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Set the irfo psv auth number
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers collection being set as the value
+     * @param ArrayCollection $irfoPsvAuthNumbers collection being set as the value
      *
      * @return IrfoPsvAuth
      */
@@ -1088,7 +1093,7 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Get the irfo psv auth numbers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrfoPsvAuthNumbers()
     {
@@ -1098,7 +1103,7 @@ abstract class AbstractIrfoPsvAuth implements BundleSerializableInterface, JsonS
     /**
      * Add a irfo psv auth numbers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPsvAuthNumbers collection being added
+     * @param ArrayCollection|mixed $irfoPsvAuthNumbers collection being added
      *
      * @return IrfoPsvAuth
      */

@@ -405,7 +405,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getApprovalSubmissionIssuedDate($asDateTime = false)
     {
@@ -459,7 +460,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getApprovalSubmissionReturnedDate($asDateTime = false)
     {
@@ -537,7 +539,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getClosedDate($asDateTime = false)
     {
@@ -615,7 +618,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getFinalSubmissionIssuedDate($asDateTime = false)
     {
@@ -669,7 +673,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getFinalSubmissionReturnedDate($asDateTime = false)
     {
@@ -723,7 +728,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getIorLetterIssuedDate($asDateTime = false)
     {
@@ -825,7 +831,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getNfaLetterIssuedDate($asDateTime = false)
     {
@@ -855,7 +862,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOperatorResponseDueDate($asDateTime = false)
     {
@@ -885,7 +893,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOperatorResponseReceivedDate($asDateTime = false)
     {
@@ -915,7 +924,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOtherActionAgreedDate($asDateTime = false)
     {
@@ -945,7 +955,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPiAgreedDate($asDateTime = false)
     {
@@ -999,7 +1010,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPtrAgreedDate($asDateTime = false)
     {
@@ -1013,7 +1025,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     * @param ArrayCollection $reasons collection being set as the value
      *
      * @return ProposeToRevoke
      */
@@ -1027,7 +1039,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Get the reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReasons()
     {
@@ -1037,7 +1049,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     * @param ArrayCollection|mixed $reasons collection being added
      *
      * @return ProposeToRevoke
      */
@@ -1092,7 +1104,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRevocationLetterIssuedDate($asDateTime = false)
     {
@@ -1146,7 +1159,8 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWarningLetterIssuedDate($asDateTime = false)
     {
@@ -1160,7 +1174,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     * @param ArrayCollection $slaTargetDates collection being set as the value
      *
      * @return ProposeToRevoke
      */
@@ -1174,7 +1188,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Get the sla target dates
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSlaTargetDates()
     {
@@ -1184,7 +1198,7 @@ abstract class AbstractProposeToRevoke implements BundleSerializableInterface, J
     /**
      * Add a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     * @param ArrayCollection|mixed $slaTargetDates collection being added
      *
      * @return ProposeToRevoke
      */

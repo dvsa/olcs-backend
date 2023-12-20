@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic;
 
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
@@ -48,7 +49,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      *
      * @return Result
      * @throws ValidationException
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -96,12 +97,12 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
     /**
      * Update community licence status
      *
-     * @param CommunityLic $communityLicence community licence
+     * @param CommunityLicEntity $communityLicence community licence
      * @param string       $type             type
      * @param string       $startDate        start date
      *
      * @return mixed
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     protected function updateCommunityLicenceStatus($communityLicence, $type, $startDate)
     {
@@ -135,7 +136,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      * @param array $communityLics community licences
      * @param array $reasons       reasons
      *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      * @return void
      */
     protected function createWithrawalAndReasons($communityLics, $reasons)
@@ -162,7 +163,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      * @param string $startDate     start date
      * @param string $endDate       end date
      *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      * @return void
      */
     protected function createSuspensionAndReasons($communityLics, $reasons, $startDate, $endDate)
@@ -188,7 +189,7 @@ final class Stop extends AbstractCommandHandler implements TransactionedInterfac
      * @param int                                           $licenceId licence id
      *
      * @throws ValidationException
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      * @return void
      */
     protected function validateLicences($command, $licenceId)

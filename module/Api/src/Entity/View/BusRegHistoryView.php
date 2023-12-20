@@ -18,6 +18,8 @@ namespace Dvsa\Olcs\Api\Entity\View;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
+use Dvsa\Olcs\Api\Entity\User\User;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 
@@ -80,7 +82,7 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     /**
      * Event history type
      *
-     * @var \Dvsa\Olcs\Api\Entity\EventHistoryType
+     * @var EventHistory
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType")
      * @ORM\JoinColumn(name="event_history_type_id", referencedColumnName="id", nullable=false)
@@ -90,7 +92,7 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     /**
      * User
      *
-     * @var \Dvsa\Olcs\Api\Entity\User
+     * @var User
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\User\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
@@ -147,7 +149,7 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * @return \Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType
+     * @return EventHistory
      */
     public function getEventHistoryType()
     {
@@ -155,7 +157,7 @@ class BusRegHistoryView implements BundleSerializableInterface, JsonSerializable
     }
 
     /**
-     * @return \Dvsa\Olcs\Api\Entity\User\User
+     * @return User
      */
     public function getUser()
     {

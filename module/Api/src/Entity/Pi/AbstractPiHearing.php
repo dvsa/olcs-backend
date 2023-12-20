@@ -278,7 +278,8 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAdjournedDate($asDateTime = false)
     {
@@ -332,7 +333,8 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCancelledDate($asDateTime = false)
     {
@@ -458,7 +460,8 @@ abstract class AbstractPiHearing implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getHearingDate($asDateTime = false)
     {

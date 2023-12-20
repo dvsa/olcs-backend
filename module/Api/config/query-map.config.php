@@ -408,9 +408,6 @@ return [
     TransferQuery\LicenceVehicle\PsvLicenceVehicle::class => QueryHandler\LicenceVehicle\PsvLicenceVehicle::class,
     TransferQuery\LicenceVehicle\LicenceVehiclesById::class => QueryHandler\LicenceVehicle\LicenceVehiclesById::class,
 
-    // Inspection Request
-    TransferQuery\InspectionRequest\OperatingCentres::class => QueryHandler\InspectionRequest\OperatingCentres::class,
-
     // Opposition
     TransferQuery\Opposition\Opposition::class => QueryHandler\Opposition\Opposition::class,
     TransferQuery\Opposition\OppositionList::class => QueryHandler\Opposition\OppositionList::class,
@@ -452,7 +449,6 @@ return [
     // Companies House
     QueryCli\CompaniesHouse\Organisations::class => QueryHandlerCli\CompaniesHouse\Organisations::class,
     TransferQuery\CompaniesHouse\AlertList::class => QueryHandler\CompaniesHouse\AlertList::class,
-    TransferQuery\CompaniesHouse\GetList::class => QueryHandler\CompaniesHouse\GetList::class,
     TransferQuery\CompaniesHouse\ByNumber::class => QueryHandler\CompaniesHouse\ByNumber::class,
 
     // Queue

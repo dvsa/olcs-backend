@@ -554,7 +554,7 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Set the licence vehicle
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being set as the value
+     * @param ArrayCollection $licenceVehicles collection being set as the value
      *
      * @return Vehicle
      */
@@ -568,7 +568,7 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Get the licence vehicles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getLicenceVehicles()
     {
@@ -578,7 +578,7 @@ abstract class AbstractVehicle implements BundleSerializableInterface, JsonSeria
     /**
      * Add a licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being added
+     * @param ArrayCollection|mixed $licenceVehicles collection being added
      *
      * @return Vehicle
      */

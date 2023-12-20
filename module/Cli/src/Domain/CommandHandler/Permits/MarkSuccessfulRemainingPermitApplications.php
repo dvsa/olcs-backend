@@ -5,8 +5,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
-use Dvsa\Olcs\Cli\Domain\Command\MarkSuccessfulRemainingPermitApplications
-    as MarkSuccessfulRemainingPermitApplicationsCommand;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Interop\Container\Containerinterface;
 

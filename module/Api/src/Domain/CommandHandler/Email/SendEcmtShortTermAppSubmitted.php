@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 /**
  * Send ECMT short term app submitted email

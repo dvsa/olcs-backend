@@ -381,7 +381,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDisabledDate($asDateTime = false)
     {
@@ -435,7 +436,8 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getLastLoginAt($asDateTime = false)
     {
@@ -593,7 +595,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the role
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles collection being set as the value
+     * @param ArrayCollection $roles collection being set as the value
      *
      * @return User
      */
@@ -607,7 +609,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the roles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getRoles()
     {
@@ -617,7 +619,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a roles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $roles collection being added
+     * @param ArrayCollection|mixed $roles collection being added
      *
      * @return User
      */
@@ -752,7 +754,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the organisation user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being set as the value
+     * @param ArrayCollection $organisationUsers collection being set as the value
      *
      * @return User
      */
@@ -766,7 +768,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the organisation users
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOrganisationUsers()
     {
@@ -776,7 +778,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a organisation users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being added
+     * @param ArrayCollection|mixed $organisationUsers collection being added
      *
      * @return User
      */
@@ -815,7 +817,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the password reset
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $passwordResets collection being set as the value
+     * @param ArrayCollection $passwordResets collection being set as the value
      *
      * @return User
      */
@@ -829,7 +831,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the password resets
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPasswordResets()
     {
@@ -839,7 +841,7 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a password resets
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $passwordResets collection being added
+     * @param ArrayCollection|mixed $passwordResets collection being added
      *
      * @return User
      */

@@ -24,7 +24,7 @@ class Transaction extends AbstractRepository
      *
      * @param string $reference   Reference Nu
      * @param int    $hydrateMode Hydration mode
-     * @param null   $version     Version Nr
+     * @param int|null   $version     Version Nr
      *
      * @return Entity
      */

@@ -337,7 +337,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDecisionDate($asDateTime = false)
     {
@@ -463,7 +464,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getNotifiedDate($asDateTime = false)
     {
@@ -501,7 +503,7 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the rehab measure
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures collection being set as the value
+     * @param ArrayCollection $rehabMeasures collection being set as the value
      *
      * @return TmCaseDecision
      */
@@ -515,7 +517,7 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the rehab measures
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getRehabMeasures()
     {
@@ -525,7 +527,7 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Add a rehab measures
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rehabMeasures collection being added
+     * @param ArrayCollection|mixed $rehabMeasures collection being added
      *
      * @return TmCaseDecision
      */
@@ -604,7 +606,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getUnfitnessEndDate($asDateTime = false)
     {
@@ -618,7 +621,7 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Set the unfitness reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons collection being set as the value
+     * @param ArrayCollection $unfitnessReasons collection being set as the value
      *
      * @return TmCaseDecision
      */
@@ -632,7 +635,7 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Get the unfitness reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUnfitnessReasons()
     {
@@ -642,7 +645,7 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
     /**
      * Add a unfitness reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $unfitnessReasons collection being added
+     * @param ArrayCollection|mixed $unfitnessReasons collection being added
      *
      * @return TmCaseDecision
      */
@@ -697,7 +700,8 @@ abstract class AbstractTmCaseDecision implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getUnfitnessStartDate($asDateTime = false)
     {

@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegBrowseView;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Laminas\Http\Response;
 
@@ -47,7 +48,7 @@ class BusRegBrowseExport extends AbstractQueryHandler
      */
     public function handleQuery(QueryInterface $query)
     {
-        /** @var Repository $repo */
+        /** @var BusRegBrowseView $repo */
         $repo = $this->getRepo();
 
         $acceptedDate = $query->getAcceptedDate();

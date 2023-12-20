@@ -618,7 +618,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAgreedDate($asDateTime = false)
     {
@@ -696,7 +697,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getBriefToTcDate($asDateTime = false)
     {
@@ -726,7 +728,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCallUpLetterDate($asDateTime = false)
     {
@@ -780,7 +783,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getClosedDate($asDateTime = false)
     {
@@ -906,7 +910,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDecisionDate($asDateTime = false)
     {
@@ -936,7 +941,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDecisionLetterSentDate($asDateTime = false)
     {
@@ -974,7 +980,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the decision
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $decisions collection being set as the value
+     * @param ArrayCollection $decisions collection being set as the value
      *
      * @return Pi
      */
@@ -988,7 +994,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the decisions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDecisions()
     {
@@ -998,7 +1004,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $decisions collection being added
+     * @param ArrayCollection|mixed $decisions collection being added
      *
      * @return Pi
      */
@@ -1053,7 +1059,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getEcmsFirstReceivedDate($asDateTime = false)
     {
@@ -1251,7 +1258,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getNotificationDate($asDateTime = false)
     {
@@ -1337,7 +1345,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the pi type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes collection being set as the value
+     * @param ArrayCollection $piTypes collection being set as the value
      *
      * @return Pi
      */
@@ -1351,7 +1359,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the pi types
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPiTypes()
     {
@@ -1361,7 +1369,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a pi types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piTypes collection being added
+     * @param ArrayCollection|mixed $piTypes collection being added
      *
      * @return Pi
      */
@@ -1400,7 +1408,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     * @param ArrayCollection $reasons collection being set as the value
      *
      * @return Pi
      */
@@ -1414,7 +1422,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReasons()
     {
@@ -1424,7 +1432,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     * @param ArrayCollection|mixed $reasons collection being added
      *
      * @return Pi
      */
@@ -1479,7 +1487,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getTcWrittenDecisionDate($asDateTime = false)
     {
@@ -1509,7 +1518,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getTcWrittenReasonDate($asDateTime = false)
     {
@@ -1547,7 +1557,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the tm decision
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being set as the value
+     * @param ArrayCollection $tmDecisions collection being set as the value
      *
      * @return Pi
      */
@@ -1561,7 +1571,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the tm decisions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTmDecisions()
     {
@@ -1571,7 +1581,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a tm decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being added
+     * @param ArrayCollection|mixed $tmDecisions collection being added
      *
      * @return Pi
      */
@@ -1674,7 +1684,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWrittenDecisionLetterDate($asDateTime = false)
     {
@@ -1728,7 +1739,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWrittenReasonDate($asDateTime = false)
     {
@@ -1758,7 +1770,8 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWrittenReasonLetterDate($asDateTime = false)
     {
@@ -1772,7 +1785,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the pi hearing
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings collection being set as the value
+     * @param ArrayCollection $piHearings collection being set as the value
      *
      * @return Pi
      */
@@ -1786,7 +1799,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the pi hearings
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPiHearings()
     {
@@ -1796,7 +1809,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a pi hearings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $piHearings collection being added
+     * @param ArrayCollection|mixed $piHearings collection being added
      *
      * @return Pi
      */
@@ -1835,7 +1848,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     * @param ArrayCollection $publicationLinks collection being set as the value
      *
      * @return Pi
      */
@@ -1849,7 +1862,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the publication links
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPublicationLinks()
     {
@@ -1859,7 +1872,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     * @param ArrayCollection|mixed $publicationLinks collection being added
      *
      * @return Pi
      */
@@ -1898,7 +1911,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     * @param ArrayCollection $slaTargetDates collection being set as the value
      *
      * @return Pi
      */
@@ -1912,7 +1925,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the sla target dates
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSlaTargetDates()
     {
@@ -1922,7 +1935,7 @@ abstract class AbstractPi implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     * @param ArrayCollection|mixed $slaTargetDates collection being added
      *
      * @return Pi
      */

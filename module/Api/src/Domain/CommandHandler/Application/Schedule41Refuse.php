@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\DeleteConditionUnder
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\RefuseS4;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**

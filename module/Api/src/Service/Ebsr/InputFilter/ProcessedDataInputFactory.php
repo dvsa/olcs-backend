@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\VariationNumber;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class ProcessedDataInputFactory

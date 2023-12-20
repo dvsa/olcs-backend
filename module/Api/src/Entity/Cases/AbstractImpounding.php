@@ -257,7 +257,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getApplicationReceiptDate($asDateTime = false)
     {
@@ -311,7 +312,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCloseDate($asDateTime = false)
     {
@@ -365,7 +367,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getHearingDate($asDateTime = false)
     {
@@ -403,7 +406,7 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Set the impounding legislation type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes collection being set as the value
+     * @param ArrayCollection $impoundingLegislationTypes collection being set as the value
      *
      * @return Impounding
      */
@@ -417,7 +420,7 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Get the impounding legislation types
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getImpoundingLegislationTypes()
     {
@@ -427,7 +430,7 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
     /**
      * Add a impounding legislation types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $impoundingLegislationTypes collection being added
+     * @param ArrayCollection|mixed $impoundingLegislationTypes collection being added
      *
      * @return Impounding
      */
@@ -578,7 +581,8 @@ abstract class AbstractImpounding implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOutcomeSentDate($asDateTime = false)
     {

@@ -20,6 +20,11 @@ class Single extends AbstractQueryHandler implements CacheAwareInterface
 
         $queryData = ['id' => $query->getUniqueId()];
         $queryDto = $this->cacheService->getQueryFromCustomIdentifier($query->getId());
+
+        if (!(is_a($queryDto, QueryInterface::class, true))) {
+            throw new \Exception('Query not found');
+        }
+
         $childQuery = $queryDto::create($queryData);
 
         return $this->getQueryHandler()->handleQuery($childQuery);

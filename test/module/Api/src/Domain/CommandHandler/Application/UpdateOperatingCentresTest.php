@@ -69,7 +69,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPartialMissingTa()
     {
@@ -117,7 +117,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvTooManyCommLic()
     {
@@ -189,7 +189,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandGvInvalid()
     {
@@ -265,7 +265,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandGvValid()
     {
@@ -372,7 +372,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandTrafficAreaValidation()
     {
@@ -484,7 +484,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvValid()
     {
@@ -592,7 +592,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvValidVariationWithTa()
     {
@@ -704,7 +704,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandSavesAVariationWithValidVehicleAuthorisations()
     {
@@ -732,7 +732,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesAVariationWithValidVehicleAuthorisations
+     * @depends handleCommandSavesAVariationWithValidVehicleAuthorisations
      */
     public function handleCommandSetsTotAuthVehiclesForGoodsVehicleOperatingCentre()
     {
@@ -760,7 +760,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesAVariationWithValidVehicleAuthorisations
+     * @depends handleCommandSavesAVariationWithValidVehicleAuthorisations
      */
     public function handleCommandSetsTotAuthVehiclesForPsvOperatingCentre()
     {
@@ -788,7 +788,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesAVariationWithValidVehicleAuthorisations
+     * @depends handleCommandSavesAVariationWithValidVehicleAuthorisations
      */
     public function handleCommandSetsTotAuthHgvVehiclesForGoodsVehicleOperatingCentre()
     {
@@ -816,7 +816,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesAVariationWithValidVehicleAuthorisations
+     * @depends handleCommandSavesAVariationWithValidVehicleAuthorisations
      */
     public function handleCommandSetsTotAuthHgvVehiclesForPsvOperatingCentre()
     {
@@ -844,7 +844,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesAVariationWithValidVehicleAuthorisations
+     * @depends handleCommandSavesAVariationWithValidVehicleAuthorisations
      */
     public function handleCommandSetsTotalAuthLgvVehiclesForGoodsVehicleOperatingCentre()
     {
@@ -874,7 +874,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandDoesNotThrowValidationExceptionWhenCommunityLicencesAreEqualToTheTotalNumberOfVehicles()
     {
@@ -902,7 +902,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandThrowsValidationExceptionWhenCommunityLicencesAreGreaterThenTheTotalNumberOfVehiclesAndApplicationHasStandardInternationalType()
     {
@@ -935,7 +935,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandThrowsValidationExceptionWhenCommunityLicencesAreGreaterThenTheTotalNumberOfVehiclesAndApplicationIsForPsvLicenceAndHasRestrictedType()
     {
@@ -968,7 +968,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandThrowsValidationExceptionWithAnyValidationMessagesFromTheUpdateHelper()
     {
@@ -994,7 +994,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesPsvsWhenCommandIsNotPartial()
     {
@@ -1017,7 +1017,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesTotAuthHgvVehiclesWhenCommandIsNotPartial()
     {
@@ -1047,7 +1047,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends handleCommand_ValidatesTotAuthHgvVehicles_WhenCommandIsNotPartial
+     * @depends handleCommandValidatesTotAuthHgvVehiclesWhenCommandIsNotPartial
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
     public function handleCommandValidatesTotAuthHgvVehiclesWhenCommandIsNotPartialAgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
@@ -1078,7 +1078,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesLgvsWhenCommandIsNotPartialAndApplicationIsForGoods()
     {

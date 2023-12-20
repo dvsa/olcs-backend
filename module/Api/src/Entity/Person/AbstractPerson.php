@@ -251,7 +251,8 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getBirthDate($asDateTime = false)
     {
@@ -529,7 +530,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the application organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being set as the value
+     * @param ArrayCollection $applicationOrganisationPersons collection being set as the value
      *
      * @return Person
      */
@@ -543,7 +544,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Get the application organisation persons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationOrganisationPersons()
     {
@@ -553,7 +554,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a application organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being added
+     * @param ArrayCollection|mixed $applicationOrganisationPersons collection being added
      *
      * @return Person
      */
@@ -592,7 +593,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the contact detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being set as the value
+     * @param ArrayCollection $contactDetails collection being set as the value
      *
      * @return Person
      */
@@ -606,7 +607,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Get the contact details
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getContactDetails()
     {
@@ -616,7 +617,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a contact details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being added
+     * @param ArrayCollection|mixed $contactDetails collection being added
      *
      * @return Person
      */
@@ -655,7 +656,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the disqualification
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being set as the value
+     * @param ArrayCollection $disqualifications collection being set as the value
      *
      * @return Person
      */
@@ -669,7 +670,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Get the disqualifications
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDisqualifications()
     {
@@ -679,7 +680,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a disqualifications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being added
+     * @param ArrayCollection|mixed $disqualifications collection being added
      *
      * @return Person
      */
@@ -718,7 +719,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Set the organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being set as the value
+     * @param ArrayCollection $organisationPersons collection being set as the value
      *
      * @return Person
      */
@@ -732,7 +733,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Get the organisation persons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOrganisationPersons()
     {
@@ -742,7 +743,7 @@ abstract class AbstractPerson implements BundleSerializableInterface, JsonSerial
     /**
      * Add a organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being added
+     * @param ArrayCollection|mixed $organisationPersons collection being added
      *
      * @return Person
      */
