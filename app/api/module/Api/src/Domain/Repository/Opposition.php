@@ -28,7 +28,7 @@ class Opposition extends AbstractRepository
     {
         parent::buildDefaultQuery($qb, $id);
 
-        $this->getQueryBuilder()
+        return $this->getQueryBuilder()
             ->with('opposer', 'o')
             ->with('grounds')
             ->withPersonContactDetails('o.contactDetails', 'c');

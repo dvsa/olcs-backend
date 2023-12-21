@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText;
 
-use Dvsa\Olcs\APi\Service\Qa\Structure\FilteredTranslateableText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\FilteredTranslateableText;
 
 class QuestionText
 {

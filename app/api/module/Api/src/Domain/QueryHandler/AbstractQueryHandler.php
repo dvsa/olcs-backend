@@ -6,7 +6,19 @@ use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -67,6 +79,61 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     private $auditLogger;
 
     private ContainerInterface $container;
+
+    /**
+     * Note this is only intended for internal users, selfserve users don't have these access permissions
+     *
+     * Takes an array of traffic areas that will have come from a transfer object.
+     * If empty or "all" is selected then return all traffic areas the user has access to
+     *
+     * @see TrafficAreas
+     * @see TrafficAreasOptional
+     */
+    public function modifyTrafficAreaQueryBasedOnUser(QueryInterface $query): QueryInterface
+    {
+        $trafficAreas = $query->getTrafficAreas();
+
+        if (empty($trafficAreas) || in_array('all', $trafficAreas)) {
+            /**
+             * reports have an "other" field which we will need to preserve
+             * this will be ignored by anything which doesn't support it via an "in" query
+             */
+            $additional = ['other'];
+
+            $newData = [
+                'trafficAreas' => array_merge($this->getInternalUserTrafficAreas(), $additional),
+            ];
+
+            $query->exchangeArray($newData);
+        }
+
+        return $query;
+    }
+
+    /**
+     * get user traffic areas (this data exists for internal users only)
+     */
+    public function getInternalUserTrafficAreas(): array
+    {
+        return $this->getUserData()['dataAccess']['trafficAreas'];
+    }
+
+    /**
+     * gets a copy of the user account data - majority of the time this will come straight from the myaccount cache
+     * if the cache doesn't exist we'll have a query handler result instead that will need to be serialized
+     *
+     * @return array
+     */
+    protected function getUserData(): array
+    {
+        $accountInfo = $this->getQueryHandler()->handleQuery(MyAccount::create([]));
+
+        if ($accountInfo instanceof \Dvsa\Olcs\Api\Domain\QueryHandler\Result) {
+            return $accountInfo->serialize();
+        }
+
+        return $accountInfo;
+    }
 
     /**
      * Get the repository

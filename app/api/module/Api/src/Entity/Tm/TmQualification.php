@@ -53,7 +53,7 @@ class TmQualification extends AbstractTmQualification
      */
     public static function create(TransportManager $tm, Country $country, RefData $qualificationType, string $serialNo)
     {
-        $tmQualification = new static();
+        $tmQualification = new self();
         $tmQualification->setTransportManager($tm);
         $tmQualification->setCountryCode($country);
         $tmQualification->setQualificationType($qualificationType);

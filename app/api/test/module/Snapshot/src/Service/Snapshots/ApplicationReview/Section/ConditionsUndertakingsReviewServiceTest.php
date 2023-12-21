@@ -38,7 +38,7 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
 
     public function testGetConfigFromData()
     {
-        $this->assertNull($this->sut->getConfigFromData([]));
+        $this->assertEmpty($this->sut->getConfigFromData([]));
     }
 
     public function testFormatLicencesSubSection()

@@ -168,6 +168,8 @@ class IrhpPermit extends AbstractIrhpPermit
         }
         $this->status = $status;
         $this->expiryDate = new DateTime();
+
+        return $this;
     }
 
     /**

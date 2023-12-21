@@ -44,7 +44,7 @@ class TmCaseDecision extends AbstractTmCaseDecision
      */
     public static function create(CasesEntity $case, RefData $decision, array $data)
     {
-        $tmCaseDecision = new static($case, $decision);
+        $tmCaseDecision = new self($case, $decision);
         $tmCaseDecision->update($data);
 
         return $tmCaseDecision;

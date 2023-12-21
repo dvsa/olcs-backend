@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
 use Dvsa\Olcs\Api\Domain\EmailAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -17,5 +18,6 @@ class EmailAwareTraitTestStub extends AbstractCommandHandler implements EmailAwa
 
     public function handleCommand(CommandInterface $command)
     {
+        return new Result();
     }
 }

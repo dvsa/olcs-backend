@@ -19,10 +19,8 @@ use Interop\Container\ContainerInterface;
  * @author Nick Payne <nick.payne@valtech.co.uk>
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
+class DocumentGenerator implements FactoryInterface
 {
-    use NamingServiceAwareTrait;
-
     /**
      * Hold an in memory cache of templates fetched from the store;
      * Useful when multiple copies of the same template are printed
@@ -229,7 +227,6 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->setNamingService($container->get('DocumentNamingService'));
         $this->documentService = $container->get('Document');
         $this->queryHandlerManager = $container->get('QueryHandlerManager');
         $this->uploader = $container->get('FileUploader');

@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Application\Declaration;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
@@ -35,7 +36,7 @@ class DeclarationTest extends QueryHandlerTestCase
         $this->mockedSmServices = [
             'FeesHelperService' => m::mock(FeesHelperService::class),
             'SectionAccessService' => m::mock(SectionAccessService::class),
-            'Review\ApplicationUndertakings' => m::mock(),
+            'Review\ApplicationUndertakings' => m::mock(ApplicationUndertakingsReviewService::class),
         ];
 
         parent::setUp();

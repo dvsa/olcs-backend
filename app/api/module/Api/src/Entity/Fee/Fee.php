@@ -334,7 +334,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     }
 
     /**
-     * @return FeeTransaction
+     * @return FeeTransaction|void
      */
     protected function getLatestFeeTransaction()
     {
@@ -368,7 +368,7 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
     /**
      * Get latest transaction
      *
-     * @return Transaction
+     * @return Transaction|void
      */
     public function getLatestTransaction()
     {

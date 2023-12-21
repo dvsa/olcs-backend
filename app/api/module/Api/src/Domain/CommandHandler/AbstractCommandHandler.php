@@ -29,6 +29,16 @@ use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg;
+use Dvsa\Olcs\Api\Entity\Cases\Cases;
+use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
@@ -42,6 +52,7 @@ use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Dvsa\Olcs\Queue\Service\QueueInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Olcs\Logging\Log\Logger;
@@ -84,6 +95,11 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     private QueryHandlerManager $queryHandler;
 
     private RepositoryServiceManager $repoManager;
+
+    /**
+     * @var NamingService
+     */
+    private $documentNamingService;
 
     /**
      * @var IdentityProviderInterface
@@ -558,5 +574,121 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             return new TransactioningCommandHandler($this, $container->get('TransactionManager'));
         }
         return $this;
+    }
+
+    /**
+     * @param NamingService $service
+     */
+    public function setNamingService(NamingService $service)
+    {
+        $this->documentNamingService = $service;
+    }
+
+    /**
+     * @return NamingService
+     */
+    public function getNamingService()
+    {
+        return $this->documentNamingService;
+    }
+
+    /**
+     * @param $command
+     */
+    public function determineEntityFromCommand(array $data)
+    {
+        if (!empty($data['case'])) {
+            return $this->getRepo()->getReference(Cases::class, $data['case']);
+        }
+
+        if (!empty($data['application'])) {
+            return $this->getRepo()->getReference(Application::class, $data['application']);
+        }
+
+        if (!empty($data['transportManager'])) {
+            return $this->getRepo()->getReference(TransportManager::class, $data['transportManager']);
+        }
+
+        if (!empty($data['busReg'])) {
+            return $this->getRepo()->getReference(BusReg::class, $data['busReg']);
+        }
+
+        if (!empty($data['licence'])) {
+            return $this->getRepo()->getReference(Licence::class, $data['licence']);
+        }
+
+        if (!empty($data['irfoOrganisation'])) {
+            return $this->getRepo()->getReference(Organisation::class, $data['irfoOrganisation']);
+        }
+
+        if (!empty($data['continuationDetail'])) {
+            return $this->getRepo()->getReference(ContinuationDetail::class, $data['continuationDetail']);
+        }
+
+        if (!empty($data['surrender'])) {
+            return $this->getRepo()->getReference(Surrender::class, $data['surrender']);
+        }
+
+        if (!empty($data['irhpApplication'])) {
+            return $this->getRepo()->getReference(IrhpApplication::class, $data['irhpApplication']);
+        }
+
+        return null;
+    }
+
+
+    /**
+     * Note this is only intended for internal users, selfserve users don't have these access permissions
+     *
+     * Takes an array of traffic areas that will have come from a transfer object.
+     * If empty or "all" is selected then return all traffic areas the user has access to
+     *
+     * @see TrafficAreas
+     * @see TrafficAreasOptional
+     */
+    public function modifyTrafficAreaQueryBasedOnUser(QueryInterface $query): QueryInterface
+    {
+        $trafficAreas = $query->getTrafficAreas();
+
+        if (empty($trafficAreas) || in_array('all', $trafficAreas)) {
+            /**
+             * reports have an "other" field which we will need to preserve
+             * this will be ignored by anything which doesn't support it via an "in" query
+             */
+            $additional = ['other'];
+
+            $newData = [
+                'trafficAreas' => array_merge($this->getInternalUserTrafficAreas(), $additional),
+            ];
+
+            $query->exchangeArray($newData);
+        }
+
+        return $query;
+    }
+
+    /**
+     * get user traffic areas (this data exists for internal users only)
+     */
+    public function getInternalUserTrafficAreas(): array
+    {
+        return $this->getUserData()['dataAccess']['trafficAreas'];
+    }
+
+    /**
+     * gets a copy of the user account data - majority of the time this will come straight from the myaccount cache
+     * if the cache doesn't exist we'll have a query handler result instead that will need to be serialized
+     *
+     * @return array
+     */
+    public function getUserData(): array
+    {
+        $accountInfo = $this->getQueryHandler()->handleQuery(MyAccount::create([]));
+
+        if ($accountInfo instanceof \Dvsa\Olcs\Api\Domain\QueryHandler\Result) {
+            return $accountInfo->serialize();
+        }
+
+        return $accountInfo;
     }
 }
