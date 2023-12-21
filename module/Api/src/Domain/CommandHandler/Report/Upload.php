@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -33,7 +32,6 @@ final class Upload extends AbstractCommandHandler implements
     UploaderAwareInterface
 {
     use AuthAwareTrait;
-    use NamingServiceAwareTrait;
     use QueueAwareTrait;
     use UploaderAwareTrait;
 

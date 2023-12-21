@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
@@ -29,11 +28,9 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 class Create extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface,
-    NamingServiceAwareInterface,
     AuthAwareInterface
 {
     use UploaderAwareTrait;
-    use NamingServiceAwareTrait;
     use AuthAwareTrait;
     use DocTemplateTrait;
 

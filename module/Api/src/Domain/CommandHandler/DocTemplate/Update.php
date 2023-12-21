@@ -16,7 +16,6 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -32,7 +31,6 @@ class Update extends AbstractCommandHandler implements
     AuthAwareInterface
 {
     use UploaderAwareTrait;
-    use NamingServiceAwareTrait;
     use AuthAwareTrait;
     use DocTemplateTrait;
 

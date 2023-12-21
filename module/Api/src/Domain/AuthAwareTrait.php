@@ -66,7 +66,7 @@ trait AuthAwareTrait
     }
 
     /**
-     * @return \Dvsa\Olcs\Api\Entity\User\User
+     * @return \Dvsa\Olcs\Api\Entity\User\User|void
      */
     public function getCurrentUser()
     {
@@ -80,7 +80,7 @@ trait AuthAwareTrait
     /**
      * @note Even though this appears to be a one to one relationship, there is only ever one organisation for a user
      *
-     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation
+     * @return \Dvsa\Olcs\Api\Entity\Organisation\Organisation|void
      */
     public function getCurrentOrganisation()
     {
@@ -97,7 +97,7 @@ trait AuthAwareTrait
      * @note Even though this appears to be a one to one relationship, there's only ever one local authority for a user
      * olcs-14494 emergency fix, need to clean this up
      *
-     * @return LocalAuthority
+     * @return LocalAuthority|void
      */
     public function getCurrentLocalAuthority()
     {
@@ -129,61 +129,6 @@ trait AuthAwareTrait
     public function getUser()
     {
         return $this->authService->getIdentity()->getUser();
-    }
-
-    /**
-     * Note this is only intended for internal users, selfserve users don't have these access permissions
-     *
-     * Takes an array of traffic areas that will have come from a transfer object.
-     * If empty or "all" is selected then return all traffic areas the user has access to
-     *
-     * @see TrafficAreas
-     * @see TrafficAreasOptional
-     */
-    public function modifyTrafficAreaQueryBasedOnUser(QueryInterface $query): QueryInterface
-    {
-        $trafficAreas = $query->getTrafficAreas();
-
-        if (empty($trafficAreas) || in_array('all', $trafficAreas)) {
-            /**
-             * reports have an "other" field which we will need to preserve
-             * this will be ignored by anything which doesn't support it via an "in" query
-             */
-            $additional = ['other'];
-
-            $newData = [
-                'trafficAreas' => array_merge($this->getInternalUserTrafficAreas(), $additional),
-            ];
-
-            $query->exchangeArray($newData);
-        }
-
-        return $query;
-    }
-
-    /**
-     * get user traffic areas (this data exists for internal users only)
-     */
-    public function getInternalUserTrafficAreas(): array
-    {
-        return $this->getUserData()['dataAccess']['trafficAreas'];
-    }
-
-    /**
-     * gets a copy of the user account data - majority of the time this will come straight from the myaccount cache
-     * if the cache doesn't exist we'll have a query handler result instead that will need to be serialized
-     *
-     * @return array
-     */
-    public function getUserData(): array
-    {
-        $accountInfo = $this->getQueryHandler()->handleQuery(MyAccount::create([]));
-
-        if ($accountInfo instanceof Result) {
-            return $accountInfo->serialize();
-        }
-
-        return $accountInfo;
     }
 
     /**
