@@ -12,7 +12,7 @@ class ReportListTest extends QueryHandlerTestCase
     /**
      * @test
      */
-    public function handleQuery_IsCallable()
+    public function handleQueryIsCallable()
     {
         $this->assertIsCallable([$this->sut, 'handleQuery']);
     }
@@ -21,7 +21,7 @@ class ReportListTest extends QueryHandlerTestCase
      * @test
      * @depends handleQuery_IsCallable
      */
-    public function handleQuery_ReturnsArrayFormat()
+    public function handleQueryReturnsArrayFormat()
     {
         $result = $this->sut->handleQuery(Qry::create([]));
 
@@ -34,7 +34,7 @@ class ReportListTest extends QueryHandlerTestCase
      * @test
      * @depends handleQuery_ReturnsArrayFormat
      */
-    public function handleQuery_ReturnsListOfAvailableReportsFromPermitReportService()
+    public function handleQueryReturnsListOfAvailableReportsFromPermitReportService()
     {
         $result = $this->sut->handleQuery(Qry::create([]));
         $this->assertEquals(PermitsReportService::REPORT_TYPES, $result['result']);
@@ -44,7 +44,7 @@ class ReportListTest extends QueryHandlerTestCase
      * @test
      * @depends handleQuery_ReturnsListOfAvailableReportsFromPermitReportService
      */
-    public function handleQuery_ReturnsValidCountOfAvailableReportsFromPermitReportService()
+    public function handleQueryReturnsValidCountOfAvailableReportsFromPermitReportService()
     {
         $result = $this->sut->handleQuery(Qry::create([]));
         $this->assertEquals(count(PermitsReportService::REPORT_TYPES), $result['count']);

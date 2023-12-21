@@ -32,13 +32,13 @@ class Create extends AbstractCommandHandler implements
     NamingServiceAwareInterface,
     AuthAwareInterface
 {
-    public const ERR_MIME = 'ERR_MIME';
-    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
-
     use UploaderAwareTrait;
     use NamingServiceAwareTrait;
     use AuthAwareTrait;
     use DocTemplateTrait;
+
+    public const ERR_MIME = 'ERR_MIME';
+    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
 
     protected $repoServiceName = 'DocTemplate';
 

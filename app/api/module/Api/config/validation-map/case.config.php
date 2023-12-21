@@ -1,13 +1,13 @@
 <?php
 
+/**
+ * @NOTE All Case related queries and commands have been moved here and assigned the isInternalUser handler
+ */
+
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSystemAdmin;
-
-/**
- * @NOTE All Case related queries and commands have been moved here and assigned the isInternalUser handler
- */
 
 return [
     //  commands

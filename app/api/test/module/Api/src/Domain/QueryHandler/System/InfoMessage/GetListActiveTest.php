@@ -11,7 +11,7 @@ use Mockery as m;
 /**
  * @covers Dvsa\Olcs\Api\Domain\QueryHandler\System\InfoMessage\GetListActive
  */
-class GetListTestActive extends QueryHandlerTestCase
+class GetListActiveTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {

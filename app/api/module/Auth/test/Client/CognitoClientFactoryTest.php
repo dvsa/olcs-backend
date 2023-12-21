@@ -35,7 +35,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -48,7 +48,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfClient()
+    public function invokeReturnsAnInstanceOfClient()
     {
         // Setup
         $this->setUpSut();
@@ -65,7 +65,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigCognitoNamespaceNotDefined(): void
+    public function invokeThrowsExceptionWhenConfigCognitoNamespaceNotDefined(): void
     {
         // Setup
         $this->setUpSut();
@@ -84,7 +84,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
      * @depends __invoke_IsCallable
      * @dataProvider incorrectSettingsProvider
      */
-    public function __invoke_ThrowsExceptionWhen_ConfigSettingsNotDefined(array $config): void
+    public function invokeThrowsExceptionWhenConfigSettingsNotDefined(array $config): void
     {
         // Setup
         $this->setUpSut();

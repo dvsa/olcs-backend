@@ -12,7 +12,7 @@ trait TotAuthVehiclesTraitTest
     /**
      * @test
      */
-    public function updateTotAuthHgvVehicles_IsCallable()
+    public function updateTotAuthHgvVehiclesIsCallable()
     {
         // Assert
         $this->setUpSut();
@@ -25,7 +25,7 @@ trait TotAuthVehiclesTraitTest
      * @test
      * @depends updateTotAuthHgvVehicles_IsCallable
      */
-    public function updateTotAuthHgvVehicles_ReturnsSelf()
+    public function updateTotAuthHgvVehiclesReturnsSelf()
     {
         // Assert
         $this->setUpSut();
@@ -56,7 +56,7 @@ trait TotAuthVehiclesTraitTest
      * @depends updateTotAuthHgvVehicles_IsCallable
      * @dataProvider validTotAuthHgvVehiclesCountsDataProvider
      */
-    public function updateTotAuthHgvVehicles_SetsTotAuthHgvVehicles($count)
+    public function updateTotAuthHgvVehiclesSetsTotAuthHgvVehicles($count)
     {
         // Assert
         $this->setUpSut();
@@ -87,7 +87,7 @@ trait TotAuthVehiclesTraitTest
      * @depends updateTotAuthHgvVehicles_IsCallable
      * @dataProvider invalidTotAuthHgvVehiclesCountsDataProvider
      */
-    public function updateTotAuthHgvVehicles_RejectsInvalidValues($count)
+    public function updateTotAuthHgvVehiclesRejectsInvalidValues($count)
     {
         // Assert
         $this->setUpSut();
@@ -104,7 +104,7 @@ trait TotAuthVehiclesTraitTest
      * @test
      * @depends updateTotAuthHgvVehicles_IsCallable
      */
-    public function updateTotAuthHgvVehicles_SetsTotAuthVehiclesToTheTotalOfLgvsAndHgvs()
+    public function updateTotAuthHgvVehiclesSetsTotAuthVehiclesToTheTotalOfLgvsAndHgvs()
     {
         // Assert
         $this->setUpSut();
@@ -122,7 +122,7 @@ trait TotAuthVehiclesTraitTest
     /**
      * @test
      */
-    public function updateTotAuthLgvVehicles_IsCallable()
+    public function updateTotAuthLgvVehiclesIsCallable()
     {
         // Assert
         $this->setUpSut();
@@ -135,7 +135,7 @@ trait TotAuthVehiclesTraitTest
      * @test
      * @depends updateTotAuthLgvVehicles_IsCallable
      */
-    public function updateTotAuthLgvVehicles_ReturnsSelf()
+    public function updateTotAuthLgvVehiclesReturnsSelf()
     {
         // Assert
         $this->setUpSut();
@@ -166,7 +166,7 @@ trait TotAuthVehiclesTraitTest
      * @depends updateTotAuthLgvVehicles_IsCallable
      * @dataProvider validTotAuthLgvVehiclesCountsDataProvider
      */
-    public function updateTotAuthLgvVehicles_SetsTotAuthHgvVehicles($count)
+    public function updateTotAuthLgvVehiclesSetsTotAuthHgvVehicles($count)
     {
         // Assert
         $this->setUpSut();
@@ -197,7 +197,7 @@ trait TotAuthVehiclesTraitTest
      * @depends updateTotAuthLgvVehicles_IsCallable
      * @dataProvider invalidTotAuthLgvVehiclesCountsDataProvider
      */
-    public function updateTotAuthLgvVehicles_RejectsInvalidValues($count)
+    public function updateTotAuthLgvVehiclesRejectsInvalidValues($count)
     {
         // Assert
         $this->setUpSut();
@@ -214,7 +214,7 @@ trait TotAuthVehiclesTraitTest
      * @test
      * @depends updateTotAuthLgvVehicles_IsCallable
      */
-    public function updateTotAuthLgvVehicles_SetsTotAuthVehiclesToTheTotalOfLgvsAndHgvs()
+    public function updateTotAuthLgvVehiclesSetsTotAuthVehiclesToTheTotalOfLgvsAndHgvs()
     {
         // Assert
         $this->setUpSut();

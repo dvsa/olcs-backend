@@ -48,9 +48,9 @@ use RuntimeException;
  */
 class LicenceEntityTest extends EntityTester
 {
-    protected const A_NUMBER_OF_VEHICLES = 2;
-
     use TotAuthVehiclesTraitTest;
+
+    protected const A_NUMBER_OF_VEHICLES = 2;
 
     /**
      * @var Licence|null
@@ -1051,7 +1051,7 @@ class LicenceEntityTest extends EntityTester
     /**
      * @test
      */
-    public function copyInformationFromApplication_IsCallable()
+    public function copyInformationFromApplicationIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -1101,7 +1101,7 @@ class LicenceEntityTest extends EntityTester
      * @test
      * @depends copyInformationFromApplication_IsCallable
      */
-    public function copyInformationFromNewApplication_SetsHgvTotal_ForApplication()
+    public function copyInformationFromNewApplicationSetsHgvTotalForApplication()
     {
         // Setup
         $this->setUpSut();
@@ -1119,7 +1119,7 @@ class LicenceEntityTest extends EntityTester
      * @test
      * @depends copyInformationFromApplication_IsCallable
      */
-    public function copyInformationFromNewApplication_SetsLgvTotal_ForApplication()
+    public function copyInformationFromNewApplicationSetsLgvTotalForApplication()
     {
         // Setup
         $this->setUpSut();
@@ -1221,7 +1221,7 @@ class LicenceEntityTest extends EntityTester
      * @test
      * @depends copyInformationFromApplication_IsCallable
      */
-    public function copyInformationFromNewApplication_SetsHgvTotal_ForVariation_WithUpdatedOperatingCentres()
+    public function copyInformationFromNewApplicationSetsHgvTotalForVariationWithUpdatedOperatingCentres()
     {
         // Setup
         $this->setUpSut();
@@ -1239,7 +1239,7 @@ class LicenceEntityTest extends EntityTester
      * @test
      * @depends copyInformationFromApplication_IsCallable
      */
-    public function copyInformationFromNewApplication_SetsLgvTotal_ForVariation_WithUpdatedOperatingCentres()
+    public function copyInformationFromNewApplicationSetsLgvTotalForVariationWithUpdatedOperatingCentres()
     {
         // Setup
         $this->setUpSut();

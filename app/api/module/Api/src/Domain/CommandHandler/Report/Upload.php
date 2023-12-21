@@ -32,12 +32,12 @@ final class Upload extends AbstractCommandHandler implements
     TransactionedInterface,
     UploaderAwareInterface
 {
-    public const ERR_MIME = 'ERR_MIME';
-
     use AuthAwareTrait;
     use NamingServiceAwareTrait;
     use QueueAwareTrait;
     use UploaderAwareTrait;
+
+    public const ERR_MIME = 'ERR_MIME';
 
     protected $repoServiceName = 'Document';
 

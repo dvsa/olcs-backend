@@ -945,7 +945,6 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
     {
         $totAuthVehicles = $this->getTotAuthVehicles($this->application);
 
-        // @todo Should this just be counting vehicles linked to the licence?
         $totVehicles = $this->countVehicles($this->licence->getLicenceVehicles());
 
         return $totAuthVehicles < $totVehicles;

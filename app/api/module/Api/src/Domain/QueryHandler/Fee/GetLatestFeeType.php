@@ -9,8 +9,6 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
  * Get latest fee type
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- * @todo I think it's not in use and should be removed together with FeeTypeDataService, ApplicationProcessingService
- * @todo and BusProcessingService
  */
 class GetLatestFeeType extends AbstractQueryHandler
 {

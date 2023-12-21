@@ -26,7 +26,6 @@ final class Cases extends AbstractQueryHandler
 
         $latestNote = $this->getLatestNoteByCase($case);
 
-        // @todo look at simplifying
         return $this->result(
             $case,
             [

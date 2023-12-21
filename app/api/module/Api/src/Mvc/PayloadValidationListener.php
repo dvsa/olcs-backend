@@ -63,7 +63,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
         $data = $matches->getParams();
 
         /**
-         * @todo there is an edge case, where Laminas route match is not bringing in the parameters correctly
+         * there is an edge case, where Laminas route match is not bringing in the parameters correctly
          * problem was introduced by:
          * https://dvsa.atlassian.net/browse/VOL-3752
          *

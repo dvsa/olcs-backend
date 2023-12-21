@@ -31,7 +31,6 @@ class CanAccessDocument extends AbstractCanAccessEntity
         }
 
         /**
-         * @todo olcs-14494 emergency fix, need to clean this up
          * attempt to find if the document is linked through a txc_inbox
          *
          * @var TxcInboxRepo $txcInboxRepo

@@ -46,7 +46,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_IsCallable()
+    public function handleCommandIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -766,7 +766,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_SetsTotAuthVehicles_ForPsvLicences_ThatHaveContinutationDetails_AndLicenceIsNotSpecialRestricted()
+    public function handleCommandSetsTotAuthVehiclesForPsvLicencesThatHaveContinutationDetailsAndLicenceIsNotSpecialRestricted()
     {
         // Setup
         $this->setUpSut();
@@ -792,7 +792,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_SetsTotAuthHgvVehicles_ForPsvLicences_ThatHaveContinutationDetails_AndLicenceIsNotSpecialRestricted()
+    public function handleCommandSetsTotAuthHgvVehiclesForPsvLicencesThatHaveContinutationDetailsAndLicenceIsNotSpecialRestricted()
     {
         // Setup
         $this->setUpSut();

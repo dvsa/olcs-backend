@@ -32,7 +32,36 @@ class AbstractCompanySubsidiaryTest extends CommandHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new AbstractCompanySubsidiaryStub();
+        $this->sut = new class extends AbstractCompanySubsidiary {
+            public function create($command, $licenceId)
+            {
+                return parent::create($command, $licenceId);
+            }
+
+            public function update($command)
+            {
+                return parent::update($command);
+            }
+
+            public function delete($command)
+            {
+                return parent::delete($command);
+            }
+
+            public function createTask($licenceId, $desc)
+            {
+                return parent::createTask($licenceId, $desc);
+            }
+
+            public function updateApplicationCompetition($appId, $hasChanged = true)
+            {
+                return parent::updateApplicationCompetition($appId, $hasChanged);
+            }
+
+            public function handleCommand(CommandInterface $command)
+            {
+            }
+        };
 
         //  mock entities
         $this->mockLicenceEntity = m::mock(Entity\Licence\Licence::class);
@@ -228,40 +257,5 @@ class AbstractCompanySubsidiaryTest extends CommandHandlerTestCase
             ],
             $actual->toArray()
         );
-    }
-}
-
-/**
- * Class for testing Abstract Class
- */
-class AbstractCompanySubsidiaryStub extends AbstractCompanySubsidiary
-{
-    public function create($command, $licenceId)
-    {
-        return parent::create($command, $licenceId);
-    }
-
-    public function update($command)
-    {
-        return parent::update($command);
-    }
-
-    public function delete($command)
-    {
-        return parent::delete($command);
-    }
-
-    public function createTask($licenceId, $desc)
-    {
-        return parent::createTask($licenceId, $desc);
-    }
-
-    public function updateApplicationCompetition($appId, $hasChanged = true)
-    {
-        return parent::updateApplicationCompetition($appId, $hasChanged);
-    }
-
-    public function handleCommand(CommandInterface $command)
-    {
     }
 }

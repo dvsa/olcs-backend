@@ -35,7 +35,7 @@ class RegisterUserSelfserveFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -48,7 +48,7 @@ class RegisterUserSelfserveFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsWrappedRegisterUserSelfserveCommandHandler(): void
+    public function invokeReturnsWrappedRegisterUserSelfserveCommandHandler(): void
     {
         // Setup
         $this->setUpSut();

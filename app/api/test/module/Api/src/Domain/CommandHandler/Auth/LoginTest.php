@@ -40,7 +40,7 @@ class LoginTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_IsCallable()
+    public function handleCommandIsCallable()
     {
         // Assert
         $this->assertIsCallable([$this->sut, 'handleCommand']);
@@ -50,7 +50,7 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_AdapterSetsUsernameAndPasswordFromCommand()
+    public function handleCommandAdapterSetsUsernameAndPasswordFromCommand()
     {
         // Expectations
         $this->authenticationAdapter()->expects('setIdentity')->withArgs([$testUsername = 'testUsername']);
@@ -67,7 +67,7 @@ class LoginTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_AdapterSetsRealm_FromCommand_WhenAdapterIsOpenAM()
+    public function handleCommandAdapterSetsRealmFromCommandWhenAdapterIsOpenAM()
     {
         // Setup
         $openAMAdapter = $this->authenticationAdapter(OpenAm::class);
@@ -96,7 +96,7 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
      */
-    public function handleCommand_UpdatesUserLastLoginAtWhenAuthenticationIsSuccessful()
+    public function handleCommandUpdatesUserLastLoginAtWhenAuthenticationIsSuccessful()
     {
         // Expectations
         $user = m::mock(User::class)->shouldIgnoreMissing()->byDefault();
@@ -136,7 +136,7 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_UpdatesUserLastLoginAtWhenAuthenticationIsSuccessful
      */
-    public function handleCommand_DoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful()
+    public function handleCommandDoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful()
     {
         // Expectations
         $user = m::mock(User::class);
@@ -182,7 +182,7 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_DoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful
      */
-    public function handleCommand_ReturnsResultWithExpectedFlags()
+    public function handleCommandReturnsResultWithExpectedFlags()
     {
         // Execute
         $result = $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
@@ -204,7 +204,7 @@ class LoginTest extends CommandHandlerTestCase
      * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
      * @dataProvider returnsExpectedResultWhenUserCannotAccessRealmProvider
      */
-    public function handleCommand_ReturnsExpectedResultWhenUserCannotAccessRealm(bool $isInternal, string $realm)
+    public function handleCommandReturnsExpectedResultWhenUserCannotAccessRealm(bool $isInternal, string $realm)
     {
         // Expectations
         $user = m::mock(User::class);
@@ -251,7 +251,7 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
      */
-    public function handleCommand_ReturnsExpectedResultWhenUserIsSelfServeWithMonitoredRolesAndHasNoOrg()
+    public function handleCommandReturnsExpectedResultWhenUserIsSelfServeWithMonitoredRolesAndHasNoOrg()
     {
         // Expectations
         $user = m::mock(User::class);
@@ -294,7 +294,7 @@ class LoginTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
      */
-    public function handleCommand_ReturnsExpectedResultWhenUserIsSelfServeWithoutMonitoredRolesAndHasNoOrg()
+    public function handleCommandReturnsExpectedResultWhenUserIsSelfServeWithoutMonitoredRolesAndHasNoOrg()
     {
         // Expectations
         $user = m::mock(User::class);
@@ -332,7 +332,7 @@ class LoginTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_UserNotFoundInDatabase_ReturnsNotFoundResult()
+    public function handleCommandUserNotFoundInDatabaseReturnsNotFoundResult()
     {
         // Expectations
         $this->userRepository()
@@ -360,7 +360,7 @@ class LoginTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_UserSoftDeletedInDatabase_ReturnsNotFoundResult()
+    public function handleCommandUserSoftDeletedInDatabaseReturnsNotFoundResult()
     {
         // Expectations
         $user = m::mock(User::class);
@@ -393,7 +393,7 @@ class LoginTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_UserDisabledInDatabase_ReturnsDisabledResult()
+    public function handleCommandUserDisabledInDatabaseReturnsDisabledResult()
     {
         // Expectations
         $user = m::mock(User::class);

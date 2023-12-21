@@ -263,7 +263,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @test
      */
-    public function validateTotalAuthVehicles_IsCallable()
+    public function validateTotalAuthVehiclesIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -320,7 +320,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @dataProvider invalidTotalAuthVehicleConfigurations
      * @depends validateTotalAuthVehicles_IsCallable
      */
-    public function validateTotalAuthVehicles_AddsValidationMessages_WhereTotalAuthHgvVehiclesValueIsInvalid(
+    public function validateTotalAuthVehiclesAddsValidationMessagesWhereTotalAuthHgvVehiclesValueIsInvalid(
         ?int $totAuthHgvs,
         int $operatingCentreCount,
         array $operatingCentreConstraints,
@@ -379,9 +379,9 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @param array $operatingCentreConstraints
      * @test
      * @dataProvider validTotalAuthVehicleConfigurations
-     * @depends validateTotalAuthVehicles_IsCallable
+     * @depends validateTotalAuthVehiclesIsCallable
      */
-    public function validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthHgvVehiclesValueIsValid(
+    public function validateTotalAuthVehiclesDoesNotAddValidationMessagesWhereTotalAuthHgvVehiclesValueIsValid(
         bool $mustHaveOperatingCentre,
         int $totAuthVehicles,
         int $operatingCentreCount,
@@ -409,7 +409,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @test
      * @depends validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthHgvVehiclesValueIsValid
      */
-    public function validateTotalAuthHgvVehicles_AcceptsLicence()
+    public function validateTotalAuthHgvVehiclesAcceptsLicence()
     {
         // Setup
         $this->setUpSut();
@@ -434,7 +434,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @test
      */
-    public function validatePsv_IsCallable()
+    public function validatePsvIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -447,7 +447,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @test
      * @depends validatePsv_IsCallable
      */
-    public function validatePsv_AddsValidationMessages_WhenLgvsAreProvided()
+    public function validatePsvAddsValidationMessagesWhenLgvsAreProvided()
     {
         // Setup
         $this->setUpSut();
@@ -464,7 +464,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @test
      */
-    public function validateTotalAuthLgvVehicles_IsCallable()
+    public function validateTotalAuthLgvVehiclesIsCallable()
     {
         // Setup
         $this->setUpSut();

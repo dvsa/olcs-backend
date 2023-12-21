@@ -17,7 +17,7 @@ class AcquiredRightsExceptionToValidationExceptionMapperTest extends MockeryTest
      * @test
      * @dataProvider dataProvider_exceptionMap
      */
-    public function mapException_ThrowsValidationException_OnMappedExceptions(string $exception, string $key, string $message)
+    public function mapExceptionThrowsValidationExceptionOnMappedExceptions(string $exception, string $key, string $message)
     {
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage(
@@ -37,7 +37,7 @@ class AcquiredRightsExceptionToValidationExceptionMapperTest extends MockeryTest
     /**
      * @test
      */
-    public function mapException_RethrowsException_WhenMappingDoesNotExistForException_AndRethrowIsTrue()
+    public function mapExceptionRethrowsExceptionWhenMappingDoesNotExistForExceptionAndRethrowIsTrue()
     {
         $exception = new AcquiredRightsException();
 
@@ -50,14 +50,14 @@ class AcquiredRightsExceptionToValidationExceptionMapperTest extends MockeryTest
     /**
      * @test
      */
-    public function mapException_ReturnsFalse_WhenMappingDoesNotExistForException_AndRethrowIsFalse()
+    public function mapExceptionReturnsFalseWhenMappingDoesNotExistForExceptionAndRethrowIsFalse()
     {
         $result = AcquiredRightsExceptionToValidationExceptionMapper::mapException(new AcquiredRightsException(), self::INPUT_NAME, false);
 
         $this->assertFalse($result);
     }
 
-    public function dataProvider_exceptionMap(): array
+    public function dataProviderexceptionMap(): array
     {
         $result = [];
 

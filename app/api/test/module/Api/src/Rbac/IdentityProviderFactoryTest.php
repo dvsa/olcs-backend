@@ -26,7 +26,7 @@ class IdentityProviderFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -39,7 +39,7 @@ class IdentityProviderFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsInstance_WhenItImplementsIdentityProviderInterface()
+    public function invokeReturnsInstanceWhenItImplementsIdentityProviderInterface()
     {
         // Setup
         $this->setUpSut();
@@ -57,7 +57,7 @@ class IdentityProviderFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ThrowsException_WhenConfigIsMissing()
+    public function invokeThrowsExceptionWhenConfigIsMissing()
     {
         // Setup
         $this->setUpSut();
@@ -75,7 +75,7 @@ class IdentityProviderFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ThrowsException_WhenContainerDoesNotHaveRequestedInstance()
+    public function invokeThrowsExceptionWhenContainerDoesNotHaveRequestedInstance()
     {
         // Setup
         $this->setUpSut();
@@ -93,7 +93,7 @@ class IdentityProviderFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ThrowsException_WhenInstanceDoesNotImplementIdentityProviderInterface()
+    public function invokeThrowsExceptionWhenInstanceDoesNotImplementIdentityProviderInterface()
     {
         // Setup
         $this->setUpSut();

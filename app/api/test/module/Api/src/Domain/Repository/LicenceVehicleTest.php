@@ -725,7 +725,7 @@ class LicenceVehicleTest extends RepositoryTestCase
     /**
      * @test
      */
-    public function createPaginatedVehiclesDataForLicenceQuery_IsCallable()
+    public function createPaginatedVehiclesDataForLicenceQueryIsCallable()
     {
         // Setup
         $serviceManager = $this->setUpServiceManager();
@@ -739,7 +739,7 @@ class LicenceVehicleTest extends RepositoryTestCase
      * @test
      * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
      */
-    public function createPaginatedVehiclesDataForLicenceQuery_WhenQueryImplementsNotCorrectInterface_DoesNotFilterByVehicleId()
+    public function createPaginatedVehiclesDataForLicenceQueryWhenQueryImplementsNotCorrectInterfaceDoesNotFilterByVehicleId()
     {
         // Setup
         $serviceManager = $this->setUpServiceManager();
@@ -761,7 +761,7 @@ class LicenceVehicleTest extends RepositoryTestCase
      * @test
      * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
      */
-    public function createPaginatedVehiclesDataForLicenceQuery_FiltersByVehicleId_AddsQueryCondition()
+    public function createPaginatedVehiclesDataForLicenceQueryFiltersByVehicleIdAddsQueryCondition()
     {
         // Setup
         $serviceManager = $this->setUpServiceManager();
@@ -796,7 +796,7 @@ class LicenceVehicleTest extends RepositoryTestCase
      * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
      * @dataProvider vehiclesIdsDataProvider
      */
-    public function createPaginatedVehiclesDataForLicenceQuery_FiltersByVehicleId_SetsAParameterForVehicleIds(array $vehicleIds)
+    public function createPaginatedVehiclesDataForLicenceQueryFiltersByVehicleIdSetsAParameterForVehicleIds(array $vehicleIds)
     {
         // Setup
         $serviceManager = $this->setUpServiceManager();
@@ -820,7 +820,7 @@ class LicenceVehicleTest extends RepositoryTestCase
      * @test
      * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
      */
-    public function createPaginatedVehiclesDataForLicenceQuery_FiltersByRemovedVehicles_AddsQueryCondition()
+    public function createPaginatedVehiclesDataForLicenceQueryFiltersByRemovedVehiclesAddsQueryCondition()
     {
         // Setup
         $serviceManager = $this->setUpServiceManager();

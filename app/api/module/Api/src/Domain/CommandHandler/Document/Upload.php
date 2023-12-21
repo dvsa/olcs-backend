@@ -27,11 +27,11 @@ final class Upload extends AbstractCommandHandler implements
     UploaderAwareInterface,
     NamingServiceAwareInterface
 {
-    public const ERR_MIME = 'ERR_MIME';
-    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
-
     use UploaderAwareTrait;
     use NamingServiceAwareTrait;
+
+    public const ERR_MIME = 'ERR_MIME';
+    public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';
 
     protected $repoServiceName = 'Document';
 

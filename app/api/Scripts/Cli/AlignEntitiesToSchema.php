@@ -46,7 +46,7 @@ class AlignEntitiesToSchema
     );
 
     /**
-     * @todo these vagrant options can be removed once all devs migrated to k8s
+     * these vagrant options can be removed once all devs migrated to k8s
      */
     private $vagrantDefaultOptions = [
         'mapping-files' => '/var/www/olcs/olcs-backend/data/mapping/',
@@ -311,7 +311,7 @@ class AlignEntitiesToSchema
         $this->respond('Removing _hist tables', 'info');
 
         // SQL to generate DROP statements for all _hist tables
-        $sql = 'SELECT CONCAT(\'DROP TABLE \', t.TABLE_NAME, \';\') AS \'-- DROP _hist tables\'FROM information_schema.TABLES t 
+        $sql = 'SELECT CONCAT(\'DROP TABLE \', t.TABLE_NAME, \';\') AS \'-- DROP _hist tables\'FROM information_schema.TABLES t
           WHERE t.TABLE_SCHEMA = \''. $this->conn->getDatabase() .'\'
           AND t.TABLE_NAME LIKE \'%_hist\'';
 

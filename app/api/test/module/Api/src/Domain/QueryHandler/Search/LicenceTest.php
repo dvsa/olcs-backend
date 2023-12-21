@@ -35,7 +35,7 @@ class LicenceTest extends QueryHandlerTestCase
     /**
      * @test
      */
-    public function handleQuery_IsCallable()
+    public function handleQueryIsCallable()
     {
         // Assert
         $this->assertIsCallable([$this->sut, 'handleQuery']);
@@ -45,7 +45,7 @@ class LicenceTest extends QueryHandlerTestCase
      * @test
      * @depends handleQuery_IsCallable
      */
-    public function handleQuery_LegacyTest()
+    public function handleQueryLegacyTest()
     {
         $query = Qry::create(['id' => 1]);
         $licenceId = 7;

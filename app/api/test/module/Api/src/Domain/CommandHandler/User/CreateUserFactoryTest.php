@@ -38,7 +38,7 @@ class CreateUserFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -52,7 +52,7 @@ class CreateUserFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsWrappedCreateUserCommandHandler(): void
+    public function invokeReturnsWrappedCreateUserCommandHandler(): void
     {
         // Setup
         $this->setUpSut();

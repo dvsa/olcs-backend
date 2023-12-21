@@ -15,7 +15,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -28,7 +28,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfAcquiredRightsClient(): void
+    public function invokeReturnsAnInstanceOfAcquiredRightsClient(): void
     {
         // Setup
         $this->setUpSut();
@@ -46,7 +46,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function config_missingBaseUri_ThrowsInvalidArgumentException(): void
+    public function configmissingBaseUriThrowsInvalidArgumentException(): void
     {
         // Setup
         $this->setUpSut();
@@ -67,7 +67,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function config_emptyBaseUri_ThrowsInvalidArgumentException(): void
+    public function configemptyBaseUriThrowsInvalidArgumentException(): void
     {
         // Setup
         $this->setUpSut();

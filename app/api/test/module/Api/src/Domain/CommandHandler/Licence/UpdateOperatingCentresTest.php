@@ -48,7 +48,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     /**
      * @test
      */
-    public function handleCommand_IsCallable()
+    public function handleCommandIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -314,7 +314,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_SavesALicence_WithValidVehicleAuthorizations()
+    public function handleCommandSavesALicenceWithValidVehicleAuthorizations()
     {
         // Setup
         $this->setUpSut();
@@ -343,7 +343,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
-    public function handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre()
+    public function handleCommandSetsTotAuthHgvVehiclesForGoodsVehicleOperatingCentre()
     {
         // Setup
         $this->setUpSut();
@@ -369,7 +369,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      * @depends handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre
      */
-    public function handleCommand_SetsTotAuthVehicles_ForGoodsVehicleOperatingCentre()
+    public function handleCommandSetsTotAuthVehiclesForGoodsVehicleOperatingCentre()
     {
         // Setup
         $this->setUpSut();
@@ -394,7 +394,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
-    public function handleCommand_SetsTotAuthHgvVehicles_ForPsvOperatingCentre()
+    public function handleCommandSetsTotAuthHgvVehiclesForPsvOperatingCentre()
     {
         // Setup
         $this->setUpSut();
@@ -420,7 +420,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      * @depends handleCommand_SetsTotAuthHgvVehicles_ForPsvOperatingCentre
      */
-    public function handleCommand_SetsTotAuthVehicles_ForPsvOperatingCentre()
+    public function handleCommandSetsTotAuthVehiclesForPsvOperatingCentre()
     {
         // Setup
         $this->setUpSut();
@@ -445,7 +445,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
      */
-    public function handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre()
+    public function handleCommandSetsTotalAuthLgvVehiclesForGoodsVehicleOperatingCentre()
     {
         // Setup
         $this->setUpSut();
@@ -477,7 +477,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @depends handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre
      * @depends handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre
      */
-    public function handleCommand_SetsTotAuthVehicles_ForGoodsVehicleOperatingCentre_WithHgvsAndLgvs()
+    public function handleCommandSetsTotAuthVehiclesForGoodsVehicleOperatingCentreWithHgvsAndLgvs()
     {
         // Setup
         $this->setUpSut();
@@ -507,7 +507,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ThrowsValidationException_WithAnyValidationMessages_FromTheUpdateHelper()
+    public function handleCommandThrowsValidationExceptionWithAnyValidationMessagesFromTheUpdateHelper()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -528,7 +528,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ValidatesPsvs_WhenCommandIsNotPartial()
+    public function handleCommandValidatesPsvsWhenCommandIsNotPartial()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -551,7 +551,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ValidatesHgvs_WhenCommandIsNotPartial()
+    public function handleCommandValidatesHgvsWhenCommandIsNotPartial()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -578,7 +578,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @depends handleCommand_ValidatesHgvs_WhenCommandIsNotPartial
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
-    public function handleCommand_ValidatesHgvs_WhenCommandIsNotPartial_AgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
+    public function handleCommandValidatesHgvsWhenCommandIsNotPartialAgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
     {
         // Setup
         $this->overrideUpdateHelperWithMock();
@@ -608,7 +608,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @test
      * @depends handleCommand_IsCallable
      */
-    public function handleCommand_ValidatesLgvs_WhenCommandIsNotPartial_AndLicenceIsForGoods()
+    public function handleCommandValidatesLgvsWhenCommandIsNotPartialAndLicenceIsForGoods()
     {
         // Setup
         $this->overrideUpdateHelperWithMock();

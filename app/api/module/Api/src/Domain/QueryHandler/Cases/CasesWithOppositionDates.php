@@ -18,7 +18,6 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
     {
         $case = $this->getRepo()->fetchUsingId($query);
 
-        // @todo look at simplifying
         return $this->result(
             $case,
             [

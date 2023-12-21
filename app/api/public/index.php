@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 
 $startTime = microtime(true);
 // Backend default timezone is UTC

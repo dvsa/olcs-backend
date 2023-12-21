@@ -73,7 +73,6 @@ abstract class AbstractBookmark
         }
 
         $fileExt = $this->getParser()->getFileExtension();
-        /* #TODO when move to 5.6: move assigment __DIR__ . '/../Snippet' to 'snippedPath' property declaration */
         $path = ($this->snippedPath ?: __DIR__ . '/../Snippet/') . $className . '.' . $fileExt;
 
         return file_get_contents($path);

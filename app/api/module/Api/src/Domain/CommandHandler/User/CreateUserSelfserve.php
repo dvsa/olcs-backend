@@ -72,7 +72,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     {
         assert($command instanceof CreateUserSelfserveCommand);
 
-        //TODO: Remove once OpenAM is removed.
         if (is_null($this->adapter)) {
             $this->adapter = $this->getOpenAmUser();
         }
@@ -169,7 +168,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     /**
      * @param string $loginId
      * @return string
-     * @TODO: Remove once OpenAM removed
      */
     private function generatePid(string $loginId)
     {
@@ -182,7 +180,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     /**
      * @throws FailedRequestException
      * @throws ClientException
-     * @todo: Call directly from handle() once OpenAM removed
      */
     private function storeUserInAuthService(CreateUserSelfserveCommand $command, string &$password)
     {

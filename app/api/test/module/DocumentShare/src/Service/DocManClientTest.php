@@ -205,7 +205,7 @@ class DocManClientTest extends MockeryTestCase
                 $this->assertSame(Request::METHOD_POST, $request->getMethod());
 
                 /**
-                 * @todo these two assertions are commented out for now due to problems running on vagrant box
+                 * These two assertions are commented out for now due to problems running on vagrant box
                  *
                  * https://jira.dvsacloud.uk/browse/OLCS-27496
                  */

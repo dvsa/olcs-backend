@@ -47,7 +47,7 @@ return [
     'doctrine' => [
         'connection' => [
             'orm_default' => [
-                'driverClass' =>\Doctrine\DBAL\Driver\PDO\MySQL\Driver::class,
+                'driverClass' => \Doctrine\DBAL\Driver\PDO\MySQL\Driver::class,
                 // Database connection details
                 'params' => $doctrine_connection_params,
             ],

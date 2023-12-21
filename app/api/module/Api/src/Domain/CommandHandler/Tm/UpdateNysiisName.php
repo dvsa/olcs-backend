@@ -41,24 +41,8 @@ final class UpdateNysiisName extends AbstractCommandHandler implements AuthAware
     {
         $this->result->addMessage('TM NYSIIS currently disabled');
         return $this->result;
-
-        /**
-         * @var TransportManager $transportManager
-         */
-        $transportManager = $this->getRepo()->fetchUsingId($command);
-        $person = $transportManager->getHomeCd()->getPerson();
-
-        $nysiisData = $this->nysiisClient->makeRequest($person->getForename(), $person->getFamilyName());
-
-        $transportManager->setNysiisForename($nysiisData['nysiisFirstName']);
-        $transportManager->setNysiisFamilyName($nysiisData['nysiisFamilyName']);
-
-        $this->getRepo('TransportManager')->save($transportManager);
-
-        $this->result->addMessage('TM NYSIIS name was requested and updated');
-
-        return $this->result;
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
