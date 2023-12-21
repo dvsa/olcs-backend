@@ -727,5 +727,7 @@ return [
     Query\Cache\Single::class => QueryHandler\Cache\Single::class,
     Query\Cache\RecordList::class => QueryHandler\Cache\RecordList::class,
 
-    TransferQuery\Messaging\GetConversationList::class => QueryHandler\Messaging\ConversationList::class,
+    // Messaging
+    TransferQuery\Messaging\Conversations\ByLicence::class => QueryHandler\Messaging\Conversations\ByLicence::class,
+    TransferQuery\Messaging\Conversations\ByApplicationToLicence::class => QueryHandler\Messaging\Conversations\ByApplicationToLicence::class,
 ];
