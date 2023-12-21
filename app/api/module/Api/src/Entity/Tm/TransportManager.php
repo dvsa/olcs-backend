@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Entity\Tm;
 
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Doctrine\Common\Collections\Criteria;
@@ -42,8 +43,8 @@ class TransportManager extends AbstractTransportManager implements
      *
      * @param $type
      * @param $status
-     * @param null $workCd
-     * @param null $homeCd
+     * @param ContactDetails|null $workCd
+     * @param ContactDetails|null $homeCd
      */
     public function updateTransportManager(
         $type,
@@ -64,8 +65,8 @@ class TransportManager extends AbstractTransportManager implements
     /**
      * Update the NYSIIS name fields
      *
-     * @param null $nysiisForename
-     * @param null $nysiisFamilyname
+     * @param string|null $nysiisForename
+     * @param string|null $nysiisFamilyname
      */
     public function updateNysiis(
         $nysiisForename = null,

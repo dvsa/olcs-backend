@@ -312,7 +312,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     * @param ArrayCollection $reasons collection being set as the value
      *
      * @return CompaniesHouseAlert
      */
@@ -326,7 +326,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Get the reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReasons()
     {
@@ -336,7 +336,7 @@ abstract class AbstractCompaniesHouseAlert implements BundleSerializableInterfac
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     * @param ArrayCollection|mixed $reasons collection being added
      *
      * @return CompaniesHouseAlert
      */

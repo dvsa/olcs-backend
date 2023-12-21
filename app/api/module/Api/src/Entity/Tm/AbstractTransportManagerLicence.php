@@ -566,7 +566,8 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getLastTmLetterDate($asDateTime = false)
     {
@@ -700,7 +701,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Set the other licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being set as the value
+     * @param ArrayCollection $otherLicences collection being set as the value
      *
      * @return TransportManagerLicence
      */
@@ -714,7 +715,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Get the other licences
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOtherLicences()
     {
@@ -724,7 +725,7 @@ abstract class AbstractTransportManagerLicence implements BundleSerializableInte
     /**
      * Add a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being added
+     * @param ArrayCollection|mixed $otherLicences collection being added
      *
      * @return TransportManagerLicence
      */

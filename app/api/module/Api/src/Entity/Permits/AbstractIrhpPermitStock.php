@@ -581,7 +581,8 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getValidFrom($asDateTime = false)
     {
@@ -611,7 +612,8 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getValidTo($asDateTime = false)
     {
@@ -649,7 +651,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irhp permit jurisdiction quota
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being set as the value
+     * @param ArrayCollection $irhpPermitJurisdictionQuotas collection being set as the value
      *
      * @return IrhpPermitStock
      */
@@ -663,7 +665,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the irhp permit jurisdiction quotas
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitJurisdictionQuotas()
     {
@@ -673,7 +675,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Add a irhp permit jurisdiction quotas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitJurisdictionQuotas collection being added
+     * @param ArrayCollection|mixed $irhpPermitJurisdictionQuotas collection being added
      *
      * @return IrhpPermitStock
      */
@@ -712,7 +714,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irhp permit range
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being set as the value
+     * @param ArrayCollection $irhpPermitRanges collection being set as the value
      *
      * @return IrhpPermitStock
      */
@@ -726,7 +728,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the irhp permit ranges
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitRanges()
     {
@@ -736,7 +738,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Add a irhp permit ranges
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRanges collection being added
+     * @param ArrayCollection|mixed $irhpPermitRanges collection being added
      *
      * @return IrhpPermitStock
      */
@@ -775,7 +777,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irhp permit sector quota
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being set as the value
+     * @param ArrayCollection $irhpPermitSectorQuotas collection being set as the value
      *
      * @return IrhpPermitStock
      */
@@ -789,7 +791,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the irhp permit sector quotas
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitSectorQuotas()
     {
@@ -799,7 +801,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Add a irhp permit sector quotas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitSectorQuotas collection being added
+     * @param ArrayCollection|mixed $irhpPermitSectorQuotas collection being added
      *
      * @return IrhpPermitStock
      */
@@ -838,7 +840,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Set the irhp permit window
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being set as the value
+     * @param ArrayCollection $irhpPermitWindows collection being set as the value
      *
      * @return IrhpPermitStock
      */
@@ -852,7 +854,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Get the irhp permit windows
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitWindows()
     {
@@ -862,7 +864,7 @@ abstract class AbstractIrhpPermitStock implements BundleSerializableInterface, J
     /**
      * Add a irhp permit windows
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitWindows collection being added
+     * @param ArrayCollection|mixed $irhpPermitWindows collection being added
      *
      * @return IrhpPermitStock
      */

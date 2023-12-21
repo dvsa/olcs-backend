@@ -25,7 +25,7 @@ class IrfoPsvAuth extends AbstractRepository
      *
      * @param int $id
      * @param int $hydrateMode
-     * @param null $version
+     * @param int|null $version
      * @return mixed
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException

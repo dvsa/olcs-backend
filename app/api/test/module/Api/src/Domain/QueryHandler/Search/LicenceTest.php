@@ -43,7 +43,7 @@ class LicenceTest extends QueryHandlerTestCase
 
     /**
      * @test
-     * @depends handleQuery_IsCallable
+     * @depends handleQueryIsCallable
      */
     public function handleQueryLegacyTest()
     {

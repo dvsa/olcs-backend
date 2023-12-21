@@ -260,7 +260,7 @@ abstract class AbstractIrhpPermitRequest implements BundleSerializableInterface,
     /**
      * Set the irhp permit request attribute
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequestAttributes collection being set as the value
+     * @param ArrayCollection $irhpPermitRequestAttributes collection being set as the value
      *
      * @return IrhpPermitRequest
      */
@@ -274,7 +274,7 @@ abstract class AbstractIrhpPermitRequest implements BundleSerializableInterface,
     /**
      * Get the irhp permit request attributes
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitRequestAttributes()
     {
@@ -284,7 +284,7 @@ abstract class AbstractIrhpPermitRequest implements BundleSerializableInterface,
     /**
      * Add a irhp permit request attributes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequestAttributes collection being added
+     * @param ArrayCollection|mixed $irhpPermitRequestAttributes collection being added
      *
      * @return IrhpPermitRequest
      */

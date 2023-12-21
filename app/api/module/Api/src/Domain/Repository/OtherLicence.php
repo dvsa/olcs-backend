@@ -44,8 +44,8 @@ class OtherLicence extends AbstractRepository
     /**
      * Filter list
      *
-     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryBuilder $qb
-     * @param \Dvsa\Olcs\Api\Domain\Repository\QueryInterface $query
+     * @param QueryBuilder $qb
+     * @param QueryInterface $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {

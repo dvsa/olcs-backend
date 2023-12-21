@@ -1061,7 +1061,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function testCopyInformationFromNewApplication()
     {
@@ -1099,7 +1099,7 @@ class LicenceEntityTest extends EntityTester
 
     /**
      * @test
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function copyInformationFromNewApplicationSetsHgvTotalForApplication()
     {
@@ -1117,7 +1117,7 @@ class LicenceEntityTest extends EntityTester
 
     /**
      * @test
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function copyInformationFromNewApplicationSetsLgvTotalForApplication()
     {
@@ -1134,7 +1134,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function testCopyInformationFromVariationApplication()
     {
@@ -1173,7 +1173,7 @@ class LicenceEntityTest extends EntityTester
     }
 
     /**
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function testCopyInformationFromUnchangedVariationApplication()
     {
@@ -1219,7 +1219,7 @@ class LicenceEntityTest extends EntityTester
 
     /**
      * @test
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function copyInformationFromNewApplicationSetsHgvTotalForVariationWithUpdatedOperatingCentres()
     {
@@ -1237,7 +1237,7 @@ class LicenceEntityTest extends EntityTester
 
     /**
      * @test
-     * @depends copyInformationFromApplication_IsCallable
+     * @depends copyInformationFromApplicationIsCallable
      */
     public function copyInformationFromNewApplicationSetsLgvTotalForVariationWithUpdatedOperatingCentres()
     {

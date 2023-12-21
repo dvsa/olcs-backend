@@ -1074,7 +1074,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Set the other licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being set as the value
+     * @param ArrayCollection $otherLicences collection being set as the value
      *
      * @return TransportManagerApplication
      */
@@ -1088,7 +1088,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the other licences
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOtherLicences()
     {
@@ -1098,7 +1098,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Add a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being added
+     * @param ArrayCollection|mixed $otherLicences collection being added
      *
      * @return TransportManagerApplication
      */

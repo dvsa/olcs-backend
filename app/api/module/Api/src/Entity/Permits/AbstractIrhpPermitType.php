@@ -292,7 +292,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the application path
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being set as the value
+     * @param ArrayCollection $applicationPaths collection being set as the value
      *
      * @return IrhpPermitType
      */
@@ -306,7 +306,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the application paths
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationPaths()
     {
@@ -316,7 +316,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Add a application paths
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being added
+     * @param ArrayCollection|mixed $applicationPaths collection being added
      *
      * @return IrhpPermitType
      */
@@ -355,7 +355,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Set the irhp permit stock
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being set as the value
+     * @param ArrayCollection $irhpPermitStocks collection being set as the value
      *
      * @return IrhpPermitType
      */
@@ -369,7 +369,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Get the irhp permit stocks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitStocks()
     {
@@ -379,7 +379,7 @@ abstract class AbstractIrhpPermitType implements BundleSerializableInterface, Js
     /**
      * Add a irhp permit stocks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitStocks collection being added
+     * @param ArrayCollection|mixed $irhpPermitStocks collection being added
      *
      * @return IrhpPermitType
      */

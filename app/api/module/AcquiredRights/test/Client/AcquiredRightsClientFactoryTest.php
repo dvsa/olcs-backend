@@ -26,7 +26,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfAcquiredRightsClient(): void
     {
@@ -44,7 +44,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function configmissingBaseUriThrowsInvalidArgumentException(): void
     {
@@ -65,7 +65,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function configemptyBaseUriThrowsInvalidArgumentException(): void
     {

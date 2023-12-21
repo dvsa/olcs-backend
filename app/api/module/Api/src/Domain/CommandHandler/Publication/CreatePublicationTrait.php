@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Publication;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Entity\Publication\Publication;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -15,7 +17,7 @@ trait CreatePublicationTrait
     /**
      * @param int $pubSection
      * @return PublicationSectionEntity
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
     public function getPublicationSection($pubSection)
     {
@@ -25,8 +27,8 @@ trait CreatePublicationTrait
     /**
      * @param int $trafficAreaId
      * @param string $pubType
-     * @return PublicationEntity
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return Publication
+     * @throws RuntimeException
      */
     public function getPublication($trafficAreaId, $pubType)
     {
@@ -37,7 +39,7 @@ trait CreatePublicationTrait
      * Check if we have an existing publication link, if not return a new one
      *
      * @param QueryInterface $query
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      * @return PublicationLinkEntity
      */
     public function getPublicationLink(QueryInterface $query)
@@ -56,7 +58,7 @@ trait CreatePublicationTrait
      * @param PublicationLinkEntity $publicationLink
      * @param $existingContext
      * @return Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      * @throws \Exception
      */
     private function createPublication(

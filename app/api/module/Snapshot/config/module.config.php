@@ -18,7 +18,6 @@ return [
             ContinuationReview\PeopleReviewService::class => ContinuationReview\GenericFactory::class,
             ContinuationReview\VehiclesReviewService::class => ContinuationReview\GenericFactory::class,
             ContinuationReview\UsersReviewService::class => ContinuationReview\GenericFactory::class,
-            ContinuationReview\VehiclesReviewService::class => ContinuationReview\GenericFactory::class,
             ContinuationReview\OperatingCentresReviewService::class => ContinuationReview\GenericFactory::class,
             ContinuationReview\TransportManagersReviewService::class => ContinuationReview\GenericFactory::class,
             ContinuationReview\SafetyReviewService::class => ContinuationReview\GenericFactory::class,

@@ -15,7 +15,9 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplication;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
@@ -27,6 +29,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as ContinueLicenceCmd;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
+use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees;
 
 /**
  * Pay Fee (handles fee side effects, doesn't actually change fee status)
@@ -43,10 +46,10 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Handle command
      *
-     * @param \Dvsa\Olcs\Transfer\Command\PayFee $command command
+     * @param PayOutstandingFees $command command
      *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @return Result
+     * @throws RuntimeException
      */
     public function handleCommand(CommandInterface $command)
     {
@@ -93,7 +96,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
      *
      * @param Fee $fee fee
      *
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      * @return void
      */
     protected function maybeProcessApplicationFee(Fee $fee)

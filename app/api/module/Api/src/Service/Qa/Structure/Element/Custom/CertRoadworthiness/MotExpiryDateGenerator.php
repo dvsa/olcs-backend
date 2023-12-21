@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\CertRoadworthiness;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpApplicationOnlyTrait;
 
 class MotExpiryDateGenerator implements ElementGeneratorInterface

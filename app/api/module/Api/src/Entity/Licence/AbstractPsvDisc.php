@@ -180,7 +180,8 @@ abstract class AbstractPsvDisc implements BundleSerializableInterface, JsonSeria
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCeasedDate($asDateTime = false)
     {
@@ -330,7 +331,8 @@ abstract class AbstractPsvDisc implements BundleSerializableInterface, JsonSeria
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getIssuedDate($asDateTime = false)
     {

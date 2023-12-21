@@ -22,9 +22,7 @@ class ApplicationConditionsUndertakingsReviewService extends AbstractReviewServi
      * Create service instance
      *
      * @param AbstractReviewServiceServices $abstractReviewServiceServices
-     * @param ComditionsUndertakingsReviewService $helper
-     *
-     * @return ApplicationConditionsUndertakingsReviewService
+     * @param ConditionsUndertakingsReviewService $helper
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,

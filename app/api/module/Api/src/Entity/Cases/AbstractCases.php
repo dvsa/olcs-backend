@@ -531,7 +531,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the category
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $categorys collection being set as the value
+     * @param ArrayCollection $categorys collection being set as the value
      *
      * @return Cases
      */
@@ -545,7 +545,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the categorys
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCategorys()
     {
@@ -555,7 +555,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a categorys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $categorys collection being added
+     * @param ArrayCollection|mixed $categorys collection being added
      *
      * @return Cases
      */
@@ -610,7 +610,8 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getClosedDate($asDateTime = false)
     {
@@ -880,7 +881,8 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOpenDate($asDateTime = false)
     {
@@ -894,7 +896,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the outcome
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $outcomes collection being set as the value
+     * @param ArrayCollection $outcomes collection being set as the value
      *
      * @return Cases
      */
@@ -908,7 +910,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the outcomes
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOutcomes()
     {
@@ -918,7 +920,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a outcomes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $outcomes collection being added
+     * @param ArrayCollection|mixed $outcomes collection being added
      *
      * @return Cases
      */
@@ -1077,7 +1079,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     * @param ArrayCollection $readAudits collection being set as the value
      *
      * @return Cases
      */
@@ -1091,7 +1093,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the read audits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReadAudits()
     {
@@ -1101,7 +1103,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     * @param ArrayCollection|mixed $readAudits collection being added
      *
      * @return Cases
      */
@@ -1140,7 +1142,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the complaint
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being set as the value
+     * @param ArrayCollection $complaints collection being set as the value
      *
      * @return Cases
      */
@@ -1154,7 +1156,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the complaints
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getComplaints()
     {
@@ -1164,7 +1166,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a complaints
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $complaints collection being added
+     * @param ArrayCollection|mixed $complaints collection being added
      *
      * @return Cases
      */
@@ -1203,7 +1205,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the condition undertaking
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being set as the value
+     * @param ArrayCollection $conditionUndertakings collection being set as the value
      *
      * @return Cases
      */
@@ -1217,7 +1219,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the condition undertakings
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getConditionUndertakings()
     {
@@ -1227,7 +1229,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being added
+     * @param ArrayCollection|mixed $conditionUndertakings collection being added
      *
      * @return Cases
      */
@@ -1266,7 +1268,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the conviction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions collection being set as the value
+     * @param ArrayCollection $convictions collection being set as the value
      *
      * @return Cases
      */
@@ -1280,7 +1282,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the convictions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getConvictions()
     {
@@ -1290,7 +1292,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a convictions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $convictions collection being added
+     * @param ArrayCollection|mixed $convictions collection being added
      *
      * @return Cases
      */
@@ -1329,7 +1331,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     * @param ArrayCollection $documents collection being set as the value
      *
      * @return Cases
      */
@@ -1343,7 +1345,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocuments()
     {
@@ -1353,7 +1355,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     * @param ArrayCollection|mixed $documents collection being added
      *
      * @return Cases
      */
@@ -1416,7 +1418,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the legacy offence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences collection being set as the value
+     * @param ArrayCollection $legacyOffences collection being set as the value
      *
      * @return Cases
      */
@@ -1430,7 +1432,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the legacy offences
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getLegacyOffences()
     {
@@ -1440,7 +1442,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a legacy offences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $legacyOffences collection being added
+     * @param ArrayCollection|mixed $legacyOffences collection being added
      *
      * @return Cases
      */
@@ -1479,7 +1481,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the opposition
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being set as the value
+     * @param ArrayCollection $oppositions collection being set as the value
      *
      * @return Cases
      */
@@ -1493,7 +1495,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the oppositions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOppositions()
     {
@@ -1503,7 +1505,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a oppositions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $oppositions collection being added
+     * @param ArrayCollection|mixed $oppositions collection being added
      *
      * @return Cases
      */
@@ -1566,7 +1568,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the prohibition
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $prohibitions collection being set as the value
+     * @param ArrayCollection $prohibitions collection being set as the value
      *
      * @return Cases
      */
@@ -1580,7 +1582,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the prohibitions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getProhibitions()
     {
@@ -1590,7 +1592,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a prohibitions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $prohibitions collection being added
+     * @param ArrayCollection|mixed $prohibitions collection being added
      *
      * @return Cases
      */
@@ -1629,7 +1631,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the serious infringement
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements collection being set as the value
+     * @param ArrayCollection $seriousInfringements collection being set as the value
      *
      * @return Cases
      */
@@ -1643,7 +1645,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the serious infringements
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSeriousInfringements()
     {
@@ -1653,7 +1655,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a serious infringements
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $seriousInfringements collection being added
+     * @param ArrayCollection|mixed $seriousInfringements collection being added
      *
      * @return Cases
      */
@@ -1692,7 +1694,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the statement
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $statements collection being set as the value
+     * @param ArrayCollection $statements collection being set as the value
      *
      * @return Cases
      */
@@ -1706,7 +1708,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the statements
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getStatements()
     {
@@ -1716,7 +1718,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a statements
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $statements collection being added
+     * @param ArrayCollection|mixed $statements collection being added
      *
      * @return Cases
      */
@@ -1755,7 +1757,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the stay
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $stays collection being set as the value
+     * @param ArrayCollection $stays collection being set as the value
      *
      * @return Cases
      */
@@ -1769,7 +1771,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the stays
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getStays()
     {
@@ -1779,7 +1781,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a stays
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $stays collection being added
+     * @param ArrayCollection|mixed $stays collection being added
      *
      * @return Cases
      */
@@ -1818,7 +1820,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Set the tm decision
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being set as the value
+     * @param ArrayCollection $tmDecisions collection being set as the value
      *
      * @return Cases
      */
@@ -1832,7 +1834,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Get the tm decisions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTmDecisions()
     {
@@ -1842,7 +1844,7 @@ abstract class AbstractCases implements BundleSerializableInterface, JsonSeriali
     /**
      * Add a tm decisions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tmDecisions collection being added
+     * @param ArrayCollection|mixed $tmDecisions collection being added
      *
      * @return Cases
      */

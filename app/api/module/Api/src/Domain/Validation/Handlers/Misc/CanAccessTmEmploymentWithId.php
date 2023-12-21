@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc;
 
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
+use Dvsa\Olcs\Api\Entity\Tm\TmEmployment;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 /**

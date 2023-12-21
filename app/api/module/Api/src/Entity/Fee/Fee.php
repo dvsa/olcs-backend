@@ -312,7 +312,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
         $ftSum = 0;
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use (&$ftSum) {
-                unset($key); // unused
                 if ($feeTransaction->getTransaction()->isComplete()) {
                     $ftSum += self::amountToPence($feeTransaction->getAmount());
                 }
@@ -730,7 +729,6 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
 
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use ($transactionId, &$amount) {
-                unset($key); // unused
                 if ($feeTransaction->getTransaction()->getId() == $transactionId) {
                     $amount = $feeTransaction->getAmount();
                     return false;

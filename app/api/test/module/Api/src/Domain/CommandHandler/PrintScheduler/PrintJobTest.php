@@ -367,7 +367,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->andReturn('TEMP_FILE.rtf');
 
         $this->sut->shouldReceive('executeCommand')
-            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], null)
+            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], 1)
             ->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) {
@@ -390,7 +390,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(
                 "soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE2.rtf' 2>&1",
                 [],
-                null
+                1
             )
             ->once()
             ->andReturnUsing(
@@ -405,7 +405,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(
                 "pdfunite 'TEMP_FILE.pdf' 'TEMP_FILE2.pdf' '/tmp/PrintJob-QUEUE_ID-print.pdf' 2>&1",
                 [],
-                null
+                1
             )
             ->once()
             ->andReturnUsing(
@@ -429,7 +429,7 @@ class PrintJobTest extends CommandHandlerTestCase
                 " -o collate=true" .
                 " 2>&1",
                 [],
-                null
+                1
             )->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) {
@@ -469,7 +469,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->andReturn('TEMP_FILE.rtf');
 
         $this->sut->shouldReceive('executeCommand')
-            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], null)
+            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], 1)
             ->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) {
@@ -492,7 +492,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(
                 "soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE2.rtf' 2>&1",
                 [],
-                null
+                1
             )
             ->once()
             ->andReturnUsing(
@@ -507,7 +507,7 @@ class PrintJobTest extends CommandHandlerTestCase
             ->with(
                 "pdfunite 'TEMP_FILE.pdf' 'TEMP_FILE2.pdf' '/tmp/PrintJob-QUEUE_ID-print.pdf' 2>&1",
                 [],
-                null
+                1
             )
             ->once()
             ->andReturnUsing(
@@ -531,7 +531,7 @@ class PrintJobTest extends CommandHandlerTestCase
                 " -o collate=true" .
                 " 2>&1",
                 [],
-                null
+                1
             )->never();
 
         $this->sut->shouldReceive('deleteTempFiles')->withNoArgs()->once();
@@ -629,7 +629,7 @@ class PrintJobTest extends CommandHandlerTestCase
         $copies = 1
     ) {
         $this->sut->shouldReceive('executeCommand')
-            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], null)
+            ->with("soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp 'TEMP_FILE.rtf' 2>&1", [], 1)
             ->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) use ($commandPdfResult) {
@@ -662,7 +662,7 @@ class PrintJobTest extends CommandHandlerTestCase
                 " -o collate=true" .
                 " 2>&1",
                 [],
-                null
+                1
             )->once()
             ->andReturnUsing(
                 function ($command, &$output, &$result) use ($commandLprResult) {

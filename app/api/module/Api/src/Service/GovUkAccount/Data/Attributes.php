@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Service\GovUkAccount\Data;
 
 /**
- * @note based on the original GDS Verify version, now being used with GovUkAccount
+ * @template-extends \ArrayObject<string, mixed>
  */
 class Attributes extends \ArrayObject
 {

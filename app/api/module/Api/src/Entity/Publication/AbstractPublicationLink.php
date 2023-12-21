@@ -538,7 +538,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOrigPubDate($asDateTime = false)
     {
@@ -640,7 +641,8 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPublishAfterDate($asDateTime = false)
     {
@@ -798,7 +800,7 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Set the police data
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas collection being set as the value
+     * @param ArrayCollection $policeDatas collection being set as the value
      *
      * @return PublicationLink
      */
@@ -812,7 +814,7 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Get the police datas
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPoliceDatas()
     {
@@ -822,7 +824,7 @@ abstract class AbstractPublicationLink implements BundleSerializableInterface, J
     /**
      * Add a police datas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $policeDatas collection being added
+     * @param ArrayCollection|mixed $policeDatas collection being added
      *
      * @return PublicationLink
      */

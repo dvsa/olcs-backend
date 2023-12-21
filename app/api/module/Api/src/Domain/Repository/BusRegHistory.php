@@ -34,11 +34,11 @@ class BusRegHistory extends AbstractRepository
 
     public function save($entity)
     {
-        throw \Exception('You cannot save to a view');
+        throw new \Exception('You cannot save to a view');
     }
 
     public function delete($entity)
     {
-        throw \Exception('You delete the contents of a view');
+        throw new \Exception('You delete the contents of a view');
     }
 }

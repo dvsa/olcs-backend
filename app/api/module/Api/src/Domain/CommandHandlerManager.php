@@ -12,6 +12,9 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 
+/**
+ * @template-extends AbstractPluginManager<CommandHandlerInterface>
+ */
 class CommandHandlerManager extends AbstractPluginManager
 {
     protected $instanceOf = CommandHandlerInterface::class;

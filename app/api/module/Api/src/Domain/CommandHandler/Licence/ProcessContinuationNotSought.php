@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

@@ -240,7 +240,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getClearedDate($asDateTime = false)
     {
@@ -414,7 +415,8 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getProhibitionDate($asDateTime = false)
     {
@@ -500,7 +502,7 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Set the defect
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $defects collection being set as the value
+     * @param ArrayCollection $defects collection being set as the value
      *
      * @return Prohibition
      */
@@ -514,7 +516,7 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Get the defects
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDefects()
     {
@@ -524,7 +526,7 @@ abstract class AbstractProhibition implements BundleSerializableInterface, JsonS
     /**
      * Add a defects
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $defects collection being added
+     * @param ArrayCollection|mixed $defects collection being added
      *
      * @return Prohibition
      */

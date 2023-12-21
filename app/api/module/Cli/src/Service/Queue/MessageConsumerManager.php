@@ -7,9 +7,7 @@ use Laminas\ServiceManager\ConfigInterface;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\MessageConsumerInterface;
 
 /**
- * Message Consumer Manager
- *
- * @author Rob Caiger <rob@clocal.co.uk>
+ * @template-extends AbstractPluginManager<MessageConsumerInterface>
  */
 class MessageConsumerManager extends AbstractPluginManager
 {

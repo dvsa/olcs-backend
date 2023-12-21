@@ -8,7 +8,7 @@ use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Comparison;
 use Doctrine\ORM\Query\Expr\Func;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLic as CommunityLicDTO;
+use Dvsa\Olcs\Transfer\Query\CommunityLic\CommunityLicence as CommunityLicDTO;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\QueryBuilder;
 
@@ -143,7 +143,7 @@ class CommunityLic extends AbstractRepository
     /**
      * Fetch licences for suspension
      *
-     * @param DateTime $date date
+     * @param \DateTime $date date
      *
      * @return ArrayCollection
      */
@@ -170,7 +170,7 @@ class CommunityLic extends AbstractRepository
     /**
      * Fetch licences for activation
      *
-     * @param DateTime $date date
+     * @param \DateTime $date date
      *
      * @return ArrayCollection
      */

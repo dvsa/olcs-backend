@@ -7,7 +7,7 @@ namespace OlcsTest\Db\Service\Search;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Elastica\Client as ElasticaClient;
-use ElasticSearch\Client;
+use Elasticsearch\Client;
 use Interop\Container\ContainerInterface;
 use Mockery as m;
 use Olcs\Db\Service\Search\Search;

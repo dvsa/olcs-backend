@@ -229,6 +229,9 @@ class PrintJob extends AbstractCommandHandler
             escapeshellarg($pdfOutput)
         );
 
+        $output = [];
+        $result = 1;
+
         $this->executeCommand($command, $output, $result);
 
         if ($result !== 0) {
@@ -284,6 +287,9 @@ class PrintJob extends AbstractCommandHandler
             escapeshellarg($username),
             ((int)$copies ?: self::DEF_PRINT_COPIES_CNT)
         );
+
+        $outputPrint = [];
+        $resultPrint = 1;
 
         $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
         if ($resultPrint !== 0) {
@@ -444,6 +450,10 @@ class PrintJob extends AbstractCommandHandler
                 'soffice --headless --convert-to pdf:writer_pdf_Export --outdir /tmp %s 2>&1',
                 escapeshellarg($fileName)
             );
+
+            $outputPdf = [];
+            $resultPdf = 1;
+
             $this->executeCommand($commandPdf, $outputPdf, $resultPdf);
             if ($resultPdf !== 0) {
                 $exception = new NotReadyException('Error generating the PDF : ' . implode("\n", $outputPdf));

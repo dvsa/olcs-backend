@@ -14,7 +14,7 @@ class IrhpPermitApplicationFactory
      * @param IrhpApplication $irhpApplication
      * @param IrhpPermitWindow $irhpPermitWindow
      *
-     * @throws IrhpPermitApplication
+     * @return IrhpPermitApplication
      */
     public function create(IrhpApplication $irhpApplication, IrhpPermitWindow $irhpPermitWindow)
     {

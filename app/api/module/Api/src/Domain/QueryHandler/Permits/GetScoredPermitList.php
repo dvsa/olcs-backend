@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Permits;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetScoredList as Query;
+use Dvsa\Olcs\Transfer\Query\IrhpCandidatePermit\GetListByIrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors;
 use Dvsa\Olcs\Api\Entity\Permits\Traits\CandidatePermitCreationTrait;
 
@@ -28,7 +28,7 @@ class GetScoredPermitList extends AbstractQueryHandler
 
     /**
      * Return a list of scored irhp candidate permit records and associated data
-     * @param QueryInterface|Query $query DTO
+     * @param GetListByIrhpApplication $query DTO
      *
      * @return array
      */

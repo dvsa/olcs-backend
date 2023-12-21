@@ -270,7 +270,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAssignedDate($asDateTime = false)
     {
@@ -324,7 +325,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getClosedDate($asDateTime = false)
     {
@@ -426,7 +428,8 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getInformationCompleteDate($asDateTime = false)
     {
@@ -608,7 +611,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     * @param ArrayCollection $documents collection being set as the value
      *
      * @return Submission
      */
@@ -622,7 +625,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Get the documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocuments()
     {
@@ -632,7 +635,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     * @param ArrayCollection|mixed $documents collection being added
      *
      * @return Submission
      */
@@ -671,7 +674,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the sla target date
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being set as the value
+     * @param ArrayCollection $slaTargetDates collection being set as the value
      *
      * @return Submission
      */
@@ -685,7 +688,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Get the sla target dates
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSlaTargetDates()
     {
@@ -695,7 +698,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a sla target dates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $slaTargetDates collection being added
+     * @param ArrayCollection|mixed $slaTargetDates collection being added
      *
      * @return Submission
      */
@@ -734,7 +737,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the submission action
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being set as the value
+     * @param ArrayCollection $submissionActions collection being set as the value
      *
      * @return Submission
      */
@@ -748,7 +751,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Get the submission actions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSubmissionActions()
     {
@@ -758,7 +761,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a submission actions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being added
+     * @param ArrayCollection|mixed $submissionActions collection being added
      *
      * @return Submission
      */
@@ -797,7 +800,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Set the submission section comment
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments collection being set as the value
+     * @param ArrayCollection $submissionSectionComments collection being set as the value
      *
      * @return Submission
      */
@@ -811,7 +814,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Get the submission section comments
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSubmissionSectionComments()
     {
@@ -821,7 +824,7 @@ abstract class AbstractSubmission implements BundleSerializableInterface, JsonSe
     /**
      * Add a submission section comments
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionSectionComments collection being added
+     * @param ArrayCollection|mixed $submissionSectionComments collection being added
      *
      * @return Submission
      */

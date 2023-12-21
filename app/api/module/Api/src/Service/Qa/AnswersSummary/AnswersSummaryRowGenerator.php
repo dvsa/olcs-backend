@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\AnswersSummary;
 
+use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRow;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;

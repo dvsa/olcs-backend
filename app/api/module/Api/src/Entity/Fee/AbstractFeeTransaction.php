@@ -362,7 +362,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Set the reversing fee transaction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions collection being set as the value
+     * @param ArrayCollection $reversingFeeTransactions collection being set as the value
      *
      * @return FeeTransaction
      */
@@ -376,7 +376,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Get the reversing fee transactions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReversingFeeTransactions()
     {
@@ -386,7 +386,7 @@ abstract class AbstractFeeTransaction implements BundleSerializableInterface, Js
     /**
      * Add a reversing fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reversingFeeTransactions collection being added
+     * @param ArrayCollection|mixed $reversingFeeTransactions collection being added
      *
      * @return FeeTransaction
      */

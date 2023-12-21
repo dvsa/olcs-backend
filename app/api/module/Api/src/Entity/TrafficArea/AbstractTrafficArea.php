@@ -225,7 +225,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the bus reg
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being set as the value
+     * @param ArrayCollection $busRegs collection being set as the value
      *
      * @return TrafficArea
      */
@@ -239,7 +239,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Get the bus regs
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getBusRegs()
     {
@@ -249,7 +249,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being added
+     * @param ArrayCollection|mixed $busRegs collection being added
      *
      * @return TrafficArea
      */
@@ -504,7 +504,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the recipient
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients collection being set as the value
+     * @param ArrayCollection $recipients collection being set as the value
      *
      * @return TrafficArea
      */
@@ -518,7 +518,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Get the recipients
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getRecipients()
     {
@@ -528,7 +528,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a recipients
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $recipients collection being added
+     * @param ArrayCollection|mixed $recipients collection being added
      *
      * @return TrafficArea
      */
@@ -639,7 +639,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     * @param ArrayCollection $documents collection being set as the value
      *
      * @return TrafficArea
      */
@@ -653,7 +653,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Get the documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocuments()
     {
@@ -663,7 +663,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     * @param ArrayCollection|mixed $documents collection being added
      *
      * @return TrafficArea
      */
@@ -702,7 +702,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Set the traffic area enforcement area
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas collection being set as the value
+     * @param ArrayCollection $trafficAreaEnforcementAreas collection being set as the value
      *
      * @return TrafficArea
      */
@@ -716,7 +716,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Get the traffic area enforcement areas
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTrafficAreaEnforcementAreas()
     {
@@ -726,7 +726,7 @@ abstract class AbstractTrafficArea implements BundleSerializableInterface, JsonS
     /**
      * Add a traffic area enforcement areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreaEnforcementAreas collection being added
+     * @param ArrayCollection|mixed $trafficAreaEnforcementAreas collection being added
      *
      * @return TrafficArea
      */

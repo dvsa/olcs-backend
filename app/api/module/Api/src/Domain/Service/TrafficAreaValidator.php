@@ -2,7 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Service;
 
+use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -271,6 +273,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
         return false;
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->addressService = $container->get('AddressService');

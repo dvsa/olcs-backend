@@ -8,7 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
+use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle;
 
 /**
  * BrRouteNo
@@ -21,5 +21,5 @@ class BrRouteNo extends SingleValueAbstract
     public const FIELD  = 'routeNo';
     public const SRCH_FLD_KEY = 'id';
     public const SRCH_VAL_KEY = 'busRegId';
-    public const QUERY_CLASS = Qry::Class;
+    public const QUERY_CLASS = BusRegBundle::class;
 }

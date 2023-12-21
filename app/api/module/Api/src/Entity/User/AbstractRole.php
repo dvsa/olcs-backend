@@ -259,7 +259,7 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being set as the value
+     * @param ArrayCollection $users collection being set as the value
      *
      * @return Role
      */
@@ -273,7 +273,7 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the users
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUsers()
     {
@@ -283,7 +283,7 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being added
+     * @param ArrayCollection|mixed $users collection being added
      *
      * @return Role
      */
@@ -346,7 +346,7 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the role permission
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions collection being set as the value
+     * @param ArrayCollection $rolePermissions collection being set as the value
      *
      * @return Role
      */
@@ -360,7 +360,7 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the role permissions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getRolePermissions()
     {
@@ -370,7 +370,7 @@ abstract class AbstractRole implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a role permissions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $rolePermissions collection being added
+     * @param ArrayCollection|mixed $rolePermissions collection being added
      *
      * @return Role
      */

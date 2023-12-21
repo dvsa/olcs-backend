@@ -67,7 +67,7 @@ class SchemaMetadata
     {
         chdir(__DIR__ . '/../');
 
-        require_once(__DIR__ . '/../init_autoloader.php');
+        require_once(__DIR__ . '/../vendor/autoloader.php');
 
         $this->options = getopt(
             'u:p:d:',

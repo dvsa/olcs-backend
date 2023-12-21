@@ -259,7 +259,8 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getExpiredDate($asDateTime = false)
     {
@@ -385,7 +386,8 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getLicenceExpiredDate($asDateTime = false)
     {
@@ -487,7 +489,8 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getSpecifiedDate($asDateTime = false)
     {
@@ -549,7 +552,7 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Set the community lic suspension
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensions collection being set as the value
+     * @param ArrayCollection $communityLicSuspensions collection being set as the value
      *
      * @return CommunityLic
      */
@@ -563,7 +566,7 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the community lic suspensions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCommunityLicSuspensions()
     {
@@ -573,7 +576,7 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Add a community lic suspensions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensions collection being added
+     * @param ArrayCollection|mixed $communityLicSuspensions collection being added
      *
      * @return CommunityLic
      */
@@ -612,7 +615,7 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Set the community lic withdrawal
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicWithdrawals collection being set as the value
+     * @param ArrayCollection $communityLicWithdrawals collection being set as the value
      *
      * @return CommunityLic
      */
@@ -626,7 +629,7 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Get the community lic withdrawals
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCommunityLicWithdrawals()
     {
@@ -636,7 +639,7 @@ abstract class AbstractCommunityLic implements BundleSerializableInterface, Json
     /**
      * Add a community lic withdrawals
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicWithdrawals collection being added
+     * @param ArrayCollection|mixed $communityLicWithdrawals collection being added
      *
      * @return CommunityLic
      */

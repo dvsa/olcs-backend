@@ -5,10 +5,12 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Doctrine\Persistence\ObjectRepository;
 use Dvsa\Olcs\Api\Domain\DbQueryServiceManager;
 use Dvsa\Olcs\Api\Domain\QueryBuilderInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -613,7 +615,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Create and returns Doctrine Query Builder
      *
-     * @return \Doctrine\ORM\QueryBuilder
+     * @return QueryBuilder
      */
     protected function createQueryBuilder()
     {
@@ -623,7 +625,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Returns repository
      *
-     * @return \Doctrine\Common\Persistence\ObjectRepository
+     * @return ObjectRepository
      */
     protected function getRepository()
     {

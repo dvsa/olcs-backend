@@ -1717,6 +1717,7 @@ class AlignEntitiesToSchema
             case 'text':
             case 'yesno':
             case 'yesnonull':
+            case 'json':
             case 'encrypted_string':
                 return 'string';
             case 'bigint':

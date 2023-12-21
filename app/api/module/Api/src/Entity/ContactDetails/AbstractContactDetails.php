@@ -536,7 +536,7 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Set the phone contact
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts collection being set as the value
+     * @param ArrayCollection $phoneContacts collection being set as the value
      *
      * @return ContactDetails
      */
@@ -550,7 +550,7 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Get the phone contacts
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPhoneContacts()
     {
@@ -560,7 +560,7 @@ abstract class AbstractContactDetails implements BundleSerializableInterface, Js
     /**
      * Add a phone contacts
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $phoneContacts collection being added
+     * @param ArrayCollection|mixed $phoneContacts collection being added
      *
      * @return ContactDetails
      */

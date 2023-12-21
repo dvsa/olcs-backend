@@ -65,7 +65,7 @@ class PidIdentityProvider implements IdentityProviderInterface
     }
 
     /**
-     * @return null
+     * @return User|null
      */
     private function authenticate()
     {

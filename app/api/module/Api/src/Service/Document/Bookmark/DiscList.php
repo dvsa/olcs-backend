@@ -32,8 +32,6 @@ class DiscList extends AbstractDiscList
      */
     public const BOOKMARK_PREFIX = 'DISC';
 
-    public const QUERY_CLASS = Qry::class;
-
     protected $discBundle = [
         'licenceVehicle' => [
             'licence' => [
@@ -154,5 +152,10 @@ class DiscList extends AbstractDiscList
         $max = self::PER_PAGE / self::PER_ROW;
 
         return ($index % $max === $max - 1) ? self::LAST_ROW_HEIGHT : self::ROW_HEIGHT;
+    }
+
+    protected function getQueryClass(): string
+    {
+        return Qry::class;
     }
 }

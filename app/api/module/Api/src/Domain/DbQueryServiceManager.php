@@ -7,7 +7,7 @@ use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\ConfigInterface;
 
 /**
- * @method Repository\Query\AbstractRawQuery get($name) Get the Query service
+ * @template-extends AbstractPluginManager<QueryInterface>
  */
 class DbQueryServiceManager extends AbstractPluginManager
 {

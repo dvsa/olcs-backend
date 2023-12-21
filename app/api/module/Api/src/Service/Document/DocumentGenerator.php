@@ -61,7 +61,7 @@ class DocumentGenerator implements FactoryInterface, NamingServiceAwareInterface
      * Helper method to generate a string of content from a given template and
      * query parameters
      *
-     * @param string $template             Template path or id
+     * @param string|int $template             Template path or id
      * @param array  $queryData            Query Data
      * @param array  $knownValues          Values
      * @param bool $disableBookmarksFlag should the bookmark rendering be disabled?

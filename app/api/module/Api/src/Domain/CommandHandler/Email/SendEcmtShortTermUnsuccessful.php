@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 /**
  * Send confirmation of ECMT short term app being unsuccessful

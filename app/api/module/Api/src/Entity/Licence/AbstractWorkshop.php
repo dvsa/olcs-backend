@@ -365,7 +365,8 @@ abstract class AbstractWorkshop implements BundleSerializableInterface, JsonSeri
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRemovedDate($asDateTime = false)
     {

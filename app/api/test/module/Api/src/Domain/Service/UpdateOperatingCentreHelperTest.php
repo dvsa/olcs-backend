@@ -318,7 +318,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
      * @param string $validationErrorCode
      * @test
      * @dataProvider invalidTotalAuthVehicleConfigurations
-     * @depends validateTotalAuthVehicles_IsCallable
+     * @depends validateTotalAuthVehiclesIsCallable
      */
     public function validateTotalAuthVehiclesAddsValidationMessagesWhereTotalAuthHgvVehiclesValueIsInvalid(
         ?int $totAuthHgvs,
@@ -407,7 +407,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends validateTotalAuthVehicles_DoesNotAddValidationMessages_WhereTotalAuthHgvVehiclesValueIsValid
+     * @depends validateTotalAuthVehiclesDoesNotAddValidationMessagesWhereTotalAuthHgvVehiclesValueIsValid
      */
     public function validateTotalAuthHgvVehiclesAcceptsLicence()
     {
@@ -445,7 +445,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends validatePsv_IsCallable
+     * @depends validatePsvIsCallable
      */
     public function validatePsvAddsValidationMessagesWhenLgvsAreProvided()
     {
@@ -529,7 +529,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     /**
      * @test
      * @dataProvider dpValidateTotalAuthLgvVehicles
-     * @depends validateTotalAuthLgvVehicles_IsCallable
+     * @depends validateTotalAuthLgvVehiclesIsCallable
      */
     public function validateTotalAuthLgvVehicles($canHaveLgv, $mustHaveLgv, $totAuthLgvVehicles, $expected)
     {

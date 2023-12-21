@@ -30,6 +30,5 @@ return [
     CommandHandler\Licence\UpdateBusinessDetails::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\UpdateOperatingCentres::class => Misc\CanAccessLicenceWithId::class,
     CommandHandler\Licence\EnqueueContinuationNotSought::class => Misc\IsSystemUser::class,
-    CommandHandler\Licence\DeleteUpdateOptOutTmLetter::class => Misc\IsInternalUser::class,
     CommandHandler\Licence\ProposeToRevoke::class => Misc\IsInternalUser::class
 ];

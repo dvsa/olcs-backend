@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\GdsVerify\Data;
 
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -11,21 +12,21 @@ use Ramsey\Uuid\Uuid;
 class Container extends \SAML2\Compat\AbstractContainer
 {
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var LoggerInterface
      */
     private $debugLogger;
 
     /**
      * Container constructor.
      *
-     * @param \Psr\Log\LoggerInterface $logger Logger
+     * @param LoggerInterface $logger Logger
      */
-    public function __construct(\Psr\Log\LoggerInterface $logger)
+    public function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
     }
@@ -33,7 +34,7 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * Provide logger to SAML2
      *
-     * @return \Psr\Log\LoggerInterface
+     * @return LoggerInterface
      */
     public function getLogger()
     {
@@ -43,14 +44,14 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * SAML show debug message
      *
-     * @param string $message Message to log
+     * @param string|object $message Message to log
      * @param string $type    Type of message
      *
      * @return void
      */
     public function debugMessage($message, $type)
     {
-        if ($this->debugLogger instanceof \Psr\Log\LoggerInterface) {
+        if ($this->debugLogger instanceof LoggerInterface) {
             if (is_object($message)) {
                 $message = get_class($message);
             }
@@ -95,11 +96,11 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * Set the debug logger
      *
-     * @param \Psr\Log\LoggerInterface $logger Logger
+     * @param LoggerInterface $logger Logger
      *
      * @return void
      */
-    public function setDebugLog(\Psr\Log\LoggerInterface $logger)
+    public function setDebugLog(LoggerInterface $logger)
     {
         $this->debugLogger = $logger;
     }

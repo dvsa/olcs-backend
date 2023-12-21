@@ -203,7 +203,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAgreedDate($asDateTime = false)
     {
@@ -401,7 +402,8 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getReceivedDate($asDateTime = false)
     {
@@ -463,7 +465,7 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Set the aoc
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $aocs collection being set as the value
+     * @param ArrayCollection $aocs collection being set as the value
      *
      * @return S4
      */
@@ -477,7 +479,7 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Get the aocs
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getAocs()
     {
@@ -487,7 +489,7 @@ abstract class AbstractS4 implements BundleSerializableInterface, JsonSerializab
     /**
      * Add a aocs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $aocs collection being added
+     * @param ArrayCollection|mixed $aocs collection being added
      *
      * @return S4
      */

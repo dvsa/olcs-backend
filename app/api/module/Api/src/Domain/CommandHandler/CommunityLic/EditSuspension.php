@@ -30,7 +30,7 @@ final class EditSuspension extends AbstractCommandHandler implements Transaction
     /**
      * Handle command
      *
-     * @param \Dvsa\Olcs\Transfer\Command\EditSuspension $command command
+     * @param \Dvsa\Olcs\Transfer\Command\CommunityLic\EditSuspension $command command
      *
      * @return Result
      * @throws ValidationException
@@ -80,8 +80,8 @@ final class EditSuspension extends AbstractCommandHandler implements Transaction
     /**
      * Update suspension and reasons
      *
-     * @param \Dvsa\Olcs\Transfer\Command\EditSuspension      $command      command
-     * @param \Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic $communityLic community licence
+     * @param Cmd $command      command
+     * @param CommunityLicEntity $communityLic community licence
      *
      * @return void
      */

@@ -346,7 +346,7 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     /**
      * Set the ground
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds collection being set as the value
+     * @param ArrayCollection $grounds collection being set as the value
      *
      * @return Opposition
      */
@@ -360,7 +360,7 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     /**
      * Get the grounds
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getGrounds()
     {
@@ -370,7 +370,7 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     /**
      * Add a grounds
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $grounds collection being added
+     * @param ArrayCollection|mixed $grounds collection being added
      *
      * @return Opposition
      */
@@ -649,7 +649,7 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     /**
      * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
+     * @param ArrayCollection $operatingCentres collection being set as the value
      *
      * @return Opposition
      */
@@ -663,7 +663,7 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     /**
      * Get the operating centres
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOperatingCentres()
     {
@@ -673,7 +673,7 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
     /**
      * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
+     * @param ArrayCollection|mixed $operatingCentres collection being added
      *
      * @return Opposition
      */
@@ -776,7 +776,8 @@ abstract class AbstractOpposition implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRaisedDate($asDateTime = false)
     {

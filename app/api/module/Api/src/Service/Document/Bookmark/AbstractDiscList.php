@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
  * Abstract Disc list bookmark
@@ -26,6 +27,10 @@ abstract class AbstractDiscList extends DynamicBookmark
      */
     public const PER_PAGE = 6;
 
+    public const PER_ROW = 1;
+
+    public const BOOKMARK_PREFIX = '';
+
     /**
      * Let the parser know we've already formatted our content by the
      * time it has been rendered
@@ -36,14 +41,19 @@ abstract class AbstractDiscList extends DynamicBookmark
 
     protected $service;
 
+    /**
+     * @psalm-return class-string<QueryInterface>
+     */
+    abstract protected function getQueryClass(): string;
+
     public function getQuery(array $data)
     {
-        $queryClass = static::QUERY_CLASS;
+        $queryClass = $this->getQueryClass();
 
         $queries = [];
         foreach ($data as $key => $id) {
             if (is_int($key)) {
-                $queries[] = $queryClass::create(['id' => $id, 'bundle' => $this->discBundle]);
+                $queries[] = (new $queryClass())::create(['id' => $id, 'bundle' => $this->discBundle]);
             }
         }
 

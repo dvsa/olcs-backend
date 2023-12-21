@@ -27,7 +27,7 @@ class DiagnosticControllerFactory implements FactoryInterface
     {
         $config = $container->get('config');
         $cpmsHelperService = $container->get('CpmsHelperService');
-        $elasticSearch = $container->get('ElasticSearch\Search');
+        $elasticSearch = $container->get('Elasticsearch\Search');
         $addressService = $container->get('AddressService');
         $companiesHouseService = $container->get(Client::class);
         $imapService = $container->get('ImapService');

@@ -823,7 +823,7 @@ abstract class AbstractConditionUndertaking implements BundleSerializableInterfa
     /**
      * Set the variation record
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords collection being set as the value
+     * @param ArrayCollection $variationRecords collection being set as the value
      *
      * @return ConditionUndertaking
      */
@@ -837,7 +837,7 @@ abstract class AbstractConditionUndertaking implements BundleSerializableInterfa
     /**
      * Get the variation records
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getVariationRecords()
     {
@@ -847,7 +847,7 @@ abstract class AbstractConditionUndertaking implements BundleSerializableInterfa
     /**
      * Add a variation records
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationRecords collection being added
+     * @param ArrayCollection|mixed $variationRecords collection being added
      *
      * @return ConditionUndertaking
      */

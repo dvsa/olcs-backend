@@ -347,7 +347,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDisqualificationDate($asDateTime = false)
     {
@@ -569,7 +570,8 @@ abstract class AbstractOtherLicence implements BundleSerializableInterface, Json
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPurchaseDate($asDateTime = false)
     {

@@ -28,7 +28,7 @@ class BilateralMetadata extends AbstractQueryHandler
     /**
      * Handle query
      *
-     * @param QueryInterface|BilateralMetadataQuery $query query
+     * @param QueryInterface $query query
      *
      * @return array
      */

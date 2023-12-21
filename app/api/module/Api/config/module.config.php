@@ -181,7 +181,6 @@ return [
             ApiServiceFactory::class => ApiServiceFactory::class,
             'FeesHelperService' => \Dvsa\Olcs\Api\Service\FeesHelperService::class,
             'FinancialStandingHelperService' => \Dvsa\Olcs\Api\Service\FinancialStandingHelperService::class,
-            'CompaniesHouseService' => \Dvsa\Olcs\Api\Service\CompaniesHouseService::class,
             DvlaSearchService::class => DvlaSearchServiceFactory::class,
 
             PublicationGenerator::class =>
@@ -237,14 +236,12 @@ return [
             \Dvsa\Olcs\Api\Mvc\OlcsBlameableListener::class => \Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory::class,
             \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class => \Dvsa\Olcs\Api\Listener\OlcsEntityListener::class,
 
-            ApiSrv\Nysiis\NysiisSoapClient::class => ApiSrv\Nysiis\NysiisSoapClientFactory::class,
             ApiSrv\Nysiis\NysiisRestClient::class => ApiSrv\Nysiis\NysiisRestClientFactory::class,
 
             ApiSrv\Document\PrintLetter::class => ApiSrv\Document\PrintLetter::class,
             \Dvsa\Olcs\Api\Service\Toggle\ToggleService::class =>
                 \Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory::class,
 
-            'TemplateFetcher' => ApiSrv\Template\TemplateFetcher::class,
             'TemplateDatabaseTwigLoader' => ApiSrv\Template\DatabaseTwigLoaderFactory::class,
             'TemplateDatabaseTemplateFetcher' => ApiSrv\Template\DatabaseTemplateFetcherFactory::class,
             'TemplateTwigRenderer' => ApiSrv\Template\TwigRendererFactory::class,
@@ -757,7 +754,6 @@ return [
             'GetDbValue' => RepositoryFactory::class,
             'Surrender' => RepositoryFactory::class,
             'Sectors' => RepositoryFactory::class,
-            'EcmtPermits' => RepositoryFactory::class,
             'IrhpPermitApplication' => RepositoryFactory::class,
             'IrhpApplication' => RepositoryFactory::class,
             'IrhpApplicationReadAudit' => RepositoryFactory::class,

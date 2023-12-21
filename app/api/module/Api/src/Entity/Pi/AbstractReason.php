@@ -390,7 +390,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the pi
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being set as the value
+     * @param ArrayCollection $pis collection being set as the value
      *
      * @return Reason
      */
@@ -404,7 +404,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Get the pis
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPis()
     {
@@ -414,7 +414,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Add a pis
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $pis collection being added
+     * @param ArrayCollection|mixed $pis collection being added
      *
      * @return Reason
      */
@@ -453,7 +453,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the propose to revoke
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes collection being set as the value
+     * @param ArrayCollection $proposeToRevokes collection being set as the value
      *
      * @return Reason
      */
@@ -467,7 +467,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Get the propose to revokes
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getProposeToRevokes()
     {
@@ -477,7 +477,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Add a propose to revokes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $proposeToRevokes collection being added
+     * @param ArrayCollection|mixed $proposeToRevokes collection being added
      *
      * @return Reason
      */
@@ -540,7 +540,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Set the submission action
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being set as the value
+     * @param ArrayCollection $submissionActions collection being set as the value
      *
      * @return Reason
      */
@@ -554,7 +554,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Get the submission actions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getSubmissionActions()
     {
@@ -564,7 +564,7 @@ abstract class AbstractReason implements BundleSerializableInterface, JsonSerial
     /**
      * Add a submission actions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $submissionActions collection being added
+     * @param ArrayCollection|mixed $submissionActions collection being added
      *
      * @return Reason
      */

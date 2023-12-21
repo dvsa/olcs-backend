@@ -26,7 +26,7 @@ final class Activate extends AbstractCommandHandler implements TransactionedInte
      *
      * @param CommandInterface $command command
      *
-     * @return Result
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {

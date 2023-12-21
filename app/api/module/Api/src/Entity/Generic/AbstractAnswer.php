@@ -262,7 +262,8 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAnsDate($asDateTime = false)
     {
@@ -292,7 +293,8 @@ abstract class AbstractAnswer implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAnsDatetime($asDateTime = false)
     {

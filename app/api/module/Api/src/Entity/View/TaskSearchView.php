@@ -44,7 +44,7 @@ class TaskSearchView implements BundleSerializableInterface
     /**
      * Is closed
      *
-     * @var unknown
+     * @var int
      *
      * @ORM\Column(type="yesno", name="is_closed")
      */
@@ -53,7 +53,7 @@ class TaskSearchView implements BundleSerializableInterface
     /**
      * Is urgent
      *
-     * @var unknown
+     * @var int
      *
      * @ORM\Column(type="yesno", name="urgent")
      */
@@ -302,7 +302,7 @@ class TaskSearchView implements BundleSerializableInterface
     /**
      * Get the is closed
      *
-     * @return unknown
+     * @return int
      */
     public function getIsClosed()
     {
@@ -312,7 +312,7 @@ class TaskSearchView implements BundleSerializableInterface
     /**
      * Get the urgent flag
      *
-     * @return unknown
+     * @return int
      */
     public function getUrgent()
     {

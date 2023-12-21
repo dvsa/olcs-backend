@@ -373,7 +373,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the task
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     * @param ArrayCollection $tasks collection being set as the value
      *
      * @return Team
      */
@@ -387,7 +387,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the tasks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTasks()
     {
@@ -397,7 +397,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a tasks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     * @param ArrayCollection|mixed $tasks collection being added
      *
      * @return Team
      */
@@ -436,7 +436,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the task allocation rule
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $taskAllocationRules collection being set as the value
+     * @param ArrayCollection $taskAllocationRules collection being set as the value
      *
      * @return Team
      */
@@ -450,7 +450,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the task allocation rules
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTaskAllocationRules()
     {
@@ -460,7 +460,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a task allocation rules
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $taskAllocationRules collection being added
+     * @param ArrayCollection|mixed $taskAllocationRules collection being added
      *
      * @return Team
      */
@@ -499,7 +499,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Set the team printer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being set as the value
+     * @param ArrayCollection $teamPrinters collection being set as the value
      *
      * @return Team
      */
@@ -513,7 +513,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Get the team printers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTeamPrinters()
     {
@@ -523,7 +523,7 @@ abstract class AbstractTeam implements BundleSerializableInterface, JsonSerializ
     /**
      * Add a team printers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being added
+     * @param ArrayCollection|mixed $teamPrinters collection being added
      *
      * @return Team
      */

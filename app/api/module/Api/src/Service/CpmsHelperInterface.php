@@ -188,7 +188,7 @@ interface CpmsHelperInterface
     /**
      * Refund payments in a batch
      *
-     * @param Fee $fee
+     * @param FeeEntity $fee
      * @return array
      */
     public function batchRefund($fee);

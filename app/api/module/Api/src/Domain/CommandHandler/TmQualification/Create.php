@@ -39,8 +39,8 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     }
 
     /**
-     * @param Cmd $command
-     * @return TmQualification
+     * @param CommandInterface $command
+     * @return TmQualificationEntity
      */
     private function createTmQualificationObject($command)
     {

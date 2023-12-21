@@ -845,7 +845,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the disqualification
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being set as the value
+     * @param ArrayCollection $disqualifications collection being set as the value
      *
      * @return Organisation
      */
@@ -859,7 +859,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the disqualifications
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDisqualifications()
     {
@@ -869,7 +869,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a disqualifications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $disqualifications collection being added
+     * @param ArrayCollection|mixed $disqualifications collection being added
      *
      * @return Organisation
      */
@@ -908,7 +908,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the irfo partner
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners collection being set as the value
+     * @param ArrayCollection $irfoPartners collection being set as the value
      *
      * @return Organisation
      */
@@ -922,7 +922,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the irfo partners
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrfoPartners()
     {
@@ -932,7 +932,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a irfo partners
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irfoPartners collection being added
+     * @param ArrayCollection|mixed $irfoPartners collection being added
      *
      * @return Organisation
      */
@@ -971,7 +971,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being set as the value
+     * @param ArrayCollection $licences collection being set as the value
      *
      * @return Organisation
      */
@@ -985,7 +985,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the licences
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getLicences()
     {
@@ -995,7 +995,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licences collection being added
+     * @param ArrayCollection|mixed $licences collection being added
      *
      * @return Organisation
      */
@@ -1034,7 +1034,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being set as the value
+     * @param ArrayCollection $organisationPersons collection being set as the value
      *
      * @return Organisation
      */
@@ -1048,7 +1048,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the organisation persons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOrganisationPersons()
     {
@@ -1058,7 +1058,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationPersons collection being added
+     * @param ArrayCollection|mixed $organisationPersons collection being added
      *
      * @return Organisation
      */
@@ -1097,7 +1097,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     * @param ArrayCollection $readAudits collection being set as the value
      *
      * @return Organisation
      */
@@ -1111,7 +1111,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the read audits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReadAudits()
     {
@@ -1121,7 +1121,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     * @param ArrayCollection|mixed $readAudits collection being added
      *
      * @return Organisation
      */
@@ -1160,7 +1160,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the organisation user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being set as the value
+     * @param ArrayCollection $organisationUsers collection being set as the value
      *
      * @return Organisation
      */
@@ -1174,7 +1174,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the organisation users
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOrganisationUsers()
     {
@@ -1184,7 +1184,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a organisation users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $organisationUsers collection being added
+     * @param ArrayCollection|mixed $organisationUsers collection being added
      *
      * @return Organisation
      */
@@ -1223,7 +1223,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Set the trading name
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames collection being set as the value
+     * @param ArrayCollection $tradingNames collection being set as the value
      *
      * @return Organisation
      */
@@ -1237,7 +1237,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Get the trading names
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTradingNames()
     {
@@ -1247,7 +1247,7 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     /**
      * Add a trading names
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tradingNames collection being added
+     * @param ArrayCollection|mixed $tradingNames collection being added
      *
      * @return Organisation
      */

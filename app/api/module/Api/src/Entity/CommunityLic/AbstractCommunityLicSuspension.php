@@ -238,7 +238,8 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getEndDate($asDateTime = false)
     {
@@ -364,7 +365,8 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getStartDate($asDateTime = false)
     {
@@ -402,7 +404,7 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
     /**
      * Set the community lic suspension reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensionReasons collection being set as the value
+     * @param ArrayCollection $communityLicSuspensionReasons collection being set as the value
      *
      * @return CommunityLicSuspension
      */
@@ -416,7 +418,7 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
     /**
      * Get the community lic suspension reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCommunityLicSuspensionReasons()
     {
@@ -426,7 +428,7 @@ abstract class AbstractCommunityLicSuspension implements BundleSerializableInter
     /**
      * Add a community lic suspension reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $communityLicSuspensionReasons collection being added
+     * @param ArrayCollection|mixed $communityLicSuspensionReasons collection being added
      *
      * @return CommunityLicSuspension
      */

@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;

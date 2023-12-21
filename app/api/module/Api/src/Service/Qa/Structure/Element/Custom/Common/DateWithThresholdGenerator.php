@@ -49,7 +49,7 @@ class DateWithThresholdGenerator
      * @param ElementGeneratorContext $context
      * @param string $dateInterval
      *
-     * @return ElementInterface
+     * @return DateWithThreshold
      */
     public function generate(ElementGeneratorContext $context, $dateInterval)
     {

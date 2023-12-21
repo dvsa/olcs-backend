@@ -95,7 +95,7 @@ final class Update extends AbstractCommandHandler implements
      * Check and possible update the licence traffic area
      *
      * @param string $postcode
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\PrivateHireLicence $phl
+     * @param PrivateHireLicence $phl
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     protected function checkTrafficArea($postcode, PrivateHireLicence $phl)

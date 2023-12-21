@@ -88,7 +88,6 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
                 /** @var FeeTransaction $ft */
-                unset($key); // unused
                 $total += Fee::amountToPence($ft->getAmount());
                 return true;
             }
@@ -132,7 +131,6 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
                 /** @var FeeTransaction $ft */
-                unset($key); // unused
                 if ($ft->getReversedFeeTransaction()) {
                     $total += Fee::amountToPence($ft->getAmount());
                 }
@@ -156,7 +154,6 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$total) {
                 /** @var FeeTransaction $ft */
-                unset($key); // unused
                 if (is_null($ft->getReversedFeeTransaction())) {
                     $total += Fee::amountToPence($ft->getAmount());
                 }
@@ -277,7 +274,6 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         $this->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$feeTransactions) {
                 /** @var FeeTransaction $ft */
-                unset($key); // unused
                 if (is_null($ft->getReversedFeeTransaction())) {
                     $feeTransactions[] = $ft;
                 }
@@ -443,7 +439,6 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
             $this->getFeeTransactions()->forAll(
                 function ($key, $ft) use (&$transaction) {
                     /** @var FeeTransaction $ft */
-                    unset($key); // unused
                     if ($ft->getReversedFeeTransaction()) {
                         $transaction = $ft->getReversedFeeTransaction()->getTransaction();
                         return false;
@@ -470,7 +465,6 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
         $this->getFeeTransactions()->forAll(
             function ($key, $feeTransaction) use ($feeId, &$amount) {
                 /** @var FeeTransaction $feeTransaction */
-                unset($key); // unused
                 if ($feeTransaction->getFee()->getId() == $feeId && !$feeTransaction->getReversedFeeTransaction()) {
                     $amount = $feeTransaction->getAmount();
                     return false;

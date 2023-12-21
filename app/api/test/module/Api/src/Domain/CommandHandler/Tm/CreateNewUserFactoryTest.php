@@ -47,7 +47,7 @@ class CreateNewUserFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsWrappedCreateNewUserCommandHandler(): void
     {

@@ -19,6 +19,11 @@ class RecordList extends AbstractQueryHandler implements CacheAwareInterface
         assert($query instanceof Qry);
 
         $queryDto = $this->cacheService->getQueryFromCustomIdentifier($query->getId());
+
+        if (!(is_a($queryDto, QueryInterface::class, true))) {
+            throw new \RuntimeException('Query not found');
+        }
+
         $childQuery = $queryDto::create([]);
 
         return $this->getQueryHandler()->handleQuery($childQuery);

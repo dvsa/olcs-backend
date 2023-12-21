@@ -6,8 +6,7 @@ use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 
 /**
- * Class PluginManager
- * @package Dvsa\Olcs\Api\Service\Publication\Context
+ * @template-extends AbstractPluginManager<ContextInterface>
  */
 class PluginManager extends AbstractPluginManager
 {
