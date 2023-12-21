@@ -6401,16 +6401,16 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "5.0.0.beta1",
+            "version": "5.0.0-beta.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-utils.git",
-                "reference": "d1430044d14ff38b3da5eabeee55024b2e90ee98"
+                "reference": "9ec3b807ff8ca1670989ced79010bd3db53f2010"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/d1430044d14ff38b3da5eabeee55024b2e90ee98",
-                "reference": "d1430044d14ff38b3da5eabeee55024b2e90ee98",
+                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/9ec3b807ff8ca1670989ced79010bd3db53f2010",
+                "reference": "9ec3b807ff8ca1670989ced79010bd3db53f2010",
                 "shasum": ""
             },
             "require": {
@@ -6447,9 +6447,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Utils",
             "support": {
-                "source": "https://github.com/dvsa/olcs-utils/tree/5.0.0.beta1"
+                "source": "https://github.com/dvsa/olcs-utils/tree/5.0.0-beta.2"
             },
-            "time": "2023-11-28T17:23:31+00:00"
+            "time": "2023-12-19T14:01:18+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
