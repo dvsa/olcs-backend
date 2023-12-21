@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\AnswersSummary as AnswersSummaryQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -28,6 +29,8 @@ class AnswersSummary extends AbstractQueryHandler
     protected $repoServiceName = 'IrhpApplication';
 
     protected $extraRepos = ['IrhpPermitApplication'];
+
+    private TranslatorInterface $translator;
 
     /**
      * Handle query

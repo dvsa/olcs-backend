@@ -128,7 +128,7 @@ class DeclarationReviewService extends AbstractReviewService
             }
         }
 
-        if ($licence->isStandardNational() || $licence->isStandardInternational()) {
+        if (!empty($markupStandard) && ($licence->isStandardNational() || $licence->isStandardInternational())) {
             // add extra bullets if licence is a stanard
             $additional[] = $this->translate($markupStandard);
         } else {

@@ -19,7 +19,6 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as Cmd;
 
@@ -36,7 +35,6 @@ final class GenerateAndStore extends AbstractCommandHandler implements
 {
     use DocumentGeneratorAwareTrait;
     use AuthAwareTrait;
-    use NamingServiceAwareTrait;
 
     protected $repoServiceName = 'Document';
 

@@ -50,7 +50,7 @@ class BatchController extends AbstractCliController
     /**
      * Run data retention rules
      *
-     * @return \Laminas\Mvc\Console\View\ViewModel
+     * @return \Laminas\Mvc\Console\View\ViewModel|void
      * @throws \Exception
      */
     public function dataRetentionRuleAction()
@@ -519,7 +519,7 @@ class BatchController extends AbstractCliController
     /**
      * Permits
      *
-     * @return ConsoleModel
+     * @return ConsoleModel|void
      */
     public function permitsAction()
     {

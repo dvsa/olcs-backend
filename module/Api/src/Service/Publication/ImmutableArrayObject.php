@@ -17,5 +17,6 @@ class ImmutableArrayObject extends \ArrayObject
 
     public function exchangeArray($input)
     {
+        return [];
     }
 }

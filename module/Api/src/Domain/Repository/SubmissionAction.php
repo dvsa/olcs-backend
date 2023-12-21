@@ -24,6 +24,6 @@ class SubmissionAction extends AbstractRepository
     {
         parent::buildDefaultQuery($qb, $id);
 
-        $this->getQueryBuilder()->with('reasons');
+        return $this->getQueryBuilder()->with('reasons');
     }
 }

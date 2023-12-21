@@ -69,7 +69,7 @@ class OrganisationName implements FormatterInterface
 
     /**
      * @param $separator
-     * @return $this
+     * @return void
      */
     public static function setSeparator($separator)
     {

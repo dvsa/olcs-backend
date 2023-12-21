@@ -47,14 +47,6 @@ class ApplicationPsvOcTotalAuthReviewService extends AbstractReviewService
             ]
         ];
 
-        // @NOTE here we use a slightly different method to modify the config, we REMOVE the large vehicles,
-        // everywhere else we generally only add relevant nodes, but due to where the large vehicles node needs to sit
-        // it's easier to conditionally remove it, also there is no real processing involved in adding it initially so
-        // this isn't really a big deal
-        if (!in_array($data['licenceType']['id'], $this->licenceTypesWithLargeVehicles)) {
-            unset($config['multiItems'][0]['large']);
-        }
-
         // Conditionally add the community licences, if the licence type is restricted or standard international
         if (in_array($data['licenceType']['id'], $this->licenceTypesWithCommunityLicences)) {
             $config['multiItems'][0][] = [

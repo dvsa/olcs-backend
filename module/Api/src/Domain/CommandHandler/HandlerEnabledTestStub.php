@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -21,6 +22,7 @@ class HandlerEnabledTestStub extends AbstractCommandHandler implements ToggleReq
 
     public function handleCommand(CommandInterface $command)
     {
+        return new Result();
     }
 
     public function setToggleConfig(array $toggleConfig)

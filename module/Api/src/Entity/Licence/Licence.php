@@ -1175,7 +1175,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      *
      * @param string $type publication type
      *
-     * @return PublicationEntity
+     * @return PublicationEntity|void
      */
     public function getLatestPublicationByType($type)
     {

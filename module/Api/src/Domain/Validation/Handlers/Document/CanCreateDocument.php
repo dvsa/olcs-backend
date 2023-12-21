@@ -105,7 +105,7 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
      *
      * @param bool $valid The result of one of the validations
      *
-     * @return bool
+     * @return void
      */
     private function setIsValid($valid)
     {

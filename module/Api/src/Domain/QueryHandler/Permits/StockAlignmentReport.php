@@ -116,7 +116,7 @@ class StockAlignmentReport extends AbstractQueryHandler
      * @param RefData $emissionsCategory Requested emissions category
      * @param Collection $restrictedCountries Requested restricted countries
      *
-     * @return array
+     * @return void
      */
     private function calculateAlignedStock(RefData $emissionsCategory, Collection $restrictedCountries)
     {

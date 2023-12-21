@@ -108,7 +108,7 @@ class Role extends AbstractRole implements RoleInterface
 
     public static function anon()
     {
-        $role = new static();
+        $role = new self();
         $role->setId(self::ROLE_ANON);
         $role->setRole(self::ROLE_ANON);
 

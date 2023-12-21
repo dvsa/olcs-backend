@@ -19,7 +19,7 @@ class ConditionsUndertakingsReviewService extends AbstractReviewService
 {
     public function getConfigFromData(array $data = array())
     {
-        // noop
+        return [];
     }
 
     public function formatLicenceSubSection($list, $lva, $conditionOrUndertaking, $action)

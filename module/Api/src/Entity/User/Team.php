@@ -143,6 +143,8 @@ class Team extends AbstractTeam
         if ($this->canAccessNiData($excludedTeams)) {
             return TrafficArea::NI_TA_IDS;
         }
+
+        return [];
     }
 
     /**

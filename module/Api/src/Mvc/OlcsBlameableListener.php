@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * @psalm-suppress InvalidExtendClass
+ * @phpstan-ignore-next-line
  */
 class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareInterface
 {

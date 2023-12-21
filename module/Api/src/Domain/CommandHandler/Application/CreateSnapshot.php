@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\System\Category;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\GeneratorFactory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
@@ -38,6 +39,11 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
     public const CODE_PSV_VAR_NO_UPGRADE = 'PSV431';
 
     protected $repoServiceName = 'Application';
+
+    /**
+     * @var GeneratorFactory
+     */
+    private $reviewSnapshotService;
 
     public function handleCommand(CommandInterface $command)
     {

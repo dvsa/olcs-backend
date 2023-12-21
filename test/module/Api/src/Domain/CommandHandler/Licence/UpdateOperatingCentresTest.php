@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
@@ -641,7 +642,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         }
     }
 
-    protected function setUpDefaultServices()
+    protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->authService();
         $this->updateHelper();

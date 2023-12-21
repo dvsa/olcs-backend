@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -1117,9 +1118,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
         }
     }
 
-    protected function setUpDefaultServices()
+    protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
-        $this->serviceManager()->setService('TrafficAreaValidator', $this->setUpMockService(\Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class));
+        $serviceManager->setService('TrafficAreaValidator', $this->setUpMockService(\Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator::class));
         $this->setUpAbstractCommandHandlerServices();
         $this->authService();
         $this->applicationRepository();

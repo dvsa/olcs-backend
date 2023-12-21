@@ -13,6 +13,7 @@ use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\OlcsTest\MocksServicesTrait;
 
@@ -438,7 +439,7 @@ class LoginTest extends CommandHandlerTestCase
         $this->sut = new Login($this->authenticationService(), $this->authenticationAdapter());
     }
 
-    protected function setUpDefaultServices()
+    protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->userRepository();
         $this->authenticationService();

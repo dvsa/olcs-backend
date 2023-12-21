@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
-use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareTrait;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
@@ -28,7 +27,6 @@ final class Upload extends AbstractCommandHandler implements
     NamingServiceAwareInterface
 {
     use UploaderAwareTrait;
-    use NamingServiceAwareTrait;
 
     public const ERR_MIME = 'ERR_MIME';
     public const ERR_EBSR_MIME = 'ERR_EBSR_MIME';

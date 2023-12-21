@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -371,7 +372,7 @@ class UpdateTest extends CommandHandlerTestCase
         return $this->sut->__invoke($this->serviceManager, Update::class);
     }
 
-    protected function setUpDefaultServices()
+    protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->repositoryServiceManager();
         $this->contactDetailsRepository();
