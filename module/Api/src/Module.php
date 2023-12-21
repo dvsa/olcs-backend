@@ -4,11 +4,12 @@ namespace Dvsa\Olcs\Api;
 
 use Dvsa\Olcs\Api\Domain\Util\BlockCipher\PhpSecLib;
 use Olcs\Logging\Log\Logger;
-use phpseclib\Crypt;
+use phpseclib3\Crypt\AES;
 use Laminas\EventManager\EventInterface;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\ResponseSender\SendResponseEvent;
+use phpseclib3\Crypt\Common\SymmetricKey;
 
 /**
  * Module class
@@ -115,7 +116,7 @@ class Module implements BootstrapListenerInterface
             $encrypterType = \Doctrine\DBAL\Types\Type::getType('encrypted_string');
 
             // NB OLCS-17482 caused a backwards INCOMPATIBLE change to the way the encryption works
-            $cipher = new Crypt\AES();
+            $cipher = new AES('cbc');
             // Force AES 256
             $cipher->setKeyLength(256);
             $cipher->setKey($config['olcs-doctrine']['encryption_key']);

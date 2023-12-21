@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
 use Doctrine\DBAL\Platforms\MySQLPlatform;
-use phpseclib\Crypt\AES;
+use phpseclib3\Crypt\AES;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 

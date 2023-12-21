@@ -15,7 +15,7 @@
 return array(
     'olcs-doctrine' => [
         // Default encryption key to use if not overridden in local
-        'encryption_key' => 'ASaoW9TQogBu7TgDHoBKtsDPY5BdjF7WFZbLKHgN'
+        'encryption_key' => 'ASaoW9TQogBu7TgDHoBKtsDPY5BdjF7W'
     ],
     'doctrine' => array(
         'configuration' => array(

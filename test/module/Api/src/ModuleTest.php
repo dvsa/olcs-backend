@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Module;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
-use phpseclib\Crypt\Base;
+use phpseclib3\Crypt\AES;
 use Laminas\EventManager\Event;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\ResponseSender\SendResponseEvent;
@@ -153,13 +153,12 @@ class ModuleTest extends MockeryTestCase
         if (!EncryptedStringType::hasType(EncryptedStringType::TYPE)) {
             EncryptedStringType::addType(EncryptedStringType::TYPE, EncryptedStringType::class);
         }
-        $this->sut->initDoctrineEncrypterType(['olcs-doctrine' => ['encryption_key' => 'key']]);
+        $this->sut->initDoctrineEncrypterType(['olcs-doctrine' => ['encryption_key' => 'ASaoW9TQogBu7TgDHoBKtsDPY5BdjF7W']]);
 
-        /** @var Base $ciper */
+        /** @var AES $ciper */
         $ciper = \Doctrine\DBAL\Types\Type::getType('encrypted_string')->getEncrypter();
 
-        $this->assertInstanceOf(Base::class, $ciper);
-        $this->assertSame('key', $ciper->key);
+        $this->assertInstanceOf(AES::class, $ciper);
     }
 
     /**
