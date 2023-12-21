@@ -62,7 +62,6 @@ final class GenerateAndStore extends AbstractCommandHandler implements
 
         $fileName = $this->getNamingService()->generateName(
             $command->getDescription(),
-            // @todo If we ever stop using just RTFs during doc generation, sort this out
             'rtf',
             $this->getRepo()->getCategoryReference($command->getCategory()),
             $this->getRepo()->getSubCategoryReference($command->getSubCategory()),

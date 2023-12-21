@@ -229,7 +229,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
 
         switch ($allocationMode) {
             case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
-                // TODO: this allocation mode is now believed to be obsolete and would benefit from being removed
                 return $this->getTotalEmissionsCategoryPermitsRequired($assignedEmissionsCategoryId);
             case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
                 return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId, $wantedOnly));

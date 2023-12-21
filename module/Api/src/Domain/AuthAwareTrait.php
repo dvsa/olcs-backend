@@ -95,7 +95,7 @@ trait AuthAwareTrait
 
     /**
      * @note Even though this appears to be a one to one relationship, there's only ever one local authority for a user
-     * @todo olcs-14494 emergency fix, need to clean this up
+     * olcs-14494 emergency fix, need to clean this up
      *
      * @return LocalAuthority
      */

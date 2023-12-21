@@ -19,7 +19,16 @@ class AbstractGoodsVehiclesExportTest extends QueryHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new DummyAbstractGoodsVehiclesExport();
+        $this->sut = new class extends AbstractGoodsVehiclesExport {
+            public function getData(QueryBuilder $qb)
+            {
+                return parent::getData($qb);
+            }
+
+            public function handleQuery(QueryInterface $query)
+            {
+            }
+        };
 
         $this->mockRepo('LicenceVehicle', Repository\LicenceVehicle::class);
 
@@ -90,17 +99,5 @@ class AbstractGoodsVehiclesExportTest extends QueryHandlerTestCase
             ],
             $actual
         );
-    }
-}
-
-class DummyAbstractGoodsVehiclesExport extends AbstractGoodsVehiclesExport
-{
-    public function getData(QueryBuilder $qb)
-    {
-        return parent::getData($qb);
-    }
-
-    public function handleQuery(QueryInterface $query)
-    {
     }
 }

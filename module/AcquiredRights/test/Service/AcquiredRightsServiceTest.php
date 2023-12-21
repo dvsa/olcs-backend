@@ -43,7 +43,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function verifyAcquiredRightsByReference_Valid_ThrowsNoExceptions()
+    public function verifyAcquiredRightsByReferenceValidThrowsNoExceptions()
     {
         $this->sut = new AcquiredRightsService(
             $this->loggerInterfaceMock,
@@ -59,7 +59,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function verifyAcquiredRightsByReference_ExpiryElapsed_ThrowsAcquiredRightsExpiredException()
+    public function verifyAcquiredRightsByReferenceExpiryElapsedThrowsAcquiredRightsExpiredException()
     {
         $this->expectException(AcquiredRightsExpiredException::class);
 
@@ -79,7 +79,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function verifyAcquiredRightsByReference_DateOfBirthMismatch_ThrowsDateOfBirthMismatchException()
+    public function verifyAcquiredRightsByReferenceDateOfBirthMismatchThrowsDateOfBirthMismatchException()
     {
         $this->expectException(DateOfBirthMismatchException::class);
 
@@ -98,7 +98,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
      * @test
      * @dataProvider dataProvider_verifyAcquiredRightsByReference_ApplicationNotApproved
      */
-    public function verifyAcquiredRightsByReference_ApplicationNotApproved_ThrowsAcquiredRightsNotApprovedException(string $status, bool $shouldThrow)
+    public function verifyAcquiredRightsByReferenceApplicationNotApprovedThrowsAcquiredRightsNotApprovedException(string $status, bool $shouldThrow)
     {
         if ($shouldThrow) {
             $this->expectException(AcquiredRightsNotApprovedException::class);
@@ -123,7 +123,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut->verifyAcquiredRightsByReference('ABC1234', $dateOfBirth);
     }
 
-    public function dataProvider_verifyAcquiredRightsByReference_ApplicationNotApproved(): array
+    public function dataProviderverifyAcquiredRightsByReferenceApplicationNotApproved(): array
     {
         return [
             ApplicationReference::APPLICATION_STATUS_SUBMITTED => [
@@ -156,7 +156,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function verifyAcquiredRightsByReference_Throws_SoftExceptionAreLoggedAsInfo_AndRethrown()
+    public function verifyAcquiredRightsByReferenceThrowsSoftExceptionAreLoggedAsInfoAndRethrown()
     {
         $exception = new class () extends AcquiredRightsException implements SoftExceptionInterface {
         };
@@ -180,7 +180,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function verifyAcquiredRightsByReference_Throws_OtherExceptionsAreLoggedAsErr_AndRethrown()
+    public function verifyAcquiredRightsByReferenceThrowsOtherExceptionsAreLoggedAsErrAndRethrown()
     {
         $exception = new class () extends AcquiredRightsException {
         };
@@ -204,7 +204,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function verifyAcquiredRightsByReference_Throws_WhenInputFieldDefined_ValidationErrorIsRethrown()
+    public function verifyAcquiredRightsByReferenceThrowsWhenInputFieldDefinedValidationErrorIsRethrown()
     {
         $exception = new ReferenceNotFoundException();
         $this->acquiredRightsClientMock->expects('fetchByReference')->with('ABC1234')->once()->andThrow($exception);

@@ -28,7 +28,7 @@ class EntityAccessLoggerFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function invoke_IsCallable()
+    public function invokeIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -40,7 +40,7 @@ class EntityAccessLoggerFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function invoke_ReturnsInstanceOfFactoryProduct()
+    public function invokeReturnsInstanceOfFactoryProduct()
     {
         // Setup
         $this->setUpSut();

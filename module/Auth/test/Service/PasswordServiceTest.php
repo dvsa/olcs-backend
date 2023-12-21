@@ -20,7 +20,7 @@ class PasswordServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function generatePassword_ThrowsException_WhenRequestedLengthIsTooShort(): void
+    public function generatePasswordThrowsExceptionWhenRequestedLengthIsTooShort(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage(PasswordService::ERR_MESSAGE_TOO_SHORT);
@@ -33,7 +33,7 @@ class PasswordServiceTest extends MockeryTestCase
      * @test
      * @throws \Exception
      */
-    public function generatePassword_ReturnsPassword_ThatConformsToPolicy(): void
+    public function generatePasswordReturnsPasswordThatConformsToPolicy(): void
     {
         /**
          * Run this test 10000 times since we generate random passwords.
@@ -88,7 +88,7 @@ class PasswordServiceTest extends MockeryTestCase
     /**
      * @test
      */
-    public function generatePassword_ReturnsPassword_ThatMatchesRequestedLength(): void
+    public function generatePasswordReturnsPasswordThatMatchesRequestedLength(): void
     {
         $password = $this->sut->generatePassword(15);
 

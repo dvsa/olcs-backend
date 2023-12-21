@@ -19,15 +19,10 @@ final class DeleteApplicationOperatingCentre extends AbstractCommandHandler impl
 
     /**
      * Delete application operating centres.
-     *
-     * @todo This may want generalising.
      */
     public function handleCommand(CommandInterface $command)
     {
         $s4 = $this->getRepo()->getReference(S4::class, $command->getS4());
-        /**
-         * @todo Maybe replace this with $s4->getAocs()
-         */
         $applicationOperatingCentres = $this->getRepo()->fetchByS4($s4->getId());
 
         foreach ($applicationOperatingCentres as $applicationOperatingCentre) {

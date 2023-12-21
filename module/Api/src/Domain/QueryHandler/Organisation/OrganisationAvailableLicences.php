@@ -70,7 +70,6 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
         $organisationRepo = $this->getRepo('Organisation');
         $organisation = $organisationRepo->fetchUsingId($query);
 
-        /** @todo different behaviour for removals, bilaterals and multilaterals for now, a bit broken for the last 2 */
         if ($permitStockId === null && $permitType->usesMultiStockLicenceBehaviour()) {
             return $this->multiStock($organisation, $permitTypeId);
         }

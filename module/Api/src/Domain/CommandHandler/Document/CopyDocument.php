@@ -114,7 +114,6 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                     $params['transportManager'] = $command->getTargetId();
                     break;
                 case self::PUBLICATION:
-                    /* @todo publication doesn't currently have a foreign key in document table - it should */
             }
 
             $sourceDocument = $this->getUploader()->download($document->getIdentifier());

@@ -35,9 +35,6 @@ class InitialiseScope extends ScoringCommandHandler
         $this->profileMessage('apply scope...');
         $irhpApplicationRepo->applyScope($stockId);
 
-        // TODO: should the deviation data calculations use the scope of candidate ids that don't have randomized
-        // scores set, or the full list of candidate permit ids in scope?
-
         $this->profileMessage('fetch deviation source values...');
         $candidatePermitSourceValues = $irhpApplicationRepo->fetchDeviationSourceValues($stockId);
 

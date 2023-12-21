@@ -8,9 +8,9 @@ use Dvsa\Olcs\Api\Service\Qa\Supports\IrhpPermitApplicationOnlyTrait;
 
 class ThirdCountryAnswerSaver implements AnswerSaverInterface
 {
-    public const YES_ANSWER = 'qanda.bilaterals.third-country.yes-answer';
-
     use IrhpPermitApplicationOnlyTrait;
+
+    public const YES_ANSWER = 'qanda.bilaterals.third-country.yes-answer';
 
     /** @var CountryDeletingAnswerSaver */
     private $countryDeletingAnswerSaver;

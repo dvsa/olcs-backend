@@ -38,7 +38,6 @@ class FilterSubmissionSectionsTest extends CommandHandlerTestCase
 
     public function setUp(): void
     {
-        // @todo the code is probably copy/pasted from CommandHandlerTestCase. need refactoring?
         $this->sut = new FilterSubmissionSections();
         $this->mockRepo('Submission', SubmissionRepo::class);
 

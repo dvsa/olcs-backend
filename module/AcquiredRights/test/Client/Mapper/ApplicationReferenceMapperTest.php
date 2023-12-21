@@ -20,7 +20,7 @@ class ApplicationReferenceMapperTest extends MockeryTestCase
      * @test
      * @dataProvider dataProvider_responseDataAndExceptionMap
      */
-    public function createFromResponseArray_ValidOrThrowsAppropriateExceptions(array $data, string $exceptionMessage = null)
+    public function createFromResponseArrayValidOrThrowsAppropriateExceptions(array $data, string $exceptionMessage = null)
     {
         if (!is_null($exceptionMessage)) {
             $this->expectException(MapperParseException::class);
@@ -32,7 +32,7 @@ class ApplicationReferenceMapperTest extends MockeryTestCase
         $this->sut::createFromResponseArray($data);
     }
 
-    public function dataProvider_responseDataAndExceptionMap(): array
+    public function dataProviderresponseDataAndExceptionMap(): array
     {
         return [
             'Valid' => [

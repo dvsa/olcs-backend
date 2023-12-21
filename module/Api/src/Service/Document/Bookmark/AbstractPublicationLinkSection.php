@@ -151,7 +151,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
         foreach ($this->data['publicationLinks'] as $key => $entry) {
             if (in_array($entry['publicationSection']['id'], $sectionId)) {
                 /**
-                 * @todo special case for section id 18, fixes the problem in olcs-11399, but a bit untidy.
+                 * special case for section id 18, fixes the problem in olcs-11399, but a bit untidy.
                  *
                  * Fixing properly requires ETL changes and the text for schedule 4/1 true (pub section 18) to go into
                  * text3 instead of text1. This will be done in olcs-12569
@@ -162,7 +162,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
                 }
 
                 /**
-                 * @todo this only affects publications, once we have a proper solution for rtf documents as a whole,
+                 * this only affects publications, once we have a proper solution for rtf documents as a whole,
                  * (olcs-15279) entities/quote may be done elsewhere and it may be necessary to change this code
                  */
                 $entries[] = [

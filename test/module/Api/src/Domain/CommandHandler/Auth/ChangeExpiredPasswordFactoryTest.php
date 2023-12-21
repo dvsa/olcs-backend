@@ -33,7 +33,7 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -46,7 +46,7 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfChangeExpiredPasswordCommandHandler(): void
+    public function invokeReturnsAnInstanceOfChangeExpiredPasswordCommandHandler(): void
     {
         // Setup
         $this->setUpSut();

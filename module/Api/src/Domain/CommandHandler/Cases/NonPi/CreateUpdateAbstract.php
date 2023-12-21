@@ -15,7 +15,6 @@ use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;
 use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 
 /**
- * @todo this isn't great code, have improved somewhat, but should all be done by the entity
  * Create Update Abstract
  */
 abstract class CreateUpdateAbstract extends AbstractCommandHandler implements TransactionedInterface

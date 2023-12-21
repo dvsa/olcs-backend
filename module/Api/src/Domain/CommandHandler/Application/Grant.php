@@ -58,7 +58,7 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
             throw new ValidationException($errors);
         }
 
-        // @todo https://jira.dvsacloud.uk/browse/VOL-1375 Refactor grant authority to be set in the GrantGoodsCmd and GrantPsvCmd proxied commands
+        // https://jira.dvsacloud.uk/browse/VOL-1375 Refactor grant authority to be set in the GrantGoodsCmd and GrantPsvCmd proxied commands
         $application->setGrantAuthority($this->refData($command->getGrantAuthority()));
         $this->getRepo()->save($application);
 

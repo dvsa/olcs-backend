@@ -22,7 +22,7 @@ class PasswordServiceFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -35,7 +35,7 @@ class PasswordServiceFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfPasswordService()
+    public function invokeReturnsAnInstanceOfPasswordService()
     {
         // Setup
         $this->setUpSut();

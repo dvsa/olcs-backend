@@ -138,7 +138,7 @@ class GovUkAccountService
      * @param string $minimumConfidence
      * @return bool
      */
-    static function meetsVectorOfTrust(string $actual, string $minimumConfidence): bool
+    public static function meetsVectorOfTrust(string $actual, string $minimumConfidence): bool
     {
         $actual = strtoupper($actual);
         $minimumConfidence = strtoupper($minimumConfidence);

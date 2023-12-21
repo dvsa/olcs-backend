@@ -75,7 +75,6 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
             return $this->result;
         }
 
-        /** @todo can be removed once OpenAm is gone, as can interface & trait for accessing config */
         if ($this->config['auth']['default_adapter'] === self::OPENAM_ADAPTER_CONFIG_VALUE) {
             return $this->proxyCommand($command, ForgotPasswordOpenAm::class);
         }
@@ -87,7 +86,6 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
             $user->getContactDetails()->getEmailAddress()
         );
 
-        //@todo check for existing reset? Do we want to do anything to prevent spamming of this service?
         $confirmation = hash('sha256', random_bytes(512));
         $entity = UserPasswordResetEntity::create($user, $confirmation);
 

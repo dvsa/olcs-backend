@@ -20,11 +20,11 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\PermitAppWithdrawReason;
  */
 final class EndIrhpApplicationsAndPermits extends AbstractCommand
 {
-    public const CONTEXT_SURRENDER = 'context_surrender';
-    public const CONTEXT_REVOKE = 'context_revoke';
-    public const CONTEXT_CNS = 'context_cns';
-
     use Identity;
     use PermitAppWithdrawReason;
     use EndIrhpApplicationsAndPermitsContext;
+
+    public const CONTEXT_SURRENDER = 'context_surrender';
+    public const CONTEXT_REVOKE = 'context_revoke';
+    public const CONTEXT_CNS = 'context_cns';
 }

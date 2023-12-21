@@ -12,9 +12,9 @@ use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
  */
 final class PendingList extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'Publication';
-
     use AuthAwareTrait;
+
+    protected $repoServiceName = 'Publication';
 
     public function handleQuery(QueryInterface $query)
     {

@@ -31,7 +31,7 @@ class LoginFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -44,7 +44,7 @@ class LoginFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfLoginCommandHandler(): void
+    public function invokeReturnsAnInstanceOfLoginCommandHandler(): void
     {
         // Setup
         $this->setUpSut();

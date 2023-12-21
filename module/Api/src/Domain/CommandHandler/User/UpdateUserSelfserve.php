@@ -113,7 +113,7 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        //TODO:VOL-2661 Remove instance check
+        // VOL-2661 Remove instance check
         if ($this->provider === JWTIdentityProvider::class) {
             if ($this->authAdapter->doesUserExist($user->getLoginId())) {
                 $this->authAdapter->changeAttribute($user->getLoginId(), 'email', $user->getContactDetails()->getEmailAddress());

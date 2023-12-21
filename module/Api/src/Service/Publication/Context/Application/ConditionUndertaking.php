@@ -16,6 +16,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 final class ConditionUndertaking extends AbstractContext implements AddressFormatterAwareInterface
 {
+    use AddressFormatterAwareTrait;
+
     public const ATTACHED_LIC = 'Attached to Licence.';
     public const ATTACHED_OC = 'Attached to Operating Centre: %s';
 
@@ -23,8 +25,6 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
     public const COND_REMOVE = '%s to be removed: %s';
     public const COND_UPDATE = 'Current %s: %s';
     public const COND_AMENDED = 'Amended to: %s';
-
-    use AddressFormatterAwareTrait;
 
     /**
      * @param PublicationLink $publication

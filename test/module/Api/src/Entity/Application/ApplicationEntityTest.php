@@ -1495,7 +1495,7 @@ class ApplicationEntityTest extends EntityTester
     /**
      * @test
      */
-    public function copyInformationFromLicence_IsCallable()
+    public function copyInformationFromLicenceIsCallable()
     {
         // Setup
         $this->setUpSut();
@@ -1547,7 +1547,7 @@ class ApplicationEntityTest extends EntityTester
      * @test
      * @depends copyInformationFromLicence_IsCallable
      */
-    public function copyInformationFromLicence_SetsTotAuthHgvVehicles()
+    public function copyInformationFromLicenceSetsTotAuthHgvVehicles()
     {
         // Setup
         $this->setUpSut();
@@ -1565,7 +1565,7 @@ class ApplicationEntityTest extends EntityTester
      * @test
      * @depends copyInformationFromLicence_IsCallable
      */
-    public function copyInformationFromLicence_SetsTotAuthLgvVehicles()
+    public function copyInformationFromLicenceSetsTotAuthLgvVehicles()
     {
         // Setup
         $this->setUpSut();

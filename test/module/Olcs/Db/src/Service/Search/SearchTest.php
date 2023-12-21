@@ -87,9 +87,7 @@ class SearchTest extends MockeryTestCase
         ];
     }
 
-    # ToDo: VOL-3447 - Evaluate this test and reinstate/update/delete as appropriate
-    # public function testUpdateVehicleSection26()
-    public function UpdateVehicleSection26()
+    public function updateVehicleSection26()
     {
         $ids = [511, 2015];
         $section26Value = true;
@@ -395,9 +393,8 @@ class SearchTest extends MockeryTestCase
             ];
     }
 
-    # ToDo: VOL-3447 - Evaluate this test and reinstate/update/delete as appropriate
-    # public function testSearchUnderMaxResults()
-    public function SearchUnderMaxResults()
+    # VOL-3447 - Evaluate this test and reinstate/update/delete as appropriate
+    public function searchUnderMaxResults()
     {
         $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
 
@@ -416,9 +413,8 @@ class SearchTest extends MockeryTestCase
         $this->assertSame(SearchService::MAX_NUMBER_OF_RESULTS - 1, $result['Count']);
     }
 
-    # ToDo: VOL-3447 - Evaluate this test and reinstate/update/delete as appropriate
-    # public function testSearchOverMaxResults()
-    public function SearchOverMaxResults()
+    # VOL-3447 - Evaluate this test and reinstate/update/delete as appropriate
+    public function searchOverMaxResults()
     {
         $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
 

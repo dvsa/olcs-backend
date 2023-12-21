@@ -29,7 +29,7 @@ class SearchViewListTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $licId  = 99;
-        $status = 'some_status'; // @Todo update in the view
+        $status = 'some_status';
         $sort   = 'sort';
         $order  = 'DESC';
         $page   = 1;

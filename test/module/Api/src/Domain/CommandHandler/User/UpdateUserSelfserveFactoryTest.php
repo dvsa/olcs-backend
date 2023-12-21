@@ -37,7 +37,7 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
     /**
      * @test
      */
-    public function __invoke_IsCallable(): void
+    public function invokeIsCallable(): void
     {
         // Setup
         $this->setUpSut();
@@ -50,7 +50,7 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
      * @test
      * @depends __invoke_IsCallable
      */
-    public function __invoke_ReturnsAnInstanceOfTransactioningCommandHandler()
+    public function invokeReturnsAnInstanceOfTransactioningCommandHandler()
     {
         // Setup
         $this->setUpSut();

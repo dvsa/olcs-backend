@@ -92,7 +92,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
      */
     public function handleCommand(CommandInterface $command)
     {
-        //TODO: Remove once OpenAM is removed.
+        // Remove once OpenAM is removed.
         if (is_null($this->adapter)) {
             $this->adapter = $this->getOpenAmUser();
         }
@@ -352,7 +352,6 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     /**
      * @throws FailedRequestException
      * @throws ClientException
-     * @todo: Call directly from handle() once OpenAM removed
      */
     private function storeUserInAuthService(Cmd $command, string &$password, $realm)
     {
@@ -377,7 +376,6 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     /**
      * @param string $loginId
      * @return string
-     * @todo: Remove once OpenAM removed
      */
     private function generatePid(string $loginId)
     {

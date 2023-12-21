@@ -20,10 +20,10 @@ use RuntimeException;
  */
 final class BulkReprint extends AbstractCommandHandler implements UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
     public const EXPECTED_ITEMS_IN_ROW = 3;
     public const MAX_LINE_COUNT = 5000;
-
-    use UploaderAwareTrait;
 
     protected $repoServiceName = 'Document';
 

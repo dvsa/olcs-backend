@@ -62,7 +62,6 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
                 $this->checkDeletable($id, $entity);
                 $entities[$id] = $entity;
             } catch (NotFoundException $e) {
-                /** @todo this seems like strange behaviour - perhaps just throw the exception? */
                 $result->addMessage(sprintf('Id %d not found', $id));
             }
         }
