@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging;
+namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
@@ -10,39 +10,28 @@ use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Transfer\Query\Messaging\GetConversationList as GetConversationListQuery;
+use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByLicence as GetConversationsByLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-class ConversationList extends AbstractQueryHandler implements ToggleRequiredInterface
+class ByLicence extends AbstractQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::MESSAGING];
     private const STATUS_CLOSED = "CLOSED";
     private const STATUS_NEW_MESSAGE = "NEW_MESSAGE";
     private const STATUS_OPEN = "OPEN";
 
+    protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = ['Conversation', 'Message'];
 
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetConversationListQuery);
-        $conversationRepository = $this->getRepo('Conversation');
-        assert($conversationRepository instanceof ConversationRepo);
+        assert($query instanceof GetConversationsByLicenceQuery);
+        $conversationRepository = $this->getRepository();
 
         $conversationsQuery = $conversationRepository->getBaseConversationListQuery($query);
-        if (!empty($query->getLicence())) {
-            $conversationsQuery = $conversationRepository->filterByLicenceId($conversationsQuery, $query->getLicence());
-        }
-
-        if (!empty($query->getApplication())) {
-            $conversationsQuery = $conversationRepository->filterByApplicationId($conversationsQuery, $query->getApplication());
-        }
-
-        if ($query->getApplyOpenMessageSorting()) {
-            $conversationsQuery = $conversationRepository->applyOrderByOpen($conversationsQuery);
-        }
-
+        $conversationsQuery = $conversationRepository->filterByLicenceId($conversationsQuery, $query->getLicence());
+        $conversationsQuery = $conversationRepository->applyOrderByOpen($conversationsQuery);
         $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery);
         foreach ($conversations as $key => $value) {
             $unreadMessageCount = $this->getUnreadMessageCountForUser($value);
@@ -51,14 +40,20 @@ class ConversationList extends AbstractQueryHandler implements ToggleRequiredInt
             $conversations[$key]['latestMessage'] = $this->getLatestMessageMetadata($value['id']);
         }
 
-        if ($query->getApplyNewMessageSorting()) {
-            $conversations = $this->orderResultPrioritisingNewMessages($conversations);
-        }
+        $conversations = $this->orderResultPrioritisingNewMessages($conversations);
 
         return [
             'result' => $conversations,
             'count' => $conversationRepository->fetchPaginatedCount($conversationsQuery),
         ];
+    }
+
+    private function getUnreadMessageCountForUser($conversation): int
+    {
+        $messageRepository = $this->getRepo('Message');
+        assert($messageRepository instanceof MessageRepo);
+        $results = $messageRepository->getUnreadMessagesByConversationIdAndUserId($conversation['id'], $this->getUser()->getId());
+        return count($results);
     }
 
     private function stringifyMessageStatusForUser($conversation, $count): string
@@ -70,14 +65,6 @@ class ConversationList extends AbstractQueryHandler implements ToggleRequiredInt
             return self::STATUS_NEW_MESSAGE;
         }
         return self::STATUS_OPEN;
-    }
-
-    private function getUnreadMessageCountForUser($conversation): int
-    {
-        $messageRepository = $this->getRepo('Message');
-        assert($messageRepository instanceof MessageRepo);
-        $results = $messageRepository->getUnreadMessagesByConversationIdAndUserId($conversation['id'], $this->getUser()->getId());
-        return count($results);
     }
 
     private function getLatestMessageMetadata($conversationId): array
@@ -127,5 +114,12 @@ class ConversationList extends AbstractQueryHandler implements ToggleRequiredInt
         return array_reduce($order, function ($carry, $status) use ($statusGroups) {
             return array_merge($carry, $statusGroups[$status]);
         }, array());
+    }
+
+    private function getRepository(): ConversationRepo
+    {
+        $conversationRepository = $this->getRepo('Conversation');
+        assert($conversationRepository instanceof ConversationRepo);
+        return $conversationRepository;
     }
 }
