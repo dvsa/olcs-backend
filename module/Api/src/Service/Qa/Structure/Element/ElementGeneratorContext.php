@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element;
 
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
@@ -47,7 +48,7 @@ class ElementGeneratorContext
     /**
      * Get the embedded ApplicationStepEntity instance
      *
-     * @return ApplicationStepEntity
+     * @return ApplicationStep
      */
     public function getApplicationStepEntity()
     {

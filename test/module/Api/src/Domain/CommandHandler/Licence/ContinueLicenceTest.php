@@ -56,7 +56,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandNoContinuationDetail()
     {
@@ -77,7 +77,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvSpecialRestricted()
     {
@@ -120,7 +120,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvStandardNational()
     {
@@ -178,7 +178,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvStandardInternational()
     {
@@ -264,7 +264,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandGoodsNotStandardInternational()
     {
@@ -321,7 +321,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandGoodsStandardInternational()
     {
@@ -404,7 +404,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider signatureProvider
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandWithSnapshotAndSignature($signature, $description, $actionDate)
     {
@@ -507,7 +507,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandInsufficientFinancesTask()
     {
@@ -584,7 +584,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandInsufficientFinancesTaskSpecialRestricted()
     {
@@ -639,7 +639,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandOtherFinancesTask()
     {
@@ -707,7 +707,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandOtherFinancesTaskNotCreated()
     {
@@ -764,7 +764,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandSetsTotAuthVehiclesForPsvLicencesThatHaveContinutationDetailsAndLicenceIsNotSpecialRestricted()
     {
@@ -790,7 +790,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandSetsTotAuthHgvVehiclesForPsvLicencesThatHaveContinutationDetailsAndLicenceIsNotSpecialRestricted()
     {

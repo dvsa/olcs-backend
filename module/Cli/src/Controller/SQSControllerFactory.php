@@ -2,8 +2,11 @@
 
 namespace Dvsa\Olcs\Cli\Controller;
 
+use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\IrhpCandidatePermitsCreator;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * SQS Controller Factory
@@ -17,8 +20,8 @@ class SQSControllerFactory implements FactoryInterface
      * @param $requestedName
      * @param array|null $options
      * @return IrhpCandidatePermitsCreator
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SQSController
     {

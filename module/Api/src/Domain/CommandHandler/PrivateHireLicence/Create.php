@@ -10,6 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Create as Command;
 use Dvsa\Olcs\Api\Entity\ContactDetails;
@@ -61,7 +62,7 @@ final class Create extends AbstractCommandHandler implements
         $cd->setDescription($command->getCouncilName())
             ->setAddress($address);
 
-        $phl = new \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence();
+        $phl = new PrivateHireLicence();
         $phl->setLicence($this->getRepo()->getReference(Licence::class, $command->getLicence()))
             ->setPrivateHireLicenceNo($command->getPrivateHireLicenceNo())
             ->setContactDetails($cd);
@@ -98,10 +99,10 @@ final class Create extends AbstractCommandHandler implements
      * Check and possible update the licence traffic area
      *
      * @param string $postcode
-     * @param \Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\PrivateHireLicence $phl
+     * @param PrivateHireLicence $phl
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
-    protected function checkTrafficArea($postcode, \Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence $phl)
+    protected function checkTrafficArea($postcode, PrivateHireLicence $phl)
     {
         $postCodeTrafficArea = $this->getAddressService()->fetchTrafficAreaByPostcode(
             $postcode,

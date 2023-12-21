@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\EnvironmentalComplaint;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Complaint;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 /**
@@ -15,7 +16,7 @@ final class EnvironmentalComplaintList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        /** @var ComplaintRepo $repo */
+        /** @var Complaint $repo */
         $repo = $this->getRepo();
         return [
             'result' => $this->resultList(

@@ -850,7 +850,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the bus service type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes collection being set as the value
+     * @param ArrayCollection $busServiceTypes collection being set as the value
      *
      * @return BusReg
      */
@@ -864,7 +864,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the bus service types
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getBusServiceTypes()
     {
@@ -874,7 +874,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a bus service types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busServiceTypes collection being added
+     * @param ArrayCollection|mixed $busServiceTypes collection being added
      *
      * @return BusReg
      */
@@ -1001,7 +1001,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getEffectiveDate($asDateTime = false)
     {
@@ -1031,7 +1032,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getEndDate($asDateTime = false)
     {
@@ -1309,7 +1311,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the local authority
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys collection being set as the value
+     * @param ArrayCollection $localAuthoritys collection being set as the value
      *
      * @return BusReg
      */
@@ -1323,7 +1325,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the local authoritys
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getLocalAuthoritys()
     {
@@ -1333,7 +1335,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a local authoritys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $localAuthoritys collection being added
+     * @param ArrayCollection|mixed $localAuthoritys collection being added
      *
      * @return BusReg
      */
@@ -1772,7 +1774,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getReceivedDate($asDateTime = false)
     {
@@ -1994,7 +1997,8 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getStatusChangeDate($asDateTime = false)
     {
@@ -2104,7 +2108,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the traffic area
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being set as the value
+     * @param ArrayCollection $trafficAreas collection being set as the value
      *
      * @return BusReg
      */
@@ -2118,7 +2122,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the traffic areas
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTrafficAreas()
     {
@@ -2128,7 +2132,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a traffic areas
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $trafficAreas collection being added
+     * @param ArrayCollection|mixed $trafficAreas collection being added
      *
      * @return BusReg
      */
@@ -2287,7 +2291,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the variation reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons collection being set as the value
+     * @param ArrayCollection $variationReasons collection being set as the value
      *
      * @return BusReg
      */
@@ -2301,7 +2305,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the variation reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getVariationReasons()
     {
@@ -2311,7 +2315,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a variation reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $variationReasons collection being added
+     * @param ArrayCollection|mixed $variationReasons collection being added
      *
      * @return BusReg
      */
@@ -2422,7 +2426,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the other service
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices collection being set as the value
+     * @param ArrayCollection $otherServices collection being set as the value
      *
      * @return BusReg
      */
@@ -2436,7 +2440,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the other services
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOtherServices()
     {
@@ -2446,7 +2450,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a other services
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherServices collection being added
+     * @param ArrayCollection|mixed $otherServices collection being added
      *
      * @return BusReg
      */
@@ -2485,7 +2489,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     * @param ArrayCollection $readAudits collection being set as the value
      *
      * @return BusReg
      */
@@ -2499,7 +2503,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the read audits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReadAudits()
     {
@@ -2509,7 +2513,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     * @param ArrayCollection|mixed $readAudits collection being added
      *
      * @return BusReg
      */
@@ -2572,7 +2576,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     * @param ArrayCollection $documents collection being set as the value
      *
      * @return BusReg
      */
@@ -2586,7 +2590,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocuments()
     {
@@ -2596,7 +2600,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     * @param ArrayCollection|mixed $documents collection being added
      *
      * @return BusReg
      */
@@ -2635,7 +2639,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the ebsr submission
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions collection being set as the value
+     * @param ArrayCollection $ebsrSubmissions collection being set as the value
      *
      * @return BusReg
      */
@@ -2649,7 +2653,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the ebsr submissions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getEbsrSubmissions()
     {
@@ -2659,7 +2663,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a ebsr submissions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $ebsrSubmissions collection being added
+     * @param ArrayCollection|mixed $ebsrSubmissions collection being added
      *
      * @return BusReg
      */
@@ -2698,7 +2702,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the fee
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     * @param ArrayCollection $fees collection being set as the value
      *
      * @return BusReg
      */
@@ -2712,7 +2716,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the fees
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getFees()
     {
@@ -2722,7 +2726,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     * @param ArrayCollection|mixed $fees collection being added
      *
      * @return BusReg
      */
@@ -2761,7 +2765,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     * @param ArrayCollection $publicationLinks collection being set as the value
      *
      * @return BusReg
      */
@@ -2775,7 +2779,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the publication links
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPublicationLinks()
     {
@@ -2785,7 +2789,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     * @param ArrayCollection|mixed $publicationLinks collection being added
      *
      * @return BusReg
      */
@@ -2824,7 +2828,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the task
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     * @param ArrayCollection $tasks collection being set as the value
      *
      * @return BusReg
      */
@@ -2838,7 +2842,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the tasks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTasks()
     {
@@ -2848,7 +2852,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a tasks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     * @param ArrayCollection|mixed $tasks collection being added
      *
      * @return BusReg
      */
@@ -2887,7 +2891,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Set the txc inbox
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs collection being set as the value
+     * @param ArrayCollection $txcInboxs collection being set as the value
      *
      * @return BusReg
      */
@@ -2901,7 +2905,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Get the txc inboxs
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTxcInboxs()
     {
@@ -2911,7 +2915,7 @@ abstract class AbstractBusReg implements BundleSerializableInterface, JsonSerial
     /**
      * Add a txc inboxs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $txcInboxs collection being added
+     * @param ArrayCollection|mixed $txcInboxs collection being added
      *
      * @return BusReg
      */

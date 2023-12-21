@@ -279,7 +279,7 @@ abstract class AbstractApplicationPathGroup implements BundleSerializableInterfa
     /**
      * Set the application path
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being set as the value
+     * @param ArrayCollection $applicationPaths collection being set as the value
      *
      * @return ApplicationPathGroup
      */
@@ -293,7 +293,7 @@ abstract class AbstractApplicationPathGroup implements BundleSerializableInterfa
     /**
      * Get the application paths
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationPaths()
     {
@@ -303,7 +303,7 @@ abstract class AbstractApplicationPathGroup implements BundleSerializableInterfa
     /**
      * Add a application paths
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationPaths collection being added
+     * @param ArrayCollection|mixed $applicationPaths collection being added
      *
      * @return ApplicationPathGroup
      */

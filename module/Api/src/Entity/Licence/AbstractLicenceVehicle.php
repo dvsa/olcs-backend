@@ -437,7 +437,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getReceivedDate($asDateTime = false)
     {
@@ -467,7 +468,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRemovalDate($asDateTime = false)
     {
@@ -497,7 +499,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRemovalLetterSeedDate($asDateTime = false)
     {
@@ -527,7 +530,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getSpecifiedDate($asDateTime = false)
     {
@@ -629,7 +633,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWarningLetterSeedDate($asDateTime = false)
     {
@@ -659,7 +664,8 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWarningLetterSentDate($asDateTime = false)
     {
@@ -673,7 +679,7 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Set the goods disc
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs collection being set as the value
+     * @param ArrayCollection $goodsDiscs collection being set as the value
      *
      * @return LicenceVehicle
      */
@@ -687,7 +693,7 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Get the goods discs
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getGoodsDiscs()
     {
@@ -697,7 +703,7 @@ abstract class AbstractLicenceVehicle implements BundleSerializableInterface, Js
     /**
      * Add a goods discs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $goodsDiscs collection being added
+     * @param ArrayCollection|mixed $goodsDiscs collection being added
      *
      * @return LicenceVehicle
      */

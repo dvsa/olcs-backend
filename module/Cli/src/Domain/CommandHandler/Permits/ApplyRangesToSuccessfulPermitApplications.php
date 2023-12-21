@@ -4,8 +4,7 @@ namespace Dvsa\Olcs\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Dvsa\Olcs\Cli\Domain\Command\ApplyRangesToSuccessfulPermitApplications
-    as ApplyRangesToSuccessfulPermitApplicationsCommand;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications as ApplyRangesToSuccessfulPermitApplicationsCommand;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

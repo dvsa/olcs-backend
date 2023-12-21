@@ -849,7 +849,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @dataProvider handleCommandProvider
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommand(
         $section,
@@ -953,7 +953,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandMarksOperatingCentresSectionAsRequiringAttentionIfVehicleAuthorizationsAreNotValid()
     {
@@ -981,7 +981,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_MarksOperatingCentresSectionAsRequiringAttention_IfVehicleAuthorizationsAreNotValid
+     * @depends handleCommandMarksOperatingCentresSectionAsRequiringAttentionIfVehicleAuthorizationsAreNotValid
      */
     public function handleCommandDoesNotMarkOperatingCentresSectionAsRequiringAttentionIfVehicleAuthorizationsAreValid()
     {
@@ -1002,7 +1002,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesTotAuthHgvVehiclesForPsvLicences()
     {
@@ -1030,7 +1030,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends handleCommand_ValidatesTotAuthHgvVehicles_ForPsvLicences
+     * @depends handleCommandValidatesTotAuthHgvVehiclesForPsvLicences
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
     public function handleCommandValidatesTotAuthHgvVehiclesForPsvLicencesAgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
@@ -1072,7 +1072,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesHgvsForGoodsVehicleLicences()
     {
@@ -1100,7 +1100,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends      handleCommand_ValidatesHgvs_ForGoodsVehicleLicences
+     * @depends      handleCommandValidatesHgvsForGoodsVehicleLicences
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
     public function handleCommandValidatesTotAuthHgvVehiclesForGoodsVehicleLicencesAgainstCorrectOperatingCentreConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
@@ -1151,7 +1151,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountExceedsLicenceAmount()
     {
@@ -1185,7 +1185,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      * @dataProvidert dpMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount
      */
     public function testMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount(

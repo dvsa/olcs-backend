@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic;
 
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

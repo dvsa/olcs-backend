@@ -737,7 +737,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     /**
      * @test
-     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     * @depends createPaginatedVehiclesDataForLicenceQueryIsCallable
      */
     public function createPaginatedVehiclesDataForLicenceQueryWhenQueryImplementsNotCorrectInterfaceDoesNotFilterByVehicleId()
     {
@@ -759,7 +759,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     /**
      * @test
-     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     * @depends createPaginatedVehiclesDataForLicenceQueryIsCallable
      */
     public function createPaginatedVehiclesDataForLicenceQueryFiltersByVehicleIdAddsQueryCondition()
     {
@@ -793,7 +793,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     /**
      * @test
-     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     * @depends createPaginatedVehiclesDataForLicenceQueryIsCallable
      * @dataProvider vehiclesIdsDataProvider
      */
     public function createPaginatedVehiclesDataForLicenceQueryFiltersByVehicleIdSetsAParameterForVehicleIds(array $vehicleIds)
@@ -818,7 +818,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     /**
      * @test
-     * @depends createPaginatedVehiclesDataForLicenceQuery_IsCallable
+     * @depends createPaginatedVehiclesDataForLicenceQueryIsCallable
      */
     public function createPaginatedVehiclesDataForLicenceQueryFiltersByRemovedVehiclesAddsQueryCondition()
     {

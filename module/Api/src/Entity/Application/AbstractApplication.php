@@ -1275,7 +1275,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getGrantedDate($asDateTime = false)
     {
@@ -1497,7 +1498,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getInterimEnd($asDateTime = false)
     {
@@ -1551,7 +1553,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getInterimStart($asDateTime = false)
     {
@@ -2253,7 +2256,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getReceivedDate($asDateTime = false)
     {
@@ -2307,7 +2311,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRefusedDate($asDateTime = false)
     {
@@ -2481,7 +2486,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getTargetCompletionDate($asDateTime = false)
     {
@@ -2703,7 +2709,8 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWithdrawnDate($asDateTime = false)
     {
@@ -2765,7 +2772,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
+     * @param ArrayCollection $operatingCentres collection being set as the value
      *
      * @return Application
      */
@@ -2779,7 +2786,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the operating centres
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOperatingCentres()
     {
@@ -2789,7 +2796,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
+     * @param ArrayCollection|mixed $operatingCentres collection being added
      *
      * @return Application
      */
@@ -2828,7 +2835,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the application organisation person
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being set as the value
+     * @param ArrayCollection $applicationOrganisationPersons collection being set as the value
      *
      * @return Application
      */
@@ -2842,7 +2849,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the application organisation persons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationOrganisationPersons()
     {
@@ -2852,7 +2859,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a application organisation persons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationOrganisationPersons collection being added
+     * @param ArrayCollection|mixed $applicationOrganisationPersons collection being added
      *
      * @return Application
      */
@@ -2891,7 +2898,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the read audit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being set as the value
+     * @param ArrayCollection $readAudits collection being set as the value
      *
      * @return Application
      */
@@ -2905,7 +2912,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the read audits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReadAudits()
     {
@@ -2915,7 +2922,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a read audits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $readAudits collection being added
+     * @param ArrayCollection|mixed $readAudits collection being added
      *
      * @return Application
      */
@@ -2978,7 +2985,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the case
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases collection being set as the value
+     * @param ArrayCollection $cases collection being set as the value
      *
      * @return Application
      */
@@ -2992,7 +2999,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the cases
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCases()
     {
@@ -3002,7 +3009,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a cases
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $cases collection being added
+     * @param ArrayCollection|mixed $cases collection being added
      *
      * @return Application
      */
@@ -3041,7 +3048,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the condition undertaking
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being set as the value
+     * @param ArrayCollection $conditionUndertakings collection being set as the value
      *
      * @return Application
      */
@@ -3055,7 +3062,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the condition undertakings
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getConditionUndertakings()
     {
@@ -3065,7 +3072,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a condition undertakings
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $conditionUndertakings collection being added
+     * @param ArrayCollection|mixed $conditionUndertakings collection being added
      *
      * @return Application
      */
@@ -3104,7 +3111,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     * @param ArrayCollection $documents collection being set as the value
      *
      * @return Application
      */
@@ -3118,7 +3125,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocuments()
     {
@@ -3128,7 +3135,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     * @param ArrayCollection|mixed $documents collection being added
      *
      * @return Application
      */
@@ -3167,7 +3174,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the fee
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     * @param ArrayCollection $fees collection being set as the value
      *
      * @return Application
      */
@@ -3181,7 +3188,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the fees
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getFees()
     {
@@ -3191,7 +3198,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     * @param ArrayCollection|mixed $fees collection being added
      *
      * @return Application
      */
@@ -3230,7 +3237,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the licence vehicle
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being set as the value
+     * @param ArrayCollection $licenceVehicles collection being set as the value
      *
      * @return Application
      */
@@ -3244,7 +3251,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the licence vehicles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getLicenceVehicles()
     {
@@ -3254,7 +3261,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $licenceVehicles collection being added
+     * @param ArrayCollection|mixed $licenceVehicles collection being added
      *
      * @return Application
      */
@@ -3293,7 +3300,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the interim licence vehicle
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being set as the value
+     * @param ArrayCollection $interimLicenceVehicles collection being set as the value
      *
      * @return Application
      */
@@ -3307,7 +3314,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the interim licence vehicles
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getInterimLicenceVehicles()
     {
@@ -3317,7 +3324,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a interim licence vehicles
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $interimLicenceVehicles collection being added
+     * @param ArrayCollection|mixed $interimLicenceVehicles collection being added
      *
      * @return Application
      */
@@ -3356,7 +3363,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the other licence
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being set as the value
+     * @param ArrayCollection $otherLicences collection being set as the value
      *
      * @return Application
      */
@@ -3370,7 +3377,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the other licences
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOtherLicences()
     {
@@ -3380,7 +3387,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a other licences
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $otherLicences collection being added
+     * @param ArrayCollection|mixed $otherLicences collection being added
      *
      * @return Application
      */
@@ -3419,7 +3426,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the previous conviction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions collection being set as the value
+     * @param ArrayCollection $previousConvictions collection being set as the value
      *
      * @return Application
      */
@@ -3433,7 +3440,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the previous convictions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPreviousConvictions()
     {
@@ -3443,7 +3450,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a previous convictions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $previousConvictions collection being added
+     * @param ArrayCollection|mixed $previousConvictions collection being added
      *
      * @return Application
      */
@@ -3482,7 +3489,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the publication link
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being set as the value
+     * @param ArrayCollection $publicationLinks collection being set as the value
      *
      * @return Application
      */
@@ -3496,7 +3503,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the publication links
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getPublicationLinks()
     {
@@ -3506,7 +3513,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a publication links
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $publicationLinks collection being added
+     * @param ArrayCollection|mixed $publicationLinks collection being added
      *
      * @return Application
      */
@@ -3545,7 +3552,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the s4
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s collection being set as the value
+     * @param ArrayCollection $s4s collection being set as the value
      *
      * @return Application
      */
@@ -3559,7 +3566,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the s4s
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getS4s()
     {
@@ -3569,7 +3576,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a s4s
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $s4s collection being added
+     * @param ArrayCollection|mixed $s4s collection being added
      *
      * @return Application
      */
@@ -3608,7 +3615,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the task
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     * @param ArrayCollection $tasks collection being set as the value
      *
      * @return Application
      */
@@ -3622,7 +3629,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the tasks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTasks()
     {
@@ -3632,7 +3639,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a tasks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     * @param ArrayCollection|mixed $tasks collection being added
      *
      * @return Application
      */
@@ -3671,7 +3678,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Set the transport manager
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers collection being set as the value
+     * @param ArrayCollection $transportManagers collection being set as the value
      *
      * @return Application
      */
@@ -3685,7 +3692,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Get the transport managers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTransportManagers()
     {
@@ -3695,7 +3702,7 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     /**
      * Add a transport managers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $transportManagers collection being added
+     * @param ArrayCollection|mixed $transportManagers collection being added
      *
      * @return Application
      */

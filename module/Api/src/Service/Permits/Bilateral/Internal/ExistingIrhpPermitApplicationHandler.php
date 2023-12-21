@@ -2,6 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -49,6 +52,10 @@ class ExistingIrhpPermitApplicationHandler
      * @param IrhpPermitApplication $irhpPermitApplication
      * @param int $stockId
      * @param array $requiredPermits
+     *
+     * @throws ForbiddenException
+     * @throws NotFoundException
+     * @throws RuntimeException
      */
     public function handle(IrhpPermitApplication $irhpPermitApplication, $stockId, $requiredPermits)
     {

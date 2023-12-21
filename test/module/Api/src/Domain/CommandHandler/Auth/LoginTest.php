@@ -48,7 +48,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandAdapterSetsUsernameAndPasswordFromCommand()
     {
@@ -94,7 +94,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     * @depends handleCommandAdapterSetsUsernameAndPasswordFromCommand
      */
     public function handleCommandUpdatesUserLastLoginAtWhenAuthenticationIsSuccessful()
     {
@@ -134,7 +134,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_UpdatesUserLastLoginAtWhenAuthenticationIsSuccessful
+     * @depends handleCommandUpdatesUserLastLoginAtWhenAuthenticationIsSuccessful
      */
     public function handleCommandDoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful()
     {
@@ -180,7 +180,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_DoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful
+     * @depends handleCommandDoesNotUpdateLastLoginAtWhenAuthenticationIsNotSuccessful
      */
     public function handleCommandReturnsResultWithExpectedFlags()
     {
@@ -201,7 +201,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     * @depends handleCommandAdapterSetsUsernameAndPasswordFromCommand
      * @dataProvider returnsExpectedResultWhenUserCannotAccessRealmProvider
      */
     public function handleCommandReturnsExpectedResultWhenUserCannotAccessRealm(bool $isInternal, string $realm)
@@ -249,7 +249,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     * @depends handleCommandAdapterSetsUsernameAndPasswordFromCommand
      */
     public function handleCommandReturnsExpectedResultWhenUserIsSelfServeWithMonitoredRolesAndHasNoOrg()
     {
@@ -292,7 +292,7 @@ class LoginTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_AdapterSetsUsernameAndPasswordFromCommand
+     * @depends handleCommandAdapterSetsUsernameAndPasswordFromCommand
      */
     public function handleCommandReturnsExpectedResultWhenUserIsSelfServeWithoutMonitoredRolesAndHasNoOrg()
     {

@@ -46,7 +46,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfClient()
     {
@@ -63,7 +63,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeThrowsExceptionWhenConfigCognitoNamespaceNotDefined(): void
     {
@@ -81,7 +81,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      * @dataProvider incorrectSettingsProvider
      */
     public function invokeThrowsExceptionWhenConfigSettingsNotDefined(array $config): void

@@ -69,7 +69,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfValidatableAdapterInterfaceWhenAdapterDefinedAsInstancedClass()
     {
@@ -86,7 +86,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfValidatableAdapterInterfaceWhenAdapterDefinedAsClassReferenceStringAndExistsInServiceManager()
     {
@@ -104,7 +104,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfValidatableAdapterInterfaceDefinedAsClassReferenceStringAndDoesNotExistInServiceManagerAndInstantiates()
     {
@@ -121,7 +121,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeThrowsExceptionWhenConfigAuthNamespaceNotDefined(): void
     {
@@ -139,7 +139,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_ThrowsExceptionWhen_ConfigAuthNamespaceNotDefined
+     * @depends invokeThrowsExceptionWhenConfigAuthNamespaceNotDefined
      */
     public function invokeThrowsExceptionWhenConfigAuthDefaultAdapterNotDefined(): void
     {
@@ -157,7 +157,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_ThrowsExceptionWhen_ConfigAuthDefaultAdapterNotDefined
+     * @depends invokeThrowsExceptionWhenConfigAuthDefaultAdapterNotDefined
      */
     public function invokeThrowsExceptionWhenConfigAuthAdapterNotDefined(): void
     {
@@ -175,7 +175,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_ThrowsExceptionWhen_ConfigAuthAdapterNotDefined
+     * @depends invokeThrowsExceptionWhenConfigAuthAdapterNotDefined
      */
     public function invokeThrowsExceptionWhenConfigAuthAdapterDefinedAndAdapterConfigAdapterNotDefined(): void
     {
@@ -193,7 +193,7 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_ThrowsExceptionWhen_ConfigAuthAdapterDefinedAndAdapterConfigAdapterNotDefined
+     * @depends invokeThrowsExceptionWhenConfigAuthAdapterDefinedAndAdapterConfigAdapterNotDefined
      */
     public function invokeThrowsExceptionWhenConfigAuthAdapterNotInstanceOfValidatableAdapterInterface(): void
     {

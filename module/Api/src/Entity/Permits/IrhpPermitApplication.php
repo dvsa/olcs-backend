@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Entity\Generic\ApplicationPath;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
 use Dvsa\Olcs\Api\Entity\Generic\Question;

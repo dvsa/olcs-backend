@@ -141,10 +141,12 @@ class Response extends AbstractPlugin
         }
 
         $bh = fopen('php://output', 'w+b');
-        stream_copy_to_stream($result->getStream(), $bh);
+
+        $stream = $result->getStream();
+        stream_copy_to_stream($stream, $bh);
 
         fclose($bh);
-        fclose($result->getStream());
+        fclose($stream);
 
         return false;
     }

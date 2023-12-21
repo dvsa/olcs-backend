@@ -271,7 +271,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAppealDate($asDateTime = false)
     {
@@ -397,7 +398,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDeadlineDate($asDateTime = false)
     {
@@ -427,7 +429,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDecisionDate($asDateTime = false)
     {
@@ -481,7 +484,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getHearingDate($asDateTime = false)
     {
@@ -655,7 +659,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPapersDueDate($asDateTime = false)
     {
@@ -685,7 +690,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPapersDueTcDate($asDateTime = false)
     {
@@ -715,7 +721,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPapersSentDate($asDateTime = false)
     {
@@ -745,7 +752,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getPapersSentTcDate($asDateTime = false)
     {
@@ -823,7 +831,8 @@ abstract class AbstractAppeal implements BundleSerializableInterface, JsonSerial
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWithdrawnDate($asDateTime = false)
     {

@@ -32,10 +32,10 @@ class ClientFactory implements FactoryInterface
     {
         $config = $container->get('Config');
         if (!isset($config['openam']['username'], $config['openam']['password'])) {
-            throw new RuntimeException('Cannot create service, config for open am api credentials is missing');
+            throw new \RuntimeException('Cannot create service, config for open am api credentials is missing');
         }
         if (!isset($config['openam']['uri'])) {
-            throw new RuntimeException('Cannot create service, config for open am api uri is missing');
+            throw new \RuntimeException('Cannot create service, config for open am api uri is missing');
         }
         $options = [];
         if (isset($config['openam']['http_client_options'])) {

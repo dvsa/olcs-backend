@@ -28,7 +28,7 @@ class MarkSuccessfulSectorPermitApplications extends ScoringCommandHandler imple
     /**
      * Handle command
      *
-     * @param CommandInterface|MarkSuccessfulSectorPermitApplicationsCommand $command command
+     * @param CommandInterface $command command
      *
      * @return Result
      */

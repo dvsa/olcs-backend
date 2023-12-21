@@ -211,7 +211,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getBirthDate($asDateTime = false)
     {
@@ -265,7 +266,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDateAdded($asDateTime = false)
     {
@@ -295,7 +297,8 @@ abstract class AbstractHistoricTm implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDateRemoved($asDateTime = false)
     {

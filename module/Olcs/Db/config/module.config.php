@@ -19,8 +19,8 @@ return [
             'Laminas\Log\LoggerAbstractServiceFactory'
         ],
         'factories' => [
-            'ElasticSearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
-            'ElasticSearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
+            'Elasticsearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
+            'Elasticsearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
         ],
     ],
     'controllers' => [

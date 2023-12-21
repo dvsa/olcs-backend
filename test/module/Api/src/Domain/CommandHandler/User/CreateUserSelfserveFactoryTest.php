@@ -46,7 +46,7 @@ class CreateUserSelfserveFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsWrappedCreateUserSelfserveCommandHandler(): void
     {

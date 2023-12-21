@@ -345,7 +345,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getChequePoDate($asDateTime = false)
     {
@@ -423,7 +424,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCompletedDate($asDateTime = false)
     {
@@ -933,7 +935,8 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWaiveRecommendationDate($asDateTime = false)
     {
@@ -971,7 +974,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Set the fee transaction
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being set as the value
+     * @param ArrayCollection $feeTransactions collection being set as the value
      *
      * @return Transaction
      */
@@ -985,7 +988,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Get the fee transactions
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getFeeTransactions()
     {
@@ -995,7 +998,7 @@ abstract class AbstractTransaction implements BundleSerializableInterface, JsonS
     /**
      * Add a fee transactions
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $feeTransactions collection being added
+     * @param ArrayCollection|mixed $feeTransactions collection being added
      *
      * @return Transaction
      */

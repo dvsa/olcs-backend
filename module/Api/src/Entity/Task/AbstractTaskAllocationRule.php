@@ -422,7 +422,7 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     /**
      * Set the task alpha split
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $taskAlphaSplits collection being set as the value
+     * @param ArrayCollection $taskAlphaSplits collection being set as the value
      *
      * @return TaskAllocationRule
      */
@@ -436,7 +436,7 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     /**
      * Get the task alpha splits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTaskAlphaSplits()
     {
@@ -446,7 +446,7 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     /**
      * Add a task alpha splits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $taskAlphaSplits collection being added
+     * @param ArrayCollection|mixed $taskAlphaSplits collection being added
      *
      * @return TaskAllocationRule
      */

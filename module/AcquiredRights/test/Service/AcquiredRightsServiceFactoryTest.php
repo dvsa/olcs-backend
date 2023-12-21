@@ -30,7 +30,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfAcquiredRightsClient(): void
     {
@@ -46,7 +46,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function configmissingExpiryThrowsInvalidArgumentException(): void
     {
@@ -70,7 +70,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function configexpiryNotInstanceOfDateTimeImmutableThrowsInvalidArgumentException(): void
     {
@@ -94,7 +94,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function configmissingCheckEnabledThrowsInvalidArgumentException(): void
     {
@@ -118,7 +118,7 @@ class AcquiredRightsServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function configcheckEnabledNotInstanceOfBoolThrowsInvalidArgumentException(): void
     {

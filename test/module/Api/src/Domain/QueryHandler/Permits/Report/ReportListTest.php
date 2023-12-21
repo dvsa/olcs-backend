@@ -19,7 +19,7 @@ class ReportListTest extends QueryHandlerTestCase
 
     /**
      * @test
-     * @depends handleQuery_IsCallable
+     * @depends handleQueryIsCallable
      */
     public function handleQueryReturnsArrayFormat()
     {
@@ -32,7 +32,7 @@ class ReportListTest extends QueryHandlerTestCase
 
     /**
      * @test
-     * @depends handleQuery_ReturnsArrayFormat
+     * @depends handleQueryReturnsArrayFormat
      */
     public function handleQueryReturnsListOfAvailableReportsFromPermitReportService()
     {
@@ -42,7 +42,7 @@ class ReportListTest extends QueryHandlerTestCase
 
     /**
      * @test
-     * @depends handleQuery_ReturnsListOfAvailableReportsFromPermitReportService
+     * @depends handleQueryReturnsListOfAvailableReportsFromPermitReportService
      */
     public function handleQueryReturnsValidCountOfAvailableReportsFromPermitReportService()
     {

@@ -22,9 +22,7 @@ class GenericAnswerClearer implements AnswerClearerInterface
      * Create service instance
      *
      * @param GenericAnswerProvider $genericAnswerProvider
-     * @param AnswerRepo $answerRepo
-     *
-     * @return GenericAnswerClearer
+     * @param AnswerRepository $answerRepo
      */
     public function __construct(GenericAnswerProvider $genericAnswerProvider, AnswerRepository $answerRepo)
     {

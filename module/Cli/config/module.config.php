@@ -339,12 +339,8 @@ return [
         ]
     ],
     'service_manager' => [
-        'alias' => [
-            'NysiisService' => 'Dvsa\Olcs\Api\Service\Data\Nysiis'
-        ],
         'factories' => [
             'MessageConsumerManager' => \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
-            'Dvsa\Olcs\Api\Service\Data\Nysiis' => Dvsa\Olcs\Api\Service\Data\NysiisFactory::class,
             'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessorFactory::class,
             Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices::class
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\AbstractConsumerServicesFactory::class,
@@ -403,8 +399,6 @@ return [
             Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GeneratePermits::class
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
             Dvsa\Olcs\Cli\Service\Queue\Consumer\Permits\GenerateReport::class
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
-            Dvsa\Olcs\Cli\Service\Queue\Consumer\PrintJob\PrintJob::class
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,
             Dvsa\Olcs\Cli\Service\Queue\Consumer\CommunityLicence\ReportingBulkReprint::class
                 => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\GenericFactory::class,

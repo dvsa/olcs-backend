@@ -461,7 +461,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     /**
      * Set the application validation
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationValidations collection being set as the value
+     * @param ArrayCollection $applicationValidations collection being set as the value
      *
      * @return Question
      */
@@ -475,7 +475,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     /**
      * Get the application validations
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getApplicationValidations()
     {
@@ -485,7 +485,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     /**
      * Add a application validations
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $applicationValidations collection being added
+     * @param ArrayCollection|mixed $applicationValidations collection being added
      *
      * @return Question
      */
@@ -524,7 +524,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     /**
      * Set the question text
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $questionTexts collection being set as the value
+     * @param ArrayCollection $questionTexts collection being set as the value
      *
      * @return Question
      */
@@ -538,7 +538,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     /**
      * Get the question texts
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getQuestionTexts()
     {
@@ -548,7 +548,7 @@ abstract class AbstractQuestion implements BundleSerializableInterface, JsonSeri
     /**
      * Add a question texts
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $questionTexts collection being added
+     * @param ArrayCollection|mixed $questionTexts collection being added
      *
      * @return Question
      */

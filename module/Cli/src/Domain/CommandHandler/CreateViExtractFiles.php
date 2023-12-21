@@ -71,7 +71,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
      *
      * @param CommandInterface $command command
      *
-     * @return Result
+     * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */
     public function handleCommand(CommandInterface $command)
     {

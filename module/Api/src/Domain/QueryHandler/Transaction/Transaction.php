@@ -54,7 +54,6 @@ class Transaction extends AbstractQueryHandler
 
         $transaction->getFeeTransactions()->forAll(
             function ($key, $ft) use (&$fees) {
-                unset($key); // unused
                 $fee = $ft->getFee()->serialize(['feeStatus']);
                 $id = $fee['id'];
                 if (isset($fees[$id])) {

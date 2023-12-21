@@ -13,6 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
@@ -59,7 +60,7 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
     protected function setLeadTcArea(LicenceEntity $licence, CommandInterface $command)
     {
         if (!is_null($command->getLeadTcArea())) {
-            /** @var OrganisationEntity $organisation */
+            /** @var Organisation $organisation */
             $organisation = $licence->getOrganisation();
             $organisation->setLeadTcArea(
                 $this->getRepo()->getReference(TrafficAreaEntity::class, $command->getLeadTcArea())

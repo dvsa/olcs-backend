@@ -88,7 +88,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     /**
      * @param array $data
-     * @return CommunityLic
+     * @return CommunityLicEntity
      */
     private function createCommunityLicObject($data)
     {

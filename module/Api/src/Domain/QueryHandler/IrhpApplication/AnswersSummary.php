@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
-use Dvsa\Olcs\Transfer\Query\Qa\AnswersSummary as AnswersSummaryQry;
+use Dvsa\Olcs\Transfer\Query\IrhpApplication\AnswersSummary as AnswersSummaryQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;

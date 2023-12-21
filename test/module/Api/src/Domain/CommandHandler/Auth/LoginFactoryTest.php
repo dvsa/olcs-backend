@@ -42,7 +42,7 @@ class LoginFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfLoginCommandHandler(): void
     {

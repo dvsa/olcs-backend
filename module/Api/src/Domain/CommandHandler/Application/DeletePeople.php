@@ -62,7 +62,7 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
      * Delete a (Application)OrganisationPerson by using deltas
      *
      * @param ApplicationEntity $application Application
-     * @param type              $personId    ID of person to delete
+     * @param int               $personId    ID of person to delete
      * @param Result            $result      Result object to add messages to
      *
      * @return void
@@ -99,7 +99,7 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
      * Delete an OrganisationPerson
      *
      * @param ApplicationEntity $application Application
-     * @param type              $personId    ID of person to delete
+     * @param int               $personId    ID of person to delete
      * @param Result            $result      Result object to add messages to
      *
      * @return void

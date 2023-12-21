@@ -58,7 +58,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
     /**
      * @param Cmd $command
-     * @return InspectionRequest
+     * @return InspectionRequestEntity
      */
     private function createInspectionRequestObject($command)
     {

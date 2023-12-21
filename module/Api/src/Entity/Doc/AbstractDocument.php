@@ -26,9 +26,9 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Table(name="document",
  *    indexes={
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
- *     columns={"continuation_detail_id"}),
+     *     columns={"continuation_detail_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
- *     columns={"irhp_application_id"}),
+     *     columns={"irhp_application_id"}),
  *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_case_id", columns={"case_id"}),
@@ -436,19 +436,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     protected $ebsrSubmission;
 
     /**
-     * Response erru
-     *
-     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
-     *
-     * @ORM\OneToOne(
-     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
-     *     mappedBy="responseDocument",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $responseErru;
-
-    /**
      * Request erru
      *
      * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
@@ -460,6 +447,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * )
      */
     protected $requestErru;
+
+    /**
+     * Response erru
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Si\ErruRequest",
+     *     mappedBy="responseDocument",
+     *     cascade={"persist"}
+     * )
+     */
+    protected $responseErru;
 
     /**
      * Sla target date
@@ -874,7 +874,8 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getIssuedDate($asDateTime = false)
     {
@@ -1248,7 +1249,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Set the continuation detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails collection being set as the value
+     * @param ArrayCollection $continuationDetails collection being set as the value
      *
      * @return Document
      */
@@ -1262,7 +1263,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Get the continuation details
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getContinuationDetails()
     {
@@ -1272,7 +1273,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Add a continuation details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $continuationDetails collection being added
+     * @param ArrayCollection|mixed $continuationDetails collection being added
      *
      * @return Document
      */
@@ -1311,7 +1312,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Set the template
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $templates collection being set as the value
+     * @param ArrayCollection $templates collection being set as the value
      *
      * @return Document
      */
@@ -1325,7 +1326,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Get the templates
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTemplates()
     {
@@ -1335,7 +1336,7 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     /**
      * Add a templates
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $templates collection being added
+     * @param ArrayCollection|mixed $templates collection being added
      *
      * @return Document
      */
@@ -1396,30 +1397,6 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     }
 
     /**
-     * Set the response erru
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $responseErru entity being set as the value
-     *
-     * @return Document
-     */
-    public function setResponseErru($responseErru)
-    {
-        $this->responseErru = $responseErru;
-
-        return $this;
-    }
-
-    /**
-     * Get the response erru
-     *
-     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
-     */
-    public function getResponseErru()
-    {
-        return $this->responseErru;
-    }
-
-    /**
      * Set the request erru
      *
      * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $requestErru entity being set as the value
@@ -1441,6 +1418,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getRequestErru()
     {
         return $this->requestErru;
+    }
+
+    /**
+     * Set the response erru
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Si\ErruRequest $responseErru entity being set as the value
+     *
+     * @return Document
+     */
+    public function setResponseErru($responseErru)
+    {
+        $this->responseErru = $responseErru;
+
+        return $this;
+    }
+
+    /**
+     * Get the response erru
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Si\ErruRequest
+     */
+    public function getResponseErru()
+    {
+        return $this->responseErru;
     }
 
     /**

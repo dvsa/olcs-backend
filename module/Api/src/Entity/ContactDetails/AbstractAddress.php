@@ -718,7 +718,7 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Set the contact detail
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being set as the value
+     * @param ArrayCollection $contactDetails collection being set as the value
      *
      * @return Address
      */
@@ -732,7 +732,7 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Get the contact details
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getContactDetails()
     {
@@ -742,7 +742,7 @@ abstract class AbstractAddress implements BundleSerializableInterface, JsonSeria
     /**
      * Add a contact details
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $contactDetails collection being added
+     * @param ArrayCollection|mixed $contactDetails collection being added
      *
      * @return Address
      */

@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitStock;
 
-use Dvsa\Olcs\Api\Domain\Query\IrhpPermitStock\AvailableCountries as AvailableCountriesQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -17,8 +16,6 @@ class AvailableCountries extends AbstractQueryHandler
 
     /**
      * Handle query
-     *
-     * @param QueryInterface|AvailableCountriesQuery $query query
      *
      * @return array
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -178,7 +178,7 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the action type
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes collection being set as the value
+     * @param ArrayCollection $actionTypes collection being set as the value
      *
      * @return SubmissionAction
      */
@@ -192,7 +192,7 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Get the action types
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getActionTypes()
     {
@@ -202,7 +202,7 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Add a action types
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $actionTypes collection being added
+     * @param ArrayCollection|mixed $actionTypes collection being added
      *
      * @return SubmissionAction
      */
@@ -361,7 +361,7 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Set the reason
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being set as the value
+     * @param ArrayCollection $reasons collection being set as the value
      *
      * @return SubmissionAction
      */
@@ -375,7 +375,7 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Get the reasons
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getReasons()
     {
@@ -385,7 +385,7 @@ abstract class AbstractSubmissionAction implements BundleSerializableInterface, 
     /**
      * Add a reasons
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $reasons collection being added
+     * @param ArrayCollection|mixed $reasons collection being added
      *
      * @return SubmissionAction
      */

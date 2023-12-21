@@ -3,8 +3,7 @@
 namespace Dvsa\Olcs\GdsVerify\Data;
 
 /**
- * Class Attributes
- * @package Dvsa\Olcs\GdsVerify\Data
+ * @template-extends \ArrayObject<string, mixed>
  */
 class Attributes extends \ArrayObject
 {

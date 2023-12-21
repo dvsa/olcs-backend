@@ -212,10 +212,6 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
             $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
         }
 
-        if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
-            $this->setCompaniesHouseService($mainServiceLocator->get('CompaniesHouseService'));
-        }
-
         if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
             $this->setAddressService($mainServiceLocator->get('AddressService'));
         }

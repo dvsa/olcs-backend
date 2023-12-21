@@ -292,7 +292,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getClosedDate($asDateTime = false)
     {
@@ -346,7 +347,8 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getComplaintDate($asDateTime = false)
     {
@@ -576,7 +578,7 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Set the operating centre
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being set as the value
+     * @param ArrayCollection $operatingCentres collection being set as the value
      *
      * @return Complaint
      */
@@ -590,7 +592,7 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Get the operating centres
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOperatingCentres()
     {
@@ -600,7 +602,7 @@ abstract class AbstractComplaint implements BundleSerializableInterface, JsonSer
     /**
      * Add a operating centres
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $operatingCentres collection being added
+     * @param ArrayCollection|mixed $operatingCentres collection being added
      *
      * @return Complaint
      */

@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\GdsVerify\Service;
 
+use Dvsa\Olcs\Utils\Client\HttpExternalClientFactory;
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Log\LoggerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -67,21 +68,6 @@ class GdsVerify implements FactoryInterface
         }
 
         return $container;
-    }
-
-    /**
-     * Get the cache adapter
-     *
-     * @return null|StorageInterface
-     */
-    private function getCache()
-    {
-        $cache = null;
-        if (!empty($this->config[self::CONFIG_CACHE]) && is_array($this->config[self::CONFIG_CACHE])) {
-            $cache = \Laminas\Cache\StorageFactory::factory($this->config[self::CONFIG_CACHE]);
-        }
-
-        return $cache;
     }
 
     /**
@@ -360,6 +346,7 @@ class GdsVerify implements FactoryInterface
     {
         $this->metadataLoader = $metadataLoader;
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $config = [];
@@ -371,10 +358,15 @@ class GdsVerify implements FactoryInterface
         \SAML2\Compat\ContainerSingleton::setContainer(
             $this->getContainer($container->get('Logger'))
         );
-        $this->setMetadataLoader(new Data\Loader($this->getCache()));
-        if ($container->has(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)) {
+
+        if (!empty($this->config[self::CONFIG_CACHE]) && is_array($this->config[self::CONFIG_CACHE])) {
+            $cache = $container->get('default-cache');
+            $this->setMetadataLoader(new Data\Loader($cache));
+        }
+
+        if ($container->has(HttpExternalClientFactory::class)) {
             $this->getMetadataLoader()->setHttpClient(
-                $container->get(\Dvsa\Olcs\Utils\Client\HttpExternalClientFactory::class)
+                $container->get(HttpExternalClientFactory::class)
             );
         }
         return $this;

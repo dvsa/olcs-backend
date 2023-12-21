@@ -37,7 +37,7 @@ class AuthenticationServiceFactoryTest extends MockeryTestCase
 
     /**
      * @test
-     * @depends __invoke_IsCallable
+     * @depends invokeIsCallable
      */
     public function invokeReturnsAnInstanceOfAuthenticationService()
     {

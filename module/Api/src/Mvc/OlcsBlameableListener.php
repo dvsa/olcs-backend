@@ -11,9 +11,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
- * Class OlcsBlameableListener
- *
- * @package Olcs\Api\Mvc
+ * @psalm-suppress InvalidExtendClass
  */
 class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareInterface
 {

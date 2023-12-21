@@ -33,7 +33,6 @@ final class Update extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command): Result
     {
         /**
-         * @var IrhpPermitRange $command
          * @var RangeEntity $range
          */
         $range = $this->getRepo()->fetchUsingId($command);

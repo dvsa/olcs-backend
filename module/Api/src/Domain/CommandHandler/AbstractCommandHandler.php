@@ -163,11 +163,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
             );
         }
 
-        if ($this instanceof \Dvsa\Olcs\Api\Domain\CompaniesHouseAwareInterface) {
-            $companiesHouseService = $mainServiceLocator->get('CompaniesHouseService');
-            $this->setCompaniesHouseService($companiesHouseService);
-        }
-
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
             $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
         }
@@ -290,7 +285,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @param QueryInterface $query query
      *
-     * @return \Dvsa\Olcs\Api\Domain\Query\Result
+     * @return Result
      */
     protected function handleQuery(QueryInterface $query)
     {

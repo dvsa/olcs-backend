@@ -10,10 +10,12 @@ use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 
+/**
+ * @template-extends AbstractPluginManager<RepositoryInterface|ReadonlyRepositoryInterface>
+ */
 class RepositoryServiceManager extends AbstractPluginManager
 {
-    public const VALIDATE_ERROR = 'Plugin manager "%s" expected an instance of type RepositoryInterface or 
-    ReadonlyRepositoryInterface, but "%s" was received';
+    public const VALIDATE_ERROR = 'Plugin manager "%s" expected an instance of type RepositoryInterface or ReadonlyRepositoryInterface, but "%s" was received';
 
     private array $exportRepos = [
         DataGovUk::class,

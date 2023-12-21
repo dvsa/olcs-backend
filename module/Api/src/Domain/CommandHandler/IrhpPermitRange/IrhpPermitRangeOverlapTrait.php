@@ -6,6 +6,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitRange;
 
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock;
+
 trait IrhpPermitRangeOverlapTrait
 {
     /**

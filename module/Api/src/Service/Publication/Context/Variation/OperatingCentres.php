@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context\Variation;
 
+use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Service\Publication\Context\AbstractContext;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareTrait;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
@@ -143,14 +144,14 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
     /**
      * Get the Licence Operating Centre, that the ApplicationOperatingCentre is an update to
      *
-     * @param LicenceOperatingCentre $aoc
+     * @param ApplicationOperatingCentre $aoc
      *
-     * @return \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre
+     * @return LicenceOperatingCentre
      */
     private function getLicenceOperatingCentre(ApplicationOperatingCentre $aoc)
     {
         foreach ($aoc->getApplication()->getLicence()->getOperatingCentres() as $loc) {
-            /* @var $loc \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */
+            /* @var $loc LicenceOperatingCentre */
             if ($loc->getOperatingCentre()->getId() === $aoc->getOperatingCentre()->getId()) {
                 return $loc;
             }

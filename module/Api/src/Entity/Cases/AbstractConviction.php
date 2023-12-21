@@ -294,7 +294,8 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getBirthDate($asDateTime = false)
     {
@@ -396,7 +397,8 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getConvictionDate($asDateTime = false)
     {
@@ -666,7 +668,8 @@ abstract class AbstractConviction implements BundleSerializableInterface, JsonSe
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getOffenceDate($asDateTime = false)
     {

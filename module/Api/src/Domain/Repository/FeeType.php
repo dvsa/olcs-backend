@@ -321,7 +321,7 @@ class FeeType extends AbstractRepository
     /**
      * Get the fee type based on ProductReference
      *
-     * @param ProductReference $productReference
+     * @param string $productReference
      * @return Entity
      * @throws Exception\NotFoundException
      */
@@ -346,7 +346,7 @@ class FeeType extends AbstractRepository
     /**
      * Get the fee type based on ProductReference and Received Date of the application
      *
-     * @param ProductReference $productReference
+     * @param string $productReference
      * @param $receivedDate
      * @return Entity
      * @throws NotFoundException

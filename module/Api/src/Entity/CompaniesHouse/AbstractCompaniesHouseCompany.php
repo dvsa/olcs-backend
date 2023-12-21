@@ -552,7 +552,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the insolvency practitioner
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $insolvencyPractitioners collection being set as the value
+     * @param ArrayCollection $insolvencyPractitioners collection being set as the value
      *
      * @return CompaniesHouseCompany
      */
@@ -566,7 +566,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Get the insolvency practitioners
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getInsolvencyPractitioners()
     {
@@ -576,7 +576,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Add a insolvency practitioners
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $insolvencyPractitioners collection being added
+     * @param ArrayCollection|mixed $insolvencyPractitioners collection being added
      *
      * @return CompaniesHouseCompany
      */
@@ -615,7 +615,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Set the officer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $officers collection being set as the value
+     * @param ArrayCollection $officers collection being set as the value
      *
      * @return CompaniesHouseCompany
      */
@@ -629,7 +629,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Get the officers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getOfficers()
     {
@@ -639,7 +639,7 @@ abstract class AbstractCompaniesHouseCompany implements BundleSerializableInterf
     /**
      * Add a officers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $officers collection being added
+     * @param ArrayCollection|mixed $officers collection being added
      *
      * @return CompaniesHouseCompany
      */

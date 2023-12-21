@@ -233,7 +233,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getAgreedDate($asDateTime = false)
     {
@@ -431,7 +432,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getSentDate($asDateTime = false)
     {
@@ -533,7 +535,8 @@ abstract class AbstractSlaTargetDate implements BundleSerializableInterface, Jso
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getTargetDate($asDateTime = false)
     {

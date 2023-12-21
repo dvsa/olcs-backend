@@ -27,7 +27,7 @@ class GetEventHistoryDetails extends AbstractRawQuery
     /**
      * Set history table
      *
-     * @param sting $historyTable
+     * @param string $historyTable
      */
     public function setHistoryTable($historyTable)
     {

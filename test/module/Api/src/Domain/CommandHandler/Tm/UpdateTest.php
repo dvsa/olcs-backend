@@ -38,7 +38,7 @@ class UpdateTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      * @test
      */
     public function handleCommand()
@@ -196,7 +196,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandUpdatesHomeAddress()
     {
@@ -216,7 +216,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandCreatesHomeAddress()
     {
@@ -237,7 +237,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandUpdatesHomeAddressWhenHomeAddressIdProvided()
     {
@@ -259,7 +259,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandDoesNotCreateHomeContactDetails()
     {
@@ -307,7 +307,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_UpdatesHomeAddress
+     * @depends handleCommandUpdatesHomeAddress
      */
     public function handleCommandReportsNoUpdatesToHomeAddressWhenNoChangeRequired()
     {
@@ -330,7 +330,7 @@ class UpdateTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_CreatesHomeAddress
+     * @depends handleCommandCreatesHomeAddress
      */
     public function handleCommandReportsNoUpdatesToHomeContactDetailsWhenVersionIsUnchanged()
     {

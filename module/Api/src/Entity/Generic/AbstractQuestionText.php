@@ -308,7 +308,8 @@ abstract class AbstractQuestionText implements BundleSerializableInterface, Json
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getEffectiveFrom($asDateTime = false)
     {

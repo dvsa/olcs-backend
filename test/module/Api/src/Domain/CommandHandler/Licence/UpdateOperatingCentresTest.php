@@ -58,7 +58,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvInvalid()
     {
@@ -112,7 +112,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandGvInvalid()
     {
@@ -168,7 +168,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandPsvValid()
     {
@@ -238,7 +238,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
     }
 
     /**
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function testHandleCommandGvValid()
     {
@@ -312,7 +312,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandSavesALicenceWithValidVehicleAuthorizations()
     {
@@ -341,7 +341,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     * @depends handleCommandSavesALicenceWithValidVehicleAuthorizations
      */
     public function handleCommandSetsTotAuthHgvVehiclesForGoodsVehicleOperatingCentre()
     {
@@ -366,8 +366,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
-     * @depends handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre
+     * @depends handleCommandSavesALicenceWithValidVehicleAuthorizations
+     * @depends handleCommandSetsTotAuthHgvVehiclesForGoodsVehicleOperatingCentre
      */
     public function handleCommandSetsTotAuthVehiclesForGoodsVehicleOperatingCentre()
     {
@@ -392,7 +392,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     * @depends handleCommandSavesALicenceWithValidVehicleAuthorizations
      */
     public function handleCommandSetsTotAuthHgvVehiclesForPsvOperatingCentre()
     {
@@ -417,8 +417,8 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
-     * @depends handleCommand_SetsTotAuthHgvVehicles_ForPsvOperatingCentre
+     * @depends handleCommandSavesALicenceWithValidVehicleAuthorizations
+     * @depends handleCommandSetsTotAuthHgvVehiclesForPsvOperatingCentre
      */
     public function handleCommandSetsTotAuthVehiclesForPsvOperatingCentre()
     {
@@ -443,7 +443,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
+     * @depends handleCommandSavesALicenceWithValidVehicleAuthorizations
      */
     public function handleCommandSetsTotalAuthLgvVehiclesForGoodsVehicleOperatingCentre()
     {
@@ -473,9 +473,9 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_SavesALicence_WithValidVehicleAuthorizations
-     * @depends handleCommand_SetsTotAuthHgvVehicles_ForGoodsVehicleOperatingCentre
-     * @depends handleCommand_SetsTotalAuthLgvVehicles_ForGoodsVehicleOperatingCentre
+     * @depends handleCommandSavesALicenceWithValidVehicleAuthorizations
+     * @depends handleCommandSetsTotAuthHgvVehiclesForGoodsVehicleOperatingCentre
+     * @depends handleCommandSetsTotalAuthLgvVehiclesForGoodsVehicleOperatingCentre
      */
     public function handleCommandSetsTotAuthVehiclesForGoodsVehicleOperatingCentreWithHgvsAndLgvs()
     {
@@ -505,7 +505,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandThrowsValidationExceptionWithAnyValidationMessagesFromTheUpdateHelper()
     {
@@ -526,7 +526,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesPsvsWhenCommandIsNotPartial()
     {
@@ -549,7 +549,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesHgvsWhenCommandIsNotPartial()
     {
@@ -575,7 +575,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
      * @param array $operatingCentresVehicleCapacities
      * @param array $expectedVehicleConstraints
      * @test
-     * @depends handleCommand_ValidatesHgvs_WhenCommandIsNotPartial
+     * @depends handleCommandValidatesHgvsWhenCommandIsNotPartial
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
      */
     public function handleCommandValidatesHgvsWhenCommandIsNotPartialAgainstCorrectOperatingCentreVehicleConstraints(array $operatingCentresVehicleCapacities, array $expectedVehicleConstraints)
@@ -606,7 +606,7 @@ class UpdateOperatingCentresTest extends CommandHandlerTestCase
 
     /**
      * @test
-     * @depends handleCommand_IsCallable
+     * @depends handleCommandIsCallable
      */
     public function handleCommandValidatesLgvsWhenCommandIsNotPartialAndLicenceIsForGoods()
     {

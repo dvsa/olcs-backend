@@ -382,7 +382,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDeferredDate($asDateTime = false)
     {
@@ -412,7 +413,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDueDate($asDateTime = false)
     {
@@ -442,7 +444,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getFromDate($asDateTime = false)
     {
@@ -664,7 +667,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getRequestDate($asDateTime = false)
     {
@@ -790,7 +794,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getReturnDate($asDateTime = false)
     {
@@ -844,7 +849,8 @@ abstract class AbstractInspectionRequest implements BundleSerializableInterface,
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getToDate($asDateTime = false)
     {

@@ -165,7 +165,7 @@ final class ReverseTransaction extends AbstractCommandHandler implements
     /**
      * Prepare extra params
      *
-     * @param \Dvsa\Olcs\Transfer\Command\Transaction\ReferseTransaction $command command
+     * @param \Dvsa\Olcs\Transfer\Command\Transaction\ReverseTransaction $command command
      *
      * @return array
      */

@@ -292,7 +292,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the country
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     * @param ArrayCollection $countrys collection being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -306,7 +306,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the countrys
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCountrys()
     {
@@ -316,7 +316,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Add a countrys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     * @param ArrayCollection|mixed $countrys collection being added
      *
      * @return IrhpPermitRange
      */
@@ -451,7 +451,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the irhp permit range attribute
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRangeAttributes collection being set as the value
+     * @param ArrayCollection $irhpPermitRangeAttributes collection being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -465,7 +465,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the irhp permit range attributes
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitRangeAttributes()
     {
@@ -475,7 +475,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Add a irhp permit range attributes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRangeAttributes collection being added
+     * @param ArrayCollection|mixed $irhpPermitRangeAttributes collection being added
      *
      * @return IrhpPermitRange
      */
@@ -706,7 +706,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the irhp candidate permit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being set as the value
+     * @param ArrayCollection $irhpCandidatePermits collection being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -720,7 +720,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the irhp candidate permits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpCandidatePermits()
     {
@@ -730,7 +730,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Add a irhp candidate permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpCandidatePermits collection being added
+     * @param ArrayCollection|mixed $irhpCandidatePermits collection being added
      *
      * @return IrhpPermitRange
      */
@@ -769,7 +769,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Set the irhp permit
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being set as the value
+     * @param ArrayCollection $irhpPermits collection being set as the value
      *
      * @return IrhpPermitRange
      */
@@ -783,7 +783,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Get the irhp permits
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermits()
     {
@@ -793,7 +793,7 @@ abstract class AbstractIrhpPermitRange implements BundleSerializableInterface, J
     /**
      * Add a irhp permits
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermits collection being added
+     * @param ArrayCollection|mixed $irhpPermits collection being added
      *
      * @return IrhpPermitRange
      */

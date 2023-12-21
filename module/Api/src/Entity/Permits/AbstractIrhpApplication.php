@@ -388,7 +388,8 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getCancellationDate($asDateTime = false)
     {
@@ -474,7 +475,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the country
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being set as the value
+     * @param ArrayCollection $countrys collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -488,7 +489,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the countrys
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getCountrys()
     {
@@ -498,7 +499,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a countrys
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $countrys collection being added
+     * @param ArrayCollection|mixed $countrys collection being added
      *
      * @return IrhpApplication
      */
@@ -577,7 +578,8 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getDateReceived($asDateTime = false)
     {
@@ -631,7 +633,8 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getExpiryDate($asDateTime = false)
     {
@@ -925,7 +928,8 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
      *
      * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
      *
-     * @return \DateTime
+     * @return \DateTime|string
+
      */
     public function getWithdrawnDate($asDateTime = false)
     {
@@ -939,7 +943,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the answer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being set as the value
+     * @param ArrayCollection $answers collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -953,7 +957,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the answers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getAnswers()
     {
@@ -963,7 +967,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a answers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $answers collection being added
+     * @param ArrayCollection|mixed $answers collection being added
      *
      * @return IrhpApplication
      */
@@ -1002,7 +1006,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the document
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being set as the value
+     * @param ArrayCollection $documents collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -1016,7 +1020,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the documents
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getDocuments()
     {
@@ -1026,7 +1030,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a documents
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being added
+     * @param ArrayCollection|mixed $documents collection being added
      *
      * @return IrhpApplication
      */
@@ -1065,7 +1069,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the fee
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being set as the value
+     * @param ArrayCollection $fees collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -1079,7 +1083,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the fees
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getFees()
     {
@@ -1089,7 +1093,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a fees
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $fees collection being added
+     * @param ArrayCollection|mixed $fees collection being added
      *
      * @return IrhpApplication
      */
@@ -1128,7 +1132,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the irhp permit application
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being set as the value
+     * @param ArrayCollection $irhpPermitApplications collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -1142,7 +1146,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the irhp permit applications
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitApplications()
     {
@@ -1152,7 +1156,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a irhp permit applications
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitApplications collection being added
+     * @param ArrayCollection|mixed $irhpPermitApplications collection being added
      *
      * @return IrhpApplication
      */
@@ -1191,7 +1195,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the irhp permit request
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being set as the value
+     * @param ArrayCollection $irhpPermitRequests collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -1205,7 +1209,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the irhp permit requests
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getIrhpPermitRequests()
     {
@@ -1215,7 +1219,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a irhp permit requests
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $irhpPermitRequests collection being added
+     * @param ArrayCollection|mixed $irhpPermitRequests collection being added
      *
      * @return IrhpApplication
      */
@@ -1254,7 +1258,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the note
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $notes collection being set as the value
+     * @param ArrayCollection $notes collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -1268,7 +1272,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the notes
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getNotes()
     {
@@ -1278,7 +1282,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a notes
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $notes collection being added
+     * @param ArrayCollection|mixed $notes collection being added
      *
      * @return IrhpApplication
      */
@@ -1317,7 +1321,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Set the task
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being set as the value
+     * @param ArrayCollection $tasks collection being set as the value
      *
      * @return IrhpApplication
      */
@@ -1331,7 +1335,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Get the tasks
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTasks()
     {
@@ -1341,7 +1345,7 @@ abstract class AbstractIrhpApplication implements BundleSerializableInterface, J
     /**
      * Add a tasks
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $tasks collection being added
+     * @param ArrayCollection|mixed $tasks collection being added
      *
      * @return IrhpApplication
      */

@@ -10,6 +10,7 @@ use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOpe
 use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\DeleteConditionUndertakingS4;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\CancelS4;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\S4;
 
@@ -27,7 +28,7 @@ class Schedule41Cancel extends AbstractCommandHandler
         /** @var Application $application */
         $application = $this->getRepo()->fetchById($command->getId());
 
-        /* @var $s4 \Dvsa\Olcs\Api\Entity\Application\S4 */
+        /* @var $s4 S4 */
         foreach ($application->getS4s() as $s4) {
             // if NOT empty or approved then continue
             if (!($s4->getOutcome() === null || $s4->getOutcome()->getId() === S4::STATUS_APPROVED)) {

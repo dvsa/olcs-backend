@@ -191,7 +191,7 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Set the team printer
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being set as the value
+     * @param ArrayCollection $teamPrinters collection being set as the value
      *
      * @return Printer
      */
@@ -205,7 +205,7 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Get the team printers
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getTeamPrinters()
     {
@@ -215,7 +215,7 @@ abstract class AbstractPrinter implements BundleSerializableInterface, JsonSeria
     /**
      * Add a team printers
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $teamPrinters collection being added
+     * @param ArrayCollection|mixed $teamPrinters collection being added
      *
      * @return Printer
      */

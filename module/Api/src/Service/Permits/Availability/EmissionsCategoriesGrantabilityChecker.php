@@ -10,13 +10,6 @@ class EmissionsCategoriesGrantabilityChecker
     /** @var EmissionsCategoryAvailabilityCounter */
     private $emissionsCategoryAvailabilityCounter;
 
-    /**
-     * Create service instance
-     *
-     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
-     *
-     * @return EmissionsCategoryGrantabilityChecker
-     */
     public function __construct(EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
         $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;

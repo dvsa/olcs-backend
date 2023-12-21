@@ -172,7 +172,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     /**
      * Set the bus reg
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being set as the value
+     * @param ArrayCollection $busRegs collection being set as the value
      *
      * @return LocalAuthority
      */
@@ -186,7 +186,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     /**
      * Get the bus regs
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getBusRegs()
     {
@@ -196,7 +196,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     /**
      * Add a bus regs
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $busRegs collection being added
+     * @param ArrayCollection|mixed $busRegs collection being added
      *
      * @return LocalAuthority
      */
@@ -451,7 +451,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     /**
      * Set the user
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being set as the value
+     * @param ArrayCollection $users collection being set as the value
      *
      * @return LocalAuthority
      */
@@ -465,7 +465,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     /**
      * Get the users
      *
-     * @return \Doctrine\Common\Collections\ArrayCollection
+     * @return ArrayCollection
      */
     public function getUsers()
     {
@@ -475,7 +475,7 @@ abstract class AbstractLocalAuthority implements BundleSerializableInterface, Js
     /**
      * Add a users
      *
-     * @param \Doctrine\Common\Collections\ArrayCollection $users collection being added
+     * @param ArrayCollection|mixed $users collection being added
      *
      * @return LocalAuthority
      */

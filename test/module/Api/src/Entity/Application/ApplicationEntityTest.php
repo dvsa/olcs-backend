@@ -1505,7 +1505,7 @@ class ApplicationEntityTest extends EntityTester
     }
 
     /**
-     * @depends copyInformationFromLicence_IsCallable
+     * @depends copyInformationFromLicenceIsCallable
      */
     public function testCopyInformationFromLicence()
     {
@@ -1545,7 +1545,7 @@ class ApplicationEntityTest extends EntityTester
 
     /**
      * @test
-     * @depends copyInformationFromLicence_IsCallable
+     * @depends copyInformationFromLicenceIsCallable
      */
     public function copyInformationFromLicenceSetsTotAuthHgvVehicles()
     {
@@ -1563,7 +1563,7 @@ class ApplicationEntityTest extends EntityTester
 
     /**
      * @test
-     * @depends copyInformationFromLicence_IsCallable
+     * @depends copyInformationFromLicenceIsCallable
      */
     public function copyInformationFromLicenceSetsTotAuthLgvVehicles()
     {

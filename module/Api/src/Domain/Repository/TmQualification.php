@@ -11,6 +11,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification as Entity;
+use Dvsa\Olcs\Transfer\Query\TmQualification\TmQualificationsList;
 
 /**
  * TmQualification
@@ -26,7 +27,7 @@ class TmQualification extends AbstractRepository
      * Add list filters
      *
      * @param QueryBuilder $qb
-     * @param TmQualificationsListDTO $query
+     * @param TmQualificationsList $query
      */
     protected function applyListFilters(QueryBuilder $qb, QueryInterface $query)
     {

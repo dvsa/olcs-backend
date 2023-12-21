@@ -25,7 +25,7 @@ class Complaint extends AbstractRepository
      *
      * @param Query|QryCmd $query
      * @param int $hydrateMode
-     * @param null $version
+     * @param int|null $version
      * @return mixed
      * @throws Exception\NotFoundException
      * @throws Exception\VersionConflictException

@@ -7,6 +7,9 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason;
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShortNoticeInputFactory
@@ -21,8 +24,8 @@ class ShortNoticeInputFactory implements FactoryInterface
      * @param $requestedName
      * @param array|null $options
      * @return Input
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Input
     {

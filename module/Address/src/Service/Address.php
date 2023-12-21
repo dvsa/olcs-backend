@@ -103,7 +103,7 @@ class Address implements AddressInterface
      *
      * @param string $postcode Post code
      *
-     * @return null
+     * @return string|null
      */
     public function fetchAdminAreaByPostcode($postcode)
     {

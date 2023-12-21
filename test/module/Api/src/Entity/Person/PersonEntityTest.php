@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Entity\Person;
 
 use Common\Data\Object\Bundle\Application;
+use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
@@ -126,7 +127,7 @@ class PersonEntityTest extends EntityTester
         $op = new OrganisationPerson();
         $org1 = m::mock(Organisation::class)->makePartial()->setId(1);
         $org2 = m::mock(Organisation::class)->makePartial()->setId(2);
-        $app = m::mock(Application::class);
+        $app = m::mock(ApplicationEntity::class);
         $op->setOrganisation($org1);
         $op->setPerson($person);
         $aop = m::mock(ApplicationOrganisationPerson::class)->makePartial();
