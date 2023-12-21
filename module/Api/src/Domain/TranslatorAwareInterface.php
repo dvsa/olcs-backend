@@ -11,7 +11,6 @@ interface TranslatorAwareInterface
 {
     /**
      * @param TranslatorInterface $translator
-     * @return self
      */
     public function setTranslator(TranslatorInterface $translator);
 

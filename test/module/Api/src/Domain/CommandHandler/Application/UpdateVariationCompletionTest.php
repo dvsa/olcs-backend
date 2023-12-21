@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateVariationCompletion;
@@ -1233,7 +1234,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
         $this->setUpServiceManager();
     }
 
-    protected function setUpDefaultServices(): void
+    protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->setUpAbstractCommandHandlerServices();
         $this->authService();

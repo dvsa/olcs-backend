@@ -67,7 +67,7 @@ class Answer extends AbstractAnswer
      * @param string $questionType
      * @param mixed $answerValue
      *
-     * @return bool
+     * @return void
      */
     public function setValue($questionType, $answerValue)
     {

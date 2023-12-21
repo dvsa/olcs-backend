@@ -21,6 +21,8 @@ class NoOfPermits implements ElementInterface
     /** @var array */
     private $emissionsCategories = [];
 
+    private bool $skipAvailabilityValidation;
+
     /**
      * Create instance
      *

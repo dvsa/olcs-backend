@@ -148,7 +148,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     public static function create($pid, $userType, $data)
     {
-        $user = new static($pid, $userType);
+        $user = new self($pid, $userType);
         $user->update($data);
 
         return $user;
@@ -161,7 +161,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     public static function anon()
     {
-        $user =  new static('', self::USER_TYPE_ANON);
+        $user =  new self('', self::USER_TYPE_ANON);
         $user->update(['loginId' => null, 'roles' => [RoleEntity::anon()]]);
         $user->loginId = static::ANON_USERNAME;
 

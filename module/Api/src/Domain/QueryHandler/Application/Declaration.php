@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section\ApplicationUndertakingsReviewService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Interop\Container\ContainerInterface;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
@@ -31,6 +32,8 @@ class Declaration extends AbstractQueryHandler
      * @var \Dvsa\Olcs\Api\Service\FeesHelperService
      */
     private $feesHelper;
+
+    private ApplicationUndertakingsReviewService $reviewService;
 
     /**
      * Handle query

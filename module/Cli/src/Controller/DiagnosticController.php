@@ -137,7 +137,7 @@ class DiagnosticController extends AbstractConsoleController
     /**
      * Index action
      *
-     * @return \Laminas\Mvc\Console\View\ViewModel
+     * @return \Laminas\Mvc\Console\View\ViewModel|void
      */
     public function indexAction()
     {
@@ -145,7 +145,7 @@ class DiagnosticController extends AbstractConsoleController
         foreach ($this->sections as $section => $header) {
             $this->outputHeading($header);
             if (!in_array($section, $skipSections)) {
-                $this->{$section . 'Section'}();
+                return $this->{$section . 'Section'}();
             } else {
                 $this->outputSkip($section);
             }

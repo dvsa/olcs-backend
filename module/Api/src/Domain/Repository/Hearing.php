@@ -26,6 +26,7 @@ class Hearing extends AbstractRepository
             throw new NotFoundException('Case id cannot be null');
         }
 
+        // @phpstan-ignore-next-line __call magic.
         return parent::fetchOneByCase($caseId);
     }
 }

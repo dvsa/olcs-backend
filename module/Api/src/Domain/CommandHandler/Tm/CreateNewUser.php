@@ -330,7 +330,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
      * @param string $username     Username
      * @param string $emailAddress Email address
      *
-     * @return \Dvsa\Olcs\Api\Domain\Command\Result
+     * @return void
      */
     protected function validateRequired($username, $emailAddress)
     {

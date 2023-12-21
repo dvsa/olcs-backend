@@ -70,7 +70,7 @@ class ContactDetails extends AbstractContactDetails
      */
     public static function create(RefData $contactType, array $contactParams)
     {
-        $contactDetails = new static($contactType);
+        $contactDetails = new self($contactType);
         $contactDetails->update($contactParams, true);
 
         return $contactDetails;

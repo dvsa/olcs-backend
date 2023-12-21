@@ -12,6 +12,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Authentication\Result;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\MockInterface;
 use Dvsa\OlcsTest\MocksServicesTrait;
@@ -106,7 +107,7 @@ class RefreshTokenTest extends CommandHandlerTestCase
         }
     }
 
-    protected function setUpDefaultServices()
+    protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->adapter();
         $this->authService();

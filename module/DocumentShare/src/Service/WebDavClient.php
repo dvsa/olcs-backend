@@ -44,7 +44,7 @@ class WebDavClient implements DocumentStoreInterface
      *
      * @param string $path Path
      *
-     * @return File|null
+     * @return File|bool
      */
     public function read($path)
     {
@@ -61,7 +61,6 @@ class WebDavClient implements DocumentStoreInterface
                 return $file;
             }
         } catch (FileNotFoundException $e) {
-            unset($file);
             return false;
         } finally {
             if (is_file($tmpFileName)) {

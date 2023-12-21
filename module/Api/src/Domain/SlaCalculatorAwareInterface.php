@@ -8,7 +8,6 @@ interface SlaCalculatorAwareInterface
 {
     /**
      * @param SlaCalculatorInterface $slaCalculator
-     * @return self
      */
     public function setSlaCalculator(SlaCalculatorInterface $slaCalculator);
 

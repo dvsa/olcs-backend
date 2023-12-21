@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcement
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -33,6 +34,8 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
         'OperatingCentre',
         'ApplicationOperatingCentre'
     ];
+
+    private OperatingCentreHelper $helper;
 
     /**
      * @param Cmd $command

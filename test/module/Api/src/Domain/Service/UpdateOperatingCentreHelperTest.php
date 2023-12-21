@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateOperatingCentres;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
@@ -561,7 +562,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
         $this->sut->__invoke($this->serviceManager(), null);
     }
 
-    protected function setUpDefaultServices(): void
+    protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->authService();
     }

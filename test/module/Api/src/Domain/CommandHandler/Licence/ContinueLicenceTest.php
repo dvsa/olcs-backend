@@ -22,6 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
+use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
@@ -828,7 +829,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
         }
     }
 
-    protected function setUpDefaultServices()
+    protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->serviceManager()->setService('FinancialStandingHelperService', m::mock(FinancialStandingHelperService::class));
         $this->setUpAbstractCommandHandlerServices();

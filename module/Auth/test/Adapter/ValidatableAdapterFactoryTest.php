@@ -110,13 +110,13 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
     {
         // Setup
         $this->setUpSut();
-        $this->configureAdapter(MockAdapter::class);
+        $this->configureAdapter(ValidatableAdapterInterface::class);
 
         // Execute
         $result = $this->sut->__invoke($this->serviceManager(), null);
 
         // Assert
-        $this->assertInstanceOf(MockAdapter::class, $result);
+        $this->assertInstanceOf(ValidatableAdapterInterface::class, $result);
     }
 
     /**
@@ -255,10 +255,10 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
     }
 
     /**
-     * @return MockAdapter
+     * @return ValidatableAdapterInterface
      */
-    protected function getValidatableAdapterMock(): MockAdapter
+    protected function getValidatableAdapterMock(): ValidatableAdapterInterface
     {
-        return new MockAdapter();
+        return $this->createMock(ValidatableAdapterInterface::class);
     }
 }

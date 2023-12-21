@@ -77,6 +77,8 @@ class ProcessInsolvency extends AbstractConsumer
      */
     protected $company;
 
+    protected CompaniesHouseClient $companiesHouseApi;
+
     /**
      * @param CommandInterface $command
      *

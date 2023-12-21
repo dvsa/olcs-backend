@@ -12,12 +12,12 @@ class QuestionHandlerDelegator
     /** @var array */
     private $handlers = [];
 
+    private QaContextFactory $qaContextFactory;
+
     /**
      * Create service instance
      *
      * @param QaContextFactory $qaContextFactory
-     *
-     * @return QuestionHandlerDelegator
      */
     public function __construct(QaContextFactory $qaContextFactory)
     {

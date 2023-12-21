@@ -31,7 +31,7 @@ abstract class AbstractBookmark
      *
      * @param string $token Token
      *
-     * @return $this;
+     * @return void;
      */
     public function setToken($token)
     {

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Cli\Domain\Query\Util\GetDbValue as GetDbValueQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use DVSA\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
+use Dvsa\Olcs\Api\Domain\Repository\GetDbValue as GetDbValueRepo;
 
 class GetDbValue extends AbstractQueryHandler
 {
