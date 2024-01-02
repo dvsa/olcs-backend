@@ -2,14 +2,12 @@
 
 namespace Dvsa\Olcs\Api;
 
-use Dvsa\Olcs\Api\Domain\Util\BlockCipher\PhpSecLib;
 use Olcs\Logging\Log\Logger;
 use phpseclib3\Crypt\AES;
 use Laminas\EventManager\EventInterface;
 use Laminas\ModuleManager\Feature\BootstrapListenerInterface;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\ResponseSender\SendResponseEvent;
-use phpseclib3\Crypt\Common\SymmetricKey;
 
 /**
  * Module class
