@@ -230,7 +230,7 @@ class PrintJob extends AbstractCommandHandler
         );
 
         $output = [];
-        $result = 1;
+        $result = 0;
 
         $this->executeCommand($command, $output, $result);
 
@@ -289,7 +289,7 @@ class PrintJob extends AbstractCommandHandler
         );
 
         $outputPrint = [];
-        $resultPrint = 1;
+        $resultPrint = 0;
 
         $this->executeCommand($commandPrint, $outputPrint, $resultPrint);
         if ($resultPrint !== 0) {
@@ -452,7 +452,7 @@ class PrintJob extends AbstractCommandHandler
             );
 
             $outputPdf = [];
-            $resultPdf = 1;
+            $resultPdf = 0;
 
             $this->executeCommand($commandPdf, $outputPdf, $resultPdf);
             if ($resultPdf !== 0) {
