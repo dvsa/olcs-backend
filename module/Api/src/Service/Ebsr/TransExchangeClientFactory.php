@@ -2,7 +2,11 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\Log\Processor\RequestId;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Filter\MapXmlFile;
@@ -17,6 +21,12 @@ use Interop\Container\ContainerInterface;
  */
 class TransExchangeClientFactory implements FactoryInterface
 {
+
+
+    protected $toggleConfig = [
+        'default' => FeatureToggle::BACKEND_TRANSXCHANGE
+    ];
+
     public const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
 
     /**
@@ -32,11 +42,24 @@ class TransExchangeClientFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransExchangeClient
     {
         $config = $container->get('Config');
+        $transXChangeAppRegistrationService = $container->get(TransXChangeAppRegistrationService::class);
+        /** @var RequestId $tequestId */
+        $correlationId = (new RequestId())->process([])['extra']['requestId'];
+        $token = $transXChangeAppRegistrationService->getToken();
+        $headers = ['Authorization' => 'Bearer ' . $token];
+
+        /** @var ToggleService $toggleService */
+        $toggleService = $container->get(ToggleService::class);
+
         if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
         $config = $config['ebsr']['transexchange_publisher'];
+        if ( $toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE) ) {
+            $config['uri'] = $config['new_uri'];
+        }
         $httpClient = new RestClient($config['uri'], $config['options']);
+        $httpClient->setHeaders($headers);
         $wrapper = new ClientAdapterLoggingWrapper();
         $wrapper->wrapAdapter($httpClient);
         /**
@@ -51,6 +74,6 @@ class TransExchangeClientFactory implements FactoryInterface
         $xmlFilter->setMapping($container->get('TransExchangePublisherXmlMapping'));
         $xsdValidator = $container->get('ValidatorManager')->get(Xsd::class);
         $xsdValidator->setXsd(self::PUBLISH_XSD);
-        return new TransExchangeClient($httpClient, $xmlFilter, $xmlParser, $xsdValidator);
+        return new TransExchangeClient($httpClient, $xmlFilter, $xmlParser, $xsdValidator, $correlationId);
     }
 }
