@@ -18,7 +18,7 @@ class ApplicationReferenceMapperTest extends MockeryTestCase
 
     /**
      * @test
-     * @dataProvider dataProvider_responseDataAndExceptionMap
+     * @dataProvider dataProviderresponseDataAndExceptionMap
      */
     public function createFromResponseArrayValidOrThrowsAppropriateExceptions(array $data, string $exceptionMessage = null)
     {

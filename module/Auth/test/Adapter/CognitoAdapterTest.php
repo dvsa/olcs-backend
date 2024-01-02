@@ -828,7 +828,7 @@ class CognitoAdapterTest extends MockeryTestCase
 
     /**
      * @test
-     * @dataProvider dataProvider_getIdentityStrings
+     * @dataProvider dataProvidergetIdentityStrings
      * @param string $identity
      */
     public function getIdentityresultDoesNotContainUppercaseAndCaseConvertsToLowercase(string $identity): void

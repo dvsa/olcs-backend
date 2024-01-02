@@ -96,7 +96,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
 
     /**
      * @test
-     * @dataProvider dataProvider_verifyAcquiredRightsByReference_ApplicationNotApproved
+     * @dataProvider dataProviderverifyAcquiredRightsByReferenceApplicationNotApproved
      */
     public function verifyAcquiredRightsByReferenceApplicationNotApprovedThrowsAcquiredRightsNotApprovedException(string $status, bool $shouldThrow)
     {

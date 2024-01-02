@@ -15,7 +15,7 @@ class AcquiredRightsExceptionToValidationExceptionMapperTest extends MockeryTest
 
     /**
      * @test
-     * @dataProvider dataProvider_exceptionMap
+     * @dataProvider dataProviderexceptionMap
      */
     public function mapExceptionThrowsValidationExceptionOnMappedExceptions(string $exception, string $key, string $message)
     {
