@@ -563,15 +563,16 @@ return [
     \Dvsa\Olcs\Api\Domain\ValidatorManagerFactory::CONFIG_KEY => require(__DIR__ . '/validators.config.php'),
     \Dvsa\Olcs\Api\Domain\QueryPartialServiceManagerFactory::CONFIG_KEY => [
         'factories' => [
-            'withApplication' => QueryPartial\WithApplicationFactory::class,
-            'withIrhpApplication' => QueryPartial\WithIrhpApplicationFactory::class,
-            'withBusReg' => QueryPartial\WithBusRegFactory::class,
-            'withContactDetails' => QueryPartial\WithContactDetailsFactory::class,
-            'withCase' => QueryPartial\WithCaseFactory::class,
-            'withCreatedBy'      => QueryPartial\WithCreatedByFactory::class,
-            'withRefdata' => QueryPartial\WithRefdataFactory::class,
-            'withUser' => QueryPartial\WithUserFactory::class,
-            'withPersonContactDetails' => QueryPartial\WithPersonContactDetailsFactory::class,
+            QueryPartial\WithApplication::class => QueryPartial\WithApplicationFactory::class,
+            QueryPartial\WithIrhpApplication::class => QueryPartial\WithIrhpApplicationFactory::class,
+            QueryPartial\WithBusReg::class => QueryPartial\WithBusRegFactory::class,
+            QueryPartial\WithContactDetails::class => QueryPartial\WithContactDetailsFactory::class,
+            QueryPartial\WithCase::class => QueryPartial\WithCaseFactory::class,
+            QueryPartial\WithCreatedBy::class => QueryPartial\WithCreatedByFactory::class,
+            QueryPartial\WithRefdata::class => QueryPartial\WithRefdataFactory::class,
+            QueryPartial\WithUser::class => QueryPartial\WithUserFactory::class,
+            QueryPartial\WithPersonContactDetails::class => QueryPartial\WithPersonContactDetailsFactory::class,
+            QueryPartial\WithCreatedByWithTeam::class => QueryPartial\WithCreatedByWithTeamFactory::class,
         ],
         'invokables' => [
             'byId' => QueryPartial\ById::class,
@@ -582,6 +583,18 @@ return [
             'filterByApplication' => QueryPartial\Filter\ByApplication::class,
             'filterByBusReg' => QueryPartial\Filter\ByBusReg::class,
             'filterByIds' => QueryPartial\Filter\ByIds::class,
+        ],
+        'aliases' => [
+            'withApplication' => QueryPartial\WithApplication::class,
+            'withIrhpApplication' => QueryPartial\WithIrhpApplication::class,
+            'withBusReg' => QueryPartial\WithBusReg::class,
+            'withContactDetails' => QueryPartial\WithContactDetails::class,
+            'withCase' => QueryPartial\WithCase::class,
+            'withCreatedBy' => QueryPartial\WithCreatedBy::class,
+            'withRefdata' => QueryPartial\WithRefdata::class,
+            'withUser' => QueryPartial\WithUser::class,
+            'withPersonContactDetails' => QueryPartial\WithPersonContactDetails::class,
+            'withCreatedByWithTeam' => QueryPartial\WithCreatedByWithTeam::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\RepositoryServiceManagerFactory::CONFIG_KEY => [
@@ -776,6 +789,7 @@ return [
             'Replacement' => RepositoryFactory::class,
             'Conversation' => RepositoryFactory::class,
             'Message' => RepositoryFactory::class,
+            'MessageContent' => RepositoryFactory::class,
         ]
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
