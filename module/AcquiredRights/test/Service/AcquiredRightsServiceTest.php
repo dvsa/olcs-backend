@@ -96,7 +96,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
 
     /**
      * @test
-     * @dataProvider dataProviderverifyAcquiredRightsByReferenceApplicationNotApproved
+     * @dataProvider dataProviderVerifyAcquiredRightsByReferenceApplicationNotApproved
      */
     public function verifyAcquiredRightsByReferenceApplicationNotApprovedThrowsAcquiredRightsNotApprovedException(string $status, bool $shouldThrow)
     {
@@ -123,7 +123,7 @@ class AcquiredRightsServiceTest extends MockeryTestCase
         $this->sut->verifyAcquiredRightsByReference('ABC1234', $dateOfBirth);
     }
 
-    public function dataProviderverifyAcquiredRightsByReferenceApplicationNotApproved(): array
+    public function dataProviderVerifyAcquiredRightsByReferenceApplicationNotApproved(): array
     {
         return [
             ApplicationReference::APPLICATION_STATUS_SUBMITTED => [

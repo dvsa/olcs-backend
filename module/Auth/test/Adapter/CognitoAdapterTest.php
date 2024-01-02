@@ -828,7 +828,7 @@ class CognitoAdapterTest extends MockeryTestCase
 
     /**
      * @test
-     * @dataProvider dataProvidergetIdentityStrings
+     * @dataProvider dataProviderGetIdentityStrings
      * @param string $identity
      */
     public function getIdentityresultDoesNotContainUppercaseAndCaseConvertsToLowercase(string $identity): void
@@ -840,7 +840,7 @@ class CognitoAdapterTest extends MockeryTestCase
         $this->assertDoesNotMatchRegularExpression('/[A-Z]+/', $sut->getIdentity());
     }
 
-    public function dataProvidergetIdentityStrings(): array
+    public function dataProviderGetIdentityStrings(): array
     {
         return [
             'Lowercase' => ['testing'],

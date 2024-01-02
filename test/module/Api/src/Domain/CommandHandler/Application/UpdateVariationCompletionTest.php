@@ -1187,7 +1187,7 @@ class UpdateVariationCompletionTest extends CommandHandlerTestCase
 
     /**
      * @depends handleCommandIsCallable
-     * @dataProvidert dpMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount
+     * @dataProvider dpMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount
      */
     public function testMarksFinancialEvidenceSectionAsRequiringAttentionIfApplicationAmountDoesntExceedLicenceAmount(
         $applicationRequiredFinance
