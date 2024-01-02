@@ -40,6 +40,8 @@ class TransExchangeClient implements TransExchangeClientInterface
      */
     private $xsdValidator;
 
+    private string $correlationId;
+
     /**
      * TransExchangeClient constructor.
      *
@@ -52,12 +54,14 @@ class TransExchangeClient implements TransExchangeClientInterface
         RestClient $restClient,
         MapXmlFile $xmlFilter,
         ParseXmlString $xmlParser,
-        Xsd $xsdValidator
+        Xsd $xsdValidator,
+        string $correlationId
     ) {
         $this->restClient = $restClient;
         $this->xmlFilter = $xmlFilter;
         $this->xmlParser = $xmlParser;
         $this->xsdValidator = $xsdValidator;
+        $this->correlationId = $correlationId;
     }
 
     /**
@@ -73,10 +77,16 @@ class TransExchangeClient implements TransExchangeClientInterface
         Logger::info('TransXchange request', ['data' => $content]);
 
         $this->restClient->getRequest()->setContent($content);
+        $this->restClient->getRequest()->getHeaders()->addHeaders(
+            [
+                'X-Correlation-Id' => $this->getCorrelationId()
+            ]
+        );
         $response = $this->restClient->send();
         $body = $response->getContent();
 
         Logger::info('TransXchange response', ['data' => $response->toString()]);
+
 
         //security check, and parse into dom document
         $dom = $this->xmlParser->filter($body);
@@ -89,5 +99,9 @@ class TransExchangeClient implements TransExchangeClientInterface
         }
 
         return $this->xmlFilter->filter($dom);
+    }
+    public function getCorrelationId(): string
+    {
+        return $this->correlationId;
     }
 }

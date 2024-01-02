@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
+use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
@@ -40,6 +41,7 @@ use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
@@ -210,6 +212,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof FileProcessorAwareInterface) {
             $this->setFileProcessor($mainServiceLocator->get(FileProcessorInterface::class));
+        }
+
+        if ($this instanceof EbsrProcessingAwareInterface) {
+            $this->setEbsrProcessing($mainServiceLocator->get(EbsrProcessingChain::class));
         }
 
         if ($this instanceof QueueInterface) {

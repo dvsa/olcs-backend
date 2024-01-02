@@ -13,10 +13,10 @@ interface TransExchangeAwareInterface
     /**
      * @param TransExchangeClientInterface $transExchange
      */
-    public function setTransExchange(TransExchangeClientInterface $transExchange);
+    public function setTransExchange(TransExchangeClientInterface $transExchange): void;
 
     /**
      * @return TransExchangeClientInterface
      */
-    public function getTransExchange();
+    public function getTransExchange(): TransExchangeClientInterface;
 }

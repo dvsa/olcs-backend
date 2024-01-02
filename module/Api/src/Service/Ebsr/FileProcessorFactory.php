@@ -3,8 +3,11 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
-use Laminas\ServiceManager\Factory\FactoryInterface;
+
 use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
+
 
 /**
  * Class FileProcessorFactory
@@ -12,6 +15,7 @@ use Interop\Container\ContainerInterface;
  */
 class FileProcessorFactory implements FactoryInterface
 {
+
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -25,9 +29,20 @@ class FileProcessorFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FileProcessor
     {
         $config = $container->get('Config');
-        $tmpDir = (isset($config['tmpDirectory']) ? $config['tmpDirectory'] : sys_get_temp_dir());
+        $tmpDir = ($config['tmpDirectory'] ?? sys_get_temp_dir());
         $decompressFilter = $container->get('FilterManager')->get('Decompress');
         $decompressFilter->setAdapter('zip');
-        return new FileProcessor($container->get('FileUploader'), new Filesystem(), $decompressFilter, $tmpDir);
+
+        $fileProcessor = new FileProcessor($container->get('FileUploader'), new Filesystem(), $decompressFilter, $container->get(ZipProcessor::class), $tmpDir);
+
+        if (isset($config['ebsr']['tmp_extra_path'])) {
+            $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
+        }
+        return  $fileProcessor;
+    }
+
+    public function createService(ServiceLocatorInterface $serviceLocator)
+    {
+        return $this->__invoke($serviceLocator, FileProcessor::class);
     }
 }
