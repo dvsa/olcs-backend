@@ -1,6 +1,36 @@
 {
     "name": "olcs/backend",
     "description": "Back End Application for OLCS Project",
+<<<<<<< HEAD
+=======
+    "repositories": [
+        {
+            "packagist": false
+        },
+        {
+            "url": "git@repo.olcs.dev-dvsacloud.uk:olcs/olcs-laminas.git",
+            "type": "vcs"
+        },
+        {
+            "type": "composer",
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
+            "only": [
+                "olcs/olcs-logging",
+                "olcs/olcs-utils",
+                "olcs/olcs-xmltools",
+                "olcs/olcs-transfer"
+            ]
+        },
+        {
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/OLCS",
+            "type": "composer"
+        },
+        {
+            "url": "https://nexus.olcs.dev-dvsacloud.uk/repository/Packagist-Proxy",
+            "type": "composer"
+        }
+    ],
+>>>>>>> 50a9a4995 (VOL-4648 Bump `olcs-transfer` to `^5.0.0-beta.1`)
     "require": {
         "php": "^7.4",
         "ext-intl": "*",
