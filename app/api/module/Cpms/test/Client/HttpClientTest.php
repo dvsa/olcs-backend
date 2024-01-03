@@ -7,7 +7,7 @@ use Dvsa\Olcs\Cpms\Client\HttpClient;
 use GuzzleHttp\Client;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use GuzzleHttp\Psr7\Response;
 use Mockery as m;
 
