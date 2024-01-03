@@ -39,12 +39,6 @@ abstract class EntityTester extends MockeryTestCase
         return $this->entityClass;
     }
 
-    public function tearDown(): void
-    {
-        unset($this->entity);
-        \Mockery::close();
-    }
-
     protected function instantiate($entityName)
     {
         if (!method_exists($entityName, '__construct')) {
