@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
-use PHPUnit\Framework\TestCase as TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**

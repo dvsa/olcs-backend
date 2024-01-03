@@ -7,8 +7,7 @@ use Dvsa\Olcs\Api\Service\Document\Document;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject as MockObj;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
