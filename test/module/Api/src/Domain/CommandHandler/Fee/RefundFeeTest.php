@@ -123,7 +123,7 @@ class RefundFeeTest extends CommandHandlerTestCase
         $fee->setFeeTransactions(new ArrayCollection([$ft1, $ft2, $ft3]));
         $fee->shouldReceive('getFeeTransactionsForRefund')
             ->andReturn(new ArrayCollection([$ft1, $ft2, $ft3]));
-        $fee->shouldReceive('getFeetype->getFeeType')->andReturn(new RefData(FeeType::FEE_TYPE_GRANT));
+        $fee->shouldReceive('getFeeType->getFeeType')->andReturn(new RefData(FeeType::FEE_TYPE_GRANT));
 
         $command = Cmd::create($data);
 
