@@ -36,7 +36,7 @@ class MessageConsumerManagerTest extends MockeryTestCase
 
         $this->sm = $sm;
 
-        $this->sut = new MessageConsumerManager();
+        $this->sut = new MessageConsumerManager($sm);
     }
 
     public function testValidate()

@@ -25,7 +25,7 @@ trait MocksRepositoriesTrait
     {
         assert(is_callable([$this, 'serviceManager']), 'Expected service manager accessor to be defined');
         if (! $this->serviceManager()->has('RepositoryServiceManager')) {
-            $instance = new RepositoryServiceManager();
+            $instance = new RepositoryServiceManager($this->serviceManager());
             $this->serviceManager()->setService('RepositoryServiceManager', $instance);
         }
         return $this->serviceManager()->get('RepositoryServiceManager');
