@@ -6,7 +6,7 @@ use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Factories\QueueFactory;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Laminas\ServiceManager\ServiceManager;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 
 class QueueFactoryTest extends TestCase

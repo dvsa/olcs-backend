@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\AwsSdk\Factories;
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\AwsSdk\Factories\SqsClientFactory;
 use Laminas\ServiceManager\ServiceManager;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Aws\Credentials\CredentialsInterface;
 

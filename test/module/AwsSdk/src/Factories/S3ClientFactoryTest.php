@@ -7,7 +7,7 @@ use Aws\S3\S3Client;
 use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Class S3ClientTest
