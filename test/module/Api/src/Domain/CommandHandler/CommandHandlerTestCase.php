@@ -206,29 +206,10 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         }
     }
 
-    public function tearDown(): void
+    protected function assertPostConditions(): void
     {
         $this->initRefdata = false;
         $this->assertCommandData();
-
-        m::close();
-        parent::tearDown();
-
-        unset(
-            $this->sut,
-            $this->commandHandler,
-            $this->repoManager,
-            $this->repoMap,
-            $this->sideEffects,
-            $this->commands,
-            $this->refData,
-            $this->references,
-            $this->categoryReferences,
-            $this->subCategoryReferences,
-            $this->initRefdata,
-            $this->mockedSmServices,
-            $this->pidIdentityProvider
-        );
     }
 
     public function expectedCacheSideEffect($cacheId, $uniqueId = null, $result = null, $times = 1)

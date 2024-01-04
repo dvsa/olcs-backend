@@ -190,27 +190,10 @@ class QueryHandlerTestCase extends MockeryTestCase
         return isset($this->references[$class][$id]) ? $this->references[$class][$id] : null;
     }
 
-    public function tearDown(): void
+    protected function assertPostConditions(): void
     {
         $this->assertCommandData();
         $this->assertQueryData();
-
-        parent::tearDown();
-
-        unset(
-            $this->sut,
-            $this->queryHandler,
-            $this->repoManager,
-            $this->repoMap,
-            $this->commands,
-            $this->sideEffectQueries,
-            $this->refData,
-            $this->references,
-            $this->categoryReferences,
-            $this->subCategoryReferences,
-            $this->initRefdata,
-            $this->mockedSmServices
-        );
     }
 
     protected function mockRepo($name, $class)
