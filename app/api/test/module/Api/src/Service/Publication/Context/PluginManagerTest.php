@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Publication\Context;
 
 use Dvsa\Olcs\Api\Service\Publication\Context\ContextInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager;
+use Interop\Container\Containerinterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
@@ -17,7 +18,7 @@ class PluginManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new PluginManager();
+        $this->sut = new PluginManager($this->createMock(ContainerInterface::class));
     }
 
     public function testValidate()

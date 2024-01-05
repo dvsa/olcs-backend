@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Psr\Container\ContainerInterface;
 
 /**
  * @covers ProcessPluginManager
@@ -17,7 +18,7 @@ class PluginManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new ProcessPluginManager();
+        $this->sut = new ProcessPluginManager($this->createMock(ContainerInterface::class));
     }
 
     public function testValidate()
