@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Psr\Container\ContainerInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager
@@ -18,7 +19,7 @@ class SectionGeneratorPluginManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
-        $this->sut = new SectionGeneratorPluginManager();
+        $this->sut = new SectionGeneratorPluginManager($this->createMock(ContainerInterface::class));
     }
 
     public function testValidate()
