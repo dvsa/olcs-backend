@@ -25,6 +25,17 @@ class Message extends AbstractRepository
         return $qb;
     }
 
+    public function getBaseMessageListWithContentQuery(QueryInterface $query): QueryBuilder
+    {
+        $qb = $this->getBaseMessageListQuery($query);
+
+        $this->getQueryBuilder()->modifyQuery($qb)
+            ->with('messagingContent')
+            ->withCreatedByWithTeam();
+
+        return $qb;
+    }
+
     public function filterByConversationId(QueryBuilder $qb, $conversationId): QueryBuilder
     {
         $qb
