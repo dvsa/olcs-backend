@@ -1,14 +1,14 @@
 <?php
 
-use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\Query;
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 use Dvsa\Olcs\Cli\Domain\Query as QueryCli;
 use Dvsa\Olcs\Cli\Domain\QueryHandler as QueryHandlerCli;
+use Dvsa\Olcs\Transfer\Query as TransferQuery;
 
 return [
     // Audit
@@ -726,4 +726,5 @@ return [
     // Messaging
     TransferQuery\Messaging\Conversations\ByLicence::class => QueryHandler\Messaging\Conversations\ByLicence::class,
     TransferQuery\Messaging\Conversations\ByApplicationToLicence::class => QueryHandler\Messaging\Conversations\ByApplicationToLicence::class,
+    TransferQuery\Messaging\Messages\ByConversation::class => QueryHandler\Messaging\Message\ByConversation::class,
 ];

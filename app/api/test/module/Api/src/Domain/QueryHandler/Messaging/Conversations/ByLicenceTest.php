@@ -39,7 +39,7 @@ class ByLicenceTest extends QueryHandlerTestCase
         $this->repoMap['Conversation']->shouldReceive('filterByLicenceId')->once()->with($mockQb, $query->getLicence())->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('applyOrderByOpen')->once()->with($mockQb)->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('fetchPaginatedList')->once()->andReturn($conversations);
-        $this->repoMap['Conversation']->shouldReceive('fetchPaginatedCount')->once()->andReturn(0);
+        $this->repoMap['Conversation']->shouldReceive('fetchPaginatedCount')->once()->andReturn(10);
         $this->repoMap['Message']->shouldReceive('getUnreadMessagesByConversationIdAndUserId')->andReturn([]);
         $this->repoMap['Message']->shouldReceive('getLastMessageByConversationId')->twice()->andReturn($conversations[0]);
 
@@ -47,7 +47,8 @@ class ByLicenceTest extends QueryHandlerTestCase
 
         $this->assertArrayHasKey('result', $result);
         $this->assertArrayHasKey('count', $result);
-        $this->assertCount(count($conversations), $result['result']);
+        $this->assertCount(2, $result['result']);
+        $this->assertEquals(10, $result['count']);
     }
 
     public function testHandleConversationOrdering()

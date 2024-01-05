@@ -18,6 +18,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  * @method QueryBuilder with($property, $alias = null)
  * @method QueryBuilder withCase()
  * @method QueryBuilder withCreatedBy()
+ * @method QueryBuilder withCreatedByWithTeam()
  * @method QueryBuilder withUser()
  * @method QueryBuilder paginate($page, $limit)
  * @method QueryBuilder order($sort, $order, $compositeFields = null)
