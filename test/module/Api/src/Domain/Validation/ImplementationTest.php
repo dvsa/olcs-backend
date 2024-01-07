@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\Config;
+use Psr\Container\ContainerInterface;
 
 /**
  * Implementation Test
@@ -58,27 +58,13 @@ class ImplementationTest extends MockeryTestCase
             }
         }
 
-        $validationHandlerConfig = new Config($validationHandlers);
-
-        $this->validationManager = new ValidationHandlerManager($validationHandlerConfig);
+        $this->validationManager = new ValidationHandlerManager($this->createMock(ContainerInterface::class), $validationHandlers);
     }
 
     public function testAllImplemented()
     {
-        $errors = [];
-
         foreach ($this->handlers as $handler) {
-            if ($this->validationManager->has($handler) === false) {
-                $errors[] = $handler;
-            }
-        }
-
-        if (!empty($errors)) {
-            $this->fail(
-                'Validation for the following handlers has not been implemented:' . "\n" . implode("\n", $errors)
-            );
-        } else {
-            $this->assertTrue(true);
+            $this->assertTrue($this->validationManager->has($handler));
         }
     }
 }

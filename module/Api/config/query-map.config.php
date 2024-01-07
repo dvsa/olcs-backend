@@ -1,14 +1,14 @@
 <?php
 
-use Dvsa\Olcs\Transfer\Query as TransferQuery;
 use Dvsa\Olcs\Api\Domain\Query;
-use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark as BookmarkQuery;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 use Dvsa\Olcs\Api\Domain\Query\Queue as QueueQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bookmark as BookmarkQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Queue as QueueQueryHandler;
 use Dvsa\Olcs\Cli\Domain\Query as QueryCli;
 use Dvsa\Olcs\Cli\Domain\QueryHandler as QueryHandlerCli;
+use Dvsa\Olcs\Transfer\Query as TransferQuery;
 
 return [
     // Audit
@@ -334,8 +334,6 @@ return [
     QueryCli\CommunityLic\CommunityLicencesForActivationList::class =>
         QueryHandlerCli\CommunityLic\CommunityLicencesForActivationList::class,
 
-
-
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
@@ -510,7 +508,7 @@ return [
     TransferQuery\Cpms\ReportStatus::class => QueryHandler\Cpms\ReportStatus::class,
     TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
 
-    //Address
+    // Address
     TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,
     TransferQuery\Address\GetList::class => QueryHandler\Address\GetList::class,
 
@@ -688,14 +686,14 @@ return [
     Query\IrhpPermit\ByPermitNumber::class => QueryHandler\IrhpPermit\ByPermitNumber::class,
     Query\IrhpPermitRange\ByPermitNumber::class => QueryHandler\IrhpPermitRange\ByPermitNumber::class,
 
-    //Digital Surrender
+    // Digital Surrender
     TransferQuery\Surrender\GetSignature::class => QueryHandler\Surrender\GetSignature::class,
     TransferQuery\Surrender\ByLicence::class => QueryHandler\Surrender\ByLicence::class,
     TransferQuery\Surrender\OpenBusReg::class => QueryHandler\Surrender\OpenBusReg::class,
     TransferQuery\Surrender\OpenCases::class => QueryHandler\Surrender\OpenCases::class,
     TransferQuery\Surrender\PreviousLicenceStatus::class => QueryHandler\Surrender\PreviousLicenceStatus::class,
 
-    //Document Internal
+    // Document Internal
     Query\Document\ByDocumentStoreId::class => QueryHandler\Document\ByDocumentStoreId::class,
 
     // Templates
@@ -704,19 +702,19 @@ return [
     TransferQuery\Template\TemplateSource::class => QueryHandler\Template\TemplateSource::class,
     TransferQuery\Template\TemplateCategories::class => QueryHandler\Template\TemplateCategories::class,
 
-    //Editable Translations
+    // Editable Translations
     TransferQuery\TranslationKey\ById::class => QueryHandler\TranslationKey\ById::class,
     TransferQuery\TranslationKey\GetList::class => QueryHandler\TranslationKey\GetList::class,
     TransferQuery\Language\GetList::class => QueryHandler\Language\GetList::class,
 
-    //Replacements
+    // Replacements
     TransferQuery\Replacement\ById::class => QueryHandler\Replacement\ById::class,
     TransferQuery\Replacement\GetList::class => QueryHandler\Replacement\GetList::class,
 
-    //DvlaSearch
+    // DvlaSearch
     TransferQuery\DvlaSearch\Vehicle::class => QueryHandler\DvlaSearch\Vehicle::class,
 
-    //Cache
+    // Cache
     TransferQuery\Cache\ById::class => QueryHandler\Cache\ById::class,
     Query\Cache\Replacements::class => QueryHandler\Cache\Replacements::class,
     Query\Cache\TranslationKey::class => QueryHandler\Cache\TranslationKey::class,
@@ -726,7 +724,6 @@ return [
     // Messaging
     TransferQuery\Messaging\Conversations\ByLicence::class => QueryHandler\Messaging\Conversations\ByLicence::class,
     TransferQuery\Messaging\Conversations\ByApplicationToLicence::class => QueryHandler\Messaging\Conversations\ByApplicationToLicence::class,
-    TransferQuery\Messaging\Messages\ByConversation::class => QueryHandler\Messaging\Message\ByConversation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class
