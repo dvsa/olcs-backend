@@ -26,7 +26,6 @@ final class Close extends AbstractUserCommandHandler
         /** @var MessagingConversation $conversation */
         $conversation = $this->getRepo()->fetchUsingId($command);
         $conversation->setIsClosed(true);
-        $conversation->setLastModifiedBy($this->getCurrentUser());
         $this->getRepo()->save($conversation);
 
         $result = new Result();
