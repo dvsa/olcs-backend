@@ -1049,6 +1049,10 @@ return [
     TransferCommand\FeatureToggle\Delete::class =>
         CommandHandler\FeatureToggle\Delete::class,
 
+    // Transfer - Messaging
+    TransferCommand\Messaging\Close::class =>
+        CommandHandler\Messaging\Close::class,
+
     // Transfer - IRHP Permit
     TransferCommand\IrhpPermit\Replace::class =>
         CommandHandler\IrhpPermit\Replace::class,
