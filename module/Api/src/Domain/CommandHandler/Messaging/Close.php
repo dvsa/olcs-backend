@@ -31,7 +31,7 @@ final class Close extends AbstractUserCommandHandler
 
         $result = new Result();
         $result->addId('conversation', $conversation->getId());
-        $result->addMessage('Conversation cosed');
+        $result->addMessage('Conversation closed');
 
         return $result;
     }
