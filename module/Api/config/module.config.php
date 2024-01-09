@@ -787,10 +787,15 @@ return [
             'TranslationKeyText' => RepositoryFactory::class,
             'Language' => RepositoryFactory::class,
             'Replacement' => RepositoryFactory::class,
-            'Conversation' => RepositoryFactory::class,
-            'Message' => RepositoryFactory::class,
-            'MessageContent' => RepositoryFactory::class,
-        ]
+            Repository\Conversation::class => RepositoryFactory::class,
+            Repository\Message::class => RepositoryFactory::class,
+            Repository\MessageContent::class => RepositoryFactory::class,
+        ],
+        'aliases' => [
+            'Conversation' => Repository\Conversation::class,
+            'Message' => Repository\Message::class,
+            'MessageContent' => Repository\MessageContent::class,
+        ],
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
         'factories' => [

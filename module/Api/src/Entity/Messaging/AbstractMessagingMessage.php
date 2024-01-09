@@ -78,7 +78,11 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
      *
      * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingContent
      *
-     * @ORM\OneToOne(targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingContent", fetch="LAZY")
+     * @ORM\OneToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingContent",
+     *     fetch="LAZY",
+     *     cascade={"persist","remove"}
+     * )
      * @ORM\JoinColumn(name="messaging_content_id", referencedColumnName="id", nullable=false)
      */
     protected $messagingContent;
