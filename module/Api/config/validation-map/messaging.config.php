@@ -1,4 +1,4 @@
-<?php
+    <?php
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
