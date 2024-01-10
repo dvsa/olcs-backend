@@ -54,8 +54,7 @@ class Application extends AbstractRepository
         $qb = $this->createQueryBuilder();
 
         $this->getQueryBuilder()->modifyQuery($qb)
-            ->withRefdata()
-            ->with('licence');
+            ->withRefdata();
 
         $qb
             ->innerJoin('a.licence', 'l', Join::WITH, $qb->expr()->eq('l.organisation', ':organisationId'))

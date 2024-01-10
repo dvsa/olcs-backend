@@ -24,7 +24,6 @@ class ByLicenceToOrganisation extends AbstractQueryHandler implements ToggleRequ
 
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetApplicationListByLicenceToOrganisationQuery);
         $licenceRepository = $this->getLicenceRepository();
 
         $licence = $licenceRepository->fetchById($query->getLicence());
