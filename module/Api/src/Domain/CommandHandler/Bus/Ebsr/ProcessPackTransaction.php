@@ -3,8 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareInterface;
-use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareTrait;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -13,12 +13,14 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Olcs\Logging\Log\Logger;
+
 
 
 final class ProcessPackTransaction extends AbstractProcessPack implements
-    TransactionedInterface
+    TransactionedInterface,  UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
     public function handleCommand(CommandInterface $command)
     {
         /** @var EbsrSubmissionEntity $ebsrSub */
@@ -46,13 +48,17 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
             $xmlName = $filesProcessed['xmlFilename'];
         } catch (\Exception $e) {
             //process the validation failure information
-            $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
+            $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], $doc->getIdentifier(), []);
             return $this->result;
         }
 
         //validate the xml structure
         $xmlDocContext = ['xml_filename' => $xmlName];
-        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlName, $xmlDocContext);
+        $xmlContent = $this->getUploader()->download($xmlName)->getContent();
+        $domDoc = new \DOMDocument();
+        $domDoc->loadXML($xmlContent);
+
+        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $domDoc, $xmlDocContext);
 
         if ($ebsrDoc === false) {
             return $this->result;

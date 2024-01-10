@@ -39,7 +39,6 @@ class S3Processor implements EbsrProcessingInterface
     {
 
         $this->logger->debug('Sending transxchange file to S3', ['identifier' => $identifier]);
-
         $file = $this->fileUploader->download($identifier);
         if (!$file) {
             $this->logger->info('Cannot get transxchange file from content store', ['identifier' => $identifier]);
@@ -61,7 +60,6 @@ class S3Processor implements EbsrProcessingInterface
             throw new ProcessPackException('Cannot process transxchange file');
 
         }
-
     }
 
     public function getOutputType(): string

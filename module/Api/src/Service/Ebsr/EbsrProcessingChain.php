@@ -38,7 +38,7 @@ class EbsrProcessingChain
                 $this->logger->info('File processed with ' . get_class($processor). ' output: ' . $identifier);
                 $this->files[$processor->getOutputType()] = $identifier;
             }
-
+            $this->logger->info('processing outputs ' . json_encode($this->files));
         return $this->getFilesCreated();
     }
 
