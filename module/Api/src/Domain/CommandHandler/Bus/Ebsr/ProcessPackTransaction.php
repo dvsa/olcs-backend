@@ -55,10 +55,8 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         //validate the xml structure
         $xmlDocContext = ['xml_filename' => $xmlName];
         $xmlContent = $this->getUploader()->download($xmlName)->getContent();
-        $domDoc = new \DOMDocument();
-        $domDoc->loadXML($xmlContent);
 
-        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $domDoc, $xmlDocContext);
+        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlContent, $xmlDocContext);
 
         if ($ebsrDoc === false) {
             return $this->result;

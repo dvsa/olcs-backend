@@ -94,7 +94,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      * @param EbsrSubmissionEntity $ebsrSub ebsr submission entity
      * @param DocumentEntity       $doc     document entity
      * @param string               $xmlName name of the xml file
-     * @param array                $value   input value
+     * @param string | array       $value   input value
      * @param array                $context input context
      *
      * @return array|bool

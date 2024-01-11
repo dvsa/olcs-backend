@@ -72,6 +72,8 @@ class ProcessPackTestCase extends AbstractCommandHandlerTestCase
             ->with(SubmissionResultFilter::class)
             ->andReturn($submissionResultFilter);
 
+
+
         $ebsrProcessingChain =m::mock(EbsrProcessingChain::class);
 
         $this->mockedSmServices = [
