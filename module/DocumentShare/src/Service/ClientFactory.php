@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\DocumentShare\Service;
 
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Laminas\Log\Logger;
 use League\Flysystem\Filesystem;
@@ -81,13 +82,22 @@ class ClientFactory implements FactoryInterface
      */
     private function getClientType(ContainerInterface $container): string
     {
+        /** @var ToggleService $toggleService */
+        $toggleService = $container->get(ToggleService::class);
+        /** @var AuthorizationService $authService */
         $authService = $container->get(AuthorizationService::class);
         /** @var Logger $logger */
         $logger = $container->get('Logger');
         /** @var User $currentUser */
         $currentUser = $authService->getIdentity()->getUser();
 
-        $clientType = ($currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10 || $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I) ? WebDavClient::class : DocManClient::class;
+        $isWindows10 = $currentUser->getOsType() == User::USER_OS_TYPE_WINDOWS_10;
+        $isNorthernIreland = $currentUser->getOsType() == User::USER_OS_TYPE_NORTHERN_I;
+
+        $isForcedWebDav = $toggleService->isEnabled('enforce_webdav');
+
+        $clientType = ($isWindows10 || $isNorthernIreland || $isForcedWebDav) ? WebDavClient::class : DocManClient::class;
+
         if ($clientType === DocManClient::class) {
             //record if document share client is used for a particular user
             $logger->info(DocManClient::class . ' is used for user ' . $currentUser->getId() . ' with OS type ' . $currentUser->getOsType());
