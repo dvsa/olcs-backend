@@ -9,4 +9,5 @@ return [
     QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation::class => NoValidationRequired::class,
     QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => NoValidationRequired::class,
     QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class => NoValidationRequired::class,
+    QueryHandler\Messaging\Message\ByConversation::class => NoValidationRequired::class
 ];
