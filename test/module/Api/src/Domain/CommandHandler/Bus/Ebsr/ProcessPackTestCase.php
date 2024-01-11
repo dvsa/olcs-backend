@@ -66,6 +66,8 @@ class ProcessPackTestCase extends CommandHandlerTestCase
             ->with(SubmissionResultFilter::class)
             ->andReturn($submissionResultFilter);
 
+
+
         $ebsrProcessingChain =m::mock(EbsrProcessingChain::class);
 
         $this->mockedSmServices = [

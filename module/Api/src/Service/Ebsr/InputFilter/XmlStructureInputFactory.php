@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXml;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
@@ -39,7 +40,7 @@ class XmlStructureInputFactory implements FactoryInterface
         $service = new Input($inputName);
         $config = $container->get('Config');
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($container->get('FilterManager')->get(ParseXml::class));
+        $filterChain->attach($container->get('FilterManager')->get(ParseXmlString::class));
         $validatorchain = $service->getValidatorChain();
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {
