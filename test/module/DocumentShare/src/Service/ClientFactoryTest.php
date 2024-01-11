@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\DocumentShare\Service;
 
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
@@ -65,6 +66,48 @@ class ClientFactoryTest extends MockeryTestCase
         );
     }
 
+    public function testEnforceWebDav(): void
+    {
+        $sut = new ClientFactory();
+
+        $serviceManager = m::mock(ContainerInterface::class);
+
+        $toggleService = m::mock(ToggleService::class);
+        $logger = m::mock(LoggerInterface::class);
+        $user = m::mock(User::class);
+        $identity = m::mock(IdentityInterface::class);
+        $authService = m::mock(AuthorizationService::class);
+
+        $toggleService->shouldReceive('isEnabled')->with('enforce_webdav')->andReturn(true);
+        $user->shouldReceive('getOstype')->andReturn(User::USER_OS_TYPE_WINDOWS_7);
+        $identity->shouldReceive('getUser')->andReturn($user);
+        $authService->shouldReceive('getIdentity')->andReturn($identity);
+
+        $serviceManager->shouldReceive('get')->with('Logger')->andReturn($logger);
+        $serviceManager->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
+        $serviceManager->shouldReceive('get')->with(AuthorizationService::class)->andReturn($authService);
+
+        $webDavConfig = [
+            'document_share' => [
+                'http' => [],
+                'client' => [
+                    'baseuri' => 'http://testdocument_share',
+                    'workspace' => 'testwebdav',
+                    'username' => 'testwebdav',
+                    'password' => 'ttestwebdavest',
+                    'webdav_baseuri' => 'http://testdocument_share',
+                    'uuid' => 'u1234'
+                ]
+            ]
+        ];
+
+        $serviceManager->shouldReceive('get')->once()->with('Configuration')->andReturn($webDavConfig);
+
+        $service = $sut->__invoke($serviceManager, null);
+
+        $this->assertInstanceOf(WebDavClient::class, $service);
+    }
+
     /**
      * @dataProvider provideCreateService
      *
@@ -76,6 +119,10 @@ class ClientFactoryTest extends MockeryTestCase
         $sut = new ClientFactory();
 
         $mockSl = m::mock(ContainerInterface::class);
+
+        $toggleService = m::mock(ToggleService::class);
+        $toggleService->shouldReceive('isEnabled')->with('enforce_webdav')->andReturn(false);
+        $mockSl->shouldReceive('get')->once()->with(ToggleService::class)->andReturn($toggleService);
 
         $mockLogger = m::mock(LoggerInterface::class);
         $mockUser = m::mock(User::class)
