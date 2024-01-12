@@ -1050,7 +1050,7 @@ return [
         CommandHandler\FeatureToggle\Delete::class,
 
     // Transfer - Messaging
-    TransferCommand\Messaging\Close::class =>
+    TransferCommand\Messaging\Conversation\Close::class =>
         CommandHandler\Messaging\Conversation\Close::class,
 
     // Transfer - IRHP Permit
