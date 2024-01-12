@@ -45,11 +45,16 @@ class ByConversationTest extends QueryHandlerTestCase
                 ['id' => 8,'messaging_conversation_id' => '1','messaging_content_id' => '8'],
             ]
         );
+        $conversation = [
+            'id' => 1,
+            'isDisabled' => false,
+        ];
         $mockQb = m::mock(QueryBuilder::class);
         $this->repoMap['Message']->shouldReceive('getBaseMessageListWithContentQuery')->andReturn($mockQb);
         $this->repoMap['Message']->shouldReceive('filterByConversationId')->andReturn($mockQb);
         $this->repoMap['Message']->shouldReceive('fetchPaginatedList')->with($mockQb)->once()->andReturn($messages);
         $this->repoMap['Message']->shouldReceive('fetchPaginatedCount')->with($mockQb)->once()->andReturn(10);
+        $this->repoMap['Conversation']->shouldReceive('fetchById')->with(1)->once()->andReturn($conversation);
 
         $result = $this->sut->handleQuery($query);
 
