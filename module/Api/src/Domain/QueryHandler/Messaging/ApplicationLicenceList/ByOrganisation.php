@@ -30,7 +30,8 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $licences = $licenceRepository->fetchByOrganisationId($query->getOrganisation());
 
-        $applications = $applicationRepository->fetchByOrganisationIdAndStatuses($query->getOrganisation(),
+        $applications = $applicationRepository->fetchByOrganisationIdAndStatuses(
+            $query->getOrganisation(),
             Entity::ALL_APPLICATION_STATUSES,
             AbstractQuery::HYDRATE_ARRAY
         );
@@ -40,14 +41,14 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
         // Sort by app / licence
         // Select uses label => id
 
-        foreach($licences as $licence){
-            if(empty($licence['licNo'])){
+        foreach ($licences as $licence){
+            if (empty($licence['licNo'])){
                 continue;
             }
             $results['licences'][$licence['id']] = $licence['licNo'];
         }
 
-        foreach($applications as $application){
+        foreach ($applications as $application){
             $results['applications'][$application['id']] = $application['id'];
         }
 
