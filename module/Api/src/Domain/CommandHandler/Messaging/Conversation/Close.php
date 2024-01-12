@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging;
+namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;

@@ -8,5 +8,5 @@ return [
     QueryHandler\Messaging\Conversations\ByLicence::class => NoValidationRequired::class,
     QueryHandler\Messaging\Conversations\ByApplicationToLicence::class => NoValidationRequired::class,
     QueryHandler\Messaging\Message\ByConversation::class => NoValidationRequired::class,
-    CommandHandler\Messaging\Close::class => NoValidationRequired::class,
+    CommandHandler\Messaging\Conversation\Close::class => NoValidationRequired::class,
 ];

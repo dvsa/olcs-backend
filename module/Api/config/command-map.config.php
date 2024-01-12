@@ -1051,7 +1051,7 @@ return [
 
     // Transfer - Messaging
     TransferCommand\Messaging\Close::class =>
-        CommandHandler\Messaging\Close::class,
+        CommandHandler\Messaging\Conversation\Close::class,
 
     // Transfer - IRHP Permit
     TransferCommand\IrhpPermit\Replace::class =>
