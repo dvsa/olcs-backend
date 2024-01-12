@@ -17,9 +17,9 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::MESSAGING];
+    protected array $toggleConfig = [FeatureToggle::MESSAGING];
 
-    protected $extraRepos = ['Conversation','Message','MessageContent'];
+    protected $extraRepos = ['Conversation', 'Message', 'MessageContent'];
 
     public function handleQuery(QueryInterface $query)
     {
@@ -36,6 +36,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
         return [
             'result' => $messages,
             'count' => $messageRepository->fetchPaginatedCount($messagesQuery),
+            'conversation' => $this->getRepo('Conversation')->fetchById($query->getConversation()),
         ];
     }
 }
