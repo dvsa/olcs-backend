@@ -6346,16 +6346,16 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "5.0.0-beta.4",
+            "version": "5.0.0-beta.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "be54dabeb4ef6d15529f0e03205e9121c91b4b3a"
+                "reference": "203cf767b866aaeea021a4ba2de51cf6c07656b8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/be54dabeb4ef6d15529f0e03205e9121c91b4b3a",
-                "reference": "be54dabeb4ef6d15529f0e03205e9121c91b4b3a",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/203cf767b866aaeea021a4ba2de51cf6c07656b8",
+                "reference": "203cf767b866aaeea021a4ba2de51cf6c07656b8",
                 "shasum": ""
             },
             "require": {
@@ -6395,9 +6395,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/5.0.0-beta.4"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/5.0.0-beta.5"
             },
-            "time": "2023-12-13T13:42:41+00:00"
+            "time": "2024-01-12T11:33:51+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -11963,5 +11963,5 @@
     "platform-overrides": {
         "ext-redis": "4.3"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
