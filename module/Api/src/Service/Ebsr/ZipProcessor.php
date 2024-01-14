@@ -16,7 +16,7 @@ class ZipProcessor implements EbsrProcessingInterface
 {
     const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
-    const BUS_REGISTRATION_FILE_LOCATION = '/data/olcs/documents/Bus_Registration/TransXChange_File/';
+    const BUS_REGISTRATION_FILE_LOCATION = '/documents/Bus_Registration/TransXChange_File/';
 
     const OUTPUT_TYPE = 'xmlFileName';
     /**
@@ -137,7 +137,7 @@ class ZipProcessor implements EbsrProcessingInterface
         $file = new File();
         $file->setContent(file_get_contents($tmpfile));
         $file->setMimeType('text/xml');
-        $filename = self::BUS_REGISTRATION_FILE_LOCATION.date_format(new DateTime(), 'Y\/m').stripcslashes(str_replace($this->tmpDir, '', $tmpfile));
+        $filename = self::BUS_REGISTRATION_FILE_LOCATION.date_format(new DateTime(), 'Y\/m\/').str_replace('/', '', $tmpfile);
         return $this->fileUploader->upload($filename, $file)->getIdentifier();
     }
     public function getOutputType(): string
