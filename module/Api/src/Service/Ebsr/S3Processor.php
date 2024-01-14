@@ -53,7 +53,7 @@ class S3Processor implements EbsrProcessingInterface
                 'Key' =>  basename($identifier),
                 'Body' => $fileContent
             ]);
-            $this->fileUploader->remove($identifier);
+
             return $result['ObjectURL'];
         } catch (S3Exception $e) {
             $this->logger->info('Cannot send transxchange file from content store to s3 '. $e->getAwsErrorMessage(), ['identifier' => $identifier]);

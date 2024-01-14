@@ -41,11 +41,11 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
-
+        $ebsrDoc = false;
 
         try {
             $filesProcessed = $this->getEbsrProcessing()->process($doc->getIdentifier());
-            $xmlName = $filesProcessed['xmlFilename'];
+            $xmlName = $filesProcessed['xmlFileName'];
         } catch (\Exception $e) {
             //process the validation failure information
             $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], $doc->getIdentifier(), []);
@@ -55,7 +55,6 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         //validate the xml structure
         $xmlDocContext = ['xml_filename' => $xmlName];
         $xmlContent = $this->getUploader()->download($xmlName)->getContent();
-
         $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlContent, $xmlDocContext);
 
         if ($ebsrDoc === false) {
