@@ -103,7 +103,7 @@
         "post-install-cmd": [
             "@composer bin all install"
         ],
-        "test": "phpunit",
+        "test": "phpunit --dont-report-useless-tests",
         "phpcs": "phpcs",
         "psalm": "psalm",
         "phpstan": "phpstan",
