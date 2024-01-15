@@ -17,11 +17,13 @@ use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Messaging\CreateMessage as CreateMessageCommand;
+use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
 
 final class CreateMessage extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
+
+    public const EXCEPTION_MESSAGE_UNABLE_TO_ADD_MESSAGE_TO_CLOSED_ARCHIVED_CONVERSATION = 'Unable to create message on conversations that are closed or archived';
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = [
@@ -54,7 +56,7 @@ final class CreateMessage extends AbstractCommandHandler implements ToggleRequir
         $conversation = $this->getConversation($command);
 
         if ($conversation->getIsClosed() || $conversation->getIsArchived()) {
-            throw new BadRequestException('Unable to create message on conversations that are closed or archived');
+            throw new BadRequestException(self::EXCEPTION_MESSAGE_UNABLE_TO_ADD_MESSAGE_TO_CLOSED_ARCHIVED_CONVERSATION);
         }
 
         $messageContent = $this->createMessageContentEntity($command->getMessageContent());
