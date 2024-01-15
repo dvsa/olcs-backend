@@ -1288,5 +1288,5 @@ return [
 
     CommandCli\InterimEndDateEnforcement::class => CommandHandlerCli\InterimEndDateEnforcement::class,
 
-    TransferCommand\Messaging\CreateMessage::class => CommandHandler\Messaging\CreateMessage::class,
+    TransferCommand\Messaging\Message\Create::class => CommandHandler\Messaging\CreateMessage::class,
 ];
