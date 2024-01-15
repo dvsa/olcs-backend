@@ -24,7 +24,6 @@ class ByApplicationToOrganisation extends AbstractQueryHandler implements Toggle
 
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetApplicationListByApplicationToOrganisationQuery);
         $applicationRepository = $this->getApplicationRepository();
 
         $application = $applicationRepository->fetchWithLicence($query->getApplication());
