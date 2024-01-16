@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 return [
     QueryHandler\Messaging\Conversations\ByLicence::class => NoValidationRequired::class,
     QueryHandler\Messaging\Conversations\ByApplicationToLicence::class => NoValidationRequired::class,
+    QueryHandler\Messaging\Conversations\ByOrganisation::class => NoValidationRequired::class,
     QueryHandler\Messaging\Message\ByConversation::class => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Close::class => NoValidationRequired::class,
 ];

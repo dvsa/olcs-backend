@@ -37,6 +37,19 @@ class Conversation extends AbstractRepository
         return $qb;
     }
 
+    public function getByOrganisationId(QueryInterface $query, int $organisationId): QueryBuilder
+    {
+        $qb = $this->getBaseConversationListQuery($query);
+
+        $qb->innerJoin($this->alias . '.task', 't')
+            ->andWhere($qb->expr()->isNotNull('t.licence'))
+            ->andWhere($qb->expr()->eq('l1.organisation', ':organisation'))
+            ->setParameter('organisation', $organisationId)
+            ->addOrderBy($this->alias . '.isClosed', 'ASC');;
+
+        return $qb;
+    }
+
     public function filterByApplicationId(QueryBuilder $qb, $applicationId): QueryBuilder
     {
         $qb
