@@ -34,8 +34,6 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
     public function handleCommand(CommandInterface $command)
     {
-        assert($command instanceof CreateMessageCommand);
-
         $message = $this->generateAndSaveMessage($command);
 
         $result = new Result();
@@ -99,15 +97,11 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
     private function getMessageContentRepository(): MessageContentRepo
     {
-        $repo = $this->getRepo(MessageContentRepo::class);
-        assert($repo instanceof MessageContentRepo);
-        return $repo;
+        return $this->getRepo(MessageContentRepo::class);
     }
 
     private function getMessageRepository(): MessageRepo
     {
-        $repo = $this->getRepo(MessageRepo::class);
-        assert($repo instanceof MessageRepo);
-        return $repo;
+        return $this->getRepo(MessageRepo::class);
     }
 }
