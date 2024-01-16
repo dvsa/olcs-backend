@@ -6,6 +6,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
 use ArrayIterator;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -21,13 +23,13 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
     private const STATUS_OPEN = "OPEN";
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
-    protected $extraRepos = ['Conversation', 'Message'];
+    protected $extraRepos = [ConversationRepo::class, MessageRepo::class];
 
     /** @param GetConversationsByOrganisationQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query): array
     {
-        $conversationRepository = $this->getRepo('Conversation');
-        $messageRepository = $this->getRepo('Message');
+        $conversationRepository = $this->getRepo(ConversationRepo::class);
+        $messageRepository = $this->getRepo(MessageRepo::class);
 
         $conversationsQuery = $conversationRepository->getByOrganisationId($query, (int)$query->getOrganisation());
         $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery);
