@@ -1284,8 +1284,9 @@ return [
     Command\Cache\ClearForOrganisation::class => CommandHandler\Cache\ClearForOrganisation::class,
 
     // DvsaReports
-    TransferCommand\DvsaReports\GetRedirect::class =>
-        CommandHandler\DvsaReports\GetRedirectFactory::class,
+    TransferCommand\DvsaReports\GetRedirect::class => CommandHandler\DvsaReports\GetRedirectFactory::class,
 
     CommandCli\InterimEndDateEnforcement::class => CommandHandlerCli\InterimEndDateEnforcement::class,
+
+    TransferCommand\Messaging\Message\Create::class => CommandHandler\Messaging\Message\Create::class,
 ];
