@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
-use ArrayIterator;
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;

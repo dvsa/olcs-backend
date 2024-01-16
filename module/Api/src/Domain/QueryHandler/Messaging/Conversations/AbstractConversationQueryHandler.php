@@ -6,13 +6,6 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
 use ArrayIterator;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
-use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
-use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByOrganisation as GetConversationsByOrganisationQuery;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 abstract class AbstractConversationQueryHandler extends AbstractQueryHandler
 {
