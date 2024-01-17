@@ -45,7 +45,7 @@ class Conversation extends AbstractRepository
             ->andWhere($qb->expr()->isNotNull('t.licence'))
             ->andWhere($qb->expr()->eq('l1.organisation', ':organisation'))
             ->setParameter('organisation', $organisationId)
-            ->addOrderBy($this->alias . '.isClosed', 'ASC');;
+            ->addOrderBy($this->alias . '.isClosed', 'ASC');
 
         return $qb;
     }
