@@ -66,6 +66,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
             'organisation' => $organisation
         ];
 
+        $xmlName =  $this->getTempNameFromXml($xmlName);
         //do some pre-doctrine data processing
         $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlName, $ebsrDoc, $busRegInputContext);
 
@@ -142,4 +143,14 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
         return $this->result;
     }
+
+    private function getTempNameFromXml(string $xmlName): string
+    {
+        $config = $this->getConfig();
+        $tmpDir = $config['ebsr']['tmp_extra_path'];
+        $fileParts =explode('_', $xmlName);
+        $tmpName = implode('/', array_slice($fileParts, -2));
+        return $tmpDir . DIRECTORY_SEPARATOR . $tmpName;
+    }
+
 }

@@ -137,7 +137,7 @@ class ZipProcessor implements EbsrProcessingInterface
         $file = new File();
         $file->setContent(file_get_contents($tmpfile));
         $file->setMimeType('text/xml');
-        $filename = self::BUS_REGISTRATION_FILE_LOCATION.date_format(new DateTime(), 'Y\/m\/').str_replace('/', '', $tmpfile);
+        $filename = self::BUS_REGISTRATION_FILE_LOCATION.date_format(new DateTime(), 'Y\/m\/').str_replace('/', '_', $tmpfile);
         return $this->fileUploader->upload($filename, $file)->getIdentifier();
     }
     public function getOutputType(): string
