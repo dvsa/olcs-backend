@@ -40,7 +40,6 @@ class ByApplicationToOrganisation extends AbstractQueryHandler implements Toggle
     private function getApplicationRepository(): ApplicationRepository
     {
         $applicationRepository = $this->getRepo('Application');
-        assert($applicationRepository instanceof ApplicationRepository);
         return $applicationRepository;
     }
 }

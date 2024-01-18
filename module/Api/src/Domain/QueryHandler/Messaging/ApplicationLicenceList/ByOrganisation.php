@@ -36,7 +36,7 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
             AbstractQuery::HYDRATE_ARRAY
         );
 
-        $results = array_fill_keys(['licences', 'applications'], array());
+        $results = array_fill_keys(['licences', 'applications'], []);
 
         // Sort by app / licence
         // Select uses label => id
