@@ -2372,6 +2372,14 @@ return array(
             )
         ),
     ),
+    'messaging_message' => array(
+        'messaging_content_id' => array(
+            'cascade' => array(
+                'persist',
+                'remove',
+            )
+        ),
+    ),
     'messaging_content' => array(
         'text' => array(
             'type' => 'encrypted_string'
