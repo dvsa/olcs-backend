@@ -23,9 +23,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetConversationMessagesQuery);
         $messageRepository = $this->getRepo('Message');
-        assert($messageRepository instanceof MessageRepo);
 
         $messageQueryBuilder = $messageRepository->getBaseMessageListWithContentQuery($query);
 
