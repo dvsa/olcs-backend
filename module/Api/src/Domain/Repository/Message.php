@@ -20,7 +20,8 @@ class Message extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata()
             ->with('createdBy')
-            ->with('lastModifiedBy');
+            ->with('lastModifiedBy')
+            ->order('createdOn', 'desc');
 
         return $qb;
     }
