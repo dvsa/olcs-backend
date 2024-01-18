@@ -725,6 +725,7 @@ return [
 
     // Messaging
     TransferQuery\Messaging\Conversations\ByLicence::class => QueryHandler\Messaging\Conversations\ByLicence::class,
+    TransferQuery\Messaging\Conversations\ByOrganisation::class => QueryHandler\Messaging\Conversations\ByOrganisation::class,
     TransferQuery\Messaging\Conversations\ByApplicationToLicence::class => QueryHandler\Messaging\Conversations\ByApplicationToLicence::class,
     TransferQuery\Messaging\Messages\ByConversation::class => QueryHandler\Messaging\Message\ByConversation::class,
 ];
