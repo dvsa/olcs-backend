@@ -2385,4 +2385,12 @@ return array(
             'type' => 'encrypted_string'
         ),
     ),
+//    'messaging_subject' => array(
+//        'category_id' => array (
+//            'inversedBy' => array(
+//                'entity' => 'Category',
+//                'property' => 'id',
+//            )
+//        )
+//    )
 );
