@@ -58,6 +58,5 @@ class AllTest extends QueryHandlerTestCase
         $this->assertArrayHasKey('result', $result);
 
         $this->assertCount(2, $result['result']);
-
     }
 }
