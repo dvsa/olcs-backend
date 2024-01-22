@@ -20,12 +20,15 @@ class All extends AbstractQueryHandler implements ToggleRequiredInterface
 
     public function handleQuery(QueryInterface $query): array
     {
-        $subjectRepository = $this->getRepo(SubjectRepo::class);
-
-        $subjects = $subjectRepository->fetchAll();
+        $subjects = $this->getSubjectRepository()->fetchList($query);
 
         return [
             'result' => $subjects,
         ];
+    }
+
+    private function getSubjectRepository(): SubjectRepo
+    {
+        return $this->getRepo(SubjectRepo::class);
     }
 }

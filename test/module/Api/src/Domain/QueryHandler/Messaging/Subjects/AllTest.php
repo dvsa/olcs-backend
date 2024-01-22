@@ -19,7 +19,7 @@ class AllTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new All();
-        $this->mockRepo(Repository\Subject::class, Repository\Subject::class);
+        $this->mockRepo(Repository\MessagingSubject::class, Repository\MessagingSubject::class);
 
         $this->mockedSmServices = [
             'SectionAccessService' => m::mock(),
@@ -50,9 +50,8 @@ class AllTest extends QueryHandlerTestCase
             ['id' => 1, 'description' => 'Subject 1',],
             ['id' => 2, 'description' => 'Subject 2',],
         ]);
-        $mockQb = m::mock(QueryBuilder::class);
-        $this->repoMap[Repository\Subject::class]->shouldReceive('getByOrganisationId')->once()->andReturn($mockQb);
-        $this->repoMap[Repository\Subject::class]->shouldReceive('fetchPaginatedList')->once()->andReturn($subjects);
+
+        $this->repoMap[Repository\MessagingSubject::class]->shouldReceive('fetchList')->once()->andReturn($subjects);
 
         $result = $this->sut->handleQuery($query);
 
