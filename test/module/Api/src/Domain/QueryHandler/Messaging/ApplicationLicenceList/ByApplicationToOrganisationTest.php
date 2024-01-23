@@ -7,7 +7,7 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\Olcs\Transfer\Query\Messaging\ApplicationLicenceList\ByApplicationToOrganisation as Qry;
+use Dvsa\Olcs\Transfer\Query\Messaging\ApplicationLicenceList\ByApplicationToOrganisation as Query;
 use Dvsa\Olcs\Transfer\Query\Messaging\ApplicationLicenceList\ByOrganisation;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -18,10 +18,15 @@ use Mockery as m;
 
 class ByApplicationToOrganisationTest extends QueryHandlerTestCase
 {
+    /**
+     * @var ByApplicationToOrganisation
+     */
+    protected $sut;
+
     public function setUp(): void
     {
         $this->sut = new ByApplicationToOrganisation();
-        $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo(Repository\Application::class, Repository\Application::class);
 
         $this->mockedSmServices = ['SectionAccessService' => m::mock(), AuthorizationService::class => m::mock(AuthorizationService::class)->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true)->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false)->getMock(),];
 
@@ -32,7 +37,7 @@ class ByApplicationToOrganisationTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = Qry::create([
+        $query = Query::create([
             'application' => 1,
         ]);
 
@@ -42,7 +47,7 @@ class ByApplicationToOrganisationTest extends QueryHandlerTestCase
         $mockOrganisation = m::mock(OrganisationEntity::class);
         $mockOrganisation->shouldReceive('getId')->once()->andReturn(1);
 
-        $this->repoMap['Application']->shouldReceive('fetchWithLicence')
+        $this->repoMap[Repository\Application::class]->shouldReceive('fetchWithLicence')
             ->with(1)
             ->andReturn($mockApplication);
         $mockApplication->shouldReceive('getLicence')->andReturn($mockLicence);

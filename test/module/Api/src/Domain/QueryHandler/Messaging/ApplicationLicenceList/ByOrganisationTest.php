@@ -14,11 +14,16 @@ use Mockery as m;
 
 class ByOrganisationTest extends QueryHandlerTestCase
 {
+    /**
+     * @var ByOrganisation
+     */
+    protected $sut;
+
     public function setUp(): void
     {
         $this->sut = new ByOrganisation();
-        $this->mockRepo('Application', Repository\Application::class);
-        $this->mockRepo('Licence', Repository\Licence::class);
+        $this->mockRepo(Repository\Application::class, Repository\Application::class);
+        $this->mockRepo(Repository\Licence::class, Repository\Licence::class);
 
         $this->mockedSmServices = ['SectionAccessService' => m::mock(), AuthorizationService::class => m::mock(AuthorizationService::class)->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true)->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false)->getMock(),];
 
@@ -51,9 +56,9 @@ class ByOrganisationTest extends QueryHandlerTestCase
 
         $mockQb = m::mock(QueryBuilder::class);
 
-        $this->repoMap['Licence']->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb);
-        $this->repoMap['Licence']->shouldReceive('fetchByOrganisationId')->andReturn($mockQb)->once()->andReturn($licences);
-        $this->repoMap['Application']->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($applications);
+        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb);
+        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationId')->andReturn($mockQb)->once()->andReturn($licences);
+        $this->repoMap[Repository\Application::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($applications);
 
         $result = $this->sut->handleQuery($query);
 

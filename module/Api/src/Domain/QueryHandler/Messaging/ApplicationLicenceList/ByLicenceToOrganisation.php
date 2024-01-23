@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\ApplicationLicenceList;
 
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepository;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -20,8 +20,12 @@ class ByLicenceToOrganisation extends AbstractQueryHandler implements ToggleRequ
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
 
-    protected $extraRepos = ['Licence'];
+    protected $extraRepos = [Repository\Licence::class];
 
+    /**
+     * @param GetApplicationListByLicenceToOrganisationQuery $query
+     * @throws NotFoundException
+     */
     public function handleQuery(QueryInterface $query)
     {
         $licenceRepository = $this->getLicenceRepository();
@@ -37,10 +41,8 @@ class ByLicenceToOrganisation extends AbstractQueryHandler implements ToggleRequ
         return $this->getQueryHandler()->handleQuery(GetApplicationListByOrganisationQuery::create($organisationQuery));
     }
 
-    private function getLicenceRepository(): LicenceRepository
+    private function getLicenceRepository(): Repository\Licence
     {
-        $licenceRepository = $this->getRepo('Licence');
-        assert($licenceRepository instanceof LicenceRepository);
-        return $licenceRepository;
+        return $this->getRepo(Repository\Licence::class);
     }
 }

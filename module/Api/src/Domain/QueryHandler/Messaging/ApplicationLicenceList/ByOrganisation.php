@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\ApplicationLicenceList;
 
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\Messaging\ApplicationLicenceList\ByOrganisation as ByOrganisationQuery;
 
 class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInterface
 {
@@ -21,12 +20,15 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
 
-    protected $extraRepos = ['Application','Licence'];
+    protected $extraRepos = [Repository\Application::class, Repository\Licence::class];
 
-    public function handleQuery(QueryInterface $query)
+    /**
+     * @param ByOrganisationQuery $query
+     */
+    public function handleQuery(QueryInterface $query): array
     {
-        $licenceRepository = $this->getRepo('Licence');
-        $applicationRepository = $this->getRepo('Application');
+        $licenceRepository = $this->getLicenceRepository();
+        $applicationRepository = $this->getApplicationRepository();
 
         $licences = $licenceRepository->fetchByOrganisationId($query->getOrganisation());
 
@@ -55,5 +57,15 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
         return [
             'result' => $results
         ];
+    }
+
+    public function getLicenceRepository(): Repository\Licence
+    {
+        return $this->getRepo(Repository\Licence::class);
+    }
+
+    public function getApplicationRepository(): Repository\Application
+    {
+        return $this->getRepo(Repository\Application::class);
     }
 }
