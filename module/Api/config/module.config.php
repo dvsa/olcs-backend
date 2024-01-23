@@ -789,6 +789,7 @@ return [
             Repository\Conversation::class => RepositoryFactory::class,
             Repository\Message::class => RepositoryFactory::class,
             Repository\MessageContent::class => RepositoryFactory::class,
+            Repository\MessagingSubject::class => RepositoryFactory::class,
             Repository\Licence::class => RepositoryFactory::class,
             Repository\Application::class => RepositoryFactory::class,
         ],

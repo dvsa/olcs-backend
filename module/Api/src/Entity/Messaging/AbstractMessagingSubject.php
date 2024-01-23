@@ -13,27 +13,40 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * MessagingContent Abstract Entity
+ * MessagingSubject Abstract Entity
  *
  * Auto-Generated
  *
  * @ORM\MappedSuperclass
  * @ORM\HasLifecycleCallbacks
- * @ORM\Table(name="messaging_content",
+ * @ORM\Table(name="messaging_subject",
  *    indexes={
- *        @ORM\Index(name="fk_messaging_content_created_by_user_id", columns={"created_by"}),
- *        @ORM\Index(name="fk_messaging_content_last_modified_by_user_id",
-     *     columns={"last_modified_by"})
+ *        @ORM\Index(name="fk_messaging_subject_category_id_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="fk_messaging_subject_created_by_user_id", columns={"created_by"}),
+ *        @ORM\Index(name="fk_messaging_subject_last_modified_by_user_id",
+     *     columns={"last_modified_by"}),
+ *        @ORM\Index(name="fk_messaging_subject_sub_category_id_sub_category_id",
+     *     columns={"sub_category_id"})
  *    }
  * )
  */
-abstract class AbstractMessagingContent implements BundleSerializableInterface, JsonSerializable
+abstract class AbstractMessagingSubject implements BundleSerializableInterface, JsonSerializable
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
     use ClearPropertiesTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
+
+    /**
+     * Category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\Category
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\Category", fetch="LAZY")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id", nullable=false)
+     */
+    protected $category;
 
     /**
      * Created by
@@ -69,13 +82,23 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
     protected $lastModifiedBy;
 
     /**
-     * Text
+     * Sub category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $subCategory;
+
+    /**
+     * Subject
      *
      * @var string
      *
-     * @ORM\Column(type="encrypted_string", name="text", length=65535, nullable=false)
+     * @ORM\Column(type="string", name="subject", length=255, nullable=false)
      */
-    protected $text;
+    protected $subject;
 
     /**
      * Version
@@ -88,11 +111,35 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
     protected $version;
 
     /**
+     * Set the category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\Category $category entity being set as the value
+     *
+     * @return MessagingSubject
+     */
+    public function setCategory($category)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get the category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
      *
-     * @return MessagingContent
+     * @return MessagingSubject
      */
     public function setCreatedBy($createdBy)
     {
@@ -116,7 +163,7 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
      *
      * @param int $id new value being set
      *
-     * @return MessagingContent
+     * @return MessagingSubject
      */
     public function setId($id)
     {
@@ -140,7 +187,7 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $lastModifiedBy entity being set as the value
      *
-     * @return MessagingContent
+     * @return MessagingSubject
      */
     public function setLastModifiedBy($lastModifiedBy)
     {
@@ -160,27 +207,51 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
     }
 
     /**
-     * Set the text
+     * Set the sub category
      *
-     * @param string $text new value being set
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
      *
-     * @return MessagingContent
+     * @return MessagingSubject
      */
-    public function setText($text)
+    public function setSubCategory($subCategory)
     {
-        $this->text = $text;
+        $this->subCategory = $subCategory;
 
         return $this;
     }
 
     /**
-     * Get the text
+     * Get the sub category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\SubCategory
+     */
+    public function getSubCategory()
+    {
+        return $this->subCategory;
+    }
+
+    /**
+     * Set the subject
+     *
+     * @param string $subject new value being set
+     *
+     * @return MessagingSubject
+     */
+    public function setSubject($subject)
+    {
+        $this->subject = $subject;
+
+        return $this;
+    }
+
+    /**
+     * Get the subject
      *
      * @return string
      */
-    public function getText()
+    public function getSubject()
     {
-        return $this->text;
+        return $this->subject;
     }
 
     /**
@@ -188,7 +259,7 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
      *
      * @param int $version new value being set
      *
-     * @return MessagingContent
+     * @return MessagingSubject
      */
     public function setVersion($version)
     {

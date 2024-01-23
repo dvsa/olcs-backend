@@ -334,6 +334,8 @@ return [
     QueryCli\CommunityLic\CommunityLicencesForActivationList::class =>
         QueryHandlerCli\CommunityLic\CommunityLicencesForActivationList::class,
 
+
+
     // Document
     TransferQuery\Document\TemplateParagraphs::class => QueryHandler\Document\TemplateParagraphs::class,
     TransferQuery\Document\Document::class => QueryHandler\Document\Document::class,
@@ -728,5 +730,6 @@ return [
     TransferQuery\Messaging\Messages\ByConversation::class => QueryHandler\Messaging\Message\ByConversation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class,
-    TransferQuery\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class
+    TransferQuery\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class,
+    TransferQuery\Messaging\Subjects\All::class => QueryHandler\Messaging\Subjects\All::class,
 ];
