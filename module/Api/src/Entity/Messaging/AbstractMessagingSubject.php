@@ -21,12 +21,11 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="messaging_subject",
  *    indexes={
- *        @ORM\Index(name="fk_messaging_subject_category_id_category_id", columns={"category_id"}),
+ *        @ORM\Index(name="fk_messaging_subject_category_id", columns={"category_id"}),
  *        @ORM\Index(name="fk_messaging_subject_created_by_user_id", columns={"created_by"}),
  *        @ORM\Index(name="fk_messaging_subject_last_modified_by_user_id",
      *     columns={"last_modified_by"}),
- *        @ORM\Index(name="fk_messaging_subject_sub_category_id_sub_category_id",
-     *     columns={"sub_category_id"})
+ *        @ORM\Index(name="fk_messaging_subject_sub_category_id", columns={"sub_category_id"})
  *    }
  * )
  */
@@ -60,6 +59,15 @@ abstract class AbstractMessagingSubject implements BundleSerializableInterface, 
     protected $createdBy;
 
     /**
+     * Description
+     *
+     * @var string
+     *
+     * @ORM\Column(type="string", name="description", length=255, nullable=false)
+     */
+    protected $description;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -90,15 +98,6 @@ abstract class AbstractMessagingSubject implements BundleSerializableInterface, 
      * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
      */
     protected $subCategory;
-
-    /**
-     * Subject
-     *
-     * @var string
-     *
-     * @ORM\Column(type="string", name="subject", length=255, nullable=false)
-     */
-    protected $subject;
 
     /**
      * Version
@@ -156,6 +155,30 @@ abstract class AbstractMessagingSubject implements BundleSerializableInterface, 
     public function getCreatedBy()
     {
         return $this->createdBy;
+    }
+
+    /**
+     * Set the description
+     *
+     * @param string $description new value being set
+     *
+     * @return MessagingSubject
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * Get the description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
     /**
@@ -228,30 +251,6 @@ abstract class AbstractMessagingSubject implements BundleSerializableInterface, 
     public function getSubCategory()
     {
         return $this->subCategory;
-    }
-
-    /**
-     * Set the subject
-     *
-     * @param string $subject new value being set
-     *
-     * @return MessagingSubject
-     */
-    public function setSubject($subject)
-    {
-        $this->subject = $subject;
-
-        return $this;
-    }
-
-    /**
-     * Get the subject
-     *
-     * @return string
-     */
-    public function getSubject()
-    {
-        return $this->subject;
     }
 
     /**
