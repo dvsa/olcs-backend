@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging\Conversations;
 
 use ArrayIterator;
 use Doctrine\ORM\QueryBuilder;
