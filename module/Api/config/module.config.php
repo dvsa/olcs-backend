@@ -791,6 +791,7 @@ return [
             Repository\MessageContent::class => RepositoryFactory::class,
             Repository\Licence::class => RepositoryFactory::class,
             Repository\Application::class => RepositoryFactory::class,
+            Repository\MessagingSubject::class => RepositoryFactory::class,
         ],
         'aliases' => [
             'Conversation' => Repository\Conversation::class,

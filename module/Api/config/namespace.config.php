@@ -216,4 +216,5 @@ return [
     'MessagingMessage' => 'Messaging',
     'MessagingContent' => 'Messaging',
     'MessagingUserMessageRead' => 'Messaging',
+    'MessagingSubject' => 'Messaging',
 ];
