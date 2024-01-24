@@ -2380,9 +2380,4 @@ return array(
             )
         ),
     ),
-    'messaging_content' => array(
-        'text' => array(
-            'type' => 'encrypted_string'
-        ),
-    ),
 );

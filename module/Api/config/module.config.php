@@ -790,6 +790,7 @@ return [
             Repository\Conversation::class => RepositoryFactory::class,
             Repository\Message::class => RepositoryFactory::class,
             Repository\MessageContent::class => RepositoryFactory::class,
+            Repository\MessagingSubject::class => RepositoryFactory::class,
         ],
         'aliases' => [
             'Conversation' => Repository\Conversation::class,

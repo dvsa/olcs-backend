@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d0e7eb2a9ce23340fc16f7205d82a57",
+    "content-hash": "631dbc529ed4ffb3c429626d3098dd7f",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6346,16 +6346,16 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "5.0.0-beta.6",
+            "version": "dev-project/messaging",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "402d21a23acd53b8475f901b97b9e1b727facda0"
+                "reference": "dd10bf1ccf3e48b4aee1dc5504a912c5d9112066"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/402d21a23acd53b8475f901b97b9e1b727facda0",
-                "reference": "402d21a23acd53b8475f901b97b9e1b727facda0",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/dd10bf1ccf3e48b4aee1dc5504a912c5d9112066",
+                "reference": "dd10bf1ccf3e48b4aee1dc5504a912c5d9112066",
                 "shasum": ""
             },
             "require": {
@@ -6395,9 +6395,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/5.0.0-beta.6"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/project/messaging"
             },
-            "time": "2024-01-15T14:59:30+00:00"
+            "time": "2024-01-24T14:01:14+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -11951,7 +11951,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "olcs/olcs-transfer": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
@@ -11963,5 +11965,5 @@
     "platform-overrides": {
         "ext-redis": "4.3"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

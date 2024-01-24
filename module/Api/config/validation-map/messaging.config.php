@@ -9,6 +9,8 @@ return [
     QueryHandler\Messaging\Conversations\ByApplicationToLicence::class => NoValidationRequired::class,
     QueryHandler\Messaging\Message\ByConversation::class               => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Close::class                 => NoValidationRequired::class,
+    QueryHandler\Messaging\Conversations\ByOrganisation::class         => NoValidationRequired::class,
+    QueryHandler\Messaging\Subjects\All::class                         => NoValidationRequired::class,
     CommandHandler\Messaging\Message\Create::class                     => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Create::class                => NoValidationRequired::class,
 ];

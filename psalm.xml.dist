@@ -11,5 +11,9 @@
     <directory name="module"/>
     <directory name="public"/>
     <directory name="config"/>
+    <ignoreFiles allowMissingFiles="true">
+      <directory name=".phpstorm.meta" />
+      <file name=".phpstorm.meta.php" />
+    </ignoreFiles>
   </projectFiles>
 </psalm>
