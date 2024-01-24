@@ -21,7 +21,7 @@
         "league/flysystem-webdav": "1.0.10",
         "monolog/monolog": "^2.9",
         "olcs/olcs-logging": "^5.0.0",
-        "olcs/olcs-transfer": "dev-VOL-4518_Messaging_subjects",
+        "olcs/olcs-transfer": "dev-project/messaging",
         "olcs/olcs-utils": "^5.0.0",
         "olcs/olcs-xmltools": "^5.0.0",
         "oro/doctrine-extensions": "^2",
