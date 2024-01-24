@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Subjects;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\MessagingSubject as SubjectRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -20,10 +21,11 @@ class All extends AbstractQueryHandler implements ToggleRequiredInterface
 
     public function handleQuery(QueryInterface $query): array
     {
-        $subjects = $this->getSubjectRepository()->fetchList($query);
+        $subjects = $this->getSubjectRepository()->fetchList($query, Query::HYDRATE_OBJECT);
 
         return [
-            'result' => $subjects,
+            'result' => $this->resultList($subjects),
+            'count' => count($subjects),
         ];
     }
 
