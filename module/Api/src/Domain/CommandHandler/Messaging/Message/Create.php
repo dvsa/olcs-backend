@@ -137,9 +137,6 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             return self::TASK_DESCRIPTION_ON_EXTERNAL_REPLY;
         }
 
-        // TODO: Remove before merge
-        return "Awaiting Reply: Anon User";
-
         throw new \RuntimeException("Unable to generate task description; not internal or external user.");
     }
 
@@ -150,9 +147,6 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         } else if ($this->isExternalUser()) {
             return (new \DateTime());
         }
-
-        // TODO: Remove before merge
-        return (new \DateTime());
 
         throw new \RuntimeException("Unable to determine task action date; not internal or external user.");
     }

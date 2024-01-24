@@ -7,33 +7,15 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Operator\UnlicensedAbstract as AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
-use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingSubject;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Create as CreateConversationCommand;
 use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
-
-final class MessageSubject
-{
-    public function getCategory(): Category
-    {
-        return ((new Category())->setId(1));
-    }
-
-    public function getSubCategory(): SubCategory
-    {
-        return ((new SubCategory())->setId(1));
-    }
-
-    public function getDescription(): string
-    {
-        return "Message Subject String";
-    }
-}
 
 final class Create extends AbstractCommandHandler
 {
@@ -41,9 +23,13 @@ final class Create extends AbstractCommandHandler
     protected $extraRepos = [
         Repository\Conversation::class,
         Repository\Task::class,
+        Repository\MessagingSubject::class,
     ];
 
-    /** @param $command CreateConversationCommand */
+    /**
+     * @param $command CreateConversationCommand
+     * @throws NotFoundException
+     */
     public function handleCommand(CommandInterface $command): Result
     {
         $messageSubject = $this->getMessageSubject($command);
@@ -74,13 +60,15 @@ final class Create extends AbstractCommandHandler
         return $result;
     }
 
-    private function getMessageSubject(CreateConversationCommand $command): MessageSubject
+    /**
+     * @throws NotFoundException
+     */
+    private function getMessageSubject(CreateConversationCommand $command): MessagingSubject
     {
-        // TODO: Get MessageSubject from DB by ID from command;
-        return new MessageSubject();
+        return $this->getMessagingSubjectRepo()->fetchById($command->getMessageSubject());
     }
 
-    private function generateAndSaveConversation(CreateConversationCommand $command, Result $createTaskResult, MessageSubject $messageSubject): MessagingConversation
+    private function generateAndSaveConversation(CreateConversationCommand $command, Result $createTaskResult, MessagingSubject $messageSubject): MessagingConversation
     {
         $task = $this->getTask($createTaskResult->getId('task'));
         $subject = $this->generateConversationSubjectFromMessageSubject($messageSubject);
@@ -102,7 +90,7 @@ final class Create extends AbstractCommandHandler
         return $this->getRepo(Repository\Task::class);
     }
 
-    private function generateConversationSubjectFromMessageSubject(MessageSubject $messageSubject): string
+    private function generateConversationSubjectFromMessageSubject(MessagingSubject $messageSubject): string
     {
         return sprintf(
             '%s enquiry',
@@ -122,5 +110,10 @@ final class Create extends AbstractCommandHandler
     private function getConversationRepo(): Repository\Conversation
     {
         return $this->getRepo(Repository\Conversation::class);
+    }
+
+    private function getMessagingSubjectRepo(): Repository\MessagingSubject
+    {
+        return $this->getRepo(Repository\MessagingSubject::class);
     }
 }
