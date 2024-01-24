@@ -728,6 +728,6 @@ return [
     TransferQuery\Messaging\Messages\ByConversation::class => QueryHandler\Messaging\Message\ByConversation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class,
-    TransferQuery\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class
-    TransferQuery\Messaging\Subjects\All::class => QueryHandler\Messaging\Subjects\All::class,
+    TransferQuery\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class,
+    TransferQuery\Messaging\Subjects\All::class => QueryHandler\Messaging\Subjects\All::class
 ];
