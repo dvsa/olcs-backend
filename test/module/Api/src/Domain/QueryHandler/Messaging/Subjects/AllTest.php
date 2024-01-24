@@ -21,42 +21,29 @@ class AllTest extends QueryHandlerTestCase
         $this->sut = new All();
         $this->mockRepo(Repository\MessagingSubject::class, Repository\MessagingSubject::class);
 
-        $this->mockedSmServices = [
-            'SectionAccessService' => m::mock(),
-            AuthorizationService::class => m::mock(AuthorizationService::class)
-                ->shouldReceive('isGranted')
-                ->with(Permission::SELFSERVE_USER, null)
-                ->andReturn(true)
-                ->shouldReceive('isGranted')
-                ->with(Permission::INTERNAL_USER, null)
-                ->andReturn(false)
-                ->getMock(),
-        ];
-
-        $this->mockedSmServices[AuthorizationService::class]
-            ->shouldReceive('getIdentity->getUser->getId')
-            ->andReturn(1);
-
         parent::setUp();
     }
 
     public function testHandleQuery()
     {
-        $query = Qry::create([
-            'organisation' => 1,
-        ]);
+        $query = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
+        $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
+        $mockResult->shouldReceive('serialize')->with([])->once()->andReturn(['test' => 'a']);
 
-        $subjects = new ArrayIterator([
-            ['id' => 1, 'description' => 'Subject 1',],
-            ['id' => 2, 'description' => 'Subject 2',],
-        ]);
+        $this->repoMap[Repository\MessagingSubject::class]->shouldReceive('fetchList')
+            ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
+            ->once()
+            ->andReturn([$mockResult]);
 
-        $this->repoMap[Repository\MessagingSubject::class]->shouldReceive('fetchList')->once()->andReturn($subjects);
+        $expected = [
+            'result' => [
+                ['test' => 'a']
+            ],
+            'count' => 1,
+        ];
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertArrayHasKey('result', $result);
-
-        $this->assertCount(2, $result['result']);
+        $this->assertSame($expected, $result);
     }
 }
