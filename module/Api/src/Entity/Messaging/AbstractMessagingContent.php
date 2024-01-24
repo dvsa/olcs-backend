@@ -73,7 +73,7 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
      *
      * @var string
      *
-     * @ORM\Column(type="encrypted_string", name="text", length=65535, nullable=false)
+     * @ORM\Column(type="text", name="text", length=65535, nullable=false)
      */
     protected $text;
 
