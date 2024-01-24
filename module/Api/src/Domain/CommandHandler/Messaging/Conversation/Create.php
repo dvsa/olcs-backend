@@ -4,49 +4,61 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Operator\UnlicensedAbstract as AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\Repository\Conversation;
-use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
-use Dvsa\Olcs\Api\Domain\Repository\MessageContent as MessageContentRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
-use Dvsa\Olcs\Api\Entity\Messaging\MessagingContent;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
-use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
+use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Create as CreateConversationCommand;
-use Interop\Container\ContainerInterface;
+use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
+
+final class MessageSubject
+{
+    public function getCategory(): Category
+    {
+        return ((new Category())->setId(1));
+    }
+
+    public function getSubCategory(): SubCategory
+    {
+        return ((new SubCategory())->setId(1));
+    }
+
+    public function getDescription(): string
+    {
+        return "Message Subject String";
+    }
+}
 
 final class Create extends AbstractCommandHandler
 {
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = [
-        ConversationRepo::class,
-        TaskRepo::class,
+        Repository\Conversation::class,
+        Repository\Task::class,
     ];
 
-    public function handleCommand(CommandInterface $command)
+    /** @param $command CreateConversationCommand */
+    public function handleCommand(CommandInterface $command): Result
     {
-        assert($command instanceof CreateConversationCommand);
+        $messageSubject = $this->getMessageSubject($command);
 
         $createTaskResult = $this->handleSideEffect(CreateTask::create([
-            'category' => $command->getCategory(),
-            'subCategory' => $command->getSubCategory(),
-            'licence' => $command->getLicence(),
+            'category'    => $messageSubject->getCategory()->getId(),
+            'subCategory' => $messageSubject->getSubCategory()->getId(),
+            'licence'     => $command->getLicence(),
             'application' => $command->getApplication(),
         ]));
 
-        $conversation = $this->generateAndSaveConversation($command, $createTaskResult);
+        $conversation = $this->generateAndSaveConversation($command, $createTaskResult, $messageSubject);
 
-        // TODO: Use messageContent from CreateConversationCommand
         $createMessageResult = $this->handleSideEffect(CreateMessageCommand::create([
-            'conversation' => $conversation->getId(),
+            'conversation'   => $conversation->getId(),
             'messageContent' => $command->getMessageContent(),
         ]));
 
@@ -62,11 +74,40 @@ final class Create extends AbstractCommandHandler
         return $result;
     }
 
+    private function getMessageSubject(CreateConversationCommand $command): MessageSubject
+    {
+        // TODO: Get MessageSubject from DB by ID from command;
+        return new MessageSubject();
+    }
+
+    private function generateAndSaveConversation(CreateConversationCommand $command, Result $createTaskResult, MessageSubject $messageSubject): MessagingConversation
+    {
+        $task = $this->getTask($createTaskResult->getId('task'));
+        $subject = $this->generateConversationSubjectFromMessageSubject($messageSubject);
+        $conversation = $this->createConversationEntity($task, $subject);
+
+        $this->getConversationRepo()->save($conversation);
+
+        return $conversation;
+    }
+
     private function getTask(int $taskId): Task
     {
         $taskRepo = $this->getTaskRepo();
-
         return $taskRepo->fetchById($taskId);
+    }
+
+    private function getTaskRepo(): Repository\Task
+    {
+        return $this->getRepo(Repository\Task::class);
+    }
+
+    private function generateConversationSubjectFromMessageSubject(MessageSubject $messageSubject): string
+    {
+        return sprintf(
+            '%s enquiry',
+            $messageSubject->getDescription()
+        );
     }
 
     private function createConversationEntity(Task $task, string $subject): MessagingConversation
@@ -78,43 +119,8 @@ final class Create extends AbstractCommandHandler
         return $entity;
     }
 
-    private function generateAndSaveConversation(CreateConversationCommand $command, Result $createTaskResult): MessagingConversation
+    private function getConversationRepo(): Repository\Conversation
     {
-        $task = $this->getTask($createTaskResult->getId('task'));
-        $subject = $this->generateConversationSubjectFromTask($task);
-        $conversation = $this->createConversationEntity($task, $subject);
-
-        $this->getConversationRepo()->save($conversation);
-
-        return $conversation;
-    }
-
-    private function generateConversationSubjectFromTask(Task $task): string
-    {
-        if (empty($task->getSubCategory())) {
-            return sprintf(
-                '%s enquiry',
-                $task->getCategory()->getDescription()
-            );
-        }
-        return sprintf(
-            '%s %s enquiry',
-            $task->getCategory()->getDescription(),
-            $task->getSubCategory()
-        );
-    }
-
-    private function getConversationRepo(): ConversationRepo
-    {
-        $repo = $this->getRepo(ConversationRepo::class);
-        assert($repo instanceof ConversationRepo);
-        return $repo;
-    }
-
-    private function getTaskRepo(): TaskRepo
-    {
-        $repo = $this->getRepo(TaskRepo::class);
-        assert($repo instanceof TaskRepo);
-        return $repo;
+        return $this->getRepo(Repository\Conversation::class);
     }
 }
