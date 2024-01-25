@@ -606,7 +606,7 @@ return [
             'CompanySubsidiary' => RepositoryFactory::class,
             'Conviction' => RepositoryFactory::class,
             'Decision' => RepositoryFactory::class,
-            'Organisation' => RepositoryFactory::class,
+            'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'BusRegHistory' => RepositoryFactory::class,
             'BusRegOtherService' => RepositoryFactory::class,
@@ -792,6 +792,7 @@ return [
             Repository\Licence::class => RepositoryFactory::class,
             Repository\Application::class => RepositoryFactory::class,
             Repository\MessagingSubject::class => RepositoryFactory::class,
+            Repository\Organisation::class => RepositoryFactory::class,
         ],
         'aliases' => [
             'Conversation' => Repository\Conversation::class,
@@ -799,6 +800,7 @@ return [
             'MessageContent' => Repository\MessageContent::class,
             'Licence' => Repository\Licence::class,
             'Application' => Repository\Application::class,
+            'Organisation' => Repository\Organisation::class,
         ],
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
