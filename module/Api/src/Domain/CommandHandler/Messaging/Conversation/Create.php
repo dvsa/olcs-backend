@@ -39,11 +39,11 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
      */
     public function handleCommand(CommandInterface $command): Result
     {
-        $messageSubject = $this->getMessageSubject($command);
-
         if (empty($command->getApplication()) && empty($command->getLicence())) {
             throw new Exception('Command expects either a application or licence defined');
         }
+
+        $messageSubject = $this->getMessageSubject($command);
 
         $licenceId = $command->getLicence();
         if (empty($licenceId)) {
