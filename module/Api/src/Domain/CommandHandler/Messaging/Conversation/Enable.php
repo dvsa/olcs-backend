@@ -7,10 +7,9 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Enable as EnableCommand;
 
@@ -19,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Enable as EnableCommand;
  *
  * @author Wade Womersley <wade.womersley@dvsa.org.uk>
  */
-final class Enable extends AbstractUserCommandHandler implements ToggleRequiredInterface
+final class Enable extends AbstractCommandHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 

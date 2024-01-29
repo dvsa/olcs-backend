@@ -606,7 +606,6 @@ return [
             'CompanySubsidiary' => RepositoryFactory::class,
             'Conviction' => RepositoryFactory::class,
             'Decision' => RepositoryFactory::class,
-            'Licence' => RepositoryFactory::class,
             'Bus' => RepositoryFactory::class,
             'BusRegHistory' => RepositoryFactory::class,
             'BusRegOtherService' => RepositoryFactory::class,
