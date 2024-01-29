@@ -55,7 +55,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             ->addId('messageConversation', $message->getMessagingConversation()->getId())
             ->addMessage('Message added to conversation')
             ->addId('task', $updatedTask->getId())
-            ->addMessage(sprintf('Updated task action date: %s', $updatedTask->getActionDate()))
+            ->addMessage(sprintf('Updated task action date: %s', $updatedTask->getActionDate()->format(\DateTimeInterface::ATOM)))
             ->addMessage(sprintf('Updated task description: %s', $updatedTask->getDescription()));
 
         return $result;

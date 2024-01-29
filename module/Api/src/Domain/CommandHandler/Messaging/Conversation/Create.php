@@ -7,8 +7,12 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Operator\UnlicensedAbstract as AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingSubject;
@@ -17,27 +21,39 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Create as CreateConversationCommand;
 use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
 
-final class Create extends AbstractCommandHandler
+final class Create extends AbstractCommandHandler implements ToggleAwareInterface
 {
+    use ToggleAwareTrait;
+
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = [
         Repository\Conversation::class,
         Repository\Task::class,
         Repository\MessagingSubject::class,
+        Repository\Application::class,
     ];
 
     /**
      * @param $command CreateConversationCommand
-     * @throws NotFoundException
+     * @throws NotFoundException|Exception
      */
     public function handleCommand(CommandInterface $command): Result
     {
         $messageSubject = $this->getMessageSubject($command);
 
+        if (empty($command->getApplication()) && empty($command->getLicence())) {
+            throw new Exception('Command expects either a application or licence defined');
+        }
+
+        $licenceId = $command->getLicence();
+        if (empty($licenceId)) {
+            $licenceId = $this->getLicenceByApplication((int)$command->getApplication())->getId();
+        }
+
         $createTaskResult = $this->handleSideEffect(CreateTask::create([
             'category'    => $messageSubject->getCategory()->getId(),
             'subCategory' => $messageSubject->getSubCategory()->getId(),
-            'licence'     => $command->getLicence(),
+            'licence'     => $licenceId,
             'application' => $command->getApplication(),
         ]));
 
@@ -115,5 +131,15 @@ final class Create extends AbstractCommandHandler
     private function getMessagingSubjectRepo(): Repository\MessagingSubject
     {
         return $this->getRepo(Repository\MessagingSubject::class);
+    }
+
+    private function getApplicationRepo(): Repository\Application
+    {
+        return $this->getRepo(Repository\Application::class);
+    }
+
+    private function getLicenceByApplication(int $application): Licence
+    {
+        return $this->getApplicationRepo()->fetchById($application)->getLicence();
     }
 }
