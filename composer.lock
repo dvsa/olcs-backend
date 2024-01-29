@@ -6350,12 +6350,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "dd10bf1ccf3e48b4aee1dc5504a912c5d9112066"
+                "reference": "fe1dd3a6903c8db9705a8f2d200c2db5c812dbff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/dd10bf1ccf3e48b4aee1dc5504a912c5d9112066",
-                "reference": "dd10bf1ccf3e48b4aee1dc5504a912c5d9112066",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/fe1dd3a6903c8db9705a8f2d200c2db5c812dbff",
+                "reference": "fe1dd3a6903c8db9705a8f2d200c2db5c812dbff",
                 "shasum": ""
             },
             "require": {
@@ -6397,7 +6397,7 @@
             "support": {
                 "source": "https://github.com/dvsa/olcs-transfer/tree/project/messaging"
             },
-            "time": "2024-01-24T14:01:14+00:00"
+            "time": "2024-01-29T14:40:36+00:00"
         },
         {
             "name": "olcs/olcs-utils",
