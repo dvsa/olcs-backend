@@ -27,16 +27,20 @@ class Disable extends CommandHandlerTestCase
 
         $mockOrganisation = m::mock(Organisation::class);
         $mockOrganisation->shouldReceive('setIsMessagingDisabled')
+                         ->once()
                          ->with(true);
         $mockOrganisation->shouldReceive('getId')
+                         ->once()
                          ->andReturn(1);
 
         $this->repoMap[OrganisationRepo::class]
             ->shouldReceive('fetchById')
+            ->once()
             ->with(1)
             ->andReturn($mockOrganisation);
         $this->repoMap[OrganisationRepo::class]
             ->shouldReceive('save')
+            ->once()
             ->with($mockOrganisation);
 
         $result = $this->sut->handleCommand($mockCommand);
