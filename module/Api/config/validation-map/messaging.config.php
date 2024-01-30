@@ -12,6 +12,8 @@ return [
     QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class => NoValidationRequired::class,
     QueryHandler\Messaging\Message\ByConversation::class               => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Close::class                 => NoValidationRequired::class,
+    CommandHandler\Messaging\Conversation\Disable::class               => NoValidationRequired::class,
+    CommandHandler\Messaging\Conversation\Enable::class                => NoValidationRequired::class,
     CommandHandler\Messaging\Message\Create::class                     => NoValidationRequired::class,
     QueryHandler\Messaging\Conversations\ByOrganisation::class         => NoValidationRequired::class,
     QueryHandler\Messaging\Subjects\All::class                         => NoValidationRequired::class
