@@ -43,19 +43,24 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
             throw new Exception('Command expects either a application or licence defined');
         }
 
-        $messageSubject = $this->getMessageSubject($command);
-
         $licenceId = $command->getLicence();
         if (empty($licenceId)) {
             $licenceId = $this->getLicenceByApplication((int)$command->getApplication())->getId();
         }
 
-        $createTaskResult = $this->handleSideEffect(CreateTask::create([
+        $messageSubject = $this->getMessageSubject($command);
+
+        $createTaskCommandParameters = [
             'category'    => $messageSubject->getCategory()->getId(),
-            'subCategory' => $messageSubject->getSubCategory()->getId(),
             'licence'     => $licenceId,
-            'application' => $command->getApplication(),
-        ]));
+        ];
+        if (!empty($command->getApplication())) {
+            $createTaskCommandParameters['application'] = $command->getApplication();
+        }
+        if (!empty($messageSubject->getSubCategory())) {
+            $createTaskCommandParameters['subCategory'] = $messageSubject->getSubCategory()->getId();
+        }
+        $createTaskResult = $this->handleSideEffect(CreateTask::create($createTaskCommandParameters));
 
         $conversation = $this->generateAndSaveConversation($command, $createTaskResult, $messageSubject);
 
@@ -109,7 +114,7 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
     private function generateConversationSubjectFromMessageSubject(MessagingSubject $messageSubject): string
     {
         return sprintf(
-            '%s enquiry',
+            '%s query',
             $messageSubject->getDescription()
         );
     }
