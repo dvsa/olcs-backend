@@ -616,7 +616,6 @@ return [
             'LocalAuthority' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
-            'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
