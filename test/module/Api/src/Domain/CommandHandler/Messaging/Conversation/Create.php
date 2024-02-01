@@ -7,12 +7,9 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Messaging\Conversation;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation\Create as CreateConversationHandler;
-use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
-use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
-use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Create as CreateConversationCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Mockery as m;
@@ -108,6 +105,7 @@ class Create extends CommandHandlerTestCase
 
         $this->repoMap[Repository\Conversation::class]
             ->expects('save')
+            ->once()
             ->with(m::type(Entity\Messaging\MessagingConversation::class));
 
         $this->expectedSideEffect(
@@ -180,6 +178,7 @@ class Create extends CommandHandlerTestCase
 
         $this->repoMap[Repository\Conversation::class]
             ->expects('save')
+            ->once()
             ->with(m::type(Entity\Messaging\MessagingConversation::class));
 
         $this->expectedSideEffect(
