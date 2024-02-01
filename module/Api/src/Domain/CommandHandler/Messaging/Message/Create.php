@@ -34,7 +34,10 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = [
-        Repository\Conversation::class, Repository\Message::class, Repository\MessageContent::class, Repository\Task::class,
+        Repository\Conversation::class,
+        Repository\Message::class,
+        Repository\MessageContent::class,
+        Repository\Task::class,
     ];
 
     /**

@@ -14,8 +14,8 @@ use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingSubject;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Create as CreateConversationCommand;
@@ -51,8 +51,7 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
         $messageSubject = $this->getMessageSubject($command);
 
         $createTaskCommandParameters = [
-            'category'    => $messageSubject->getCategory()->getId(),
-            'licence'     => $licenceId,
+            'category' => $messageSubject->getCategory()->getId(), 'licence' => $licenceId,
         ];
         if (!empty($command->getApplication())) {
             $createTaskCommandParameters['application'] = $command->getApplication();
@@ -62,23 +61,30 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
         }
         $createTaskResult = $this->handleSideEffect(CreateTask::create($createTaskCommandParameters));
 
-        $conversation = $this->generateAndSaveConversation($command, $createTaskResult, $messageSubject);
+        $conversation = $this->generateAndSaveConversation($createTaskResult, $messageSubject);
 
         $createMessageResult = $this->handleSideEffect(CreateMessageCommand::create([
-            'conversation'   => $conversation->getId(),
-            'messageContent' => $command->getMessageContent(),
+            'conversation' => $conversation->getId(), 'messageContent' => $command->getMessageContent(),
         ]));
 
         $result = new Result();
 
-        $result
-            ->addId('conversation', $conversation->getId())
-            ->addMessage('Conversation added');
+        $result->addId('conversation', $conversation->getId())->addMessage('Conversation added');
 
         $result->merge($createTaskResult);
         $result->merge($createMessageResult);
 
         return $result;
+    }
+
+    private function getLicenceByApplication(int $application): Licence
+    {
+        return $this->getApplicationRepo()->fetchById($application)->getLicence();
+    }
+
+    private function getApplicationRepo(): Repository\Application
+    {
+        return $this->getRepo(Repository\Application::class);
     }
 
     /**
@@ -89,7 +95,12 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
         return $this->getMessagingSubjectRepo()->fetchById($command->getMessageSubject());
     }
 
-    private function generateAndSaveConversation(CreateConversationCommand $command, Result $createTaskResult, MessagingSubject $messageSubject): MessagingConversation
+    private function getMessagingSubjectRepo(): Repository\MessagingSubject
+    {
+        return $this->getRepo(Repository\MessagingSubject::class);
+    }
+
+    private function generateAndSaveConversation(Result $createTaskResult, MessagingSubject $messageSubject): MessagingConversation
     {
         $task = $this->getTask($createTaskResult->getId('task'));
         $subject = $this->generateConversationSubjectFromMessageSubject($messageSubject);
@@ -113,38 +124,18 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
 
     private function generateConversationSubjectFromMessageSubject(MessagingSubject $messageSubject): string
     {
-        return sprintf(
-            '%s query',
-            $messageSubject->getDescription()
-        );
+        return sprintf('%s query', $messageSubject->getDescription());
     }
 
     private function createConversationEntity(Task $task, string $subject): MessagingConversation
     {
         $entity = new MessagingConversation();
-        $entity
-            ->setTask($task)
-            ->setSubject($subject);
+        $entity->setTask($task)->setSubject($subject);
         return $entity;
     }
 
     private function getConversationRepo(): Repository\Conversation
     {
         return $this->getRepo(Repository\Conversation::class);
-    }
-
-    private function getMessagingSubjectRepo(): Repository\MessagingSubject
-    {
-        return $this->getRepo(Repository\MessagingSubject::class);
-    }
-
-    private function getApplicationRepo(): Repository\Application
-    {
-        return $this->getRepo(Repository\Application::class);
-    }
-
-    private function getLicenceByApplication(int $application): Licence
-    {
-        return $this->getApplicationRepo()->fetchById($application)->getLicence();
     }
 }
