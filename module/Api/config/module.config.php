@@ -615,7 +615,6 @@ return [
             'LocalAuthority' => RepositoryFactory::class,
             'Trailer' => RepositoryFactory::class,
             'GracePeriod' => RepositoryFactory::class,
-            'Task' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
             'Cases' => RepositoryFactory::class,
@@ -792,6 +791,7 @@ return [
             Repository\Application::class => RepositoryFactory::class,
             Repository\MessagingSubject::class => RepositoryFactory::class,
             Repository\Organisation::class => RepositoryFactory::class,
+            Repository\Task::class => RepositoryFactory::class,
         ],
         'aliases' => [
             'Conversation' => Repository\Conversation::class,
@@ -800,6 +800,7 @@ return [
             'Licence' => Repository\Licence::class,
             'Application' => Repository\Application::class,
             'Organisation' => Repository\Organisation::class,
+            'Task' => Repository\Task::class,
         ],
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [

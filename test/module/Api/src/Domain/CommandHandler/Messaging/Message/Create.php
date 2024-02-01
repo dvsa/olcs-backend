@@ -57,7 +57,7 @@ class Create extends CommandHandlerTestCase
     public function testCannotAddMessageToClosedConversation()
     {
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage(CreateMessageHandler::EXCEPTION_MESSAGE_UNABLE_TO_ADD_MESSAGE_TO_CLOSED_ARCHIVED_CONVERSATION);
+        $this->expectExceptionMessage('Unable to create message on conversations that are closed or archived');
 
         $data = [
             'conversation' => $conversationId = 1,
@@ -76,7 +76,7 @@ class Create extends CommandHandlerTestCase
     public function testCannotAddMessageToArchivedConversation()
     {
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage(CreateMessageHandler::EXCEPTION_MESSAGE_UNABLE_TO_ADD_MESSAGE_TO_CLOSED_ARCHIVED_CONVERSATION);
+        $this->expectExceptionMessage('Unable to create message on conversations that are closed or archived');
 
         $data = [
             'conversation' => $conversationId = 1,

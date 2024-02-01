@@ -675,7 +675,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     }
 
     /**
-     * Determines if the organisation as ever submitted a licence application.
+     * Determines if the organisation has ever submitted a licence application.
      *
      * @return bool
      */
