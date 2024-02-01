@@ -190,6 +190,6 @@ class Create extends CommandHandlerTestCase
             (new Result())->addId('message', 5)
         );
 
-        $this->sut->handleCommand($command)->toArray();
+        $this->sut->handleCommand($command);
     }
 }

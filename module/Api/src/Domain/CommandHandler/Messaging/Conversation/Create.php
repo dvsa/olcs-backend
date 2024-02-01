@@ -70,6 +70,7 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
         $result = new Result();
 
         $result->addId('conversation', $conversation->getId())->addMessage('Conversation added');
+        $result->addId('licence', $licenceId);
 
         $result->merge($createTaskResult);
         $result->merge($createMessageResult);
