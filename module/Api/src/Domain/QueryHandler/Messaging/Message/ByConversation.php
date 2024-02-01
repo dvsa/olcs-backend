@@ -30,7 +30,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
         $messages = $messageRepository->fetchPaginatedList($messagesQuery);
 
         /*
-         * @TODO: For _some_ conversations, when sending an authenticated request (so any request from the front end,
+         * For _some_ conversations, when sending an authenticated request (so any request from the front end,
          * JSON serializing lastModifiedBy causes a recursion error. An unauthenticated request results in
          * lastModifiedBy always being null.
          */
