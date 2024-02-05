@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Message;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\Conversation;
+use Dvsa\Olcs\Api\Domain\Repository\Message;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
@@ -17,11 +19,11 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 
     protected array $toggleConfig = [FeatureToggle::MESSAGING];
 
-    protected $extraRepos = ['Conversation', 'Message', 'MessageContent'];
+    protected $extraRepos = [Message::class, Conversation::class];
 
     public function handleQuery(QueryInterface $query)
     {
-        $messageRepository = $this->getRepo('Message');
+        $messageRepository = $this->getRepo(Message::class);
 
         $messageQueryBuilder = $messageRepository->getBaseMessageListWithContentQuery($query);
 
@@ -30,7 +32,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
         $messages = $messageRepository->fetchPaginatedList($messagesQuery);
 
         /** @var MessagingConversation $conversation */
-        $conversation = $this->getRepo('Conversation')->fetchById($query->getConversation());
+        $conversation = $this->getRepo(Conversation::class)->fetchById($query->getConversation());
 
         return [
             'result'       => $messages,
