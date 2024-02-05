@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Message\ByConversation;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Messaging\Messages\ByConversation as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -45,10 +46,7 @@ class ByConversationTest extends QueryHandlerTestCase
                 ['id' => 8,'messaging_conversation_id' => '1','messaging_content_id' => '8'],
             ]
         );
-        $conversation = [
-            'id' => 1,
-            'isDisabled' => false,
-        ];
+        $conversation = new MessagingConversation();
         $mockQb = m::mock(QueryBuilder::class);
         $this->repoMap['Message']->shouldReceive('getBaseMessageListWithContentQuery')->andReturn($mockQb);
         $this->repoMap['Message']->shouldReceive('filterByConversationId')->andReturn($mockQb);
