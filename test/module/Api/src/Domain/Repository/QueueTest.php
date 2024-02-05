@@ -1,11 +1,5 @@
 <?php
 
-/**
- * Queue test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
-
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
 use Doctrine\DBAL\Connection;
@@ -17,14 +11,8 @@ use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Mockery as m;
 
-/**
- * Queue test
- *
- * @author Dan Eggleston <dan@stolenegg.com>
- */
 class QueueTest extends RepositoryTestCase
 {
     /**
@@ -219,39 +207,6 @@ class QueueTest extends RepositoryTestCase
             ' (q.processAfterDate <= [[' . $now->format(DateTime::W3C) . ']] OR q.processAfterDate IS NULL) LIMIT 1' .
             ' AND q.type = [[foo]]';
         $this->assertEquals($expectedQuery, $this->query);
-    }
-
-    public function testEnqueueAllOrganisations()
-    {
-        $mockStatement = m::mock();
-        $mockConnection = m::mock();
-        $expectedSql = <<<SQL
-INSERT INTO `queue` (`status`, `type`, `options`, `created_by`, `last_modified_by`, `created_on`)
-SELECT DISTINCT 'que_sts_queued',
-                ?,
-                CONCAT('{"companyNumber":"', UPPER(o.company_or_llp_no), '"}'),
-                ?,
-                ?,
-                NOW()
-FROM organisation o
-INNER JOIN licence l ON o.id=l.organisation_id
-WHERE l.status IN ('lsts_consideration',
-                   'lsts_suspended',
-                   'lsts_valid',
-                   'lsts_curtailed',
-                   'lsts_granted')
-  AND o.company_or_llp_no IS NOT NULL
-  AND o.type IN ('org_t_rc', 'org_t_llp')
-ORDER BY o.company_or_llp_no;
-SQL;
-        $this->em->shouldReceive('getConnection')->with()->once()->andReturn($mockConnection);
-        $mockConnection->shouldReceive('prepare')->with($expectedSql)->once()->andReturn($mockStatement);
-        $mockStatement->shouldReceive('execute')
-            ->with(['TYPE', IdentityProviderInterface::SYSTEM_USER, IdentityProviderInterface::SYSTEM_USER])
-            ->once()->andReturnNull();
-        $mockStatement->shouldReceive('rowCount')->with()->once()->andReturn(99);
-
-        $this->sut->enqueueAllOrganisations('TYPE');
     }
 
     public function testFetchNextItemIncludingPostponedWithIncludeTypes()
