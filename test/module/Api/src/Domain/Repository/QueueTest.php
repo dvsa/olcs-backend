@@ -2,6 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
+use Doctrine\DBAL\Statement;
+use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -135,35 +140,28 @@ class QueueTest extends RepositoryTestCase
         $query = 'INSERT INTO `queue` (`status`, `type`, `options`) VALUES '
             . '(:status1, :type1, :options1), (:status2, :type2, :options2)';
 
-        $params = [
-            'status1' => QueueEntity::STATUS_QUEUED,
-            'type1' => QueueEntity::TYPE_CNS,
-            'options1' => $options1,
-            'status2' => QueueEntity::STATUS_QUEUED,
-            'type2' => QueueEntity::TYPE_CNS,
-            'options2' => $options2
-        ];
+        $queryResult = m::mock(Result::class);
+        $queryResult->expects('rowCount')
+            ->withNoArgs()
+            ->andReturn(2);
 
-        $mockStatement = m::mock()
-            ->shouldReceive('execute')
-            ->with($params)
-            ->once()
-            ->shouldReceive('rowCount')
-            ->andReturn(2)
-            ->once()
-            ->getMock();
+        $mockStatement = m::mock(Statement::class);
+        $mockStatement ->expects('executeQuery')
+            ->withNoArgs()
+            ->andReturn($queryResult);
+        $mockStatement->expects('bindValue')->with('status1', QueueEntity::STATUS_QUEUED);
+        $mockStatement->expects('bindValue')->with('type1', QueueEntity::TYPE_CNS);
+        $mockStatement->expects('bindValue')->with('options1', $options1);
+        $mockStatement->expects('bindValue')->with('status2', QueueEntity::STATUS_QUEUED);
+        $mockStatement->expects('bindValue')->with('type2', QueueEntity::TYPE_CNS);
+        $mockStatement->expects('bindValue')->with('options2', $options2);
 
-        $mockConnection = m::mock()
-            ->shouldReceive('prepare')
+        $mockConnection = m::mock(Connection::class);
+        $mockConnection->expects('prepare')
             ->with($query)
-            ->andReturn($mockStatement)
-            ->once()
-            ->getMock();
+            ->andReturn($mockStatement);
 
-        $this->em->shouldReceive('getConnection')
-            ->andReturn($mockConnection)
-            ->once()
-            ->getMock();
+        $this->em->expects('getConnection')->withNoArgs()->andReturn($mockConnection);
 
         $licences = [
             ['id' => 1, 'version' => 2],

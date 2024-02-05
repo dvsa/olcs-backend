@@ -37,19 +37,18 @@ class Queue extends AbstractRepository
             $query .= "(:status{$i}, :type{$i}, :options{$i}), ";
         }
         $query = trim($query, ', ');
+        $stmt = $conn->prepare($query);
 
-        $params = [];
         $i = 1;
         foreach ($licences as $licence) {
-            $params['status' . $i] = Entity::STATUS_QUEUED;
-            $params['type' . $i] = Entity::TYPE_CNS;
-            $params['options' . $i] = '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}';
+            $stmt->bindValue('status' . $i, Entity::STATUS_QUEUED);
+            $stmt->bindValue('type' . $i, Entity::TYPE_CNS);
+            $stmt->bindValue('options' . $i, '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}');
             $i++;
         }
 
-        $stmt = $conn->prepare($query);
-        $stmt->execute($params);
-        return $stmt->rowCount();
+        $result = $stmt->executeQuery();
+        return $result->rowCount();
     }
 
     /**
