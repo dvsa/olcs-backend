@@ -66,9 +66,9 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
             'organisation' => $organisation
         ];
 
-        $xmlName =  $this->getTempNameFromXml($xmlName);
+        $xmlTempName =  $this->getTempNameFromXml($xmlName);
         //do some pre-doctrine data processing
-        $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlName, $ebsrDoc, $busRegInputContext);
+        $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlTempName, $ebsrDoc, $busRegInputContext);
 
         if ($ebsrData === false) {
             return $this->result;
