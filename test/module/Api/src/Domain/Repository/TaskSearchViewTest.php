@@ -31,6 +31,7 @@ class TaskSearchViewTest extends RepositoryTestCase
             'date' => 'tdt_today',
             'status' => 'tst_closed',
             'urgent' => true,
+            'messaging' => true,
             'licence' => 111,
             'transportManager' => 222,
             'case' => 333,
@@ -58,6 +59,7 @@ class TaskSearchViewTest extends RepositoryTestCase
             . ' AND m.actionDate <= [[' . date('Y-m-d') . ']]'
             . ' AND m.isClosed = 1'
             . ' AND m.urgent = 1'
+            . ' AND m.messaging = 1'
             . ' AND ('
             . 'm.licenceId = :licence'
             . ' OR m.transportManagerId = :tm'
@@ -118,6 +120,7 @@ class TaskSearchViewTest extends RepositoryTestCase
             'date' => 'tdt_today',
             'status' => 'tst_all',
             'urgent' => false,
+            'messaging' => false,
             'licence' => 111,
             'application' => 444,
         ];
