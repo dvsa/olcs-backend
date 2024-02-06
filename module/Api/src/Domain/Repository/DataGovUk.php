@@ -13,7 +13,7 @@ use PDO;
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-class DataGovUk
+class DataGovUk implements CustomRepositoryInterface
 {
     /**
      * @var Connection

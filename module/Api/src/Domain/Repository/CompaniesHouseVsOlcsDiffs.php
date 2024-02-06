@@ -10,7 +10,7 @@ use Doctrine\DBAL\Result;
  *
  * @author Dmitry Golubev <dmitrij.golubev@valtech.co.uk>
  */
-class CompaniesHouseVsOlcsDiffs
+class CompaniesHouseVsOlcsDiffs implements CustomRepositoryInterface
 {
     private Connection $conn;
 

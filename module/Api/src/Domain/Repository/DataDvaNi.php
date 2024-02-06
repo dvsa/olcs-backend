@@ -8,7 +8,7 @@ use Doctrine\DBAL\Result;
 /**
  * Contains methods to get data from DB to export for data for Northern Ireland
  */
-class DataDvaNi
+class DataDvaNi implements CustomRepositoryInterface
 {
     private Connection $conn;
 

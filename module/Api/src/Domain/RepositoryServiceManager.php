@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseVsOlcsDiffs;
+use Dvsa\Olcs\Api\Domain\Repository\CustomRepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\DataDvaNi;
 use Dvsa\Olcs\Api\Domain\Repository\DataGovUk;
 use Dvsa\Olcs\Api\Domain\Repository\ReadonlyRepositoryInterface;
@@ -25,7 +26,11 @@ class RepositoryServiceManager extends AbstractPluginManager
 
     public function validate($instance)
     {
-        if ($instance instanceof RepositoryInterface || $instance instanceof ReadonlyRepositoryInterface) {
+        if (
+            $instance instanceof RepositoryInterface
+            || $instance instanceof ReadonlyRepositoryInterface
+            || $instance instanceof CustomRepositoryInterface
+        ) {
             return;
         }
 
