@@ -6,6 +6,7 @@ use ArrayIterator;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Messaging\ApplicationLicenceList\ByOrganisation as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -74,9 +75,17 @@ class ByOrganisationTest extends QueryHandlerTestCase
 
     public function testHandleQueryDefersToIdentityIfNoOrganisationIsDefinedInQuery()
     {
-        $query = Qry::create([
-            'organisation' => 1,
-        ]);
+        $organisation = m::mock(Organisation::class);
+        $organisation
+            ->shouldReceive('getId')
+            ->once()
+            ->andReturn(1);
+
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser->getOrganisationUsers->isEmpty')->once()->andReturn(false);
+        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser->getRelatedOrganisation')->once()->andReturn($organisation);
+
+
+        $query = Qry::create([]);
 
         $licences = new ArrayIterator(
             [
