@@ -8,6 +8,8 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -31,10 +33,11 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class WithdrawApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
+class WithdrawApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, CacheAwareInterface
 {
     use AuthAwareTrait;
     use RefundInterimTrait;
+    use CacheAwareTrait;
 
     public $repoServiceName = 'Application';
 
@@ -116,6 +119,10 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         if ($application->getCurrentInterimStatus() === Application::INTERIM_STATUS_REQUESTED) {
             $this->maybeRefundInterimFee($application);
         }
+
+        try {
+            $this->clearLicenceCaches($application->getLicence());
+        } catch (\Exception $e) {}
 
         return $this->result;
     }

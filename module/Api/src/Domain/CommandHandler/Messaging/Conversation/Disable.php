@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -18,9 +20,10 @@ use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Disable as DisableCommand;
  *
  * @author Wade Womersley <wade.womersley@dvsa.org.uk>
  */
-final class Disable extends AbstractCommandHandler implements ToggleRequiredInterface
+final class Disable extends AbstractCommandHandler implements ToggleRequiredInterface, CacheAwareInterface
 {
     use ToggleAwareTrait;
+    use CacheAwareTrait;
 
     protected $extraRepos = [OrganisationRepo::class];
     protected $toggleConfig = [FeatureToggle::MESSAGING];
@@ -34,6 +37,10 @@ final class Disable extends AbstractCommandHandler implements ToggleRequiredInte
         $organisation->setIsMessagingDisabled(true);
 
         $repo->save($organisation);
+
+        try {
+            $this->clearOrganisationCaches($organisation);
+        } catch (\Exception $e) {}
 
         $result = new Result();
         $result->addId('organisation', $organisation->getId());

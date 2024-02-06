@@ -13,14 +13,18 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 
 /**
  * Cancel application
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CancelApplication extends AbstractCommandHandler implements TransactionedInterface
+class CancelApplication extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
+
     public $repoServiceName = 'Application';
 
     public $extraRepos = ['Licence'];
@@ -31,10 +35,16 @@ class CancelApplication extends AbstractCommandHandler implements TransactionedI
         $application = $this->getRepo()->fetchById($command->getId());
 
         $application->setStatus($this->getRepo()->getRefdataReference(Application::APPLICATION_STATUS_CANCELLED));
+
         $this->getRepo()->save($application);
 
+        $licence = $application->getLicence();
+
+        try {
+            $this->clearLicenceCaches($licence);
+        } catch (\Exception $e) {}
+
         if (!$application->getIsVariation()) {
-            $licence = $application->getLicence();
             $licence->setStatus($this->getRepo()->getRefdataReference(Licence::LICENCE_STATUS_CANCELLED));
             $this->getRepo('Licence')->save($licence);
         }

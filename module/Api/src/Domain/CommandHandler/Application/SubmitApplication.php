@@ -5,6 +5,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateLightGoodsVehicleCondition
     as CreateLightGoodsVehicleConditionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
@@ -27,13 +29,14 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, SlaCalculatorAwareInterface
+final class SubmitApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, SlaCalculatorAwareInterface, CacheAwareInterface
 {
     use AuthAwareTrait;
     use SlaCalculatorAwareTrait;
+    use CacheAwareTrait;
 
     protected $repoServiceName = 'Application';
-    protected $extraRepos = ['TransportManagerApplication', 'Sla'];
+    protected $extraRepos = ['TransportManagerApplication', 'Sla', 'Organisation'];
 
     /**
      * Handle Command
@@ -52,6 +55,10 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         $this->result->merge($this->snapshotApplication($application));
 
         $this->updateStatus($application);
+
+        try {
+            $this->clearLicenceCaches($application->getLicence());
+        } catch (\Exception $e) {}
 
         $this->result->merge($this->createTask($application));
         $this->result->merge($this->maybeCreateLightGoodsVehicleCondition($application));
