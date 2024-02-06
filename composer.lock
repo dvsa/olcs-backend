@@ -6350,12 +6350,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "f94175ebf32f73946b9e46ab23dfdf28307f9f4d"
+                "reference": "e2727d8e365a41f2b6093282a96800794cbcc8c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/f94175ebf32f73946b9e46ab23dfdf28307f9f4d",
-                "reference": "f94175ebf32f73946b9e46ab23dfdf28307f9f4d",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/e2727d8e365a41f2b6093282a96800794cbcc8c3",
+                "reference": "e2727d8e365a41f2b6093282a96800794cbcc8c3",
                 "shasum": ""
             },
             "require": {
@@ -6397,7 +6397,7 @@
             "support": {
                 "source": "https://github.com/dvsa/olcs-transfer/tree/project/messaging"
             },
-            "time": "2024-01-29T17:12:19+00:00"
+            "time": "2024-02-06T15:11:55+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -11965,5 +11965,5 @@
     "platform-overrides": {
         "ext-redis": "4.3"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

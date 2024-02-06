@@ -51,7 +51,9 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
         $messageSubject = $this->getMessageSubject($command);
 
         $createTaskCommandParameters = [
-            'category' => $messageSubject->getCategory()->getId(), 'licence' => $licenceId,
+            'category' => $messageSubject->getCategory()->getId(),
+            'licence' => $licenceId,
+            'messaging' => true,
         ];
         if (!empty($command->getApplication())) {
             $createTaskCommandParameters['application'] = $command->getApplication();

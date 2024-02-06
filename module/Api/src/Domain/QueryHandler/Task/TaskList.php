@@ -34,6 +34,7 @@ class TaskList extends AbstractQueryHandler
         unset($data['date']);
         unset($data['status']);
         unset($data['urgent']);
+        unset($data['messaging']);
         unset($data['showTasks']);
 
         $unfilteredQuery = \Dvsa\Olcs\Transfer\Query\Task\TaskList::create($data);
