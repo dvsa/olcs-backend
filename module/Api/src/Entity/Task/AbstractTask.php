@@ -272,7 +272,7 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
 
     /**
      * @var int
-     * @ORM\Column(type="yesno", name="messaging", nullable=false, options={"default": 0})
+     * @ORM\Column(type="boolean", name="messaging", nullable=false, options={"default": 0})
      */
     protected $messaging = 0;
 
