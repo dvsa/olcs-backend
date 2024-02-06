@@ -43,7 +43,7 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
 
         $result = new Result();
 
-        $licence = $application->getLicence()->getId();
+        $licence = $application->getLicence();
 
         switch ($currentStatus->getId()) {
             case Application::APPLICATION_STATUS_NOT_TAKEN_UP:
@@ -89,7 +89,7 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
         $this->getRepo()->save($application);
 
         try {
-            $this->clearLicenceCaches($application->getLicence());
+            $this->clearLicenceCaches($licence);
         } catch (\Exception $e) {}
 
         $result->addMessage('Application ' . $application->getId() . ' has been revived');
