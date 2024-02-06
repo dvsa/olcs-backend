@@ -74,6 +74,7 @@ class CreateTaskTest extends \PHPUnit\Framework\TestCase
                 'assignedToTeam' => 444,
                 'isClosed' => true,
                 'urgent' => true,
+                'messaging' => true,
                 'application' => 555,
                 'licence' => 666,
                 'busReg' => 123,
