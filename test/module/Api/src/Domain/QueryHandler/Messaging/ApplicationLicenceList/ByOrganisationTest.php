@@ -71,4 +71,44 @@ class ByOrganisationTest extends QueryHandlerTestCase
         $this->assertArrayHasKey('applications', $result['result']);
         $this->assertCount(3, $result['result']['applications']);
     }
+
+    public function testHandleQueryDefersToIdentityIfNoOrganisationIsDefinedInQuery()
+    {
+        $query = Qry::create([
+            'organisation' => 1,
+        ]);
+
+        $licences = new ArrayIterator(
+            [
+                [ 'id' => 1, 'organisation_id' => 1, 'licNo' => 'A1' ],
+                [ 'id' => 2, 'organisation_id' => 1, 'licNo' => 'B2' ],
+                [ 'id' => 3, 'organisation_id' => 1, 'licNo' => 'C3' ],
+            ]
+        );
+
+        $applications = new ArrayIterator(
+            [
+                [ 'id' => 1, 'licence_id' => 1 ],
+                [ 'id' => 2, 'licence_id' => 2 ],
+                [ 'id' => 3, 'licence_id' => 3 ],
+            ]
+        );
+
+        $mockQb = m::mock(QueryBuilder::class);
+
+        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb);
+        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationId')->andReturn($mockQb)->once()->andReturn($licences);
+        $this->repoMap[Repository\Application::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($applications);
+
+        $result = $this->sut->handleQuery($query);
+
+        $this->assertArrayHasKey('result', $result);
+        $this->assertCount(2, $result['result']);
+
+        $this->assertArrayHasKey('licences', $result['result']);
+        $this->assertCount(3, $result['result']['licences']);
+
+        $this->assertArrayHasKey('applications', $result['result']);
+        $this->assertCount(3, $result['result']['applications']);
+    }
 }
