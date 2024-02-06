@@ -51,6 +51,12 @@ class TaskSearchView implements BundleSerializableInterface
     protected $isClosed = 0;
 
     /**
+     * @var int
+     * @ORM\Column(type="yesno", name="messaging")
+     */
+    protected $messaging = 0;
+
+    /**
      * Is urgent
      *
      * @var int
@@ -307,6 +313,11 @@ class TaskSearchView implements BundleSerializableInterface
     public function getIsClosed()
     {
         return $this->isClosed;
+    }
+
+    public function getMessaging(): int
+    {
+        return $this->messaging;
     }
 
     /**

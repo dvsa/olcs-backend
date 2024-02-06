@@ -53,6 +53,7 @@ class TaskSearchViewTest extends \PHPUnit\Framework\TestCase
             'teamName' => 'team',
             'transportManagerId' => 11,
             'urgent' => 1,
+            'messaging' => 1,
             'irfoOrganisationId' => 12,
             'submissionId' => 13,
         ];

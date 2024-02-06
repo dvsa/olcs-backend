@@ -36,6 +36,8 @@ final class CreateTask extends AbstractCommand
      */
     protected $urgent = false;
 
+    protected $messaging = false;
+
     protected $application;
 
     protected $licence;
@@ -118,6 +120,11 @@ final class CreateTask extends AbstractCommand
     public function getUrgent()
     {
         return $this->urgent;
+    }
+
+    public function getMessaging(): bool
+    {
+        return $this->messaging;
     }
 
     /**

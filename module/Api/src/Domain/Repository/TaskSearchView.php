@@ -73,6 +73,10 @@ class TaskSearchView extends AbstractRepository
             $qb->andWhere($qb->expr()->eq('m.urgent', 1));
         }
 
+        if ($query->getMessaging()) {
+            $qb->andWhere($qb->expr()->eq('m.messaging', 1));
+        }
+
         //  check if should show only items related to current object
         $isShowSelfOnly = ($query->getShowTasks() === FilterOptions::SHOW_SELF_ONLY);
         if ($isShowSelfOnly) {
