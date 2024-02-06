@@ -271,6 +271,12 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     protected $transportManager;
 
     /**
+     * @var int
+     * @ORM\Column(type="yesno", name="messaging", nullable=false, options={"default": 0})
+     */
+    protected $messaging = 0;
+
+    /**
      * Urgent
      *
      * @var string
@@ -798,6 +804,19 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     public function getTransportManager()
     {
         return $this->transportManager;
+    }
+
+    public function setMessaging($messaging)
+    {
+        $this->messaging = $messaging;
+
+        return $this;
+    }
+
+    /** @return string */
+    public function getMessaging()
+    {
+        return $this->messaging;
     }
 
     /**
