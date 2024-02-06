@@ -317,7 +317,7 @@ class TaskSearchView implements BundleSerializableInterface
 
     public function getMessaging(): int
     {
-        return $this->urgent;
+        return $this->messaging;
     }
 
     /**
