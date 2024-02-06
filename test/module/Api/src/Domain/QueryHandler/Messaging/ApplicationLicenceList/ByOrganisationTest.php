@@ -84,7 +84,6 @@ class ByOrganisationTest extends QueryHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser->getOrganisationUsers->isEmpty')->once()->andReturn(false);
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser->getRelatedOrganisation')->once()->andReturn($organisation);
 
-
         $query = Qry::create([]);
 
         $licences = new ArrayIterator(
