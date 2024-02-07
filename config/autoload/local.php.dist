@@ -565,8 +565,12 @@ return [
                 'token_url' => 'http://localhost',
                 'clientId' => 'abc123',
                 'scope' => 'abc123',
+                'secret_name' => 'txc_client_secret',
             ],
             'proxy' => 'http://localhost',
             'max_retry_attempts' => 3,
-        ]
+        ],
+        'localSecretsManager' => [
+        'txc_client_secret'=> ['client_secret' => ''],
+    ]
 ];
