@@ -19,8 +19,8 @@ class PostcheckTest extends QueryHandlerTestCase
         $this->sut = new Postcheck();
         $this->mockedConnection = m::mock(\PDO::class);
 
-        $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
-        $this->mockedSmServices['DoctrineOrmEntityManager']
+        $this->mockedSmServices['doctrine.entitymanager.orm_default'] = m::mock(EntityManager::class);
+        $this->mockedSmServices['doctrine.entitymanager.orm_default']
             ->expects('getConnection->getNativeConnection')
             ->withNoArgs()
             ->andReturn($this->mockedConnection);
