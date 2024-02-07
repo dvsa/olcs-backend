@@ -13,6 +13,9 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\WithdrawApplication as CommandHandler;
@@ -36,6 +39,8 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class WithdrawApplicationTest extends CommandHandlerTestCase
 {
+    use MocksAbstractCommandHandlerServicesTrait;
+
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
@@ -43,7 +48,8 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
         $this->mockedSmServices = [
-            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+            CacheEncryption::class => m::mock(CacheEncryption::class),
         ];
 
         parent::setUp();
