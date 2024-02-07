@@ -20,7 +20,7 @@ class CheckFkIntegrityTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $mockDoctrineEntityManager = m::mock(EntityManager::class);
-        $this->mockedSmServices['DoctrineOrmEntityManager'] = $mockDoctrineEntityManager;
+        $this->mockedSmServices['doctrine.entitymanager.orm_default'] = $mockDoctrineEntityManager;
 
         $this->mockPdo = m::mock(PDO::class);
         $mockDoctrineEntityManager
