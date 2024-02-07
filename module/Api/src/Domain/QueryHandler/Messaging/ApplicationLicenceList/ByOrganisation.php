@@ -37,10 +37,7 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
         $licenceRepository = $this->getLicenceRepository();
         $applicationRepository = $this->getApplicationRepository();
 
-        $orgId = (int)$query->getOrganisation();
-        if (empty($orgId)) {
-            $orgId = $this->getCurrentOrganisation()->getId();
-        }
+        $orgId = (int)($query->getOrganisation() ?: $this->getCurrentOrganisation()->getId());
 
         $licences = $licenceRepository->fetchByOrganisationId($orgId);
 
