@@ -19,8 +19,8 @@ class PrecheckTest extends CommandHandlerTestCase
     {
         $this->sut = new Precheck();
         $this->mockedConnection = m::mock(\PDO::class);
-        $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
-        $this->mockedSmServices['DoctrineOrmEntityManager']
+        $this->mockedSmServices['doctrine.entitymanager.orm_default'] = m::mock(EntityManager::class);
+        $this->mockedSmServices['doctrine.entitymanager.orm_default']
             ->shouldReceive('getConnection->getNativeConnection')
             ->andReturn($this->mockedConnection);
         parent::setUp();
