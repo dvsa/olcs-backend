@@ -13,6 +13,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Http\Client;
 use Laminas\Http\Client\Adapter\Curl;
 use Laminas\Json\Json;
+use Olcs\Logging\Log\Logger;
 
 /**
  * GetRedirect
@@ -70,7 +71,8 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
         $resultBody = json_decode($edhApiResult->getContent(), true);
 
         if (!isset($resultBody['redirectUrl'])) {
-            throw new RuntimeException('An Error occurred obtaining a DVSA Reports Redirect Link');
+            Logger::err('TOPS Report API Error Message: '.$resultBody['message']);
+            throw new RuntimeException('An Error occurred obtaining a DVSA Reports Redirect Link. Upstream Response: '.$resultBody['message']);
         }
 
         return $this->result->addMessage($resultBody['redirectUrl']);
