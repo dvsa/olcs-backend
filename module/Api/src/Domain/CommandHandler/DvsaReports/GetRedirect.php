@@ -72,7 +72,7 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
 
         if (!isset($resultBody['redirectUrl'])) {
             Logger::err('TOPS Report API Error Message: '.$resultBody['message']);
-            throw new RuntimeException('An Error occurred obtaining a DVSA Reports Redirect Link. Upstream Response: '.$resultBody['message']);
+            throw new RuntimeException('An error occurred while trying to redirect to the Reports page');
         }
 
         return $this->result->addMessage($resultBody['redirectUrl']);
