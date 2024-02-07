@@ -226,6 +226,7 @@ return [
         'region' => 'eu-west-1',
         'version' => 'latest',
         'useEnvCredentials' => true,
+        'sts_regional_endpoints' =>'regional',
         'global' => [
             'endpoint' => 'http://host.docker.internal:4566',
         ],
