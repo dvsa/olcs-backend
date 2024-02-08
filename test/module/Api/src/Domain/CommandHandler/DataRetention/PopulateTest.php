@@ -26,8 +26,8 @@ class PopulateTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class] = m::mock(AuthorizationService::class);
         $this->mockedConnection = m::mock(Connection::class);
         $this->mockedConnection->shouldReceive('beginTransaction');
-        $this->mockedSmServices['DoctrineOrmEntityManager'] = m::mock(EntityManager::class);
-        $this->mockedSmServices['DoctrineOrmEntityManager']
+        $this->mockedSmServices['doctrine.entitymanager.orm_default'] = m::mock(EntityManager::class);
+        $this->mockedSmServices['doctrine.entitymanager.orm_default']
             ->shouldReceive('getConnection')
             ->andReturn($this->mockedConnection);
         parent::setUp();
