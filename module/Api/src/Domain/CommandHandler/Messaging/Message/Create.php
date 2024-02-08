@@ -9,6 +9,7 @@ use DateTime;
 use DateTimeInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendNewMessageOperators;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
@@ -48,6 +49,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
     {
         $message = $this->generateAndSaveMessage($command);
         $updatedTask = $this->updateTaskDescriptionAndActionDate($command);
+        $sendEmailResult = $this->sendEmail($command);
 
         $result = new Result();
 
@@ -60,6 +62,10 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             ->addId('task', $updatedTask->getId())
             ->addMessage(sprintf('Updated task action date: %s', $updatedTask->getActionDate()->format(DateTimeInterface::ATOM)))
             ->addMessage(sprintf('Updated task description: %s', $updatedTask->getDescription()));
+
+        if ($sendEmailResult !== null) {
+            $result->merge($sendEmailResult);
+        }
 
         return $result;
     }
@@ -149,5 +155,22 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
     private function getTaskRepository(): Repository\Task
     {
         return $this->getRepo(Repository\Task::class);
+    }
+
+    public function sendEmail(CreateMessageCommand $command): ?Result
+    {
+        if ($this->isExternalUser()) {
+            return null;
+        }
+
+        $conversation = $this->getConversationFromCommand($command);
+
+        return $this->handleSideEffect(
+            SendNewMessageOperators::create(
+                [
+                    'id' => $conversation->getTask()->getApplication()->getId(),
+                ]
+            )
+        );
     }
 }

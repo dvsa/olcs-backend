@@ -1056,6 +1056,7 @@ return [
         CommandHandler\Messaging\Conversation\Disable::class,
     TransferCommand\Messaging\Conversation\Enable::class =>
         CommandHandler\Messaging\Conversation\Enable::class,
+    Command\Email\SendNewMessageOperators::class => CommandHandler\Email\SendNewMessageOperators::class,
 
     // Transfer - IRHP Permit
     TransferCommand\IrhpPermit\Replace::class =>

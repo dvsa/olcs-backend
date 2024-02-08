@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 
 return [
@@ -18,4 +19,5 @@ return [
     QueryHandler\Messaging\Conversations\ByOrganisation::class         => NoValidationRequired::class,
     QueryHandler\Messaging\Subjects\All::class                         => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Create::class                => NoValidationRequired::class,
+    CommandHandler\Email\SendNewMessageOperators::class                => IsSideEffect::class,
 ];
