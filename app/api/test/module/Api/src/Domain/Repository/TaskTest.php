@@ -143,13 +143,13 @@ class TaskTest extends RepositoryTestCase
     public function testFlagUrgentsTasks()
     {
         $queryResponse = m::mock();
-        $queryResponse->shouldReceive('fetchColumn')->with(0)->once()->andReturn(65);
+        $queryResponse->shouldReceive('fetchOne')->once()->andReturn(65);
 
         $query = m::mock();
         $query->shouldReceive('execute')->once()->with()->andReturn($queryResponse);
 
         $this->dbQueryService->shouldReceive('get')
-            ->with('Task/FlagUrgentTasks')
+            ->with('Task\FlagUrgentTasks')
             ->andReturn($query);
 
         $result = $this->sut->flagUrgentsTasks();
