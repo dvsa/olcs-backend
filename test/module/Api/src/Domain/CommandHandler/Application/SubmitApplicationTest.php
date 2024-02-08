@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
@@ -24,6 +25,8 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
 
 /**
@@ -31,6 +34,9 @@ use Mockery as m;
  */
 class SubmitApplicationTest extends CommandHandlerTestCase
 {
+    use MocksServicesTrait;
+    use MocksAbstractCommandHandlerServicesTrait;
+
     public const APP_ID = 9001;
     public const LIC_ID = 8001;
     public const TASK_ID = 6001;
@@ -44,12 +50,16 @@ class SubmitApplicationTest extends CommandHandlerTestCase
     /** @var  Entity\Application\Application  | m\MockInterface */
     private $mockApp;
 
+    private Organisation $organisation;
+
     /** @var  m\MockInterface*/
     private $mockTmaRepo;
 
     public function setUp(): void
     {
         $this->sut = new SubmitApplication();
+
+        $this->organisation = new Organisation();
 
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockTmaRepo = $this->mockRepo(
@@ -61,13 +71,21 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $trafficArea = new Entity\TrafficArea\TrafficArea();
         $trafficArea->setId(self::TRAFFIC_AREA);
 
-        $this->mockLic = m::mock(Entity\Licence\Licence::class)->makePartial();
-        $this->mockLic
-            ->setTrafficArea($trafficArea)
-            ->setLicenceType(new RefData())
-            ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+//        $this->mockLic = m::mock(Entity\Licence\Licence::class)->makePartial();
+//        $this->mockLic
+//            ->setTrafficArea($trafficArea)
+//            ->setLicenceType(new RefData())
+//            ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
 
-        $this->mockApp = m::mock(ApplicationEntity::class)->makePartial();
+        $this->mockLic = $this->getMockBuilder(LicenceEntity::class)
+            ->onlyMethods(['setStatus'])
+            ->setConstructorArgs([$this->organisation, new RefData(LicenceEntity::LICENCE_STATUS_VALID)])
+            ->getMock();
+
+        $this->mockApp = m::mock(ApplicationEntity::class)->makePartial()
+            ->shouldReceive('getTrafficArea')
+            ->with()
+            ->andReturn($trafficArea);
         $this->mockApp
             ->setLicence($this->mockLic)
             ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
@@ -159,15 +177,23 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         // licence status should be updated if application is not a variation
         if ($isVariation) {
+//            $this->mockLic
+//                ->shouldReceive('setStatus')
+//                ->never();
             $this->mockLic
-                ->shouldReceive('setStatus')
-                ->never();
+                ->expects($this->never())
+                ->method('setStatus');
         } else {
+//            $this->mockLic
+//                ->shouldReceive('setStatus')
+//                ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
+//                ->once()
+//                ->andReturnSelf();
             $this->mockLic
-                ->shouldReceive('setStatus')
+                ->expects($this->once())
+                ->method('setStatus')
                 ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-                ->once()
-                ->andReturnSelf();
+                ->willReturnSelf();
         }
 
         $this->repoMap['Application']
@@ -395,9 +421,12 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
+//        $this->mockLic
+//            ->shouldReceive('setStatus')
+//            ->never();
         $this->mockLic
-            ->shouldReceive('setStatus')
-            ->never();
+            ->expects($this->never())
+            ->method('setStatus');
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -522,11 +551,16 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
+//        $this->mockLic
+//            ->shouldReceive('setStatus')
+//            ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
+//            ->once()
+//            ->andReturnSelf();
         $this->mockLic
-            ->shouldReceive('setStatus')
+            ->expects($this->once())
+            ->method('setStatus')
             ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-            ->once()
-            ->andReturnSelf();
+            ->willReturnSelf();
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -608,7 +642,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->mockLic->shouldReceive('getOrganisation->isLtd')->with()->andReturn($isLtd);
+// Help...how to do nested?!
+//        $this->mockLic->shouldReceive('getOrganisation->isLtd')->with()->andReturn($isLtd);
 
         $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
 
@@ -627,7 +662,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturnSelf()
             ->shouldReceive('getCode')
             ->andReturn($code);
-
+//
         $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $this->mockLic);
         $s4->setOutcome($this->mapRefdata(\Dvsa\Olcs\Api\Entity\Application\S4::STATUS_APPROVED));
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
