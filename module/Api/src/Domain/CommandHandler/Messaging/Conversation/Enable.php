@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Enable as EnableCommand;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Enable conversations
@@ -40,7 +41,18 @@ final class Enable extends AbstractCommandHandler implements ToggleRequiredInter
 
         try {
             $this->clearOrganisationCaches($organisation);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            Logger::err('Cache clear by organisation failed when enabling messaging for organisation',
+                [
+                    'organisation_id' => $organisation->getId(),
+                    'exception' => [
+                        'class' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ],
+                ]
+            );
+        }
 
         $result = new Result();
         $result->addId('organisation', $organisation->getId());

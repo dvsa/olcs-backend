@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class WithdrawApplication
@@ -122,7 +123,19 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         try {
             $this->clearLicenceCaches($application->getLicence());
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            Logger::err('Cache clear by licence failed when withdrawing application',
+                [
+                    'application_id' => $application->getId(),
+                    'licence_id' => $application->getLicence()->getId(),
+                    'exception' => [
+                        'class' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ],
+                ]
+            );
+        }
 
         return $this->result;
     }

@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Disable as DisableCommand;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Disable conversations
@@ -41,6 +42,21 @@ final class Disable extends AbstractCommandHandler implements ToggleRequiredInte
         try {
             $this->clearOrganisationCaches($organisation);
         } catch (\Exception $e) {}
+
+        try {
+            $this->clearOrganisationCaches($organisation);
+        } catch (\Exception $e) {
+            Logger::err('Cache clear by organisation failed when disabling messaging for organisation',
+                [
+                    'organisation_d' => $organisation->getId(),
+                    'exception' => [
+                        'class' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ],
+                ]
+            );
+        }
 
         $result = new Result();
         $result->addId('organisation', $organisation->getId());

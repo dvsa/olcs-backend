@@ -54,13 +54,13 @@ class ReviveApplicationTest extends CommandHandlerTestCase
 
         $command = Command::create(['id' => 532]);
 
+        $licence = m::mock(LicenceEntity::class)
+            ->shouldReceive('getId')
+            ->andReturn(123);
+
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
-
-        $mockLicence = m::mock(LicenceEntity::class);
-        $mockLicence->expects('getId')->andReturn(123);
-
-        $application->setLicence($mockLicence);
+        $application->setLicence($licence->getMock());
 
         $application->shouldReceive('getStatus')
             ->andReturn(

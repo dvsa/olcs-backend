@@ -23,6 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as CreateSnapshotCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Submit Application
@@ -59,7 +60,17 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         try {
             $this->clearLicenceCaches($application->getLicence());
         } catch (\Exception $e) {
-
+            Logger::err('Cache clear by licence failed when submitting application',
+                [
+                    'application_id' => $application->getId(),
+                    'licence_id' => $application->getLicence()->getId(),
+                    'exception' => [
+                        'class' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ],
+                ]
+            );
         }
 
         $this->result->merge($this->createTask($application));

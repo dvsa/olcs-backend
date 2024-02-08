@@ -18,6 +18,7 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class ReviveApplication
@@ -90,7 +91,19 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
 
         try {
             $this->clearLicenceCaches($licence);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+            Logger::err('Cache clear by licence failed when reviving application',
+                [
+                    'application_id' => $application->getId(),
+                    'licence_id' => $licence->getId(),
+                    'exception' => [
+                        'class' => get_class($e),
+                        'message' => $e->getMessage(),
+                        'trace' => $e->getTraceAsString(),
+                    ],
+                ]
+            );
+        }
 
         $result->addMessage('Application ' . $application->getId() . ' has been revived');
 

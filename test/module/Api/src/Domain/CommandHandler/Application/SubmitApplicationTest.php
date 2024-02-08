@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateLightGoodsVehicleCon
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\Sla;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -16,14 +17,15 @@ use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksServicesTrait;
@@ -43,23 +45,21 @@ class SubmitApplicationTest extends CommandHandlerTestCase
     public const VERSION = 10;
     public const TRAFFIC_AREA = 'TA';
 
-    /** @var SubmitApplication  */
+    /** @var SubmitApplication */
     protected $sut;
     /** @var  Entity\Licence\Licence | m\MockInterface */
     private $mockLic;
     /** @var  Entity\Application\Application  | m\MockInterface */
     private $mockApp;
 
-    private Organisation $organisation;
+    private OrganisationEntity $organisation;
 
-    /** @var  m\MockInterface*/
+    /** @var  m\MockInterface */
     private $mockTmaRepo;
 
     public function setUp(): void
     {
         $this->sut = new SubmitApplication();
-
-        $this->organisation = new Organisation();
 
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockTmaRepo = $this->mockRepo(
@@ -71,21 +71,17 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $trafficArea = new Entity\TrafficArea\TrafficArea();
         $trafficArea->setId(self::TRAFFIC_AREA);
 
-//        $this->mockLic = m::mock(Entity\Licence\Licence::class)->makePartial();
-//        $this->mockLic
-//            ->setTrafficArea($trafficArea)
-//            ->setLicenceType(new RefData())
-//            ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+        $this->organisation = new OrganisationEntity();
+        $this->organisation->setType(new RefData(OrganisationEntity::ORG_TYPE_OTHER));
 
-        $this->mockLic = $this->getMockBuilder(LicenceEntity::class)
-            ->onlyMethods(['setStatus'])
-            ->setConstructorArgs([$this->organisation, new RefData(LicenceEntity::LICENCE_STATUS_VALID)])
-            ->getMock();
+        $this->mockLic = m::mock(LicenceEntity::class)->makePartial();
+        $this->mockLic
+            ->setTrafficArea($trafficArea)
+            ->setLicenceType(new RefData())
+            ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection())
+            ->setOrganisation($this->organisation);
 
-        $this->mockApp = m::mock(ApplicationEntity::class)->makePartial()
-            ->shouldReceive('getTrafficArea')
-            ->with()
-            ->andReturn($trafficArea);
+        $this->mockApp = m::mock(ApplicationEntity::class)->makePartial();
         $this->mockApp
             ->setLicence($this->mockLic)
             ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
@@ -93,6 +89,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class),
             SlaCalculatorInterface::class => m::mock(SlaCalculator::class),
+            CacheEncryption::class => m::mock(CacheEncryption::class),
         ];
 
         parent::setUp();
@@ -177,23 +174,15 @@ class SubmitApplicationTest extends CommandHandlerTestCase
 
         // licence status should be updated if application is not a variation
         if ($isVariation) {
-//            $this->mockLic
-//                ->shouldReceive('setStatus')
-//                ->never();
             $this->mockLic
-                ->expects($this->never())
-                ->method('setStatus');
+                ->shouldReceive('setStatus')
+                ->never();
         } else {
-//            $this->mockLic
-//                ->shouldReceive('setStatus')
-//                ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-//                ->once()
-//                ->andReturnSelf();
             $this->mockLic
-                ->expects($this->once())
-                ->method('setStatus')
+                ->shouldReceive('setStatus')
                 ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-                ->willReturnSelf();
+                ->once()
+                ->andReturnSelf();
         }
 
         $this->repoMap['Application']
@@ -264,6 +253,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 (new Result())->addMessage('unit TexTask created')
             );
         }
+
+        $this->expectedLicenceCacheClear($this->mockLic);
 
         $result = $this->sut->handleCommand($command);
 
@@ -421,12 +412,9 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
-//        $this->mockLic
-//            ->shouldReceive('setStatus')
-//            ->never();
         $this->mockLic
-            ->expects($this->never())
-            ->method('setStatus');
+            ->shouldReceive('setStatus')
+            ->never();
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -551,16 +539,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturn($expectedTargetCompletionDate);
 
         // licence status should be updated if application is not a variation
-//        $this->mockLic
-//            ->shouldReceive('setStatus')
-//            ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-//            ->once()
-//            ->andReturnSelf();
         $this->mockLic
-            ->expects($this->once())
-            ->method('setStatus')
+            ->shouldReceive('setStatus')
             ->with($this->mapRefdata(LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION))
-            ->willReturnSelf();
+            ->once()
+            ->andReturnSelf();
 
         $this->repoMap['Application']
             ->shouldReceive('fetchUsingId')
@@ -642,8 +625,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
-// Help...how to do nested?!
-//        $this->mockLic->shouldReceive('getOrganisation->isLtd')->with()->andReturn($isLtd);
+        if($isLtd) {
+            $this->organisation->setType(new RefData(OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY));
+        }
+
+        $this->mockLic->setOrganisation($this->organisation);
 
         $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
 
@@ -662,7 +648,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ->andReturnSelf()
             ->shouldReceive('getCode')
             ->andReturn($code);
-//
+
         $s4 = new \Dvsa\Olcs\Api\Entity\Application\S4($application, $this->mockLic);
         $s4->setOutcome($this->mapRefdata(\Dvsa\Olcs\Api\Entity\Application\S4::STATUS_APPROVED));
         $application->setS4s(new \Doctrine\Common\Collections\ArrayCollection([$s4]));
