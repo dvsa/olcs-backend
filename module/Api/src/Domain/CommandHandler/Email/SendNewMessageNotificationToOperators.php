@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 
-final class SendNewMessageOperators extends AbstractEmailHandler implements EmailAwareInterface
+final class SendNewMessageNotificationToOperators extends AbstractEmailHandler implements EmailAwareInterface
 {
     protected $repoServiceName = ApplicationRepo::class;
     protected $template = 'messaging-new-message-operator';
@@ -35,11 +35,13 @@ final class SendNewMessageOperators extends AbstractEmailHandler implements Emai
     protected function createMissingEmailTask($recordObject, Result $result, MissingEmailException $exception): Result
     {
         $taskData = [
-            'category'        => Category::CATEGORY_PERMITS,
-            'subCategory'     => Category::TASK_SUB_CATEGORY_PERMITS_GENERAL_TASK,
-            'description'     => 'Unable to send email - no organisation recipients found for Org: ' .
-                                 $recordObject->getLicence()->getOrganisation()->getName() .
-                                 ' - Please update the organisation admin user contacts to ensure at least one has a valid email address.',
+            'category'        => Category::CATEGORY_LICENSING,
+            'subCategory'     => Category::TASK_SUB_CATEGORY_LICENSING_GENERAL_TASK,
+            'description'     => sprintf(
+                'Unable to send email - no organisation recipients found for Org: %s' .
+                ' - Please update the organisation admin user contacts to ensure at least one has a valid email address.',
+                $recordObject->getLicence()->getOrganisation()->getName(),
+            ),
             'actionDate'      => (new DateTimeImmutable())->format('Y-m-d'),
             'licence'         => $recordObject->getLicence()->getId(),
             'irhpApplication' => $recordObject->getId(),

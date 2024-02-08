@@ -9,7 +9,7 @@ use DateTime;
 use DateTimeInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendNewMessageOperators;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendNewMessageNotificationToOperators;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
@@ -166,7 +166,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         $conversation = $this->getConversationFromCommand($command);
 
         return $this->handleSideEffect(
-            SendNewMessageOperators::create(
+            SendNewMessageNotificationToOperators::create(
                 [
                     'id' => $conversation->getTask()->getApplication()->getId(),
                 ]

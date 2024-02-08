@@ -765,7 +765,7 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetailsFactory::class,
-   TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
+    TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
     TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
@@ -1046,26 +1046,26 @@ return [
         CommandHandler\FeatureToggle\Create::class,
     TransferCommand\FeatureToggle\Update::class =>
         CommandHandler\FeatureToggle\Update::class,
-    TransferCommand\FeatureToggle\Delete::class =>
+    TransferCommand\FeatureToggle\Delete::class                =>
         CommandHandler\FeatureToggle\Delete::class,
 
     // Transfer - Messaging
-    TransferCommand\Messaging\Conversation\Close::class =>
+    TransferCommand\Messaging\Conversation\Close::class        =>
         CommandHandler\Messaging\Conversation\Close::class,
-    TransferCommand\Messaging\Conversation\Disable::class =>
+    TransferCommand\Messaging\Conversation\Disable::class      =>
         CommandHandler\Messaging\Conversation\Disable::class,
-    TransferCommand\Messaging\Conversation\Enable::class =>
+    TransferCommand\Messaging\Conversation\Enable::class       =>
         CommandHandler\Messaging\Conversation\Enable::class,
-    Command\Email\SendNewMessageOperators::class => CommandHandler\Email\SendNewMessageOperators::class,
+    Command\Email\SendNewMessageNotificationToOperators::class => CommandHandler\Email\SendNewMessageNotificationToOperators::class,
 
     // Transfer - IRHP Permit
-    TransferCommand\IrhpPermit\Replace::class =>
+    TransferCommand\IrhpPermit\Replace::class                  =>
         CommandHandler\IrhpPermit\Replace::class,
-    TransferCommand\IrhpPermit\Terminate::class =>
+    TransferCommand\IrhpPermit\Terminate::class                =>
         CommandHandler\IrhpPermit\Terminate::class,
 
     // Transfer - IRHP Permit Application
-    TransferCommand\IrhpApplication\Create::class =>
+    TransferCommand\IrhpApplication\Create::class              =>
         CommandHandler\IrhpApplication\Create::class,
 
     // Transfer - IRHP Permit Stock
