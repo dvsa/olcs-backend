@@ -58,7 +58,9 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
 
         try {
             $this->clearLicenceCaches($application->getLicence());
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+
+        }
 
         $this->result->merge($this->createTask($application));
         $this->result->merge($this->maybeCreateLightGoodsVehicleCondition($application));
@@ -278,7 +280,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * check, if can be submited
+     * check, if can be submitted
      *
      * @param ApplicationEntity $application Application Entity
      *
