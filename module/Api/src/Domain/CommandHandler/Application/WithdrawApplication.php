@@ -104,7 +104,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             }
         }
 
-        if ($application->isGoods() &&
+        if (
+            $application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));

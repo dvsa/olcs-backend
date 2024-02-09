@@ -625,7 +625,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
-        if($isLtd) {
+        if ($isLtd) {
             $this->organisation->setType(new RefData(OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY));
         }
 
