@@ -42,7 +42,8 @@ final class Enable extends AbstractCommandHandler implements ToggleRequiredInter
         try {
             $this->clearOrganisationCaches($organisation);
         } catch (\Exception $e) {
-            Logger::err('Cache clear by organisation failed when enabling messaging for organisation',
+            Logger::err(
+                'Cache clear by organisation failed when enabling messaging for organisation',
                 [
                     'organisation_id' => $organisation->getId(),
                     'exception' => [

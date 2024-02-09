@@ -104,8 +104,7 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
             }
         }
 
-        if (
-            $application->isGoods() &&
+        if ($application->isGoods() &&
             $application->getCurrentInterimStatus() === Application::INTERIM_STATUS_INFORCE
         ) {
             $this->result->merge($this->handleSideEffect(EndInterimCmd::create(['id' => $application->getId()])));
@@ -124,7 +123,8 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
         try {
             $this->clearLicenceCaches($application->getLicence());
         } catch (\Exception $e) {
-            Logger::err('Cache clear by licence failed when withdrawing application',
+            Logger::err(
+                'Cache clear by licence failed when withdrawing application',
                 [
                     'application_id' => $application->getId(),
                     'licence_id' => $application->getLicence()->getId(),

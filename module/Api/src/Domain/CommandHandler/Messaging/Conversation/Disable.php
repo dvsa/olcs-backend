@@ -41,12 +41,9 @@ final class Disable extends AbstractCommandHandler implements ToggleRequiredInte
 
         try {
             $this->clearOrganisationCaches($organisation);
-        } catch (\Exception $e) {}
-
-        try {
-            $this->clearOrganisationCaches($organisation);
         } catch (\Exception $e) {
-            Logger::err('Cache clear by organisation failed when disabling messaging for organisation',
+            Logger::err(
+                'Cache clear by organisation failed when disabling messaging for organisation',
                 [
                     'organisation_d' => $organisation->getId(),
                     'exception' => [

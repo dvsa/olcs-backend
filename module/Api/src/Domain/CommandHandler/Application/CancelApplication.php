@@ -45,7 +45,8 @@ class CancelApplication extends AbstractCommandHandler implements TransactionedI
         try {
             $this->clearLicenceCaches($licence);
         } catch (\Exception $e) {
-            Logger::err('Cache clear by licence failed when cancelling application',
+            Logger::err(
+                'Cache clear by licence failed when cancelling application',
                 [
                     'application_id' => $application->getId(),
                     'licence_id' => $application->getLicence()->getId(),

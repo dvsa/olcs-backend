@@ -92,7 +92,8 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
         try {
             $this->clearLicenceCaches($licence);
         } catch (\Exception $e) {
-            Logger::err('Cache clear by licence failed when reviving application',
+            Logger::err(
+                'Cache clear by licence failed when reviving application',
                 [
                     'application_id' => $application->getId(),
                     'licence_id' => $licence->getId(),

@@ -60,7 +60,8 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
         try {
             $this->clearLicenceCaches($application->getLicence());
         } catch (\Exception $e) {
-            Logger::err('Cache clear by licence failed when submitting application',
+            Logger::err(
+                'Cache clear by licence failed when submitting application',
                 [
                     'application_id' => $application->getId(),
                     'licence_id' => $application->getLicence()->getId(),
