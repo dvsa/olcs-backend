@@ -23,44 +23,25 @@ class ByApplicationToLicenceTest extends QueryHandlerTestCase
 
     public function testHandleQuery()
     {
-        $query = Qry::create(
-            [
-                'application' => 1,
-            ],
-        );
+        $query = Qry::create([
+            'application' => 1,
+        ]);
 
         $mockLicence = m::mock(Licence::class);
         $mockLicence->shouldReceive('getId')->once()->andReturn(2);
         $mockApplication = m::mock(Application::class);
         $mockApplication->shouldReceive('getLicence')->once()->andReturn($mockLicence);
-        $mockApplication->shouldReceive('serialize')->once()->andReturn(['id' => 7]);
 
         $this->repoMap['Application']->shouldReceive('fetchById')->andReturn($mockApplication);
 
-        $this->queryHandler->shouldReceive('handleQuery')
-                           ->with(
-                               m::on(
-                                   function ($argument) {
-                                       $this->assertInstanceOf(ByLicence::class, $argument);
-                                       assert($argument instanceof ByLicence);
-                                       $this->assertEquals(
-                                           2, $argument->getLicence(),
-                                           'Expected licence ID used in proxy call to ByLicence to match licence returned from application',
-                                       );
-                                       return true;
-                                   },
-                               ),
-                           )
-                           ->once()
-                           ->andReturn(
-                               [
-                                   'result' => [
-                                       [
-                                           'application' => null,
-                                       ],
-                                   ],
-                               ],
-                           );
+        $this->queryHandler->shouldReceive('handleQuery')->with(m::on(
+            function ($argument) {
+                $this->assertInstanceOf(ByLicence::class, $argument);
+                assert($argument instanceof ByLicence);
+                $this->assertEquals(2, $argument->getLicence(), 'Expected licence ID used in proxy call to ByLicence to match licence returned from application');
+                return true;
+            }
+        ))->once();
 
         $this->sut->handleQuery($query);
     }

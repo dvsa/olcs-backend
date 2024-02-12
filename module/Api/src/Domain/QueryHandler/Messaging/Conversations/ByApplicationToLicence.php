@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByApplicationToLicence as GetConversationsByApplicationToLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByLicence as GetConversationsByLicenceQuery;
@@ -21,26 +20,20 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = ['Application'];
 
-    /** @param GetConversationsByApplicationToLicenceQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query)
     {
+        assert($query instanceof GetConversationsByApplicationToLicenceQuery);
         $applicationRepository = $this->getApplicationRepository();
 
-        /** @var Application $application */
         $application = $applicationRepository->fetchById($query->getApplication());
 
         $licenceQuery = [
-            'page'    => $query->getPage(),
-            'limit'   => $query->getLimit(),
+            'page' => $query->getPage(),
+            'limit' => $query->getLimit(),
             'licence' => $application->getLicence()->getId(),
         ];
-        $byLicence = $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
-        array_walk(
-            $byLicence['result'],
-            fn(&$result) => $result['task']['application'] = $application->serialize(),
-        );
 
-        return $byLicence;
+        return $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
     }
 
     private function getApplicationRepository(): ApplicationRepo
