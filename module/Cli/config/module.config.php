@@ -6,345 +6,113 @@ use Dvsa\Olcs\Cli\Domain\Command;
 use Dvsa\Olcs\Cli\Domain\Query;
 use Dvsa\Olcs\Cli\Domain\QueryHandler;
 use Dvsa\Olcs\Cli;
+use Dvsa\Olcs\Cli\Command\Batch as BatchCommands;
+use Dvsa\Olcs\Cli\Command\Permits as PermitsCommands;
+use Dvsa\Olcs\Cli\Command\Queue as QueueCommands;
+use Laminas\ServiceManager\AbstractFactory\ConfigAbstractFactory;
+
+$commonCommandDeps = [
+    'CommandHandlerManager',
+];
+
+$commonBatchCommandDeps = [
+    'CommandHandlerManager',
+    'QueryHandlerManager',
+];
 
 return [
-    'console' => [
-        'router' => [
-            'routes' => [
-                'diagnostic' => [
-                    'options' => [
-                        'route' => 'diagnostic [--skip=] [--openam-user=] [--email=] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\DiagnosticController::class,
-                            'action' => 'index'
-                        ],
-                    ],
-                ],
-                'check-fk-integrity' => [
-                    'options' => [
-                        'route' => 'check-fk-integrity',
-                        'defaults' => [
-                            'controller' => Cli\Controller\DiagnosticController::class,
-                            'action' => 'checkFkIntegrity',
-                        ],
-                    ],
-                ],
-                'check-fk-integrity-sql' => [
-                    'options' => [
-                        'route' => 'check-fk-integrity-sql',
-                        'defaults' => [
-                            'controller' => Cli\Controller\DiagnosticController::class,
-                            'action' => 'checkFkIntegritySql',
-                        ],
-                    ],
-                ],
-                'licence-status-rules' => [
-                    'options' => [
-                        'route' => 'licence-status-rules [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'licenceStatusRules'
-                        ],
-                    ],
-                ],
-                'enqueue-ch-compare' => [
-                    'options' => [
-                        'route' => 'enqueue-ch-compare [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'enqueueCompaniesHouseCompare',
-                        ],
-                    ],
-                ],
-                'ch-vs-olcs-compare' => [
-                    'options' => [
-                        'route' => 'ch-vs-olcs-diffs [--verbose|-v] [--path=]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'companiesHouseVsOlcsDiffsExport',
-                        ],
-                    ],
-                ],
-                'duplicate-vehicle-warning' => [
-                    'options' => [
-                        'route' => 'duplicate-vehicle-warning [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'duplicateVehicleWarning',
-                        ],
-                    ],
-                ],
-                'duplicate-vehicle-removal' => [
-                    'options' => [
-                        'route' => 'duplicate-vehicle-removal [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'duplicateVehicleRemoval',
-                        ],
-                    ],
-                ],
-                'batch-cns' => [
-                    'options' => [
-                        'route' => 'batch-cns [--verbose|-v] [--dryrun|-d]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'continuationNotSought'
-                        ],
-                    ],
-                ],
-                'batch-clean-variations' => [
-                    'options' => [
-                        'route' => 'batch-clean-variations [--verbose|-v] [--dryrun|-d]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'cleanUpVariations'
-                        ],
-                    ],
-                ],
-                'get-db-value' => [
-                    'options' => [
-                        'route' => 'get-db-value [--property-name=] [--entity-name=] [--filter-property=] [--filter-value=] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\UtilController::class,
-                            'action' => 'getDbValue'
-                        ],
-                    ],
-                ],
-                'process-queue' => [
-                    'options' => [
-                        'route' => 'process-queue [--type=] [--exclude=] [--queue-duration=]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\QueueController::class,
-                            'action' => 'index'
-                        ],
-                    ],
-                ],
-                'process-inbox' => [
-                    'options' => [
-                        'route' => 'process-inbox [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'processInboxDocuments'
-                        ],
-                    ],
-                ],
-                'process-ntu' => [
-                    'options' => [
-                        'route' => 'process-ntu [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'processNtu'
-                        ],
-                    ],
-                ],
-                'inspection-request-email' => [
-                    'options' => [
-                        'route' => 'inspection-request-email [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'inspectionRequestEmail'
-                        ],
-                    ],
-                ],
-                'remove-read-audit' => [
-                    'options' => [
-                        'route' => 'remove-read-audit [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'removeReadAudit'
-                        ],
-                    ],
-                ],
-                'system-parameter' => [
-                    'options' => [
-                        'route' => 'system-parameter <name> <value> [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'setSystemParameter'
-                        ],
-                    ],
-                ],
-                'resolve-payments' => [
-                    'options' => [
-                        'route' => 'resolve-payments [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'resolvePayments',
-                        ],
-                    ],
-                ],
-                'create-vi-extract-files' => [
-                    'options' => [
-                        'route' =>
-                            'create-vi-extract-files [--verbose|-v] [--oc|-oc] ' .
-                            '[--op|-op] [--tnm|-tnm] [--vhl|-vhl] [--all|-all] [--path=]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'createViExtractFiles',
-                        ],
-                    ],
-                ],
+    'laminas-cli' => [
+        'commands' => [
+            'batch:ch-vs-olcs-diffs' => Dvsa\Olcs\Cli\Command\Batch\CompaniesHouseVsOlcsDiffsExportCommand::class,
+            'batch:clean-up-variations' => Dvsa\Olcs\Cli\Command\Batch\CleanUpAbandonedVariationsCommand::class,
+            'batch:cns' => Dvsa\Olcs\Cli\Command\Batch\ContinuationNotSoughtCommand::class,
+            'batch:create-psv-licence-surrender-tasks' => Dvsa\Olcs\Cli\Command\Batch\CreatePsvLicenceSurrenderTasksCommand::class,
+            'batch:data-dva-ni-export' => Dvsa\Olcs\Cli\Command\Batch\DataDvaNiExportCommand::class,
+            'batch:data-gov-uk-export' => Dvsa\Olcs\Cli\Command\Batch\DataGovUkExportCommand::class,
+            'batch:data-retention' => Dvsa\Olcs\Cli\Command\Batch\DataRetentionCommand::class,
+            'batch:database-maintenance' => Dvsa\Olcs\Cli\Command\Batch\DatabaseMaintenanceCommand::class,
+            'batch:digital-continuation-reminders' => Dvsa\Olcs\Cli\Command\Batch\DigitalContinuationRemindersCommand::class,
+            'batch:duplicate-vehicle-warning' => Dvsa\Olcs\Cli\Command\Batch\DuplicateVehicleWarningCommand::class,
+            'batch:enqueue-ch-compare' => Dvsa\Olcs\Cli\Command\Batch\EnqueueCompaniesHouseCompareCommand::class,
+            'batch:expire-bus-registration' => Dvsa\Olcs\Cli\Command\Batch\ExpireBusRegistrationCommand::class,
+            'batch:flag-urgent-tasks' => Dvsa\Olcs\Cli\Command\Batch\FlagUrgentTasksCommand::class,
+            'batch:import-users-from-csv' => Dvsa\Olcs\Cli\Command\Batch\ImportUsersFromCsvCommand::class,
+            'batch:inspection-request-email' => Dvsa\Olcs\Cli\Command\Batch\InspectionRequestEmailCommand::class,
+            'batch:interim-end-date-enforcement' => Dvsa\Olcs\Cli\Command\Batch\InterimEndDateEnforcementCommand::class,
+            'batch:last-tm-letter' => Dvsa\Olcs\Cli\Command\Batch\LastTmLetterCommand::class,
+            'batch:licence-status-rules' => Dvsa\Olcs\Cli\Command\Batch\LicenceStatusRulesCommand::class,
+            'batch:process-cl' => Dvsa\Olcs\Cli\Command\Batch\ProcessCommunityLicencesCommand::class,
+            'batch:process-inbox' => Dvsa\Olcs\Cli\Command\Batch\ProcessInboxDocumentsCommand::class,
+            'batch:process-ntu' => Dvsa\Olcs\Cli\Command\Batch\ProcessNtuCommand::class,
+            'batch:remove-read-audit' => Dvsa\Olcs\Cli\Command\Batch\RemoveReadAuditCommand::class,
+            'batch:resolve-payments' => Dvsa\Olcs\Cli\Command\Batch\ResolvePaymentsCommand::class,
+            'permits:cancel-unsubmitted-bilateral' => Dvsa\Olcs\Cli\Command\Permits\CancelUnsubmittedBilateralCommand::class,
+            'permits:close-expired-windows' => Dvsa\Olcs\Cli\Command\Permits\CloseExpiredWindowsCommand::class,
+            'permits:mark-expired-permits' => Dvsa\Olcs\Cli\Command\Permits\MarkExpiredPermitsCommand::class,
+            'permits:withdraw-unpaid' => Dvsa\Olcs\Cli\Command\Permits\WithdrawUnpaidIrhpCommand::class,
+            'queue:process-queue' => Dvsa\Olcs\Cli\Command\Queue\ProcessQueueCommand::class,
+            'queue:process-company-profile' => Dvsa\Olcs\Cli\Command\Queue\ProcessCompanyProfileSQSQueueCommand::class,
+            'queue:company-profile-dlq' => Dvsa\Olcs\Cli\Command\Queue\CompanyProfileDlqSQSQueueCommand::class,
+            'queue:process-insolvency' => Dvsa\Olcs\Cli\Command\Queue\ProcessInsolvencySQSQueueCommand::class,
+            'queue:process-insolvency-dlq' => Dvsa\Olcs\Cli\Command\Queue\ProcessInsolvencyDlqSQSQueueCommand::class,
+            'queue:transxchange-consumer' => Dvsa\Olcs\Cli\Command\Queue\TransXChangeConsumerSQSQueueCommand::class,
 
-                'export-to-data-gov-uk' => [
-                    'options' => [
-                        'route' => 'data-gov-uk-export <report-name> [--verbose|-v] [--path=]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'dataGovUkExport',
-                        ],
-                    ],
-                ],
-                'export-data-for-northern-ireland' => [
-                    'options' => [
-                        'route' => 'data-dva-ni-export <report-name> [--verbose|-v] [--path=]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'dataDvaNiExport',
-                        ],
-                    ],
-                ],
-                'process-cl' => [
-                    'options' => [
-                        'route' => 'process-cl [--verbose|-v] [--dryrun|-d]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'processCommunityLicences'
-                        ],
-                    ],
-                ],
-                'flag-urgent-tasks' => [
-                    'options' => [
-                        'route' => 'flag-urgent-tasks [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'flagUrgentTasks'
-                        ],
-                    ],
-                ],
-                'expire-bus-registration' => [
-                    'options' => [
-                        'route' => 'expire-bus-registration [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'expireBusRegistration'
-                        ],
-                    ],
-                ],
-                'import-users-from-csv' => [
-                    'options' => [
-                        'route' => 'import-users-from-csv <csv-path> [--result-csv-path=] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'importUsersFromCsv',
-                        ],
-                    ],
-                ],
-                'data-retention-rule' => [
-                    'options' => [
-                        'route' => 'data-retention-rule (populate|delete|precheck|postcheck) [--limit=] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'dataRetentionRule',
-                        ],
-                    ],
-                ],
-                'digital-continuation-reminders' => [
-                    'options' => [
-                        'route' => 'digital-continuation-reminders [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'digitalContinuationReminders',
-                        ],
-                    ],
-                ],
-                'create-psv-licence-surrender-tasks' => [
-                    'options' => [
-                        'route' => 'create-psv-licence-surrender-tasks [--verbose|-v] [--dryrun|-d]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'createPsvLicenceSurrenderTasks',
-                        ],
-                    ],
-                ],
-                'database-maintenance' => [
-                    'options' => [
-                        'route' => 'database-maintenance [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'databaseMaintenance',
-                        ],
-                    ],
-                ],
-                'last-tm-letter' => [
-                    'options' => [
-                        'route' => 'last-tm-letter [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'lastTmLetter',
-                        ],
-                    ],
-                ],
-                'permits' => [
-                    'options' => [
-                        'route' => 'permits (close-expired-windows|mark-expired-permits|withdraw-unpaid|cancel-unsubmitted-bilateral) [--since=<date>] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'permits',
-                        ],
-                    ],
-                ],
-                'populate-last-login' => [
-                    'options' => [
-                        'route' => 'populate-last-login [--live] [--limit=<limit>] [--batch-size=<batchSize>] [--show-progress] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'populateLastLogin',
-                        ],
-                    ],
-                ],
-                'poll-sqs' => [
-                    'options' => [
-                        'route' => 'poll-sqs <queue> [--queue-duration=<seconds>] [--verbose|-v]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\SQSController::class,
-                            'action' => 'index'
-                        ],
-                    ],
-                ],
-                'interim-end-date-enforcement' => [
-                    'options' => [
-                        'route' => 'interim-end-date-enforcement [--dryrun|-d]',
-                        'defaults' => [
-                            'controller' => Cli\Controller\BatchController::class,
-                            'action' => 'interimEndDateEnforcement'
-                        ],
-                    ],
-                ],
-            ],
         ],
     ],
-    'controllers' => [
-        'factories' => [
-            Cli\Controller\SQSController::class => Cli\Controller\SQSControllerFactory::class,
-            Cli\Controller\DiagnosticController::class => Cli\Controller\DiagnosticControllerFactory::class,
-            Cli\Controller\QueueController::class => Cli\Controller\QueueControllerFactory::class,
-            Cli\Controller\UtilController::class => Cli\Controller\UtilControllerFactory::class,
-            Cli\Controller\BatchController::class => Cli\Controller\BatchControllerFactory::class,
+    'service_manager' => [
+        'abstract_factories' => [
+            ConfigAbstractFactory::class,
         ],
+        'invokables' => [
+            'Request' => Cli\Request\CliRequest::class,
+        ],
+        'factories' => [
+            'MessageConsumerManager' => \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
+            'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessorFactory::class,
+            Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices::class
+            => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\AbstractConsumerServicesFactory::class,
+        ],
+    ],
+    ConfigAbstractFactory::class => [
+        BatchCommands\CleanUpAbandonedVariationsCommand::class => $commonBatchCommandDeps,
+        BatchCommands\CompaniesHouseVsOlcsDiffsExportCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ContinuationNotSoughtCommand::class => $commonBatchCommandDeps,
+        BatchCommands\CreatePsvLicenceSurrenderTasksCommand::class => $commonBatchCommandDeps,
+        BatchCommands\DataDvaNiExportCommand::class => $commonBatchCommandDeps,
+        BatchCommands\DataGovUkExportCommand::class => $commonBatchCommandDeps,
+        BatchCommands\DataRetentionCommand::class => $commonBatchCommandDeps,
+        BatchCommands\DatabaseMaintenanceCommand::class => $commonBatchCommandDeps,
+        BatchCommands\DigitalContinuationRemindersCommand::class => $commonBatchCommandDeps,
+        BatchCommands\DuplicateVehicleWarningCommand::class => $commonBatchCommandDeps,
+        BatchCommands\EnqueueCompaniesHouseCompareCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ExpireBusRegistrationCommand::class => $commonBatchCommandDeps,
+        BatchCommands\FlagUrgentTasksCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ImportUsersFromCsvCommand::class => $commonBatchCommandDeps,
+        BatchCommands\InspectionRequestEmailCommand::class => $commonBatchCommandDeps,
+        BatchCommands\InterimEndDateEnforcementCommand::class => $commonBatchCommandDeps,
+        BatchCommands\LastTmLetterCommand::class => $commonBatchCommandDeps,
+        BatchCommands\LicenceStatusRulesCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ProcessCommunityLicencesCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ProcessInboxDocumentsCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ProcessNtuCommand::class => $commonBatchCommandDeps,
+        BatchCommands\RemoveReadAuditCommand::class => $commonBatchCommandDeps,
+        BatchCommands\ResolvePaymentsCommand::class => $commonBatchCommandDeps,
+        PermitsCommands\CancelUnsubmittedBilateralCommand::class => $commonBatchCommandDeps,
+        PermitsCommands\CloseExpiredWindowsCommand::class => $commonBatchCommandDeps,
+        PermitsCommands\MarkExpiredPermitsCommand::class => $commonBatchCommandDeps,
+        PermitsCommands\WithdrawUnpaidIrhpCommand::class => $commonBatchCommandDeps,
+        QueueCommands\ProcessQueueCommand::class => [...$commonCommandDeps, ...['config', 'Queue']],
+        QueueCommands\CompanyProfileDlqSQSQueueCommand::class => $commonCommandDeps,
+        QueueCommands\ProcessCompanyProfileSQSQueueCommand::class => $commonCommandDeps,
+        QueueCommands\ProcessInsolvencySQSQueueCommand::class => $commonCommandDeps,
+        QueueCommands\ProcessInsolvencyDlqSQSQueueCommand::class => $commonCommandDeps,
+        QueueCommands\TransXChangeConsumerSQSQueueCommand::class => $commonCommandDeps,
     ],
     'cache' => [
         'adapter' => [
             // apc_cli is not currently enabled in environments therefore change it
             'name' => 'memory',
         ]
-    ],
-    'service_manager' => [
-        'factories' => [
-            'MessageConsumerManager' => \Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory::class,
-            'Queue' => Dvsa\Olcs\Cli\Service\Queue\QueueProcessorFactory::class,
-            Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices::class
-                => Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory\AbstractConsumerServicesFactory::class,
-        ],
     ],
     'message_consumer_manager' => [
         'factories' => [
@@ -515,7 +283,6 @@ return [
             Command\Permits\CloseExpiredWindows::class => CommandHandler\Permits\CloseExpiredWindows::class,
             Command\Permits\CancelUnsubmittedBilateral::class => CommandHandler\Permits\CancelUnsubmittedBilateral::class,
             Command\Permits\MarkExpiredPermits::class => CommandHandler\Permits\MarkExpiredPermits::class,
-            Command\PopulateLastLoginFromOpenAm::class => CommandHandler\PopulateLastLoginFromOpenAm::class,
             Command\InterimEndDateEnforcement::class => CommandHandler\InterimEndDateEnforcement::class,
         ],
     ],
