@@ -16,9 +16,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
-use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Class ReviveApplication
@@ -28,10 +25,8 @@ use Olcs\Logging\Log\Logger;
  * @package Dvsa\Olcs\Api\Domain\CommandHandler\Application
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-final class ReviveApplication extends AbstractCommandHandler implements TransactionedInterface, CacheAwareInterface
+final class ReviveApplication extends AbstractCommandHandler implements TransactionedInterface
 {
-    use CacheAwareTrait;
-
     protected $repoServiceName = 'Application';
 
     public function handleCommand(CommandInterface $command)
@@ -43,8 +38,6 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
         $currentStatus = $application->getStatus();
 
         $result = new Result();
-
-        $licence = $application->getLicence();
 
         switch ($currentStatus->getId()) {
             case Application::APPLICATION_STATUS_NOT_TAKEN_UP:
@@ -58,7 +51,7 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
                     $this->handleSideEffect(
                         GrantCmd::create(
                             [
-                                'id' => $licence->getId()
+                                'id' => $application->getLicence()->getId()
                             ]
                         )
                     )
@@ -78,7 +71,7 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
                         $this->handleSideEffect(
                             UnderConsideration::create(
                                 [
-                                    'id' => $licence->getId()
+                                    'id' => $application->getLicence()->getId()
                                 ]
                             )
                         )
@@ -88,23 +81,6 @@ final class ReviveApplication extends AbstractCommandHandler implements Transact
         }
 
         $this->getRepo()->save($application);
-
-        try {
-            $this->clearLicenceCaches($licence);
-        } catch (\Exception $e) {
-            Logger::err(
-                'Cache clear by licence failed when reviving application',
-                [
-                    'application_id' => $application->getId(),
-                    'licence_id' => $licence->getId(),
-                    'exception' => [
-                        'class' => get_class($e),
-                        'message' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString(),
-                    ],
-                ]
-            );
-        }
 
         $result->addMessage('Application ' . $application->getId() . ' has been revived');
 

@@ -14,13 +14,9 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\ReviveApplication as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\ReviveApplication as Command;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
 
 /**
@@ -30,17 +26,10 @@ use Mockery as m;
  */
 class ReviveApplicationTest extends CommandHandlerTestCase
 {
-    use MocksServicesTrait;
-    use MocksAbstractCommandHandlerServicesTrait;
-
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', ApplicationRepo::class);
-
-        $this->mockedSmServices = [
-            CacheEncryption::class => m::mock(CacheEncryption::class),
-        ];
 
         parent::setUp();
     }
@@ -54,7 +43,7 @@ class ReviveApplicationTest extends CommandHandlerTestCase
 
         $command = Command::create(['id' => 532]);
 
-        $licence = m::mock(LicenceEntity::class)
+        $licence = m::mock(Licence::class)
             ->shouldReceive('getId')
             ->andReturn(123);
 
@@ -92,12 +81,13 @@ class ReviveApplicationTest extends CommandHandlerTestCase
 
         $command = Command::create(['id' => 532]);
 
+        $licence = m::mock(Licence::class)
+            ->shouldReceive('getId')
+            ->andReturn(123);
+
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
-
-        $mockLicence = m::mock(LicenceEntity::class);
-        $mockLicence->expects('getId')->andReturn(123);
-        $application->setLicence($mockLicence);
+        $application->setLicence($licence->getMock());
 
         $application->shouldReceive('getStatus')
             ->andReturn(
@@ -114,8 +104,6 @@ class ReviveApplicationTest extends CommandHandlerTestCase
 
         $considerationResult = new Result();
         $this->expectedSideEffect(UnderConsideration::class, ['id' => 123], $considerationResult);
-
-        $this->expectedLicenceCacheClear($mockLicence);
 
         $result = $this->sut->handleCommand($command);
 

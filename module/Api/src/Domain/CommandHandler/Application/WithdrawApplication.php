@@ -8,8 +8,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
-use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
-use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -25,7 +23,6 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CloseTexTask as CloseTexTaskCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CloseFeeDueTask as CloseFeeDueTaskCmd;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Olcs\Logging\Log\Logger;
 
 /**
  * Class WithdrawApplication
@@ -34,11 +31,10 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class WithdrawApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface, CacheAwareInterface
+class WithdrawApplication extends AbstractCommandHandler implements TransactionedInterface, AuthAwareInterface
 {
     use AuthAwareTrait;
     use RefundInterimTrait;
-    use CacheAwareTrait;
 
     public $repoServiceName = 'Application';
 
@@ -119,23 +115,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
         if ($application->getCurrentInterimStatus() === Application::INTERIM_STATUS_REQUESTED) {
             $this->maybeRefundInterimFee($application);
-        }
-
-        try {
-            $this->clearLicenceCaches($application->getLicence());
-        } catch (\Exception $e) {
-            Logger::err(
-                'Cache clear by licence failed when withdrawing application',
-                [
-                    'application_id' => $application->getId(),
-                    'licence_id' => $application->getLicence()->getId(),
-                    'exception' => [
-                        'class' => get_class($e),
-                        'message' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString(),
-                    ],
-                ]
-            );
         }
 
         return $this->result;

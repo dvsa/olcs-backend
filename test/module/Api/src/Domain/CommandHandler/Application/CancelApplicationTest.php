@@ -15,10 +15,6 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use Dvsa\OlcsTest\MocksServicesTrait;
-use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 
@@ -29,18 +25,11 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  */
 class CancelApplicationTest extends CommandHandlerTestCase
 {
-    use MocksServicesTrait;
-    use MocksAbstractCommandHandlerServicesTrait;
-
     public function setUp(): void
     {
         $this->sut = new CancelApplication();
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('Licence', LicenceRepo::class);
-
-        $this->mockedSmServices = [
-            CacheEncryption::class => m::mock(CacheEncryption::class),
-        ];
 
         parent::setUp();
     }
@@ -60,8 +49,6 @@ class CancelApplicationTest extends CommandHandlerTestCase
         $applicationId = 834;
         $command = Cmd::create(['id' => $applicationId]);
 
-        $mockLicence = m::mock(LicenceEntity::class);
-
         $mockApplication = m::mock(ApplicationEntity::class)
             ->shouldReceive('setStatus')
             ->with($this->refData[ApplicationEntity::APPLICATION_STATUS_CANCELLED])
@@ -70,9 +57,6 @@ class CancelApplicationTest extends CommandHandlerTestCase
             ->andReturn($applicationId)
             ->shouldReceive('getIsVariation')
             ->andReturn(true)
-            ->once()
-            ->shouldReceive('getLicence')
-            ->andReturn($mockLicence)
             ->once()
             ->getMock();
 
@@ -90,8 +74,6 @@ class CancelApplicationTest extends CommandHandlerTestCase
             ['id' => 834],
             new \Dvsa\Olcs\Api\Domain\Command\Result()
         );
-
-        $this->expectedLicenceCacheClear($mockLicence);
 
         $result = $this->sut->handleCommand($command);
 
@@ -112,13 +94,11 @@ class CancelApplicationTest extends CommandHandlerTestCase
         $applicationId = 834;
         $command = Cmd::create(['id' => $applicationId]);
 
-        $mockLicence = m::mock(LicenceEntity::class)
+        $mockLicence = m::mock()
             ->shouldReceive('setStatus')
             ->with($this->refData[LicenceEntity::LICENCE_STATUS_CANCELLED])
             ->once()
             ->getMock();
-
-        $this->expectedLicenceCacheClear($mockLicence);
 
         $mockApplication = m::mock(ApplicationEntity::class)
             ->shouldReceive('setStatus')

@@ -10,14 +10,9 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction;
-use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use Dvsa\OlcsTest\MocksServicesTrait;
-use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\WithdrawApplication as CommandHandler;
@@ -41,9 +36,6 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class WithdrawApplicationTest extends CommandHandlerTestCase
 {
-    use MocksServicesTrait;
-    use MocksAbstractCommandHandlerServicesTrait;
-
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
@@ -51,8 +43,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $this->mockRepo('LicenceVehicle', LicenceVehicleRepo::class);
 
         $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class),
-            CacheEncryption::class => m::mock(CacheEncryption::class),
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
 
         parent::setUp();
@@ -396,7 +387,7 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
         $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
         $trafficArea->setId('TA');
 
-        $licence = $this->getTestingLicence();
+        $licence = m::mock(Licence::class)->shouldReceive('getId')->with()->andReturn(123);
 
         $application = m::mock(Application::class)->makePartial();
         $application->setId(1);
@@ -459,9 +450,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ->shouldReceive('isNew')->times(2)->andReturn(false)
             ->shouldReceive('getCurrentInterimStatus')->andReturn(Application::INTERIM_STATUS_REQUESTED);
 
-        $mockLicence = m::mock(LicenceEntity::class);
-        $application->setLicence($mockLicence);
-
         $this->repoMap['Application']->shouldReceive('fetchById')
             ->with(532)
             ->andReturn($application)
@@ -523,8 +511,6 @@ class WithdrawApplicationTest extends CommandHandlerTestCase
             ],
             new Result()
         );
-
-        $this->expectedLicenceCacheClear($mockLicence);
 
         $this->sut->handleCommand($command);
     }
