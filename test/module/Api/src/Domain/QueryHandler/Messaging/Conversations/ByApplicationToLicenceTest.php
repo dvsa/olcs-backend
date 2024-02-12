@@ -38,19 +38,15 @@ class ByApplicationToLicenceTest extends QueryHandlerTestCase
         $this->repoMap['Application']->shouldReceive('fetchById')->andReturn($mockApplication);
 
         $this->queryHandler->shouldReceive('handleQuery')
-                           ->with(
-                               m::on(
-                                   function ($argument) {
-                                       $this->assertInstanceOf(ByLicence::class, $argument);
-                                       assert($argument instanceof ByLicence);
-                                       $this->assertEquals(
-                                           2, $argument->getLicence(),
-                                           'Expected licence ID used in proxy call to ByLicence to match licence returned from application',
-                                       );
-                                       return true;
-                                   },
-                               ),
-                           )
+                           ->with(m::on(function ($argument) {
+                               $this->assertInstanceOf(ByLicence::class, $argument);
+                               $this->assertEquals(
+                                   2,
+                                   $argument->getLicence(),
+                                   'Expected licence ID used in proxy call to ByLicence to match licence returned from application',
+                               );
+                               return true;
+                           }))
                            ->once()
                            ->andReturn(
                                [
