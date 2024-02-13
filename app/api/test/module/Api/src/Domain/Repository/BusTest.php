@@ -8,6 +8,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\DBAL\LockMode;
@@ -437,7 +438,11 @@ class BusTest extends RepositoryTestCase
 
     public function testExpireBusRegistrations()
     {
-        $this->expectQueryWithData(ExpireQuery::class, []);
-        $this->sut->expireRegistrations();
+        $rowCount = 555;
+        $mockResult = m::mock(Result::class);
+        $mockResult->expects('rowCount')->withNoArgs()->andReturn($rowCount);
+
+        $this->expectQueryWithData(ExpireQuery::class, [], [], $mockResult);
+        $this->assertEquals($rowCount, $this->sut->expireRegistrations());
     }
 }

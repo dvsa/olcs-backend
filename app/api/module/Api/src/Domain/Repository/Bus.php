@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Bus
- */
-
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as Entity;
@@ -15,9 +11,6 @@ use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query\Expr\Join;
 
-/**
- * Bus
- */
 class Bus extends AbstractRepository
 {
     protected $entity = Entity::class;
@@ -188,11 +181,9 @@ class Bus extends AbstractRepository
 
     /**
      * expire all bus registrations that have reached their end date
-     *
-     * @return void
      */
-    public function expireRegistrations()
+    public function expireRegistrations(): int
     {
-        $this->getDbQueryManager()->get(ExpireQuery::class)->execute([]);
+        return $this->getDbQueryManager()->get(ExpireQuery::class)->execute([])->rowCount();
     }
 }
