@@ -5,4 +5,9 @@ namespace PHPSTORM_META {
         \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler::getRepo(0),
         type(0)
     );
+
+    override(
+        \Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler::getRepo(0),
+        type(0)
+    );
 }

@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByApplicationToLicence as GetConversationsByApplicationToLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByLicence as GetConversationsByLicenceQuery;
@@ -25,8 +24,6 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
     public function handleQuery(QueryInterface $query)
     {
         $applicationRepository = $this->getRepo(ApplicationRepo::class);
-
-        /** @var Application $application */
         $application = $applicationRepository->fetchById($query->getApplication());
 
         $licenceQuery = [
