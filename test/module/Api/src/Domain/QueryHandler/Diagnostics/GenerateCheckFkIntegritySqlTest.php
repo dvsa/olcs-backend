@@ -20,7 +20,7 @@ class GenerateCheckFkIntegritySqlTest extends QueryHandlerTestCase
     {
         $this->sut = new GenerateCheckFkIntegritySql();
         $mockDoctrineEntityManager = m::mock(EntityManager::class);
-        $this->mockedSmServices['DoctrineOrmEntityManager'] = $mockDoctrineEntityManager;
+        $this->mockedSmServices['doctrine.entitymanager.orm_default'] = $mockDoctrineEntityManager;
 
         $mockDoctrineEntityManager
             ->shouldReceive('getConnection->getParams')
