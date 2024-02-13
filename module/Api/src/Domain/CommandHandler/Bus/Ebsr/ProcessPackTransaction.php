@@ -13,13 +13,14 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-
+use Laminas\Log\LoggerInterface;
 
 
 final class ProcessPackTransaction extends AbstractProcessPack implements
     TransactionedInterface,  UploaderAwareInterface
 {
     use UploaderAwareTrait;
+
 
     public function handleCommand(CommandInterface $command)
     {
@@ -96,7 +97,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
             'busRegNoExclusions' => $previousBusRegNoExclusions,
         ];
 
-        $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $xmlName, $ebsrData, $processedContext);
+        $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $this->getTempNameFromXml($xmlName), $ebsrData, $processedContext);
 
         if ($ebsrData === false) {
             return $this->result;
@@ -153,4 +154,8 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         return $tmpDir . DIRECTORY_SEPARATOR . $tmpName;
     }
 
+    public function setLogger(LoggerInterface $logger)
+    {
+        // TODO: Implement setLogger() method.
+    }
 }
