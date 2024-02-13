@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as Entity;
-use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 /**
  * Queue
@@ -17,48 +16,6 @@ class Queue extends AbstractRepository
     protected $entity = Entity::class;
 
     protected $alias = 'q';
-
-    /**
-     * This custom method will enqueue a message for all active organisations.
-     * There are potentially tens of thousands of records so uses an
-     * INSERT...SELECT query directly, for performance reasons.
-     *
-     * @param string $type type
-     *
-     * @return boolean
-     */
-    public function enqueueAllOrganisations($type)
-    {
-        /**
-         * @var \Doctrine\DBAL\Connection
-         */
-        $db = $this->getEntityManager()->getConnection();
-
-        $query = <<<SQL
-INSERT INTO `queue` (`status`, `type`, `options`, `created_by`, `last_modified_by`, `created_on`)
-SELECT DISTINCT 'que_sts_queued',
-                ?,
-                CONCAT('{"companyNumber":"', UPPER(o.company_or_llp_no), '"}'),
-                ?,
-                ?,
-                NOW()
-FROM organisation o
-INNER JOIN licence l ON o.id=l.organisation_id
-WHERE l.status IN ('lsts_consideration',
-                   'lsts_suspended',
-                   'lsts_valid',
-                   'lsts_curtailed',
-                   'lsts_granted')
-  AND o.company_or_llp_no IS NOT NULL
-  AND o.type IN ('org_t_rc', 'org_t_llp')
-ORDER BY o.company_or_llp_no;
-SQL;
-        $stmt = $db->prepare($query);
-        $params = array($type, IdentityProviderInterface::SYSTEM_USER, IdentityProviderInterface::SYSTEM_USER);
-
-        $stmt->execute($params);
-        return $stmt->rowCount();
-    }
 
     /**
      * Enqueue CNS
@@ -80,19 +37,18 @@ SQL;
             $query .= "(:status{$i}, :type{$i}, :options{$i}), ";
         }
         $query = trim($query, ', ');
+        $stmt = $conn->prepare($query);
 
-        $params = [];
         $i = 1;
         foreach ($licences as $licence) {
-            $params['status' . $i] = Entity::STATUS_QUEUED;
-            $params['type' . $i] = Entity::TYPE_CNS;
-            $params['options' . $i] = '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}';
+            $stmt->bindValue('status' . $i, Entity::STATUS_QUEUED);
+            $stmt->bindValue('type' . $i, Entity::TYPE_CNS);
+            $stmt->bindValue('options' . $i, '{"id":' . $licence['id'] . ',"version":' . $licence['version'] . '}');
             $i++;
         }
 
-        $stmt = $conn->prepare($query);
-        $stmt->execute($params);
-        return $stmt->rowCount();
+        $result = $stmt->executeQuery();
+        return $result->rowCount();
     }
 
     /**

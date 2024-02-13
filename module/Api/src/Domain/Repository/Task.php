@@ -139,10 +139,10 @@ class Task extends AbstractRepository
     {
         /** @var \Doctrine\DBAL\Result $stmt */
         $stmt = $this->getDbQueryManager()
-            ->get('Task/FlagUrgentTasks')
+            ->get('Task\FlagUrgentTasks')
             ->execute();
 
-        return $stmt->fetchColumn(0);
+        return (int) $stmt->fetchOne();
     }
 
     /**
