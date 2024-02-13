@@ -50,7 +50,7 @@ final class CheckFkIntegrity extends AbstractQueryHandler
         $fullContainer = $container;
 
         /** @var EntityManager $entityManager */
-        $entityManager = $container->get('DoctrineOrmEntityManager');
+        $entityManager = $container->get('doctrine.entitymanager.orm_default');
         $this->pdo = $entityManager->getConnection()->getNativeConnection();
         return parent::__invoke($fullContainer, $requestedName, $options);
     }
