@@ -31,8 +31,8 @@ final class Expire extends AbstractCommandHandler implements TransactionedInterf
 
         /** @var BusRepo $repo */
         $repo = $this->getRepo();
-        $repo->expireRegistrations();
-        $result->addMessage('registrations have been expired');
+        $rowCount = $repo->expireRegistrations();
+        $result->addMessage($rowCount . ' registrations have been expired');
 
         return $result;
     }
