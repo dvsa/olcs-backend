@@ -16,7 +16,7 @@ class ByApplicationToLicenceTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new Handler();
-        $this->mockRepo('Application', Repository\Application::class);
+        $this->mockRepo(Repository\Application::class, Repository\Application::class);
 
         parent::setUp();
     }
@@ -35,7 +35,7 @@ class ByApplicationToLicenceTest extends QueryHandlerTestCase
         $mockApplication->shouldReceive('getLicence')->once()->andReturn($mockLicence);
         $mockApplication->shouldReceive('serialize')->once()->andReturn(['id' => 7]);
 
-        $this->repoMap['Application']->shouldReceive('fetchById')->andReturn($mockApplication);
+        $this->repoMap[Repository\Application::class]->shouldReceive('fetchById')->andReturn($mockApplication);
 
         $this->queryHandler->shouldReceive('handleQuery')
                            ->with(m::on(function ($argument) {

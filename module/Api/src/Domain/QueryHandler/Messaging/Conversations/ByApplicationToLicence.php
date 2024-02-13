@@ -19,12 +19,12 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = [ApplicationRepo::class];
 
     /** @param GetConversationsByApplicationToLicenceQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query)
     {
-        $applicationRepository = $this->getApplicationRepository();
+        $applicationRepository = $this->getRepo(ApplicationRepo::class);
 
         /** @var Application $application */
         $application = $applicationRepository->fetchById($query->getApplication());
@@ -41,12 +41,5 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
         );
 
         return $byLicence;
-    }
-
-    private function getApplicationRepository(): ApplicationRepo
-    {
-        $applicationRepository = $this->getRepo('Application');
-        assert($applicationRepository instanceof ApplicationRepo);
-        return $applicationRepository;
     }
 }
