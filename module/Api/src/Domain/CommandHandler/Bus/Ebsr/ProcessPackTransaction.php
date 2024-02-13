@@ -55,6 +55,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
         //validate the xml structure
         $xmlDocContext = ['xml_filename' => $this->getTempNameFromXml(basename($xmlName))];
+
         $xmlContent = $this->getUploader()->download($xmlName)->getContent();
         $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlContent, $xmlDocContext);
 
@@ -147,10 +148,8 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
     private function getTempNameFromXml(string $xmlName): string
     {
-        $config = $this->getConfig();
-        $tmpDir = $config['ebsr']['tmp_extra_path'];
         $fileParts =explode('_', $xmlName);
         $tmpName = implode('/', $fileParts);
-        return $tmpDir . DIRECTORY_SEPARATOR . $tmpName;
+        return DIRECTORY_SEPARATOR . $tmpName;
     }
 }
