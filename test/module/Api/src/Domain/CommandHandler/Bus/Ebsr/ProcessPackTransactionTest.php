@@ -662,7 +662,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
                     $savedBusReg = $busReg;
                 }
             );
-        echo $xmlDocContext;
         $this->mockInput(XmlStructureInputFactory::class, $xmlDocument, $xmlDocContext, $xmlDocument);
 
         $busRegInputContext = [
@@ -1070,7 +1069,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $command = ProcessPackTransactionCmd::create($cmdData);
 
         $xmlDocContext = ['xml_filename' => $this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR.basename($xmlName)];
-        var_dump($this->mockedSmServices['config']['ebsr']['tmp_extra_path']);
         $parsedLicenceNumber = 'OB1234567';
         $parsedVariationNumber = 666;
         $parsedRouteNumber = '12345';
