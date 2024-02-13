@@ -54,7 +54,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         }
 
         //validate the xml structure
-        $xmlDocContext = ['xml_filename' => $xmlName];
+        $xmlDocContext = ['xml_filename' => $this->getTempNameFromXml(basename($xmlName))];
         $xmlContent = $this->getUploader()->download($xmlName)->getContent();
         $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlContent, $xmlDocContext);
 
@@ -150,12 +150,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         $config = $this->getConfig();
         $tmpDir = $config['ebsr']['tmp_extra_path'];
         $fileParts =explode('_', $xmlName);
-        $tmpName = implode('/', array_slice($fileParts, -2));
+        $tmpName = implode('/', $fileParts);
         return $tmpDir . DIRECTORY_SEPARATOR . $tmpName;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        // TODO: Implement setLogger() method.
     }
 }
