@@ -129,7 +129,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' =>$this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR. basename($xmlName)];
+        $xmlDocContext = ['xml_filename' =>DIRECTORY_SEPARATOR. basename($xmlName)];
 
         $parsedLicenceNumber = 'OB1234567';
         $parsedVariationNumber = 666;
@@ -387,7 +387,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' =>$this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR. basename($xmlName)];
+        $xmlDocContext = ['xml_filename' =>DIRECTORY_SEPARATOR. basename($xmlName)];
 
         $parsedLicenceNumber = 'OB1234567';
         $parsedVariationNumber = 666;
@@ -598,7 +598,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' => $this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR.basename($xmlName)];
+        $xmlDocContext = ['xml_filename' => DIRECTORY_SEPARATOR.basename($xmlName)];
 
         $parsedLicenceNumber = 'OB1234567';
         $parsedVariationNumber = 666;
@@ -666,6 +666,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
                     $savedBusReg = $busReg;
                 }
             );
+        echo $xmlDocContext;
         $this->mockInput(XmlStructureInputFactory::class, $xmlDocument, $xmlDocContext, $xmlDocument);
 
         $busRegInputContext = [
@@ -826,7 +827,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' => $this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR.basename($xmlName)];
+        $xmlDocContext = ['xml_filename' => DIRECTORY_SEPARATOR.basename($xmlName)];
 
         $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
 
@@ -872,7 +873,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' => $this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR.basename($xmlName)];
+        $xmlDocContext = ['xml_filename' => DIRECTORY_SEPARATOR.basename($xmlName)];
 
         $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
         $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
@@ -941,7 +942,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' =>$this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR. basename($xmlName)];
+        $xmlDocContext = ['xml_filename' =>DIRECTORY_SEPARATOR. basename($xmlName)];
 
         $parsedLicenceNumber = 'OB1234567';
         $parsedVariationNumber = 666;
@@ -1068,7 +1069,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $command = ProcessPackTransactionCmd::create($cmdData);
 
-        $xmlDocContext = ['xml_filename' => $this->mockedSmServices['Config']['ebsr']['tmp_extra_path'].DIRECTORY_SEPARATOR.basename($xmlName)];
+        $xmlDocContext = ['xml_filename' => DIRECTORY_SEPARATOR.basename($xmlName)];
+        var_dump($this->mockedSmServices['config']['ebsr']['tmp_extra_path']);
         $parsedLicenceNumber = 'OB1234567';
         $parsedVariationNumber = 666;
         $parsedRouteNumber = '12345';
