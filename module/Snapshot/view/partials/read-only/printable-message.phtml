@@ -1,0 +1,27 @@
+<?php /** @global \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage $message */ ?>
+<div class="govuk-!-margin-bottom-6">
+  <div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">
+        <?php
+        if ($message->getCreatedBy()->getTeam()) {
+          $sender = 'Case Worker';
+        } elseif ($message->getCreatedBy()->getContactDetails()->getPerson()) {
+          $sender = $message->getCreatedBy()->getContactDetails()->getPerson()->getFullName();
+        } else {
+          $sender = $message->getCreatedBy()->getLoginId();
+        }
+        echo $sender;
+        ?>
+      </h2>
+      <h2 class="govuk-summary-card__title govuk-summary-card__date">
+        <?php echo $message->getCreatedOn(true)->format('l j F Y \a\t H:ia'); ?>
+      </h2>
+    </div>
+    <div class="govuk-summary-card__content">
+      <p class="govuk-body">
+        <?php echo nl2br($message->getMessagingContent()->getText()); ?>
+      </p>
+    </div>
+  </div>
+</div>
