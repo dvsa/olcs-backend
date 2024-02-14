@@ -110,7 +110,8 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
     }
 
     private function createMessageEntity(
-        MessagingConversation $messagingConversation, MessagingContent $messagingContent
+        MessagingConversation $messagingConversation,
+        MessagingContent $messagingContent
     ): MessagingMessage {
         $entity = new MessagingMessage();
         $entity->setMessagingConversation($messagingConversation)->setMessagingContent($messagingContent);
