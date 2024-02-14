@@ -15,6 +15,9 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Olcs\Logging\Log\Logger;
 
+/**
+ * @method Entity fetchById($id, $hydrateMode = \Doctrine\ORM\Query::HYDRATE_OBJECT, $version = null)
+ */
 class Application extends AbstractRepository
 {
     use LicenceStatusAwareTrait;
