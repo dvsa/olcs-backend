@@ -72,7 +72,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     /**
      * Get admin organisation users
      *
-     * @return ArrayCollection
+     * @return ArrayCollection|OrganisationUserEntity[]
      */
     public function getAdminOrganisationUsers()
     {
