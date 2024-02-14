@@ -15,17 +15,26 @@ trait GetAccessTokenTrait
      */
     public function getAccessToken(ClientInterface $client): string
     {
+
+        $client_id = $this->getClientId();
+        $client_secret = $this->getClientSecret();
+        $scope = $this->getScope();
+        $proxy =  $this->getProxy();
+        error_log('client_id:'. $client_id);
+        error_log('secret:'. $client_secret);
+        error_log('scope:'. $scope);
+        error_log('proxy:'. $proxy);
         $response = $client->request(
             'POST',
             $this->getTokenUrl(),
             [
                 'form_params' => [
                     'grant_type' => 'client_credentials',
-                    'client_id' => $this->getClientId(),
-                    'client_secret' => $this->getClientSecret(),
-                    'scope' => $this->getScope(),
+                    'client_id' => $client_id,
+                    'client_secret' => $client_secret,
+                    'scope' => $scope,
                 ],
-                'proxy' => $this->getProxy(),
+                'proxy' => $proxy,
             ]
         );
         $responseBody = json_decode($response->getBody()->getContents(), true);
