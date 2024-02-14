@@ -62,7 +62,7 @@ class TransXChangeAppRegistrationService implements AppRegistrationInterface
         try {
              $accessToken = $this->getAccessToken($this->client);
         } catch (GuzzleException $e) {
-            $this->logger->info('Access Token request failed from TransXChange App Registration'. $e->getMessage());
+            $this->logger->info('Access Token request failed from TransXChange App Registration');
             throw $e;
         }
         $this->logger->debug('Access Token received from TransXChange App Registration ' . $accessToken);
