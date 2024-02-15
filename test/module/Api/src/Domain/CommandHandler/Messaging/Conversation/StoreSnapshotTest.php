@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Messaging\Generator;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCreateSnapshotHandlerTest;
-use Mockery as m;
 
 class StoreSnapshotTest extends AbstractCreateSnapshotHandlerTest
 {
@@ -27,10 +26,4 @@ class StoreSnapshotTest extends AbstractCreateSnapshotHandlerTest
     protected $documentLinkId = 'messagingConversation';
     protected $documentLinkValue = null;
     protected $generatorClass = Generator::class;
-
-    protected function extraEntityAssertions(m\MockInterface $entity)
-    {
-
-        return $entity;
-    }
 }
