@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\QueryPartial\QueryPartialInterface;
 use Dvsa\Olcs\Api\Domain\QueryPartialServiceManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

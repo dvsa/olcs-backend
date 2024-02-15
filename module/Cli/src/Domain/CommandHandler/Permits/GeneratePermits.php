@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit as IrhpPermitEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Generate permits

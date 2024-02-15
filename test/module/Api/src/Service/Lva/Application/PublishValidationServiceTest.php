@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;

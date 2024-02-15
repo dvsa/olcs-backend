@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\AcquiredRights\Client;
 
 use GuzzleHttp\Client;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\Logging\Log\Logger;
 

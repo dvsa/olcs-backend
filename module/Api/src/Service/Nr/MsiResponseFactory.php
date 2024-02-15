@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Nr;
 
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class MsiResponseFactory

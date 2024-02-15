@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain;
 use Dvsa\Olcs\Api\Domain\Repository\ReadonlyRepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

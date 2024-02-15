@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;

@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Query\FeatureToggle\FetchList;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Qandidate\Toggle\Serializer\InMemoryCollectionSerializer;
 use Qandidate\Toggle\ToggleManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ToggleServiceFactory implements FactoryInterface
 {

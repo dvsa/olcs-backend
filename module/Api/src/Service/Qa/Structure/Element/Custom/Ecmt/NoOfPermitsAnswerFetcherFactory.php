@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class NoOfPermitsAnswerFetcherFactory implements FactoryInterface
 {

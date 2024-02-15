@@ -3,7 +3,7 @@
 namespace OlcsTest\Db\Service\Search;
 
 use Elastica\Client;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Olcs\Db\Service\Search\ClientFactory;
 use Mockery as m;
@@ -12,7 +12,7 @@ class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     public function testInvoke(): void
     {
-        $mockSl = m::mock(Containerinterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn(
             ['elastic_search' => ['host' => 'google.com', 'port' => 4034]]
         );
@@ -25,7 +25,7 @@ class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 
     public function testInvokeWithException(): void
     {
-        $mockSl = m::mock(Containerinterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
 
         $sut = new ClientFactory();

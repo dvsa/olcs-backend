@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Validation\Validators\ValidatorInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;

@@ -7,7 +7,7 @@ use Olcs\Logging\Log\Logger;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\Exception;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ClientFactory

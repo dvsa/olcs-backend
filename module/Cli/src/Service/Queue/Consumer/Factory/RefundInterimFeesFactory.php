@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Cli\Service\Queue\Consumer\Factory;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\AbstractConsumerServices;
 use Dvsa\Olcs\Cli\Service\Queue\Consumer\RefundInterimFees;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Refund Interim Fees Factory

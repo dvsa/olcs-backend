@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Scoring;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class EmissionsCategoryAvailabilityCounterFactory implements FactoryInterface
 {

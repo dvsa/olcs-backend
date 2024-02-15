@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Nr\Filter;
 
 use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory;
 use Mockery as m;

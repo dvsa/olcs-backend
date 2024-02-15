@@ -9,7 +9,7 @@ use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Validator\Xsd;
 use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class TransExchangeClientFactory

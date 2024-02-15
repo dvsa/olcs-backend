@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\Logging\Log\Logger;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Request new Ebsr map

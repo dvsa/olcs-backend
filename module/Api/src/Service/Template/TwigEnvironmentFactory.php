@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Template;
 
 use Twig\Environment;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class TwigEnvironmentFactory implements FactoryInterface
 {

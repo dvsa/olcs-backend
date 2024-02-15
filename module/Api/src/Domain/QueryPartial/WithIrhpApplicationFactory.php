@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class WithIrhpApplicationFactory implements FactoryInterface

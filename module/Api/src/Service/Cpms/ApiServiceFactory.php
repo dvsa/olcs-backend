@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Cpms;
 use Dvsa\Olcs\Cpms\Service\ApiServiceFactory as CpmsApiService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ApiServiceFactory implements FactoryInterface
 {

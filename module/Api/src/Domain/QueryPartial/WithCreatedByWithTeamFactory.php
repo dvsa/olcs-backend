@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * With CreatedBy With Team Factory
