@@ -121,7 +121,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
         try {
             $filesProcessed = $this->getEbsrProcessing()->process($submission->getDocument()->getIdentifier(), ['isTransXchange' => true]);
-            $xmlFilename = $filesProcessed['xmlFilename'];
+            $xmlFilename = $filesProcessed['s3Filename'] ?? $filesProcessed['xmlFileName'];
         } catch (\Exception $e) {
             Logger::info('TransXchange error', ['data' => self::MISSING_PACK_FILE_ERROR]);
             throw new TransxchangeException(self::MISSING_PACK_FILE_ERROR . $e->getMessage());
