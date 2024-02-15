@@ -2379,5 +2379,17 @@ return array(
                 'remove',
             )
         ),
+
+    ),
+    'messaging_user_message_read' => array(
+        'messaging_message_id' => array(
+            'inversedBy' => array(
+                'entity' => 'MessagingMessage',
+                'property' => 'userMessageRead',
+                'orderBy' => array(
+                    'weight' => 'ASC'
+                )
+            )
+        ),
     ),
 );
