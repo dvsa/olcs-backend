@@ -6,10 +6,12 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
-use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -36,7 +38,7 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-    use ClearPropertiesTrait;
+    use ClearPropertiesWithCollectionsTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
 
@@ -109,6 +111,39 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
      * @ORM\Version
      */
     protected $version = 1;
+
+    /**
+     * User message read
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead",
+     *     mappedBy="messagingMessage"
+     * )
+     * @ORM\OrderBy({"weight" = "ASC"})
+     */
+    protected $userMessageReads;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->userMessageReads = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -252,5 +287,68 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the user message read
+     *
+     * @param ArrayCollection $userMessageReads collection being set as the value
+     *
+     * @return MessagingMessage
+     */
+    public function setUserMessageReads($userMessageReads)
+    {
+        $this->userMessageReads = $userMessageReads;
+
+        return $this;
+    }
+
+    /**
+     * Get the user message reads
+     *
+     * @return ArrayCollection
+     */
+    public function getUserMessageReads()
+    {
+        return $this->userMessageReads;
+    }
+
+    /**
+     * Add a user message reads
+     *
+     * @param ArrayCollection|mixed $userMessageReads collection being added
+     *
+     * @return MessagingMessage
+     */
+    public function addUserMessageReads($userMessageReads)
+    {
+        if ($userMessageReads instanceof ArrayCollection) {
+            $this->userMessageReads = new ArrayCollection(
+                array_merge(
+                    $this->userMessageReads->toArray(),
+                    $userMessageReads->toArray()
+                )
+            );
+        } elseif (!$this->userMessageReads->contains($userMessageReads)) {
+            $this->userMessageReads->add($userMessageReads);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a user message reads
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userMessageReads collection being removed
+     *
+     * @return MessagingMessage
+     */
+    public function removeUserMessageReads($userMessageReads)
+    {
+        if ($this->userMessageReads->contains($userMessageReads)) {
+            $this->userMessageReads->removeElement($userMessageReads);
+        }
+
+        return $this;
     }
 }
