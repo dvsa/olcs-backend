@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Entity\Messaging;
 
 use Doctrine\ORM\Mapping as ORM;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 
 /**
  * MessagingConversation Entity
@@ -17,6 +19,10 @@ use Doctrine\ORM\Mapping as ORM;
  *    }
  * )
  */
-class MessagingConversation extends AbstractMessagingConversation
+class MessagingConversation extends AbstractMessagingConversation implements LicenceProviderInterface
 {
+    public function getRelatedLicence(): Licence
+    {
+        return $this->task->getLicence();
+    }
 }
