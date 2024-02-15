@@ -19,9 +19,7 @@ use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
  *    }
  * )
  */
-class MessagingConversation
-    extends AbstractMessagingConversation
-    implements LicenceProviderInterface
+class MessagingConversation extends AbstractMessagingConversation implements LicenceProviderInterface
 {
     public function getRelatedLicence(): Licence
     {
