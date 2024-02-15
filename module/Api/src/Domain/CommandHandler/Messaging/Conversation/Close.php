@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 
+use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
 use Dvsa\Olcs\Api\Domain\Command\Messaging\Conversation\StoreSnapshot;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
@@ -39,7 +40,20 @@ final class Close extends AbstractUserCommandHandler implements ToggleRequiredIn
         $result->addId('conversation', $conversation->getId());
         $result->addMessage('Conversation closed');
 
-        $result->merge($this->handleSideEffect(StoreSnapshot::create(['id' => $conversation->getId()])));
+        $documentResult = $this->handleSideEffect(StoreSnapshot::create(['id' => $conversation->getId()]));
+
+        $result->merge($documentResult);
+        $result->merge(
+            $this->handleSideEffect(
+                CreateCorrespondenceRecord::create(
+                    [
+                        'licence'  => $conversation->getRelatedLicence(),
+                        'document' => $documentResult->getId('document'),
+                        'type'     => CreateCorrespondenceRecord::TYPE_STANDARD,
+                    ],
+                ),
+            ),
+        );
 
         return $result;
     }
