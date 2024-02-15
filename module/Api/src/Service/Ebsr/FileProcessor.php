@@ -15,7 +15,7 @@ use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
 {
 
-    const OUTPUT_TYPE = 'xmlFileName';
+    const OUTPUT_TYPE = 'xmlFilename';
 
     /**
      * @var Filesystem
