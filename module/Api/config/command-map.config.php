@@ -1,14 +1,14 @@
 <?php
 
-use Dvsa\Olcs\Transfer\Command as TransferCommand;
-use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion as AppCompCommand;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command as CommandCli;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CommandHandlerCli;
+use Dvsa\Olcs\Transfer\Command as TransferCommand;
 
 return [
     // Transfer - Auth
@@ -1293,6 +1293,7 @@ return [
 
     CommandCli\InterimEndDateEnforcement::class => CommandHandlerCli\InterimEndDateEnforcement::class,
 
-    TransferCommand\Messaging\Message\Create::class => CommandHandler\Messaging\Message\Create::class,
+    Command\Messaging\Conversation\StoreSnapshot::class  => CommandHandler\Messaging\Conversation\StoreSnapshot::class,
+    TransferCommand\Messaging\Message\Create::class      => CommandHandler\Messaging\Message\Create::class,
     TransferCommand\Messaging\Conversation\Create::class => CommandHandler\Messaging\Conversation\Create::class,
 ];

@@ -6,7 +6,7 @@
         <?php
         if ($message->getCreatedBy()->getTeam()) {
           $sender = 'Case Worker';
-        } elseif ($message->getCreatedBy()->getContactDetails()->getPerson()) {
+        } elseif ($message->getCreatedBy()->getContactDetails() !== null && $message->getCreatedBy()->getContactDetails()->getPerson()) {
           $sender = $message->getCreatedBy()->getContactDetails()->getPerson()->getFullName();
         } else {
           $sender = $message->getCreatedBy()->getLoginId();

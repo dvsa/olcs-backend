@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Messaging;
 
+use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepository;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Interop\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -14,6 +16,7 @@ class GeneratorFactory implements FactoryInterface
     {
         return new Generator(
             $container->get(AbstractGeneratorServices::class),
+            $container->get('RepositoryServiceManager')->get(MessageRepository::class),
         );
     }
 }

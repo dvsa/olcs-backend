@@ -28,6 +28,7 @@ return [
             IrhpGenerator::class => IrhpGeneratorFactory::class,
             'ContinuationReview' => Snapshots\ContinuationReview\GeneratorFactory::class,
             'ReviewSnapshot' => Snapshots\ApplicationReview\GeneratorFactory::class,
+            Snapshots\Messaging\Generator::class => Snapshots\Messaging\GeneratorFactory::class,
             Review\VariationTypeOfLicenceReviewService::class => Review\GenericFactory::class,
             Review\VariationBusinessTypeReviewService::class => Review\GenericFactory::class,
             Review\VariationFinancialEvidenceReviewService::class => Review\VariationFinancialEvidenceReviewServiceFactory::class,

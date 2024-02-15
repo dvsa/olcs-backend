@@ -4,27 +4,35 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Messaging;
 
-use Dvsa\Olcs\Api\Domain\Repository\Message;
+use Doctrine\ORM\AbstractQuery;
+use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
+use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
 use Dvsa\Olcs\Transfer\Query\Messaging\Messages\ByConversation;
 
-class Generator extends AbstractGenerator
+class Generator extends AbstractGenerator implements SnapshotGeneratorInterface
 {
-    protected Message $messageRepository;
+    protected MessageRepo $messageRepository;
+    protected MessagingConversation $conversation;
 
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        Message $messageRepository
+        MessageRepo $messageRepository
     ) {
         parent::__construct($abstractGeneratorServices);
 
         $this->messageRepository = $messageRepository;
     }
 
-    public function generate(MessagingConversation $conversation): string
+    public function setData($data): void
+    {
+        $this->conversation = $data['entity'];
+    }
+
+    public function generate(): string
     {
         $query = $this->messageRepository->getBaseMessageListWithContentQuery(
             ByConversation::create(
@@ -34,13 +42,13 @@ class Generator extends AbstractGenerator
                 ],
             ),
         );
-        $query = $this->messageRepository->filterByConversationId($query, $conversation->getId());
+        $query = $this->messageRepository->filterByConversationId($query, $this->conversation->getId());
         /** @var MessagingMessage[] $messages */
-        $messages = $this->messageRepository->fetchPaginatedList($query);
+        $messages = $this->messageRepository->fetchPaginatedList($query, AbstractQuery::HYDRATE_OBJECT);
 
         return $this->generateReadonly(
             [
-                'conversation' => $conversation,
+                'conversation' => $this->conversation,
                 'messages'     => $messages,
             ],
             'conversation',
