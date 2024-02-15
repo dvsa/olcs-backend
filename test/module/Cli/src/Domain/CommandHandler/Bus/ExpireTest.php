@@ -29,10 +29,11 @@ class ExpireTest extends CommandHandlerTestCase
      */
     public function testHandleCommand()
     {
-        $this->repoMap['Bus']->shouldReceive('expireRegistrations')->withNoArgs();
+        $numExpired = 666;
+        $this->repoMap['Bus']->expects('expireRegistrations')->withNoArgs()->andReturn($numExpired);
         $result = $this->sut->handleCommand(ExpireBusCmd::create([]));
 
-        $messages = [0 => 'registrations have been expired'];
+        $messages = [0 => $numExpired . ' registrations have been expired'];
         $this->assertEquals($messages, $result->getMessages());
     }
 }
