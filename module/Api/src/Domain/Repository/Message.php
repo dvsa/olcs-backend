@@ -73,4 +73,54 @@ class Message extends AbstractRepository
 
         return $query->getResult(Query::HYDRATE_ARRAY);
     }
+
+    public function getUnreadMessagesByLicenceIdAndUserId($licenceId, $userId): array
+    {
+        $sql = '
+        SELECT messaging_message.* FROM messaging_user_message_read
+        RIGHT JOIN messaging_message ON
+            messaging_user_message_read.messaging_message_id = messaging_message.id
+        RIGHT JOIN messaging_conversation ON
+            messaging_message.messaging_conversation_id = messaging_conversation.id
+        RIGHT JOIN task ON
+            messaging_conversation.task_id = task.id
+        RIGHT JOIN licence ON
+            task.licence_id = licence.id
+        WHERE
+            licence.id = ?
+          AND
+            (messaging_user_message_read.user_id != ? OR messaging_user_message_read.user_id IS NULL);
+        ';
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(MessagingMessage::class, 'messaging_message');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters([$licenceId, $userId]);
+
+        return $query->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function getUnreadMessagesByOrganisationIdAndUserId($organisationId, $userId): array
+    {
+        $sql = '
+        SELECT messaging_message.* FROM messaging_user_message_read
+        RIGHT JOIN messaging_message ON
+            messaging_user_message_read.messaging_message_id = messaging_message.id
+        RIGHT JOIN messaging_conversation ON
+            messaging_message.messaging_conversation_id = messaging_conversation.id
+        RIGHT JOIN task ON
+            messaging_conversation.task_id = task.id
+        RIGHT JOIN licence ON
+            task.licence_id = licence.id
+        WHERE
+            licence.organisation_id = ?
+          AND
+            (messaging_user_message_read.user_id != ? OR messaging_user_message_read.user_id IS NULL);
+        ';
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(MessagingMessage::class, 'messaging_message');
+        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
+        $query->setParameters([$organisationId, $userId]);
+
+        return $query->getResult(Query::HYDRATE_ARRAY);
+    }
 }
