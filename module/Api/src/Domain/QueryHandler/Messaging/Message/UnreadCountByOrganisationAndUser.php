@@ -17,13 +17,15 @@ class UnreadCountByOrganisationAndUser extends AbstractConversationQueryHandler 
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
 
-    public function handleQuery(QueryInterface $query): int
+    protected $repoServiceName = 'Message';
+
+    public function handleQuery(QueryInterface $query): array
     {
         $messageRepository = $this->getMessageRepository();
         $results = $messageRepository
-            ->getUnreadMessagesByOrganisationIdAndUserId($query->getOrganisation()->getId(), $this->getUser()->getId());
+            ->getUnreadMessageCountByOrganisationIdAndUserId($query->getOrganisation(), $this->getUser()->getId());
 
-        return count($results);
+        return $results;
     }
 
     private function getMessageRepository(): MessageRepo

@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage as Entity;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation as ConversationEntity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class Message extends AbstractRepository
@@ -65,53 +66,33 @@ class Message extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getUnreadMessagesByLicenceIdAndUserId($licenceId, $userId): array
+    public function getUnreadMessageCountByLicenceIdAndUserId($licenceId, $userId): array
     {
-        $sql = '
-        SELECT messaging_message.* FROM messaging_user_message_read
-        RIGHT JOIN messaging_message ON
-            messaging_user_message_read.messaging_message_id = messaging_message.id
-        RIGHT JOIN messaging_conversation ON
-            messaging_message.messaging_conversation_id = messaging_conversation.id
-        RIGHT JOIN task ON
-            messaging_conversation.task_id = task.id
-        RIGHT JOIN licence ON
-            task.licence_id = licence.id
-        WHERE
-            licence.id = ?
-          AND
-            (messaging_user_message_read.user_id != ? OR messaging_user_message_read.user_id IS NULL);
-        ';
-        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
-        $rsm->addRootEntityFromClassMetadata(MessagingMessage::class, 'messaging_message');
-        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $query->setParameters([$licenceId, $userId]);
+        $qb = $this->createQueryBuilder()
+            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
+            ->innerJoin($this->alias . '.task', 't')
+            ->innerJoin($this->alias . '.licence', 'l')
+            ->andWhere($this->alias . 'l.id = :licenceId')
+            ->andWhere('umr.id IS NULL')
+            ->setParameter('licenceId', $licenceId)
+            ->setParameter('userId', $userId);
 
-        return $query->getResult(Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getUnreadMessagesByOrganisationIdAndUserId($organisationId, $userId): array
+    public function getUnreadMessageCountByOrganisationIdAndUserId($organisationId, $userId): array
     {
-        $sql = '
-        SELECT messaging_message.* FROM messaging_user_message_read
-        RIGHT JOIN messaging_message ON
-            messaging_user_message_read.messaging_message_id = messaging_message.id
-        RIGHT JOIN messaging_conversation ON
-            messaging_message.messaging_conversation_id = messaging_conversation.id
-        RIGHT JOIN task ON
-            messaging_conversation.task_id = task.id
-        RIGHT JOIN licence ON
-            task.licence_id = licence.id
-        WHERE
-            licence.organisation_id = ?
-          AND
-            (messaging_user_message_read.user_id != ? OR messaging_user_message_read.user_id IS NULL);
-        ';
-        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
-        $rsm->addRootEntityFromClassMetadata(MessagingMessage::class, 'messaging_message');
-        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $query->setParameters([$organisationId, $userId]);
+        $qb = $this->createQueryBuilder()
+            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
+            ->leftJoin($this->alias . '.messagingConversation', 'c')
+            ->leftJoin('c.task', 't')
+            ->leftJoin('t.licence', 'l')
+            ->leftJoin('l.organisation', 'o')
+            ->andWhere('o.id = :organisationId')
+            ->andWhere('umr.id IS NULL')
+            ->setParameter('organisationId', $organisationId)
+            ->setParameter('userId', $userId);
 
-        return $query->getResult(Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 }

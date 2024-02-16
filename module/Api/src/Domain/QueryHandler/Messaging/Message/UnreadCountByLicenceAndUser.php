@@ -22,7 +22,7 @@ class UnreadCountByLicenceAndUser extends AbstractConversationQueryHandler imple
     {
         $messageRepository = $this->getMessageRepository();
         $results = $messageRepository
-            ->getUnreadMessagesByLicenceIdAndUserId($query->getLicence()->getId(), $this->getUser()->getId());
+            ->getUnreadMessageCountByLicenceIdAndUserId($query->getLicence()->getId(), $this->getUser()->getId());
 
         return count($results);
     }
