@@ -77,6 +77,18 @@ class Application extends AbstractApplication implements ContextProviderInterfac
     public const APPLICATION_STATUS_CURTAILED = 'apsts_curtailed';
     public const APPLICATION_STATUS_CANCELLED = 'apsts_cancelled';
 
+    public const ALL_APPLICATION_STATUSES = [
+        self::APPLICATION_STATUS_NOT_SUBMITTED,
+        self::APPLICATION_STATUS_GRANTED,
+        self::APPLICATION_STATUS_UNDER_CONSIDERATION,
+        self::APPLICATION_STATUS_VALID,
+        self::APPLICATION_STATUS_WITHDRAWN,
+        self::APPLICATION_STATUS_REFUSED,
+        self::APPLICATION_STATUS_NOT_TAKEN_UP,
+        self::APPLICATION_STATUS_CURTAILED,
+        self::APPLICATION_STATUS_CANCELLED
+    ];
+
     public const INTERIM_STATUS_REQUESTED = 'int_sts_requested';
     public const INTERIM_STATUS_INFORCE = 'int_sts_in_force';
     public const INTERIM_STATUS_REFUSED = 'int_sts_refused';

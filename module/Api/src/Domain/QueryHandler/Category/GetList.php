@@ -7,7 +7,7 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Doctrine\ORM\Query;
 
 /**
- * Get a list of category's
+ * Get a list of categories
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */

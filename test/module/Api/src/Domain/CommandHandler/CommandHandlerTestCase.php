@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate as GenerateCacheCmd;
@@ -135,6 +136,17 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         ) {
             $toggleService = m::mock(ToggleService::class);
             $sm->shouldReceive('get')->with(ToggleService::class)->andReturn($toggleService);
+        }
+
+        /**
+         * If the handler is cache aware, provide this
+         */
+        if (
+            $this->sut instanceof CacheAwareInterface
+            && !array_key_exists(CacheEncryption::class, $this->mockedSmServices)
+        ) {
+            $cacheEncryptionService = m::mock(CacheEncryption::class);
+            $sm->shouldReceive('get')->with(CacheEncryption::class)->andReturn($cacheEncryptionService);
         }
 
         $this->sut->__invoke($sm, null);

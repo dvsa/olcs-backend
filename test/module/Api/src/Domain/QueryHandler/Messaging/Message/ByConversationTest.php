@@ -1,11 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging\Message;
 
 use ArrayIterator;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Message\ByConversation;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Messaging\Messages\ByConversation as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -17,8 +18,8 @@ class ByConversationTest extends QueryHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new ByConversation();
-        $this->mockRepo('Conversation', Repository\Conversation::class);
-        $this->mockRepo('Message', Repository\Message::class);
+        $this->mockRepo(Repository\Conversation::class, Repository\Conversation::class);
+        $this->mockRepo(Repository\Message::class, Repository\Message::class);
 
         $this->mockedSmServices = ['SectionAccessService' => m::mock(), AuthorizationService::class => m::mock(AuthorizationService::class)->shouldReceive('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true)->shouldReceive('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false)->getMock(),];
 
@@ -45,16 +46,13 @@ class ByConversationTest extends QueryHandlerTestCase
                 ['id' => 8,'messaging_conversation_id' => '1','messaging_content_id' => '8'],
             ]
         );
-        $conversation = [
-            'id' => 1,
-            'isDisabled' => false,
-        ];
+        $conversation = new MessagingConversation();
         $mockQb = m::mock(QueryBuilder::class);
-        $this->repoMap['Message']->shouldReceive('getBaseMessageListWithContentQuery')->andReturn($mockQb);
-        $this->repoMap['Message']->shouldReceive('filterByConversationId')->andReturn($mockQb);
-        $this->repoMap['Message']->shouldReceive('fetchPaginatedList')->with($mockQb)->once()->andReturn($messages);
-        $this->repoMap['Message']->shouldReceive('fetchPaginatedCount')->with($mockQb)->once()->andReturn(10);
-        $this->repoMap['Conversation']->shouldReceive('fetchById')->with(1)->once()->andReturn($conversation);
+        $this->repoMap[Repository\Message::class]->shouldReceive('getBaseMessageListWithContentQuery')->andReturn($mockQb);
+        $this->repoMap[Repository\Message::class]->shouldReceive('filterByConversationId')->andReturn($mockQb);
+        $this->repoMap[Repository\Message::class]->shouldReceive('fetchPaginatedList')->with($mockQb)->once()->andReturn($messages);
+        $this->repoMap[Repository\Message::class]->shouldReceive('fetchPaginatedCount')->with($mockQb)->once()->andReturn(10);
+        $this->repoMap[Repository\Conversation::class]->shouldReceive('fetchById')->with(1)->once()->andReturn($conversation);
 
         $result = $this->sut->handleQuery($query);
 
