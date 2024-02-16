@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use DateTime;
 use DateTimeInterface;
+use Doctrine\DBAL\Query;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\Exception;
@@ -14,6 +15,9 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Olcs\Logging\Log\Logger;
 
+/**
+ * @method Entity fetchById($id, $hydrateMode = \Doctrine\ORM\Query::HYDRATE_OBJECT, $version = null)
+ */
 class Application extends AbstractRepository
 {
     use LicenceStatusAwareTrait;
@@ -103,11 +107,11 @@ class Application extends AbstractRepository
      *
      * @return array
      */
-    public function fetchByOrganisationIdAndStatuses($orgId, array $statuses = [])
+    public function fetchByOrganisationIdAndStatuses($orgId, array $statuses = [], $hydrationMode = \Doctrine\ORM\Query::HYDRATE_OBJECT)
     {
         $qb = $this->prepareFetchByOrgAndStatus($orgId, $statuses);
 
-        return $qb->getQuery()->execute();
+        return $qb->getQuery()->execute(null, $hydrationMode);
     }
 
     /**

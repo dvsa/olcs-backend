@@ -50,4 +50,5 @@ class SubCategory extends AbstractSubCategory
     public const DOC_SUB_CATEGORY_REPORT_LETTER = 203;
     public const DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE = 204;
     public const DOC_SUB_CATEGORY_POST_SCORING_EMAIL = 205;
+    public const DOC_SUB_CATEGORY_MESSAGING = 206;
 }

@@ -82,10 +82,10 @@ abstract class AbstractMessagingContent implements BundleSerializableInterface, 
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true)
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * Set the created by

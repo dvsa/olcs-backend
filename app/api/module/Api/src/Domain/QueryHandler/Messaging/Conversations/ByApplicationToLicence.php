@@ -18,28 +18,25 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
-    protected $extraRepos = ['Application'];
+    protected $extraRepos = [ApplicationRepo::class];
 
+    /** @param GetConversationsByApplicationToLicenceQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetConversationsByApplicationToLicenceQuery);
-        $applicationRepository = $this->getApplicationRepository();
-
+        $applicationRepository = $this->getRepo(ApplicationRepo::class);
         $application = $applicationRepository->fetchById($query->getApplication());
 
         $licenceQuery = [
-            'page' => $query->getPage(),
-            'limit' => $query->getLimit(),
+            'page'    => $query->getPage(),
+            'limit'   => $query->getLimit(),
             'licence' => $application->getLicence()->getId(),
         ];
+        $byLicence = $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
+        array_walk(
+            $byLicence['result'],
+            fn(&$result) => $result['task']['application'] = $application->serialize(),
+        );
 
-        return $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
-    }
-
-    private function getApplicationRepository(): ApplicationRepo
-    {
-        $applicationRepository = $this->getRepo('Application');
-        assert($applicationRepository instanceof ApplicationRepo);
-        return $applicationRepository;
+        return $byLicence;
     }
 }

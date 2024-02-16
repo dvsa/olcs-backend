@@ -71,7 +71,7 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
         try {
             $recipients = $this->getRecipients($recordObject);
         } catch (MissingEmailException $e) {
-                return $this->createMissingEmailTask($recordObject, $result, $e);
+            return $this->createMissingEmailTask($recordObject, $result, $e);
         }
 
         $templateVariables = $this->getTemplateVariables($recordObject);
