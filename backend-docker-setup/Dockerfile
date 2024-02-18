@@ -1,8 +1,8 @@
 FROM php:7.4.33-fpm-alpine3.16
 
 LABEL maintainer="<vol-team>@dvsa.gov.uk"
-LABEL description="PHP Alpine base image with dependency packages"
-LABEL Name="vol-php-fpm:7.4.33-alpine-fpm"
+LABEL description="Alpine base image with PHP 7.4, nginx & Supervisord"
+LABEL Name="php:nginx-supervisord-fpm-7.4.33-alpine"
 LABEL Version="0.1"
 
 RUN apk add --no-cache supervisor nginx
