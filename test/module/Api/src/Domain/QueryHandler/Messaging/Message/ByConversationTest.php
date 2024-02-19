@@ -66,7 +66,7 @@ class ByConversationTest extends QueryHandlerTestCase
 
         $mockUserMessageRead = m::mock(MessagingUserMessageRead::class);
         $mockUserMessageRead->shouldReceive('setLastReadOn')->times(count($messages));
-        $this->repoMap[Repository\MessagingUserMessageRead::class]->shouldReceive('fetchByMessageIdAndUserId')->times( count($messages))->andReturn($mockUserMessageRead);
+        $this->repoMap[Repository\MessagingUserMessageRead::class]->shouldReceive('fetchByMessageIdAndUserId')->times(count($messages))->andReturn($mockUserMessageRead);
         $this->repoMap[Repository\MessagingUserMessageRead::class]->shouldReceive('save')->times(count($messages));
 
         $result = $this->sut->handleQuery($query);
