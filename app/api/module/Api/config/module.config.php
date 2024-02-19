@@ -625,7 +625,6 @@ return [
             'PublicHoliday' => RepositoryFactory::class,
             'Sla' => RepositoryFactory::class,
             'LicenceNoGen' => RepositoryFactory::class,
-            'User' => RepositoryFactory::class,
             'UserPasswordReset' => RepositoryFactory::class,
             'PreviousConviction' => RepositoryFactory::class,
             'Prohibition' => RepositoryFactory::class,
@@ -792,6 +791,8 @@ return [
             Repository\MessagingSubject::class => RepositoryFactory::class,
             Repository\Organisation::class => RepositoryFactory::class,
             Repository\Task::class => RepositoryFactory::class,
+            Repository\MessagingUserMessageRead::class => RepositoryFactory::class,
+            Repository\User::class => RepositoryFactory::class,
         ],
         'aliases' => [
             'Conversation' => Repository\Conversation::class,
@@ -801,6 +802,7 @@ return [
             'Application' => Repository\Application::class,
             'Organisation' => Repository\Organisation::class,
             'Task' => Repository\Task::class,
+            'User' => Repository\User::class,
         ],
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [

@@ -222,6 +222,15 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     protected $licence;
 
     /**
+     * Messaging
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="messaging", nullable=false, options={"default": 0})
+     */
+    protected $messaging = 0;
+
+    /**
      * Olbs key
      *
      * @var int
@@ -269,12 +278,6 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
      * @ORM\JoinColumn(name="transport_manager_id", referencedColumnName="id", nullable=true)
      */
     protected $transportManager;
-
-    /**
-     * @var int
-     * @ORM\Column(type="boolean", name="messaging", nullable=false, options={"default": 0})
-     */
-    protected $messaging = 0;
 
     /**
      * Urgent
@@ -687,6 +690,30 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     }
 
     /**
+     * Set the messaging
+     *
+     * @param boolean $messaging new value being set
+     *
+     * @return Task
+     */
+    public function setMessaging($messaging)
+    {
+        $this->messaging = $messaging;
+
+        return $this;
+    }
+
+    /**
+     * Get the messaging
+     *
+     * @return boolean
+     */
+    public function getMessaging()
+    {
+        return $this->messaging;
+    }
+
+    /**
      * Set the olbs key
      *
      * @param int $olbsKey new value being set
@@ -804,19 +831,6 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     public function getTransportManager()
     {
         return $this->transportManager;
-    }
-
-    public function setMessaging($messaging)
-    {
-        $this->messaging = $messaging;
-
-        return $this;
-    }
-
-    /** @return string */
-    public function getMessaging()
-    {
-        return $this->messaging;
     }
 
     /**
