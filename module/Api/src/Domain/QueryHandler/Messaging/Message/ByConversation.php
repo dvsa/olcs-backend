@@ -39,7 +39,6 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $messages = $messageRepository->fetchPaginatedList($messagesQuery);
 
-        /** @var MessagingConversation $conversation */
         $conversation = $this->getRepo(Repository\Conversation::class)->fetchById($query->getConversation());
 
         $this->markMessagesAsReadByCurrentUser($messages);
@@ -56,7 +55,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
         $currentDatetime = new \DateTime();
 
         $messageRepo = $this->getRepo(Repository\Message::class);
-        $userMessageReadRepo = $this->getRepo(Repository\Message::class);
+        $userMessageReadRepo = $this->getRepo(Repository\MessagingUserMessageRead::class);
 
         foreach ($messages as $message) {
             $messageId = $message['id'];
