@@ -39,7 +39,6 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $messages = $messageRepository->fetchPaginatedList($messagesQuery);
 
-        /** @var MessagingConversation $conversation */
         $conversation = $this->getRepo(Repository\Conversation::class)->fetchById($query->getConversation());
 
         $this->markMessagesAsReadByCurrentUser($messages);
@@ -55,19 +54,21 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
     {
         $currentDatetime = new \DateTime();
 
+        $messageRepo = $this->getRepo(Repository\Message::class);
+        $userMessageReadRepo = $this->getRepo(Repository\MessagingUserMessageRead::class);
+
         foreach ($messages as $message) {
             $messageId = $message['id'];
-            $message = $this->getRepo(Repository\Message::class)->fetchById($messageId);
-            $messageUserRead = null;
+            $message = $messageRepo->fetchById($messageId);
             try {
-                $messageUserRead = $this->getRepo(Repository\MessagingUserMessageRead::class)->fetchByMessageIdAndUserId($messageId, $this->getUser()->getId());
+                $messageUserRead = $userMessageReadRepo->fetchByMessageIdAndUserId($messageId, $this->getUser()->getId());
             } catch (NoResultException $e) {
                 $messageUserRead = new MessagingUserMessageRead();
                 $messageUserRead->setMessagingMessage($message);
                 $messageUserRead->setUser($this->getUser());
             } finally {
                 $messageUserRead->setLastReadOn($currentDatetime);
-                $this->getRepo(Repository\MessagingUserMessageRead::class)->save($messageUserRead);
+                $userMessageReadRepo->save($messageUserRead);
             }
         }
     }

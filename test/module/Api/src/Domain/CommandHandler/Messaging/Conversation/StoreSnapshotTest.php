@@ -21,7 +21,7 @@ class StoreSnapshotTest extends AbstractCreateSnapshotHandlerTest
     protected $repoClass = Conversation::class;
     protected $entityClass = MessagingConversation::class;
     protected $documentCategory = Category::CATEGORY_LICENSING;
-    protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_MESSAGING;
+    protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_LICENCING_OTHER_DOCUMENTS;
     protected $documentDescription = 'Conversation Snapshot';
     protected $documentLinkId = 'messagingConversation';
     protected $documentLinkValue = null;
