@@ -2,9 +2,9 @@
 
 $environment = $_ENV['APP_ENV'] ?? null;
 
-$isProduction = $environment === 'PROD';
+$isProduction = strtoupper($environment) === 'PROD';
 
-$isProductionAccount = in_array($environment, ['INT', 'PS', 'PROD']);
+$isProductionAccount = in_array(strtoupper($environment), ['INT', 'PS', 'PROD']);
 
 /**
  * Local Configuration Override

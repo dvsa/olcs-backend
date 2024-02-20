@@ -17,6 +17,9 @@ $doctrine_connection_params = [
 ];
 
 return [
+  'config_parameters' => [
+    'providers' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+  ],
   'address' => [
     'client' => [
       'baseuri' => 'http://address.reg.olcs.dev-dvsacloud.uk/'
@@ -177,10 +180,10 @@ return [
                   'priority' => \Laminas\Log\Logger::DEBUG
                 ]
               ],
-            ]
+            ],
           ],
-        ]
-      ]
+        ],
+      ],
     ],
   ],
   'nysiis' => [
