@@ -18,6 +18,7 @@ data/db/live-like-data.sql
 data/db/test-olcs-refdata.sql
 test/coverage/
 .scannerwork/
+config/development.config.php
 vendor-bin/**/composer.lock
 .phpunit.result.cache
 
