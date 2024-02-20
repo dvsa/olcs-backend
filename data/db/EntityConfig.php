@@ -2386,9 +2386,6 @@ return array(
             'inversedBy' => array(
                 'entity' => 'MessagingMessage',
                 'property' => 'userMessageRead',
-                'orderBy' => array(
-                    'weight' => 'ASC'
-                )
             )
         ),
     ),
