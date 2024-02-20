@@ -3,7 +3,7 @@
 use Dvsa\LaminasConfigCloudParameters\ParameterProvider\Aws\SecretsManager;
 use Dvsa\LaminasConfigCloudParameters\ParameterProvider\Aws\ParameterStore;
 
-$environment = $_ENV['APP_ENV'] ?? null;
+$environment = $_ENV['ENVIRONMENT_NAME'] ?? null;
 
 $providers = [];
 

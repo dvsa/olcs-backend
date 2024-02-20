@@ -1,22 +1,12 @@
 <?php
 
-$environment = $_ENV['APP_ENV'] ?? null;
+$environment = $_ENV['ENVIRONMENT_NAME'] ?? null;
 
+// All this logic to do with environments should be part of parameter store instead.
+// But for now, it's not. So we have to do it here.
 $isProduction = strtoupper($environment) === 'PROD';
 
 $isProductionAccount = in_array(strtoupper($environment), ['INT', 'PS', 'PROD']);
-
-/**
- * Local Configuration Override
- *
- * This configuration override file is for overriding environment-specific and
- * security-sensitive configuration information. Copy this file without the
- * .dist extension at the end and populate values as needed.
- *
- * @NOTE: This file is ignored from Git by default with the .gitignore included
- * in LaminasSkeletonApplication. This is a good practice, as it prevents sensitive
- * credentials from accidentally being committed into version control.
- */
 
 $doctrine_connection_params = [
     // *Environment specific*
