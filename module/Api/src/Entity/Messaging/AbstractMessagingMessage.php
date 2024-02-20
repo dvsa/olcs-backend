@@ -121,7 +121,6 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
      *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead",
      *     mappedBy="messagingMessage"
      * )
-     * @ORM\OrderBy({"weight" = "ASC"})
      */
     protected $userMessageReads;
 
