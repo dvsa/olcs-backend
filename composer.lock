@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6d0e7eb2a9ce23340fc16f7205d82a57",
+    "content-hash": "7eaa8c3708f6b0fbc5e6cbcd283d46b9",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6294,16 +6294,16 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "5.0.0.beta1",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-logging.git",
-                "reference": "41f38b368ec4bd6530b04396215e577bb466b494"
+                "reference": "558e3fbd7a53e1483658d2b2edd8c2de6bef220a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-logging/zipball/41f38b368ec4bd6530b04396215e577bb466b494",
-                "reference": "41f38b368ec4bd6530b04396215e577bb466b494",
+                "url": "https://api.github.com/repos/dvsa/olcs-logging/zipball/558e3fbd7a53e1483658d2b2edd8c2de6bef220a",
+                "reference": "558e3fbd7a53e1483658d2b2edd8c2de6bef220a",
                 "shasum": ""
             },
             "require": {
@@ -6314,6 +6314,7 @@
                 "laminas/laminas-session": "^2.8.7",
                 "laminas/laminas-stdlib": "^3.0",
                 "php": "^7.4",
+                "psr/container": "^1.1|^2",
                 "psr/log": "^1.0"
             },
             "require-dev": {
@@ -6340,22 +6341,22 @@
             ],
             "description": "Logging Module for OLCS",
             "support": {
-                "source": "https://github.com/dvsa/olcs-logging/tree/5.0.0.beta1"
+                "source": "https://github.com/dvsa/olcs-logging/tree/v6.0.0"
             },
-            "time": "2023-11-28T16:45:42+00:00"
+            "time": "2024-02-20T11:41:22+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "v5.1.0",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "b1fe910e1dafbf495367d16fe1953cf1aa9f88b6"
+                "reference": "147e9c70bb96e2e0da3f4828b582ec70c039f171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/b1fe910e1dafbf495367d16fe1953cf1aa9f88b6",
-                "reference": "b1fe910e1dafbf495367d16fe1953cf1aa9f88b6",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/147e9c70bb96e2e0da3f4828b582ec70c039f171",
+                "reference": "147e9c70bb96e2e0da3f4828b582ec70c039f171",
                 "shasum": ""
             },
             "require": {
@@ -6367,11 +6368,12 @@
                 "laminas/laminas-form": "^3.1.1",
                 "laminas/laminas-inputfilter": "^2.10.1",
                 "laminas/laminas-router": "^3.9",
-                "laminas/laminas-servicemanager": "^3.0",
+                "laminas/laminas-servicemanager": "^3.3",
                 "laminas/laminas-stdlib": "^3.0",
                 "laminas/laminas-validator": "^2.11.1",
                 "laminas/laminas-xml": "^1.4.0",
-                "php": "^7.4"
+                "php": "^7.4",
+                "psr/container": "^1.1|^2"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
@@ -6395,32 +6397,31 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/v5.1.0"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/v6.0.0"
             },
-            "time": "2024-02-16T10:21:39+00:00"
+            "time": "2024-02-20T11:53:18+00:00"
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "5.0.0-beta.2",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-utils.git",
-                "reference": "9ec3b807ff8ca1670989ced79010bd3db53f2010"
+                "reference": "d639bbac153fc7bf7c940b3ebf67c3a239011818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/9ec3b807ff8ca1670989ced79010bd3db53f2010",
-                "reference": "9ec3b807ff8ca1670989ced79010bd3db53f2010",
+                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/d639bbac153fc7bf7c940b3ebf67c3a239011818",
+                "reference": "d639bbac153fc7bf7c940b3ebf67c3a239011818",
                 "shasum": ""
             },
             "require": {
-                "container-interop/container-interop": "^1.2",
                 "laminas/laminas-eventmanager": "^3.0",
                 "laminas/laminas-http": "^2.8",
                 "laminas/laminas-i18n": "^2.14",
                 "laminas/laminas-mvc": "^3.3",
                 "laminas/laminas-mvc-i18n": "^1.4",
-                "laminas/laminas-servicemanager": "^3.0",
+                "laminas/laminas-servicemanager": "^3.3",
                 "laminas/laminas-view": "^2.11",
                 "php": "^7.4",
                 "psr/container": "^1.1|^2.0"
@@ -6429,7 +6430,7 @@
                 "bamarni/composer-bin-plugin": "^1.8",
                 "johnkary/phpunit-speedtrap": "^4.0",
                 "mockery/mockery": "^1.6",
-                "olcs/olcs-logging": "^5.0.0",
+                "olcs/olcs-logging": "^6.0",
                 "phpunit/phpunit": "^9.6"
             },
             "type": "library",
@@ -6447,33 +6448,34 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Utils",
             "support": {
-                "source": "https://github.com/dvsa/olcs-utils/tree/5.0.0-beta.2"
+                "source": "https://github.com/dvsa/olcs-utils/tree/v6.0.0"
             },
-            "time": "2023-12-19T14:01:18+00:00"
+            "time": "2024-02-20T11:46:06+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "5.0.0.beta1",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-xmltools.git",
-                "reference": "f000d1cabb03e9e491ddc0e0d7d43195577661e0"
+                "reference": "b1bb6af86346d7ce99db9ebad683b0472e61960f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-xmltools/zipball/f000d1cabb03e9e491ddc0e0d7d43195577661e0",
-                "reference": "f000d1cabb03e9e491ddc0e0d7d43195577661e0",
+                "url": "https://api.github.com/repos/dvsa/olcs-xmltools/zipball/b1bb6af86346d7ce99db9ebad683b0472e61960f",
+                "reference": "b1bb6af86346d7ce99db9ebad683b0472e61960f",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "laminas/laminas-filter": "^2.0",
-                "laminas/laminas-servicemanager": "^3.0",
+                "laminas/laminas-servicemanager": "^3.3",
                 "laminas/laminas-stdlib": "^3.0",
                 "laminas/laminas-validator": "^2.0",
                 "laminas/laminas-xml": "^1.2",
-                "php": "^7.4"
+                "php": "^7.4",
+                "psr/container": "^1.1|^2"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
@@ -6497,9 +6499,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "XML tools for OLCS",
             "support": {
-                "source": "https://github.com/dvsa/olcs-xmltools/tree/5.0.0.beta1"
+                "source": "https://github.com/dvsa/olcs-xmltools/tree/v6.0.0"
             },
-            "time": "2023-11-29T13:50:39+00:00"
+            "time": "2024-02-20T11:40:49+00:00"
         },
         {
             "name": "oro/doctrine-extensions",
