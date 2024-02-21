@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Mvc;
 use Dvsa\Olcs\Api\Mvc\PayloadValidationListener;
 use Dvsa\Olcs\Api\Mvc\PayloadValidationListenerFactory;
 use Dvsa\Olcs\Transfer\Util\Annotation\AnnotationBuilder;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

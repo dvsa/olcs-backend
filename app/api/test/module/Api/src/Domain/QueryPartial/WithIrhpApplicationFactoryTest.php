@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\QueryPartial\With;
 use Dvsa\Olcs\Api\Domain\QueryPartial\WithIrhpApplication;
 use Dvsa\Olcs\Api\Domain\QueryPartial\WithIrhpApplicationFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartialServiceManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 
 class WithIrhpApplicationFactoryTest extends m\Adapter\Phpunit\MockeryTestCase

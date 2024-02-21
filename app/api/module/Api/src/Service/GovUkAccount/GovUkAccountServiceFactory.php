@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\GovUkAccount;
 
 use Dvsa\GovUkAccount\Provider\GovUkAccount;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

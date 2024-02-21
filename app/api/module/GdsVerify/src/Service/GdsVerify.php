@@ -8,7 +8,7 @@ use Laminas\Log\LoggerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use RobRichards\XMLSecLibs;
 use Dvsa\Olcs\GdsVerify\Data;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class GdsVerify

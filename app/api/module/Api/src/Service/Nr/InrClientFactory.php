@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Nr;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as RestClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class InrClientFactory

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceOperatingCentre;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Variation Operating Centre Helper

@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\FilterSubmissionSections;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;

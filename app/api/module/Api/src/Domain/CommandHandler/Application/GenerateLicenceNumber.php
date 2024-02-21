@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Doctrine\ORM\Query;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Generate Licence Number

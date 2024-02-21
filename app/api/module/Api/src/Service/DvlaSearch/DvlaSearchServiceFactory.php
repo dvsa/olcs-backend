@@ -9,7 +9,7 @@ use GuzzleHttp\HandlerStack;
 use GuzzleRetry\GuzzleRetryMiddleware;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class DvlaSearchServiceFactory implements FactoryInterface
 {

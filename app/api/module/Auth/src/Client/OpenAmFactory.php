@@ -6,7 +6,7 @@ namespace Dvsa\Olcs\Auth\Client;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
 use Dvsa\Olcs\Auth\Client\OpenAm as OpenAmClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Http\Client as HttpClient;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 

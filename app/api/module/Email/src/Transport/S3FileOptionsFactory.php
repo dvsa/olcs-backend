@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Email\Transport;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class S3FileOptionsFactory implements FactoryInterface
 {

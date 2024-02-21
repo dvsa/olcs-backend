@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ApplicationCountryUpdaterFactory implements FactoryInterface
 {

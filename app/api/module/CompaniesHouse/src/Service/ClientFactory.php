@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\CompaniesHouse\Service;
 
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as HttpClient;

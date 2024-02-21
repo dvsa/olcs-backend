@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service;
 
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Mvc\Service\AbstractPluginManagerFactory;
 
 abstract class AbstractServiceManagerFactory extends AbstractPluginManagerFactory

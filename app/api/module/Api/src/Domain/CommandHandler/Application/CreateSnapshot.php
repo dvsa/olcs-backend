@@ -17,7 +17,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\GeneratorFactory;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
 
 /**

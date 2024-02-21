@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Auth\Adapter;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Auth\Adapter\OpenAm as OpenAmAdapter;
 use Dvsa\Olcs\Auth\Client\OpenAm as OpenAmClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class OpenAmFactory implements FactoryInterface

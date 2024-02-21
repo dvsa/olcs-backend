@@ -6,7 +6,7 @@ use Olcs\XmlTools\Xml\Specification\MultiNodeValue;
 use Olcs\XmlTools\Xml\Specification\NodeValue;
 use Olcs\XmlTools\Xml\Specification\Recursion;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class TransExchangePublisherXmlFactory

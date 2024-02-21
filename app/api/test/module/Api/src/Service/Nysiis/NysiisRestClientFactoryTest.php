@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Data;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

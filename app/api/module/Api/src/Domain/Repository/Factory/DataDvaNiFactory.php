@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository\Factory;
 
 use Dvsa\Olcs\Api\Domain\Repository\DataDvaNi;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Factory for @see Dvsa\Olcs\Api\Domain\Repository\DataDvaNi

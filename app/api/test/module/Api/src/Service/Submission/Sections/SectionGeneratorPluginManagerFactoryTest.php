@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManagerFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

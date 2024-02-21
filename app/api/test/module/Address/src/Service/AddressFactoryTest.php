@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Address\Service;
 
 use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Address\Service\AddressFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

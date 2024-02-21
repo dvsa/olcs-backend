@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class GrantabilityCheckerFactory implements FactoryInterface
 {

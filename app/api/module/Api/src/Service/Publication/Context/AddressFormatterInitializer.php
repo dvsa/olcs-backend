@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Initializer\InitializerInterface;
 
 /**

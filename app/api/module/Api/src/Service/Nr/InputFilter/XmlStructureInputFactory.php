@@ -6,7 +6,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class XmlStructureInputFactory

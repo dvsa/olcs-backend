@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Queue\Factories;
 
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class MessageBuilderFactory implements FactoryInterface
 {

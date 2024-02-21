@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\DocumentShare\Service\ClientFactory;
 use Dvsa\Olcs\DocumentShare\Service\DocManClient;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
