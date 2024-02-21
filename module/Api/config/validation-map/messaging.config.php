@@ -15,6 +15,8 @@ return [
     CommandHandler\Messaging\Conversation\Close::class                               => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Disable::class                             => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\Enable::class                              => NoValidationRequired::class,
+    CommandHandler\Messaging\EnableFileUpload::class                                 => NoValidationRequired::class,
+    CommandHandler\Messaging\DisableFileUpload::class                                => NoValidationRequired::class,
     CommandHandler\Messaging\Message\Create::class                                   => NoValidationRequired::class,
     CommandHandler\Messaging\Conversation\StoreSnapshot::class                       => IsSideEffect::class,
     QueryHandler\Messaging\Conversations\ByOrganisation::class                       => NoValidationRequired::class,

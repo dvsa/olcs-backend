@@ -187,6 +187,18 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     protected $isMessagingDisabled = 0;
 
     /**
+     * Is messaging file upload enabled
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean",
+     *     name="is_messaging_file_upload_enabled",
+     *     nullable=false,
+     *     options={"default": 0})
+     */
+    protected $isMessagingFileUploadEnabled = 0;
+
+    /**
      * Is unlicensed
      *
      * @var boolean
@@ -672,6 +684,30 @@ abstract class AbstractOrganisation implements BundleSerializableInterface, Json
     public function getIsMessagingDisabled()
     {
         return $this->isMessagingDisabled;
+    }
+
+    /**
+     * Set the is messaging file upload enabled
+     *
+     * @param boolean $isMessagingFileUploadEnabled new value being set
+     *
+     * @return Organisation
+     */
+    public function setIsMessagingFileUploadEnabled($isMessagingFileUploadEnabled)
+    {
+        $this->isMessagingFileUploadEnabled = $isMessagingFileUploadEnabled;
+
+        return $this;
+    }
+
+    /**
+     * Get the is messaging file upload enabled
+     *
+     * @return boolean
+     */
+    public function getIsMessagingFileUploadEnabled()
+    {
+        return $this->isMessagingFileUploadEnabled;
     }
 
     /**
