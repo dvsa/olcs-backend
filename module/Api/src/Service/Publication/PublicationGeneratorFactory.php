@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Publication;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class PublicationGeneratorFactory

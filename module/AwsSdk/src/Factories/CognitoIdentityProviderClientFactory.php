@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class CognitoIdentityProviderClientFactory implements FactoryInterface

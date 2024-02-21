@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\Permits;
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class IrhpGeneratorFactory implements FactoryInterface
 {

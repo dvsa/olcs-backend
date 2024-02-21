@@ -20,7 +20,7 @@ use Laminas\Mail\Exception\InvalidArgumentException as LaminasAddressException;
 use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
 use Laminas\Mail\Transport\TransportInterface;
 use Olcs\Logging\Log\Logger;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Email

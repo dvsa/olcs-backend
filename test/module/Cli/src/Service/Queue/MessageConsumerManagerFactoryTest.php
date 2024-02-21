@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Service\Queue;
 
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManagerFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

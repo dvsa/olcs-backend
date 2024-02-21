@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\AcquiredRights\Service\AcquiredRightsService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class UpdateDetailsFactory implements FactoryInterface

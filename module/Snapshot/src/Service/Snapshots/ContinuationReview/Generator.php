@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGenerator;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
 use Dvsa\Olcs\Utils\Translation\NiTextTranslation;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Filter\Word\UnderscoreToCamelCase;
 
 /**

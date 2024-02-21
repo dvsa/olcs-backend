@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\RefreshSubmissionSections;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;

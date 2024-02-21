@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class OptionListGeneratorFactory implements FactoryInterface
 {

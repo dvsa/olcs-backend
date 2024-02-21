@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class CabotageOnlyQuestionHandlerFactory implements FactoryInterface
 {

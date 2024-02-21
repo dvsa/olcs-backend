@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\PermitEmailTrait;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\I18n\Translator\Translator;
 
 /**

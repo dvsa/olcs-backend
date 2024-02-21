@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Service\Publication\Context;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\AbstractPluginManager;
 
 /**

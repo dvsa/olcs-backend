@@ -8,7 +8,7 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Generator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedInterface
 {

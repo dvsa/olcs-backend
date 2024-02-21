@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryGenerator;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Dvsa\Olcs\Transfer\Query\IrhpApplication\AnswersSummary as AnswersSummaryQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

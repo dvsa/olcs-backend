@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>

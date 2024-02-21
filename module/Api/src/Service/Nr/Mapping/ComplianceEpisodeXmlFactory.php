@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Nr\Mapping;
 
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ComplianceEpisodeXmlFactory

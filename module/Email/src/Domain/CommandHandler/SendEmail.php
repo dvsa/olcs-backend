@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
 use Dvsa\Olcs\Email\Exception\EmailNotSentException;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\I18n\Translator\TranslatorInterface;
 use Dvsa\Olcs\Email\Service\Email as EmailService;
 use Dvsa\Olcs\Api\Domain\Command\Result;

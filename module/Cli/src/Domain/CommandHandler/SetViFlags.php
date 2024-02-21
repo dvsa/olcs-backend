@@ -6,7 +6,7 @@ use Doctrine\DBAL\Connection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 
 final class SetViFlags extends AbstractCommandHandler
 {

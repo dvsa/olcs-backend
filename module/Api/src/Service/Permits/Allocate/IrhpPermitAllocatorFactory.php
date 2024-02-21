@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Allocate;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class IrhpPermitAllocatorFactory implements FactoryInterface
 {

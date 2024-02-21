@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator;
 use Dvsa\Olcs\Auth\Service\PasswordService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 

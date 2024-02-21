@@ -9,7 +9,7 @@
 namespace Dvsa\Olcs\Api\Mvc;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Payload Validation Listener Factory

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as UpdateNysiisNameCmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
 use Dvsa\Olcs\Api\Domain\Exception\NysiisException;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Queue request to update TM name with Nysiis values

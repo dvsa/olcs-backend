@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\Nysiis;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class NysiisRestClientFactory

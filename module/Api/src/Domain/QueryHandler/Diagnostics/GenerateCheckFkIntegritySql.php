@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Cli\Domain\QueryHandler\DataRetention\EscapeMysqlIdentifierTrait;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use PDO;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

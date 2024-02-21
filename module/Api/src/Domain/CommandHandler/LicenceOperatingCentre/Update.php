@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\LicenceOperatingCentre\Update as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Update Licence Operating Centre

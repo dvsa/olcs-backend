@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler as DomainAbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>

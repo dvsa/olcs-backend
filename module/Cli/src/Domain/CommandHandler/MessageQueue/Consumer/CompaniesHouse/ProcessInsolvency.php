@@ -25,7 +25,7 @@ use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ProcessInsolvency extends AbstractConsumer
 {

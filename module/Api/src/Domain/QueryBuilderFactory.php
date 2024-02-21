@@ -9,7 +9,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Query Builder Factory

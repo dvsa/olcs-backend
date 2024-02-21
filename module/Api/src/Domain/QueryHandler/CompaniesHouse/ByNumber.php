@@ -11,7 +11,7 @@ use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as CompanyNotFo
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
 use Dvsa\Olcs\Transfer\Query\CompaniesHouse\ByNumber as Qry;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

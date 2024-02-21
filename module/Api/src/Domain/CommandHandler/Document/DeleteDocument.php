@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteEbsrSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
 use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Delete Document

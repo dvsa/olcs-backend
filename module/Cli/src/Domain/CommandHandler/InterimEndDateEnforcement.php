@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Cli\Domain\Command\InterimEndDateEnforcement as InterimEndDateEnforcementCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 
 final class InterimEndDateEnforcement extends AbstractCommandHandler
