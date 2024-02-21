@@ -1,6 +1,6 @@
 <?php
 
-$environment = $_ENV['ENVIRONMENT_NAME'] ?? null;
+$environment = getenv('ENVIRONMENT_NAME');
 
 // All this logic to do with environments should be part of parameter store instead.
 // But for now, it's not. So we have to do it here.
