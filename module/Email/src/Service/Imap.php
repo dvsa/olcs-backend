@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Email\Service;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Mail\Storage;
 use Laminas\Mail\Exception\RuntimeException as LaminasMailRuntimeException;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class Imap

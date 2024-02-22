@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\OpenAm;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Validators\EmailAddress;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>

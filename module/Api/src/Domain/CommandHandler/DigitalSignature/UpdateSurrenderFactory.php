@@ -6,7 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\DigitalSignature;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class UpdateSurrenderFactory implements FactoryInterface

@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Publication\Context;
 use Dvsa\Olcs\Api\Service\Helper\AddressFormatterAwareInterface;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 use Dvsa\Olcs\Api\Service\Publication\Context\AddressFormatterInitializer;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use stdClass;

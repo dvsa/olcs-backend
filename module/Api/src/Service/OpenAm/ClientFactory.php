@@ -11,7 +11,7 @@ use Laminas\Http\Request;
 use Laminas\ServiceManager\Exception\RuntimeException;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Client Factory

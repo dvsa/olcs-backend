@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Translator;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**

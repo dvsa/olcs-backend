@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Mvc;
 
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
 use Dvsa\Olcs\Api\Mvc\OlcsBlameableListenerFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

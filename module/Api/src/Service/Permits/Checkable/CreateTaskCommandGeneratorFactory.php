@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Permits\Checkable;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class CreateTaskCommandGeneratorFactory implements FactoryInterface
 {

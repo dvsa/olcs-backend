@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Submission;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager as SectionGeneratorPluginManager;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class SubmissionGeneratorFactory

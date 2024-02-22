@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\EventHistory;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class CreatorFactory implements FactoryInterface
 {

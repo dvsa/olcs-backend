@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Mvc\OlcsBlameableListener;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Gedmo\Mapping\Event\AdapterInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Laminas\ServiceManager\ServiceLocatorInterface;

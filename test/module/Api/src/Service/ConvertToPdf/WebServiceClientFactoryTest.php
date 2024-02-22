@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory;
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
 

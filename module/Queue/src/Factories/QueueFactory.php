@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Queue\Factories;
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class QueueFactory implements FactoryInterface
 {

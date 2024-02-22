@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
 use Laminas\Http\Response;
 use Laminas\Http\Client\Adapter\Exception\RuntimeException as AdapterRuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\InrClientException;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * SendResponse

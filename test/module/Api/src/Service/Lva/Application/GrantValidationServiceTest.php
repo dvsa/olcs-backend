@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\System\RefData;

@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication;
 
 use Dvsa\Olcs\Snapshot\Service\Snapshots\AbstractGeneratorServices;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class GeneratorFactory implements FactoryInterface

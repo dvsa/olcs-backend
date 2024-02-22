@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Auth\Client;
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Dvsa\Authentication\Cognito\Client;
 use GuzzleHttp\Client as HttpClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use RuntimeException;
 

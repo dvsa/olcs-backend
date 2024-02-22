@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\AwsSdk\Factories;
 
 use Aws\Sqs\SqsClient;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class S3ClientFactory

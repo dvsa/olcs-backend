@@ -13,7 +13,7 @@ use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as HttpClient;
 use Sabre\DAV\Client as SabreClient;
 use LmcRbacMvc\Service\AuthorizationService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ClientFactory

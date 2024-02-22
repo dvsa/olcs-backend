@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDateFilter;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
 use Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate as ImposedDateValidator;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class SeriousInfringementInputFactory

@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Transfer\Query\LoggerOmitResponseInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
