@@ -18,7 +18,7 @@ $doctrine_connection_params = [
 
 return [
   'config_parameters' => [
-    'providers' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+    'providers' => new \Laminas\Stdlib\ArrayUtils\MergeReplaceKey([]),
   ],
   'address' => [
     'client' => [
