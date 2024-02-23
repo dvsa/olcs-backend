@@ -39,6 +39,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         Repository\Message::class,
         Repository\MessageContent::class,
         Repository\Task::class,
+        Repository\Document::class,
     ];
 
     /**
@@ -50,6 +51,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         $message = $this->generateAndSaveMessage($command);
         $updatedTask = $this->updateTaskDescriptionAndActionDate($command);
         $sendEmailResult = $this->sendEmail($command);
+        $this->assignUploadsToMessage($message);
 
         $result = new Result();
 
@@ -179,5 +181,21 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
                 ],
             ),
         );
+    }
+
+    private function assignUploadsToMessage(MessagingMessage $message): void
+    {
+        $docRepo = $this->getRepo(Repository\Document::class);
+        $docs = $docRepo->fetchListForConversation(
+            $message->getMessagingConversation()->getId(),
+            $this->getUser()->getId(),
+        );
+
+        foreach ($docs as $doc) {
+            $doc->setMessagingMessage($message);
+            $docRepo->saveOnFlush($doc);
+        }
+
+        $docRepo->flushAll();
     }
 }

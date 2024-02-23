@@ -97,8 +97,8 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
             $this->setIsValid($this->canAccessContinuationDetail($dto->getContinuationDetail()));
         }
 
-        if ($dto->getConversation()) {
-            $this->setIsValid($this->canAccessConversation($dto->getConversation()));
+        if ($dto->getMessagingConversation()) {
+            $this->setIsValid($this->canAccessConversation($dto->getMessagingConversation()));
         }
 
         return $this->getIsValid();

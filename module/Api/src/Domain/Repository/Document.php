@@ -8,7 +8,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -35,13 +34,18 @@ class Document extends AbstractRepository
         return $this->fetchListForApplicationOrLicence($tmId, $licenceId, 'licence');
     }
 
-    public function fetchListForConversation(int $conversationId)
+    /** @return Entity[] */
+    public function fetchListForConversation(int $conversationId, ?int $createdBy = null): array
     {
         $qb = $this->createQueryBuilder();
-        $qb->andWhere($qb->expr()->eq($this->alias . '.conversation', ':conversationId'))
-           ->andWhere($qb->expr()->isNull($this->alias . '.message'))
+        $qb->andWhere($qb->expr()->eq($this->alias . '.messagingConversation', ':conversationId'))
+           ->andWhere($qb->expr()->isNull($this->alias . '.messagingMessage'))
            ->setParameter('conversationId', $conversationId)
            ->orderBy($this->alias . '.id', 'DESC');
+
+        if ($createdBy !== null) {
+            $qb->andWhere($qb->expr()->eq($this->alias . '.createdBy', $createdBy));
+        }
 
         return $qb->getQuery()->execute();
     }

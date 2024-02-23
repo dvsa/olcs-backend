@@ -61,9 +61,9 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $irhpApplication;
 
-    protected $conversation;
+    protected $messagingConversation;
 
-    protected $message;
+    protected $messagingMessage;
 
     protected $isPostSubmissionUpload = 0;
 
