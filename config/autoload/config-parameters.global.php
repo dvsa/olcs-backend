@@ -19,6 +19,14 @@ if (!empty($environment)) {
 }
 
 return [
+    'aws' => [
+        'global' => [
+            'http'    => [
+                'connect_timeout' => 5,
+                'timeout'         => 5,
+            ],
+        ],
+    ],
     'config_parameters' => [
         'providers' => $providers,
     ],
