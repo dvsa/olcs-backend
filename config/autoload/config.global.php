@@ -4,9 +4,9 @@ $environment = getenv('ENVIRONMENT_NAME');
 
 // All this logic to do with environments should be part of parameter store instead.
 // But for now, it's not. So we have to do it here.
-$isProduction = strtoupper($environment) === 'PROD';
+$isProduction = strtoupper($environment) === 'APP';
 
-$isProductionAccount = in_array(strtoupper($environment), ['INT', 'PS', 'PROD']);
+$isProductionAccount = in_array(strtoupper($environment), ['INT', 'PP', 'APP']);
 
 $doctrine_connection_params = [
     // *Environment specific*
