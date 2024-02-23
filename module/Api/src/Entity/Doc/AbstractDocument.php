@@ -27,8 +27,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *    indexes={
  *        @ORM\Index(name="fk_document_continuation_detail_id_continuation_detail_id",
      *     columns={"continuation_detail_id"}),
+ *        @ORM\Index(name="fk_document_conversation", columns={"conversation_id"}),
  *        @ORM\Index(name="fk_document_irhp_application_id_irhp_application_id",
      *     columns={"irhp_application_id"}),
+ *        @ORM\Index(name="fk_document_message", columns={"message_id"}),
  *        @ORM\Index(name="ix_document_application_id", columns={"application_id"}),
  *        @ORM\Index(name="ix_document_bus_reg_id", columns={"bus_reg_id"}),
  *        @ORM\Index(name="ix_document_case_id", columns={"case_id"}),
@@ -121,6 +123,19 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="continuation_detail_id", referencedColumnName="id", nullable=true)
      */
     protected $continuationDetail;
+
+    /**
+     * Conversation
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation
+     *
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation",
+     *     fetch="LAZY"
+     * )
+     * @ORM\JoinColumn(name="conversation_id", referencedColumnName="id", nullable=true)
+     */
+    protected $conversation;
 
     /**
      * Created by
@@ -258,6 +273,16 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
      * @ORM\JoinColumn(name="licence_id", referencedColumnName="id", nullable=true)
      */
     protected $licence;
+
+    /**
+     * Message
+     *
+     * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage", fetch="LAZY")
+     * @ORM\JoinColumn(name="message_id", referencedColumnName="id", nullable=true)
+     */
+    protected $message;
 
     /**
      * Metadata
@@ -616,6 +641,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     }
 
     /**
+     * Set the conversation
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation $conversation entity being set as the value
+     *
+     * @return Document
+     */
+    public function setConversation($conversation)
+    {
+        $this->conversation = $conversation;
+
+        return $this;
+    }
+
+    /**
+     * Get the conversation
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation
+     */
+    public function getConversation()
+    {
+        return $this->conversation;
+    }
+
+    /**
      * Set the created by
      *
      * @param \Dvsa\Olcs\Api\Entity\User\User $createdBy entity being set as the value
@@ -932,6 +981,30 @@ abstract class AbstractDocument implements BundleSerializableInterface, JsonSeri
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the message
+     *
+     * @param \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage $message entity being set as the value
+     *
+     * @return Document
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+
+        return $this;
+    }
+
+    /**
+     * Get the message
+     *
+     * @return \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage
+     */
+    public function getMessage()
+    {
+        return $this->message;
     }
 
     /**

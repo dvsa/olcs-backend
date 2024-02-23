@@ -8,6 +8,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -32,6 +33,17 @@ class Document extends AbstractRepository
     public function fetchListForTmLicence($tmId, $licenceId)
     {
         return $this->fetchListForApplicationOrLicence($tmId, $licenceId, 'licence');
+    }
+
+    public function fetchListForConversation(int $conversationId)
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->eq($this->alias . '.conversation', ':conversationId'))
+           ->andWhere($qb->expr()->isNull($this->alias . '.message'))
+           ->setParameter('conversationId', $conversationId)
+           ->orderBy($this->alias . '.id', 'DESC');
+
+        return $qb->getQuery()->execute();
     }
 
     protected function fetchListForApplicationOrLicence($tmId, $id, $type)

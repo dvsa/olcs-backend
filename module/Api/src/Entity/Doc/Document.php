@@ -208,6 +208,10 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
             return $this->getIrhpApplication()->getRelatedOrganisation();
         }
 
+        if ($this->getConversation()) {
+            return $this->getConversation()->getRelatedOrganisation();
+        }
+
         return null;
     }
 

@@ -61,6 +61,10 @@ class CreateDocumentSpecific extends AbstractCommand
 
     protected $irhpApplication;
 
+    protected $conversation;
+
+    protected $message;
+
     protected $isPostSubmissionUpload = 0;
 
     /**
@@ -309,5 +313,16 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getIsPostSubmissionUpload()
     {
         return $this->isPostSubmissionUpload;
+    }
+
+    public function getConversation()
+    {
+        return $this->conversation;
+    }
+
+    public function getMessage()
+    {
+
+        return $this->message;
     }
 }
