@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Entity\Messaging;
 use Doctrine\ORM\Mapping as ORM;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 
 /**
@@ -27,7 +28,7 @@ class MessagingConversation extends AbstractMessagingConversation implements Lic
         return $this->task->getLicence();
     }
 
-    public function getRelatedOrganisation()
+    public function getRelatedOrganisation(): Organisation
     {
         return $this->getRelatedLicence()->getOrganisation();
     }
