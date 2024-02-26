@@ -66,7 +66,9 @@ final class Create extends AbstractCommandHandler implements ToggleAwareInterfac
         $conversation = $this->generateAndSaveConversation($createTaskResult, $messageSubject);
 
         $createMessageResult = $this->handleSideEffect(CreateMessageCommand::create([
-            'conversation' => $conversation->getId(), 'messageContent' => $command->getMessageContent(),
+            'conversation' => $conversation->getId(),
+            'messageContent' => $command->getMessageContent(),
+            'correlationId' => $command->getCorrelationId(),
         ]));
 
         $result = new Result();

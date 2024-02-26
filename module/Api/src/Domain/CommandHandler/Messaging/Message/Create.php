@@ -9,10 +9,13 @@ use DateTime;
 use DateTimeInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendNewMessageNotificationToOperators;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
@@ -23,10 +26,13 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use RuntimeException;
 
-final class Create extends AbstractCommandHandler implements ToggleRequiredInterface, AuthAwareInterface
+final class Create extends AbstractCommandHandler
+    implements ToggleRequiredInterface, AuthAwareInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
     use ToggleAwareTrait;
     use AuthAwareTrait;
 
@@ -51,7 +57,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         $message = $this->generateAndSaveMessage($command);
         $updatedTask = $this->updateTaskDescriptionAndActionDate($command);
         $sendEmailResult = $this->sendEmail($command);
-        $this->assignUploadsToMessage($message);
+        $this->assignUploadsToMessage($message, $command->getCorrelationId());
 
         $result = new Result();
 
@@ -183,15 +189,24 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         );
     }
 
-    private function assignUploadsToMessage(MessagingMessage $message): void
+    private function assignUploadsToMessage(MessagingMessage $message, string $correlationId): void
     {
+        $documentIds = $this->getCache()->getCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $correlationId) ?: [];
         $docRepo = $this->getRepo(Repository\Document::class);
-        $docs = $docRepo->fetchListForConversation(
-            $message->getMessagingConversation()->getId(),
-            $this->getUser()->getId(),
-        );
 
-        foreach ($docs as $doc) {
+        foreach ($documentIds as $id) {
+            try {
+                $doc = $docRepo->fetchById($id);
+            } catch (NotFoundException $ex) {
+                // Document deleted.
+                continue;
+            }
+
+            // Ensure only documents the user definitely uploaded can be modified
+            if ($doc->getCreatedBy()->getId() !== $this->getUser()->getId()) {
+                continue;
+            }
+
             $doc->setMessagingMessage($message);
             $docRepo->saveOnFlush($doc);
         }

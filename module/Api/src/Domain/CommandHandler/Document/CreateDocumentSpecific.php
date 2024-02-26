@@ -4,6 +4,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -11,14 +13,16 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Domain\Command\Document\CreateDocumentSpecific as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateEbsrSubmissionCmd;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as UpdateDocumentLinksCommand;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 
 /**
  * Create Document
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateDocumentSpecific extends AbstractCommandHandler implements AuthAwareInterface
+final class CreateDocumentSpecific extends AbstractCommandHandler implements AuthAwareInterface, CacheAwareInterface
 {
+    use CacheAwareTrait;
     use AuthAwareTrait;
 
     public const DEFAULT_OS = 'windows_7';
@@ -31,7 +35,7 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
     /**
      * Handle command
      *
-     * @param CommandInterface $command the command
+     * @param CommandInterface|Cmd $command the command
      *
      * @return Result
      */
@@ -45,6 +49,8 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
 
         $data = $command->getArrayCopy();
         $data['id'] = $document->getId();
+
+        $this->updateCorrelationStore($command, $document);
 
         $result->merge($this->handleSideEffect(UpdateDocumentLinksCommand::create($data)));
 
@@ -137,5 +143,17 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
         if ($command->getSubCategory() != null) {
             $document->setSubCategory($this->getRepo()->getSubCategoryReference($command->getSubCategory()));
         }
+    }
+
+    /** @param CommandInterface|Cmd $command */
+    private function updateCorrelationStore(CommandInterface $command, Document $document): void
+    {
+        if ($command->getCorrelationId() === null) {
+            return;
+        }
+
+        $ids = $this->getCache()->getCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $command->getCorrelationId()) ?: [];
+        $ids[] = $document->getId();
+        $this->getCache()->setCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $ids, $command->getCorrelationId());
     }
 }
