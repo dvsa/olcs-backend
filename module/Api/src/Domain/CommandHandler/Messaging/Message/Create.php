@@ -29,8 +29,7 @@ use Dvsa\Olcs\Transfer\Command\Messaging\Message\Create as CreateMessageCommand;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use RuntimeException;
 
-final class Create extends AbstractCommandHandler
-    implements ToggleRequiredInterface, AuthAwareInterface, CacheAwareInterface
+final class Create extends AbstractCommandHandler implements ToggleRequiredInterface, AuthAwareInterface, CacheAwareInterface
 {
     use CacheAwareTrait;
     use ToggleAwareTrait;
