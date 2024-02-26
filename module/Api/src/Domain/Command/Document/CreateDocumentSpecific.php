@@ -317,12 +317,11 @@ class CreateDocumentSpecific extends AbstractCommand
 
     public function getConversation()
     {
-        return $this->conversation;
+        return $this->messagingConversation;
     }
 
     public function getMessage()
     {
-
-        return $this->message;
+        return $this->messagingMessage;
     }
 }
