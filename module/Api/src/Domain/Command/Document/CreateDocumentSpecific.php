@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\Document;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
-use Dvsa\Olcs\Transfer\FieldType\Traits\CorrelationId;
+use Dvsa\Olcs\Transfer\FieldType\Traits\CorrelationIdOptional;
 
 /**
  * Create Document
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Transfer\FieldType\Traits\CorrelationId;
  */
 class CreateDocumentSpecific extends AbstractCommand
 {
-    use CorrelationId;
+    use CorrelationIdOptional;
 
     protected $filename;
 
