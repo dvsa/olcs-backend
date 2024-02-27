@@ -152,8 +152,8 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
             return;
         }
 
-        $ids = $this->getCache()->getCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $command->getCorrelationId()) ?: [];
+        $ids = $this->getCache()->getCustomItem(CacheEncryption::GENERIC_STORAGE_IDENTIFIER, $command->getCorrelationId()) ?: [];
         $ids[] = $document->getId();
-        $this->getCache()->setCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $ids, $command->getCorrelationId());
+        $this->getCache()->setCustomItem(CacheEncryption::GENERIC_STORAGE_IDENTIFIER, $ids, $command->getCorrelationId());
     }
 }

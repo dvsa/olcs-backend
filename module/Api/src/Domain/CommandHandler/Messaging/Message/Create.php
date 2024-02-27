@@ -190,7 +190,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
 
     private function assignUploadsToMessage(MessagingMessage $message, string $correlationId): void
     {
-        $documentIds = $this->getCache()->getCustomItem(CacheEncryption::USER_ACCOUNT_IDENTIFIER, $correlationId) ?: [];
+        $documentIds = $this->getCache()->getCustomItem(CacheEncryption::GENERIC_STORAGE_IDENTIFIER, $correlationId) ?: [];
         $docRepo = $this->getRepo(Repository\Document::class);
 
         foreach ($documentIds as $id) {
