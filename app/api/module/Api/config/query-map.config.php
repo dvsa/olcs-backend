@@ -729,5 +729,7 @@ return [
     TransferQuery\Messaging\ApplicationLicenceList\ByOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class,
     TransferQuery\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class,
-    TransferQuery\Messaging\Subjects\All::class => QueryHandler\Messaging\Subjects\All::class
+    TransferQuery\Messaging\Subjects\All::class => QueryHandler\Messaging\Subjects\All::class,
+    TransferQuery\Messaging\Messages\UnreadCountByOrganisationAndUser::class => QueryHandler\Messaging\Message\UnreadCountByOrganisationAndUser::class,
+    TransferQuery\Messaging\Messages\UnreadCountByLicenceAndUser::class => QueryHandler\Messaging\Message\UnreadCountByLicenceAndUser::class,
 ];

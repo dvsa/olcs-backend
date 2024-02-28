@@ -64,4 +64,39 @@ class Message extends AbstractRepository
 
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
+
+    public function getUnreadConversationCountByLicenceIdAndUserId(int $licenceId, int $userId): int
+    {
+        $qb = $this->createQueryBuilder()
+            ->select('COUNT(c.id)')
+            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
+            ->leftJoin($this->alias . '.messagingConversation', 'c')
+            ->innerJoin($this->alias . '.task', 't')
+            ->innerJoin($this->alias . '.licence', 'l')
+            ->andWhere($this->alias . 'l.id = :licenceId')
+            ->andWhere('umr.id IS NULL')
+            ->groupBy($this->alias . '.messagingConversation')
+            ->setParameter('licenceId', $licenceId)
+            ->setParameter('userId', $userId);
+
+        return count($qb->getQuery()->getScalarResult());
+    }
+
+    public function getUnreadConversationCountByOrganisationIdAndUserId(int $organisationId, int $userId): int
+    {
+        $qb = $this->createQueryBuilder()
+            ->select('COUNT(c.id)')
+            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
+            ->leftJoin($this->alias . '.messagingConversation', 'c')
+            ->leftJoin('c.task', 't')
+            ->leftJoin('t.licence', 'l')
+            ->leftJoin('l.organisation', 'o')
+            ->andWhere('o.id = :organisationId')
+            ->andWhere('umr.id IS NULL')
+            ->groupBy($this->alias . '.messagingConversation')
+            ->setParameter('organisationId', $organisationId)
+            ->setParameter('userId', $userId);
+
+        return count($qb->getQuery()->getScalarResult());
+    }
 }
