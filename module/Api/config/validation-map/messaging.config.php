@@ -22,5 +22,5 @@ return [
     CommandHandler\Messaging\Conversation\Create::class                              => NoValidationRequired::class,
     CommandHandler\Email\SendNewMessageNotificationToOperators::class                => IsSideEffect::class,
     QueryHandler\Messaging\Message\UnreadCountByOrganisationAndUser::class           => NoValidationRequired::class,
-    QueryHandler\Messaging\Message\UnreadCountByLicenceAndUser::class                => NoValidationRequired::class
+    QueryHandler\Messaging\Message\UnreadCountByLicenceAndRoles::class               => NoValidationRequired::class
 ];

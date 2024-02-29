@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -65,19 +66,42 @@ class Message extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getUnreadConversationCountByLicenceIdAndUserId(int $licenceId, int $userId): int
+    public function getUnreadConversationCountByLicenceIdAndRole(int $licenceId, array $roleNames): int
     {
-        $qb = $this->createQueryBuilder()
-            ->select('COUNT(c.id)')
-            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
-            ->leftJoin($this->alias . '.messagingConversation', 'c')
-            ->innerJoin($this->alias . '.task', 't')
-            ->innerJoin($this->alias . '.licence', 'l')
-            ->andWhere($this->alias . 'l.id = :licenceId')
-            ->andWhere('umr.id IS NULL')
+        $qb = $this->createQueryBuilder();
+
+        $subQuery = $this->getEntityManager()->createQueryBuilder();
+        $subQuery
+            ->select('1')
+            ->from(\Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead::class, 'inner_read')
+            ->leftJoin('inner_read.user', 'inner_user')
+            ->leftJoin('inner_user.roles', 'inner_role')
+            ->leftJoin('inner_read.messagingMessage', 'inner_msg')
+            ->leftJoin('inner_msg.messagingConversation', 'inner_conversation')
+            ->leftJoin('inner_conversation.task', 'inner_task')
+            ->where('inner_conversation.isClosed = 0')
+            ->andWhere('inner_task.licence = :licenceId')
+            ->andWhere('inner_read.messagingMessage = ' . $this->alias . '.id')
+            ->andWhere($qb->expr()->in('inner_role.role', ':roleNames'));
+
+        $qb
+            ->leftJoin($this->alias . '.messagingConversation', 'inner_conversation2')
+            ->leftJoin('inner_conversation2.task', 'inner_task2')
             ->groupBy($this->alias . '.messagingConversation')
-            ->setParameter('licenceId', $licenceId)
-            ->setParameter('userId', $userId);
+            ->where('inner_conversation2.isClosed = 0')
+            ->andWhere('inner_task2.licence = :licenceId')
+            ->andWhere(
+                $qb->expr()->not(
+                    $qb->expr()->exists($subQuery->getDQL())
+                )
+            );
+
+        // TODO: Should we ignore closed conversations? Yes
+        // TODO: Change joins to outer scope only for potential performance gains?
+        // TODO: This needs performance testing!
+
+        $qb->setParameter('licenceId', $licenceId);
+        $qb->setParameter('roleNames', $roleNames);
 
         return count($qb->getQuery()->getScalarResult());
     }
