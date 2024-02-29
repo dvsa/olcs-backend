@@ -66,7 +66,7 @@ class Message extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getUnreadConversationCountByLicenceIdAndRole(int $licenceId, array $roleNames): int
+    public function getUnreadConversationCountByLicenceIdAndRoles(int $licenceId, array $roleNames): int
     {
         $qb = $this->createQueryBuilder();
 
@@ -96,7 +96,6 @@ class Message extends AbstractRepository
                 )
             );
 
-        // TODO: Should we ignore closed conversations? Yes
         // TODO: Change joins to outer scope only for potential performance gains?
         // TODO: This needs performance testing!
 

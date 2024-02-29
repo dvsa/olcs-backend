@@ -28,7 +28,7 @@ class UnreadCountByLicenceAndRoles extends AbstractConversationQueryHandler impl
     {
         $messageRepository = $this->getMessageRepository();
         $results = $messageRepository
-            ->getUnreadConversationCountByLicenceIdAndRole((int)$query->getLicence(), $query->getRoles());
+            ->getUnreadConversationCountByLicenceIdAndRoles((int)$query->getLicence(), $query->getRoles());
 
         return ['count' => $results];
     }
