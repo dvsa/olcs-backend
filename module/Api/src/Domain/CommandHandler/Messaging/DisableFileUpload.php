@@ -38,7 +38,7 @@ final class DisableFileUpload extends AbstractCommandHandler implements ToggleRe
             $this->clearOrganisationCaches($organisation);
         } catch (\Exception $e) {
             Logger::err(
-                'Cache clear by organisation failed when enabling messaging for organisation',
+                'Cache clear by organisation failed when disabling file upload for organisation',
                 [
                     'organisation_id' => $organisation->getId(),
                     'exception' => [
