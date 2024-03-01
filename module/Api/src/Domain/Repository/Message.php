@@ -76,28 +76,20 @@ class Message extends AbstractRepository
             ->from(\Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead::class, 'inner_read')
             ->leftJoin('inner_read.user', 'inner_user')
             ->leftJoin('inner_user.roles', 'inner_role')
-            ->leftJoin('inner_read.messagingMessage', 'inner_msg')
-            ->leftJoin('inner_msg.messagingConversation', 'inner_conversation')
-            ->leftJoin('inner_conversation.task', 'inner_task')
-            ->where('inner_conversation.isClosed = 0')
-            ->andWhere('inner_task.licence = :licenceId')
-            ->andWhere('inner_read.messagingMessage = ' . $this->alias . '.id')
+            ->where('inner_read.messagingMessage = ' . $this->alias . '.id')
             ->andWhere($qb->expr()->in('inner_role.role', ':roleNames'));
 
         $qb
-            ->leftJoin($this->alias . '.messagingConversation', 'inner_conversation2')
-            ->leftJoin('inner_conversation2.task', 'inner_task2')
+            ->leftJoin($this->alias . '.messagingConversation', 'inner_conversation')
+            ->leftJoin('inner_conversation.task', 'inner_task')
             ->groupBy($this->alias . '.messagingConversation')
-            ->where('inner_conversation2.isClosed = 0')
-            ->andWhere('inner_task2.licence = :licenceId')
+            ->where('inner_conversation.isClosed = 0')
+            ->andWhere('inner_task.licence = :licenceId')
             ->andWhere(
                 $qb->expr()->not(
                     $qb->expr()->exists($subQuery->getDQL())
                 )
             );
-
-        // TODO: Change joins to outer scope only for potential performance gains?
-        // TODO: This needs performance testing!
 
         $qb->setParameter('licenceId', $licenceId);
         $qb->setParameter('roleNames', $roleNames);

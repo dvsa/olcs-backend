@@ -16,7 +16,9 @@ class UnreadCountByLicenceAndRoles extends AbstractConversationQueryHandler impl
 {
     use ToggleAwareTrait;
 
-    protected $toggleConfig = [FeatureToggle::MESSAGING];
+    protected $toggleConfig = [
+        FeatureToggle::MESSAGING
+    ];
     protected $extraRepos = [
         Repository\Message::class,
     ];
