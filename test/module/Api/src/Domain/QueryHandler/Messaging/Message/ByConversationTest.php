@@ -6,8 +6,11 @@ use ArrayIterator;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Message\ByConversation;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Messaging\Messages\ByConversation as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
@@ -64,6 +67,25 @@ class ByConversationTest extends QueryHandlerTestCase
                 ->andReturn($message);
         }
 
+        $mockLicence = m::mock(Licence::class);
+        $mockLicence->shouldReceive('serialize')
+                    ->once()
+                    ->andReturn(['id' => 123]);
+
+        $mockApplication = m::mock(Application::class);
+        $mockApplication->shouldReceive('serialize')
+                        ->once()
+                        ->andReturn(['id' => 456]);
+
+        $mockTask = m::mock(Task::class);
+        $mockTask->shouldReceive('getLicence')
+                 ->once()
+                 ->andReturn($mockLicence);
+        $mockTask->shouldReceive('getApplication')
+                 ->once()
+                 ->andReturn($mockApplication);
+        $conversation->setTask($mockTask);
+
         $mockUserMessageRead = m::mock(MessagingUserMessageRead::class);
         $mockUserMessageRead->shouldReceive('setLastReadOn')->times(count($messages));
         $this->repoMap[Repository\MessagingUserMessageRead::class]->shouldReceive('fetchByMessageIdAndUserId')->times(count($messages))->andReturn($mockUserMessageRead);
@@ -71,9 +93,13 @@ class ByConversationTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
+        $this->assertArrayHasKey('application', $result);
+        $this->assertArrayHasKey('licence', $result);
         $this->assertArrayHasKey('result', $result);
         $this->assertArrayHasKey('count', $result);
         $this->assertCount(8, $result['result']);
         $this->assertEquals(10, $result['count']);
+        $this->assertEquals(456, $result['application']['id']);
+        $this->assertEquals(123, $result['licence']['id']);
     }
 }

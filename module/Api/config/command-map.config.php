@@ -1056,6 +1056,11 @@ return [
         CommandHandler\Messaging\Conversation\Disable::class,
     TransferCommand\Messaging\Conversation\Enable::class       =>
         CommandHandler\Messaging\Conversation\Enable::class,
+    TransferCommand\Messaging\DisableFileUpload::class =>
+        CommandHandler\Messaging\DisableFileUpload::class,
+    TransferCommand\Messaging\EnableFileUpload::class =>
+        CommandHandler\Messaging\EnableFileUpload::class,
+
     Command\Email\SendNewMessageNotificationToOperators::class => CommandHandler\Email\SendNewMessageNotificationToOperators::class,
 
     // Transfer - IRHP Permit
