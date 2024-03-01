@@ -601,6 +601,12 @@ return array(
                 'property' => 'document'
             )
         ),
+        'messaging_message_id' => array(
+            'inversedBy' => array(
+                'entity' => 'MessagingMessage',
+                'property' => 'document'
+            )
+        ),
     ),
     'doc_template' => array(
         'is_ni' => array(
@@ -2379,7 +2385,6 @@ return array(
                 'remove',
             )
         ),
-
     ),
     'messaging_user_message_read' => array(
         'messaging_message_id' => array(

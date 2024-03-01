@@ -163,6 +163,7 @@ final class Upload extends AbstractCommandHandler implements
         $data['filename'] = $identifier;
         $data['description'] = $this->getDescriptionFromCommand($command);
         $data['user'] = $command->getUser();
+        $data['correlationId'] = $command->getCorrelationId();
 
         if ($data['isExternal'] === null) {
             $cmd = DomainCmd\Document\CreateDocument::create($data);

@@ -51,7 +51,8 @@ class UpdateDocumentLinksTest extends CommandHandlerTestCase
         $data = [
             'id' => 111,
             'application' => 123,
-            'surrender' => 777
+            'surrender' => 777,
+            'conversation' => null,
         ];
 
         $command = Cmd::create($data);

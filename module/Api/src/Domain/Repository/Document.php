@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
  * Document
  *
  * @author Rob Caiger <rob@clocal.co.uk>
+ * @method Entity fetchById($id, $hydrateMode = Query::HYDRATE_OBJECT, $version = null)
  */
 class Document extends AbstractRepository
 {
@@ -32,6 +33,16 @@ class Document extends AbstractRepository
     public function fetchListForTmLicence($tmId, $licenceId)
     {
         return $this->fetchListForApplicationOrLicence($tmId, $licenceId, 'licence');
+    }
+
+    public function fetchUnassignedListForUser(int $createdBy): array
+    {
+        $qb = $this->createQueryBuilder();
+        $qb->andWhere($qb->expr()->isNull($this->alias . '.messagingMessage'))
+           ->andWhere($qb->expr()->eq($this->alias . '.createdBy', $createdBy))
+           ->orderBy($this->alias . '.id', 'DESC');
+
+        return $qb->getQuery()->execute();
     }
 
     protected function fetchListForApplicationOrLicence($tmId, $id, $type)
