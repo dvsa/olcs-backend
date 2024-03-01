@@ -39,13 +39,17 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $messages = $messageRepository->fetchPaginatedList($messagesQuery);
 
+        /** @var MessagingConversation $conversation */
         $conversation = $this->getRepo(Repository\Conversation::class)->fetchById($query->getConversation());
+        $application = $conversation->getTask()->getApplication();
 
         $this->markMessagesAsReadByCurrentUser($messages);
 
         return [
             'result'       => $messages,
             'count'        => $messageRepository->fetchPaginatedCount($messagesQuery),
+            'licence'      => $conversation->getRelatedLicence()->serialize(),
+            'application'  => $application ? $application->serialize() : null,
             'conversation' => $conversation->serialize(),
         ];
     }
