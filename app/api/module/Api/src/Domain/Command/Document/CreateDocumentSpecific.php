@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Command\Document;
 
 use Dvsa\Olcs\Transfer\Command\AbstractCommand;
+use Dvsa\Olcs\Transfer\FieldType\Traits\CorrelationIdOptional;
 
 /**
  * Create Document
@@ -11,6 +12,8 @@ use Dvsa\Olcs\Transfer\Command\AbstractCommand;
  */
 class CreateDocumentSpecific extends AbstractCommand
 {
+    use CorrelationIdOptional;
+
     protected $filename;
 
     protected $identifier;
@@ -60,6 +63,10 @@ class CreateDocumentSpecific extends AbstractCommand
     protected $user;
 
     protected $irhpApplication;
+
+    protected $messagingConversation;
+
+    protected $messagingMessage;
 
     protected $isPostSubmissionUpload = 0;
 
@@ -309,5 +316,15 @@ class CreateDocumentSpecific extends AbstractCommand
     public function getIsPostSubmissionUpload()
     {
         return $this->isPostSubmissionUpload;
+    }
+
+    public function getConversation()
+    {
+        return $this->messagingConversation;
+    }
+
+    public function getMessage()
+    {
+        return $this->messagingMessage;
     }
 }

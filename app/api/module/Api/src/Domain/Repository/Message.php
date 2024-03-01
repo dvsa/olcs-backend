@@ -30,6 +30,7 @@ class Message extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('messagingContent')
+            ->with('documents')
             ->withCreatedByWithTeam();
 
         return $qb;

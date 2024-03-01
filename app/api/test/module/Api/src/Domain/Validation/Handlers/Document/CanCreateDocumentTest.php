@@ -52,6 +52,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIrfoOrganisation')->andReturn(776);
         $dto->shouldReceive('getSubmission')->andReturn(876);
         $dto->shouldReceive('getContinuationDetail')->andReturn(943);
+        $dto->shouldReceive('getMessagingConversation')->andReturn(1);
 
         $this->setIsValid('canAccessLicence', [176], true);
         $this->setIsValid('canAccessApplication', [276], true);
@@ -62,6 +63,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $this->setIsValid('canAccessOrganisation', [776], true);
         $this->setIsValid('canAccessSubmission', [876], true);
         $this->setIsValid('canAccessContinuationDetail', [943], true);
+        $this->setIsValid('canAccessConversation', [1], true);
 
         $this->assertTrue($this->sut->isValid($dto));
     }
@@ -111,6 +113,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIrfoOrganisation')->andReturn(776);
         $dto->shouldReceive('getSubmission')->andReturn(876);
         $dto->shouldReceive('getContinuationDetail')->andReturn(943);
+        $dto->shouldReceive('getMessagingConversation')->andReturn(1);
 
         $this->setIsValid('canAccessLicence', [176], true);
         $this->setIsValid('canAccessApplication', [276], true);
@@ -121,6 +124,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $this->setIsValid('canAccessOrganisation', [776], true);
         $this->setIsValid('canAccessSubmission', [876], true);
         $this->setIsValid('canAccessContinuationDetail', [943], true);
+        $this->setIsValid('canAccessConversation', [1], true);
 
         $this->assertFalse($this->sut->isValid($dto));
     }
@@ -144,6 +148,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIrfoOrganisation')->andReturn(null);
         $dto->shouldReceive('getSubmission')->andReturn(null);
         $dto->shouldReceive('getContinuationDetail')->andReturn(null);
+        $dto->shouldReceive('getMessagingConversation')->andReturn(null);
 
         $this->assertFalse($this->sut->isValid($dto));
     }
@@ -224,6 +229,7 @@ class CanCreateDocumentTest extends AbstractHandlerTestCase
         $dto->shouldReceive('getIrfoOrganisation')->andReturn(null);
         $dto->shouldReceive('getSubmission')->andReturn(null);
         $dto->shouldReceive('getContinuationDetail')->andReturn(null);
+        $dto->shouldReceive('getMessagingConversation')->andReturn(null);
 
         $this->setIsValid('canAccessLicence', [176], true);
 
