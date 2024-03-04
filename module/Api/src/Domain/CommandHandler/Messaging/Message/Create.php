@@ -56,7 +56,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         $message = $this->generateAndSaveMessage($command);
         $updatedTask = $this->updateTaskDescriptionAndActionDate($command);
         $sendEmailResult = $this->sendEmail($command);
-        
+
         if ($command->getCorrelationId() !== null) {
             $this->assignUploadsToMessage($message, $command->getCorrelationId());
         }
