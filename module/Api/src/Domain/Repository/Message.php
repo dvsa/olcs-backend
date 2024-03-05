@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage as Entity;
@@ -30,8 +31,15 @@ class Message extends AbstractRepository
 
         $this->getQueryBuilder()->modifyQuery($qb)
             ->with('messagingContent')
-            ->with('documents')
             ->withCreatedByWithTeam();
+
+        $qb->leftJoin(
+            $this->alias . '.documents',
+            'd',
+            Query\Expr\Join::WITH,
+            $this->alias . '.messagingConversation = d.messagingConversation'
+        );
+        $qb->addSelect('d');
 
         return $qb;
     }
@@ -40,7 +48,7 @@ class Message extends AbstractRepository
     {
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.messagingConversation', ':messagingConversation'))
-            ->setParameter('messagingConversation', $conversationId);
+            ->setParameter('messagingConversation', (int)$conversationId);
 
         return $qb;
     }
