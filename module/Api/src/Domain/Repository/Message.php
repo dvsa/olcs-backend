@@ -66,19 +66,33 @@ class Message extends AbstractRepository
         return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getUnreadConversationCountByLicenceIdAndUserId(int $licenceId, int $userId): int
+    public function getUnreadConversationCountByLicenceIdAndRoles(int $licenceId, array $roleNames): int
     {
-        $qb = $this->createQueryBuilder()
-            ->select('COUNT(c.id)')
-            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
-            ->leftJoin($this->alias . '.messagingConversation', 'c')
-            ->innerJoin($this->alias . '.task', 't')
-            ->innerJoin($this->alias . '.licence', 'l')
-            ->andWhere($this->alias . 'l.id = :licenceId')
-            ->andWhere('umr.id IS NULL')
+        $qb = $this->createQueryBuilder();
+
+        $subQuery = $this->getEntityManager()->createQueryBuilder();
+        $subQuery
+            ->select('1')
+            ->from(\Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead::class, 'inner_read')
+            ->leftJoin('inner_read.user', 'inner_user')
+            ->leftJoin('inner_user.roles', 'inner_role')
+            ->where('inner_read.messagingMessage = ' . $this->alias . '.id')
+            ->andWhere($qb->expr()->in('inner_role.role', ':roleNames'));
+
+        $qb
+            ->leftJoin($this->alias . '.messagingConversation', 'inner_conversation')
+            ->leftJoin('inner_conversation.task', 'inner_task')
             ->groupBy($this->alias . '.messagingConversation')
-            ->setParameter('licenceId', $licenceId)
-            ->setParameter('userId', $userId);
+            ->where('inner_conversation.isClosed = 0')
+            ->andWhere('inner_task.licence = :licenceId')
+            ->andWhere(
+                $qb->expr()->not(
+                    $qb->expr()->exists($subQuery->getDQL())
+                )
+            );
+
+        $qb->setParameter('licenceId', $licenceId);
+        $qb->setParameter('roleNames', $roleNames);
 
         return count($qb->getQuery()->getScalarResult());
     }
