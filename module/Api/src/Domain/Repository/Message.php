@@ -44,16 +44,16 @@ class Message extends AbstractRepository
         return $qb;
     }
 
-    public function filterByConversationId(QueryBuilder $qb, $conversationId): QueryBuilder
+    public function filterByConversationId(QueryBuilder $qb, int $conversationId): QueryBuilder
     {
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.messagingConversation', ':messagingConversation'))
-            ->setParameter('messagingConversation', (int)$conversationId);
+            ->setParameter('messagingConversation', $conversationId);
 
         return $qb;
     }
 
-    public function getLastMessageByConversationId($conversationId): array
+    public function getLastMessageByConversationId(int $conversationId): array
     {
         $qb = $this->createQueryBuilder();
         $qb = $this->filterByConversationId($qb, $conversationId);
