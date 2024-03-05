@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 
@@ -27,5 +28,5 @@ return [
     CommandHandler\Messaging\Conversation\Create::class                              => NoValidationRequired::class,
     CommandHandler\Email\SendNewMessageNotificationToOperators::class                => IsSideEffect::class,
     QueryHandler\Messaging\Message\UnreadCountByOrganisationAndUser::class           => NoValidationRequired::class,
-    QueryHandler\Messaging\Message\UnreadCountByLicenceAndUser::class                => NoValidationRequired::class
+    QueryHandler\Messaging\Message\UnreadCountByLicenceAndRoles::class               => IsInternalUser::class
 ];
