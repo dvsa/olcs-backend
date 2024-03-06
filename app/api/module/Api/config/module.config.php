@@ -617,7 +617,6 @@ return [
             'GracePeriod' => RepositoryFactory::class,
             'FeeType' => RepositoryFactory::class,
             'Fee' => RepositoryFactory::class,
-            'Cases' => RepositoryFactory::class,
             'Pi' => RepositoryFactory::class,
             'NonPi' => RepositoryFactory::class,
             'EventHistory' => RepositoryFactory::class,
@@ -789,6 +788,7 @@ return [
             Repository\MessagingConversation::class => RepositoryFactory::class,
             Repository\Licence::class => RepositoryFactory::class,
             Repository\Application::class => RepositoryFactory::class,
+            Repository\Cases::class => RepositoryFactory::class,
             Repository\MessagingSubject::class => RepositoryFactory::class,
             Repository\Organisation::class => RepositoryFactory::class,
             Repository\Task::class => RepositoryFactory::class,
@@ -805,6 +805,7 @@ return [
             'Task' => Repository\Task::class,
             'User' => Repository\User::class,
             'Document' => Repository\Document::class,
+            'Cases' => Repository\Cases::class,
         ],
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [
