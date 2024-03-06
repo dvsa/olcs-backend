@@ -35,7 +35,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $messageQueryBuilder = $messageRepository->getBaseMessageListWithContentQuery($query);
 
-        $messagesQuery = $messageRepository->filterByConversationId($messageQueryBuilder, $query->getConversation());
+        $messagesQuery = $messageRepository->filterByConversationId($messageQueryBuilder, (int)$query->getConversation());
 
         $messages = $messageRepository->fetchPaginatedList($messagesQuery);
 

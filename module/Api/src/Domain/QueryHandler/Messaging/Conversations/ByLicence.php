@@ -32,7 +32,7 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
             $unreadMessageCount = $this->getUnreadMessageCountForUser($value);
             $conversations[$key]['userContextUnreadCount'] = $unreadMessageCount;
             $conversations[$key]['userContextStatus'] = $this->stringifyMessageStatusForUser($value, $unreadMessageCount);
-            $conversations[$key]['latestMessage'] = $this->getLatestMessageMetadata($value['id']);
+            $conversations[$key]['latestMessage'] = $this->getLatestMessageMetadata((int)$value['id']);
         }
 
         $conversations = $this->orderResultPrioritisingNewMessages($conversations);
@@ -51,17 +51,14 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
         return count($results);
     }
 
-    private function getLatestMessageMetadata($conversationId): array
+    private function getLatestMessageMetadata(int $conversationId): array
     {
         $messageRepository = $this->getRepo('Message');
-        assert($messageRepository instanceof MessageRepo);
         return $messageRepository->getLastMessageByConversationId($conversationId);
     }
 
     private function getRepository(): ConversationRepo
     {
-        $conversationRepository = $this->getRepo('Conversation');
-        assert($conversationRepository instanceof ConversationRepo);
-        return $conversationRepository;
+        return $this->getRepo('Conversation');
     }
 }

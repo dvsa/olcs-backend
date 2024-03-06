@@ -34,7 +34,7 @@ class ByOrganisation extends AbstractConversationQueryHandler implements ToggleR
             );
             $conversations[$key]['userContextUnreadCount'] = $unreadMessageCount;
             $conversations[$key]['userContextStatus'] = $this->stringifyMessageStatusForUser($value, $unreadMessageCount);
-            $conversations[$key]['latestMessage'] = $messageRepository->getLastMessageByConversationId($value['id']);
+            $conversations[$key]['latestMessage'] = $messageRepository->getLastMessageByConversationId((int)$value['id']);
         }
 
         $conversations = $this->orderResultPrioritisingNewMessages($conversations);
