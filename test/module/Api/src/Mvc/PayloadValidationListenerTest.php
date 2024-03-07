@@ -68,10 +68,8 @@ class PayloadValidationListenerTest extends MockeryTestCase
     public function testOnRouteNoDtoClass()
     {
         $mockHttpRequest = m::mock(HttpRequest::class);
-        $mockHttpRequest->expects('getQuery->toArray')->withNoArgs()->andReturn([]);
 
         $mockRouteMatch = m::mock(RouteMatch::class);
-        $mockRouteMatch->expects('getParams')->withNoArgs()->andReturn([]);
         $mockRouteMatch->shouldReceive('getParam')
             ->with('dto', false)
             ->once()
