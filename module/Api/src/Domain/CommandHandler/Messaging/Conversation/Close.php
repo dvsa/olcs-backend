@@ -49,7 +49,7 @@ final class Close extends AbstractUserCommandHandler implements ToggleRequiredIn
                     [
                         'licence'  => $conversation->getRelatedLicence(),
                         'document' => $documentResult->getId('document'),
-                        'type'     => CreateCorrespondenceRecord::TYPE_STANDARD,
+                        'type'     => CreateCorrespondenceRecord::TYPE_CLOSED_CONVERSATION,
                     ],
                 ),
             ),
