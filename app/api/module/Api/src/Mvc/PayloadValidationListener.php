@@ -60,29 +60,13 @@ class PayloadValidationListener implements ListenerAggregateInterface
         }
 
         $dtoClass = $matches->getParam('dto', false);
-        $data = $matches->getParams();
 
-        /**
-         * there is an edge case, where Laminas route match is not bringing in the parameters correctly
-         * problem was introduced by:
-         * https://dvsa.atlassian.net/browse/VOL-3752
-         *
-         * Where this happens, we're able to get the params from the query parameters instead, as they seem unaffected
-         *
-         * The only query known to be broken is olcs-transfer/src/Query/Correspondence/Correspondences.php
-         *
-         * A ticket has been created for a more permanent fix for VOL-3752, and also mentions this issue:
-         * https://dvsa.atlassian.net/browse/VOL-4642
-         */
         if (!$dtoClass) {
-            $queryParams = $request->getQuery()->toArray();
-            $dtoClass = $queryParams['dto'] ?? false;
-
-            if (!$dtoClass) {
-                // no controller matched, nothing to do
-                return;
-            }
+            // no controller matched, nothing to do
+            return;
         }
+
+        $data = $matches->getParams();
 
         $dto = new $dtoClass();
         $matches->setParam('dto', $dto);
