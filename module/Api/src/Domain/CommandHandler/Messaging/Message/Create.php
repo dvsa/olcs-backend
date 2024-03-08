@@ -210,6 +210,8 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
             }
 
             $doc->setMessagingMessage($message);
+            $doc->setLicence($message->getMessagingConversation()->getRelatedLicence());
+            $doc->setApplication($message->getMessagingConversation()->getTask()->getApplication());
             $docRepo->saveOnFlush($doc);
         }
 
