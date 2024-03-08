@@ -38,4 +38,12 @@ class Permission extends AbstractPermission
     public const SELFSERVE_EBSR_DOCUMENTS = 'selfserve-ebsr-documents';
     public const CAN_READ_USER_SELFSERVE = 'can-read-user-selfserve';
     public const TRANSPORT_MANAGER = 'selfserve-tm';
+
+    public const CAN_LIST_CONVERSATIONS = 'can-list-conversations';
+    public const CAN_LIST_MESSAGES = 'can-list-messages';
+    public const CAN_REPLY_TO_CONVERSATIONS = 'can-reply-to-conversation';
+    public const CAN_CREATE_CONVERSATIONS = 'can-create-conversation';
+    public const CAN_DISABLE_MESSAGING = 'can-disable-messaging';
+    public const CAN_ENABLE_MESSAGING = 'can-enable-messaging';
+    public const CAN_CLOSE_CONVERSATION = 'can-close-conversation';
 }
