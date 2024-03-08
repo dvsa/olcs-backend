@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Service\Qa\QaContextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep as ApplicationStepQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 

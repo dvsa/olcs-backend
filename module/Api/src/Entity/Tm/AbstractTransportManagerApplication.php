@@ -262,7 +262,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Op digital signature
      *
-     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature|null
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
      * @ORM\JoinColumn(name="op_digital_signature_id", referencedColumnName="id", nullable=true)
@@ -272,7 +272,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Op signature type
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="op_signature_type", referencedColumnName="id", nullable=true)
@@ -282,7 +282,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Tm application status
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_application_status", referencedColumnName="id", nullable=true)
@@ -292,7 +292,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Tm digital signature
      *
-     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature|null
+     * @var \Dvsa\Olcs\Api\Entity\DigitalSignature
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\DigitalSignature", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_digital_signature_id", referencedColumnName="id", nullable=true)
@@ -302,7 +302,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Tm signature type
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_signature_type", referencedColumnName="id", nullable=true)
@@ -312,7 +312,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Tm type
      *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @var \Dvsa\Olcs\Api\Entity\System\RefData
      *
      * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
      * @ORM\JoinColumn(name="tm_type", referencedColumnName="id", nullable=true)
@@ -896,7 +896,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the op digital signature
      *
-     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature|null
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
      */
     public function getOpDigitalSignature()
     {
@@ -920,7 +920,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the op signature type
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getOpSignatureType()
     {
@@ -932,7 +932,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
      *
      * @param \Dvsa\Olcs\Api\Entity\System\RefData $tmApplicationStatus entity being set as the value
      *
-     * @return TransportManagerApplication|null
+     * @return TransportManagerApplication
      */
     public function setTmApplicationStatus($tmApplicationStatus)
     {
@@ -944,7 +944,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the tm application status
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getTmApplicationStatus()
     {
@@ -968,7 +968,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the tm digital signature
      *
-     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature|null
+     * @return \Dvsa\Olcs\Api\Entity\DigitalSignature
      */
     public function getTmDigitalSignature()
     {
@@ -992,7 +992,7 @@ abstract class AbstractTransportManagerApplication implements BundleSerializable
     /**
      * Get the tm signature type
      *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData|null
+     * @return \Dvsa\Olcs\Api\Entity\System\RefData
      */
     public function getTmSignatureType()
     {

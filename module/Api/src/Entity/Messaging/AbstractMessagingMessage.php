@@ -6,10 +6,12 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use JsonSerializable;
 use Dvsa\Olcs\Api\Entity\Traits\BundleSerializableTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
-use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesTrait;
+use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 use Dvsa\Olcs\Api\Entity\Traits\CreatedOnTrait;
 use Dvsa\Olcs\Api\Entity\Traits\ModifiedOnTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
@@ -36,7 +38,7 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
 {
     use BundleSerializableTrait;
     use ProcessDateTrait;
-    use ClearPropertiesTrait;
+    use ClearPropertiesWithCollectionsTrait;
     use CreatedOnTrait;
     use ModifiedOnTrait;
 
@@ -105,10 +107,52 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true)
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
-    protected $version;
+    protected $version = 1;
+
+    /**
+     * Document
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Dvsa\Olcs\Api\Entity\Doc\Document", mappedBy="messagingMessage")
+     */
+    protected $documents;
+
+    /**
+     * User message read
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead",
+     *     mappedBy="messagingMessage"
+     * )
+     */
+    protected $userMessageReads;
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->initCollections();
+    }
+
+    /**
+     * Initialise the collections
+     *
+     * @return void
+     */
+    public function initCollections()
+    {
+        $this->documents = new ArrayCollection();
+        $this->userMessageReads = new ArrayCollection();
+    }
 
     /**
      * Set the created by
@@ -252,5 +296,131 @@ abstract class AbstractMessagingMessage implements BundleSerializableInterface, 
     public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * Set the document
+     *
+     * @param ArrayCollection $documents collection being set as the value
+     *
+     * @return MessagingMessage
+     */
+    public function setDocuments($documents)
+    {
+        $this->documents = $documents;
+
+        return $this;
+    }
+
+    /**
+     * Get the documents
+     *
+     * @return ArrayCollection
+     */
+    public function getDocuments()
+    {
+        return $this->documents;
+    }
+
+    /**
+     * Add a documents
+     *
+     * @param ArrayCollection|mixed $documents collection being added
+     *
+     * @return MessagingMessage
+     */
+    public function addDocuments($documents)
+    {
+        if ($documents instanceof ArrayCollection) {
+            $this->documents = new ArrayCollection(
+                array_merge(
+                    $this->documents->toArray(),
+                    $documents->toArray()
+                )
+            );
+        } elseif (!$this->documents->contains($documents)) {
+            $this->documents->add($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a documents
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $documents collection being removed
+     *
+     * @return MessagingMessage
+     */
+    public function removeDocuments($documents)
+    {
+        if ($this->documents->contains($documents)) {
+            $this->documents->removeElement($documents);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Set the user message read
+     *
+     * @param ArrayCollection $userMessageReads collection being set as the value
+     *
+     * @return MessagingMessage
+     */
+    public function setUserMessageReads($userMessageReads)
+    {
+        $this->userMessageReads = $userMessageReads;
+
+        return $this;
+    }
+
+    /**
+     * Get the user message reads
+     *
+     * @return ArrayCollection
+     */
+    public function getUserMessageReads()
+    {
+        return $this->userMessageReads;
+    }
+
+    /**
+     * Add a user message reads
+     *
+     * @param ArrayCollection|mixed $userMessageReads collection being added
+     *
+     * @return MessagingMessage
+     */
+    public function addUserMessageReads($userMessageReads)
+    {
+        if ($userMessageReads instanceof ArrayCollection) {
+            $this->userMessageReads = new ArrayCollection(
+                array_merge(
+                    $this->userMessageReads->toArray(),
+                    $userMessageReads->toArray()
+                )
+            );
+        } elseif (!$this->userMessageReads->contains($userMessageReads)) {
+            $this->userMessageReads->add($userMessageReads);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a user message reads
+     *
+     * @param \Doctrine\Common\Collections\ArrayCollection $userMessageReads collection being removed
+     *
+     * @return MessagingMessage
+     */
+    public function removeUserMessageReads($userMessageReads)
+    {
+        if ($this->userMessageReads->contains($userMessageReads)) {
+            $this->userMessageReads->removeElement($userMessageReads);
+        }
+
+        return $this;
     }
 }

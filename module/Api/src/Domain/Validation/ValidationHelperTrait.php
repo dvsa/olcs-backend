@@ -10,7 +10,7 @@ namespace Dvsa\Olcs\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
 
@@ -62,6 +62,7 @@ use Dvsa\Olcs\Api\Domain\ValidatorManager;
  * @method bool canEditApplication($entityId)
  * @method bool canEditBusReg($entityId)
  * @method bool canAccessContinuationDetail($entityId)
+ * @method bool canAccessConversation($entityId)
  * @method bool isLicenceSurrenderable($licenceId)
  * @method bool canAccessIrhpApplicationWithId($entityId)
  * @method bool canEditIrhpApplicationWithId($entityId)

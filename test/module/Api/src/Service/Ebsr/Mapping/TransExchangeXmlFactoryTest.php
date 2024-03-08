@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Mapping;
 
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\Mapping\TransExchangeXmlFactory;

@@ -75,11 +75,24 @@ abstract class AbstractMessagingUserMessageRead implements BundleSerializableInt
     protected $lastModifiedBy;
 
     /**
+     * Last read on
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="datetime", name="last_read_on", nullable=false)
+     */
+    protected $lastReadOn;
+
+    /**
      * Messaging message
      *
      * @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage
      *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage", fetch="LAZY")
+     * @ORM\ManyToOne(
+     *     targetEntity="Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage",
+     *     fetch="LAZY",
+     *     inversedBy="userMessageReads"
+     * )
      * @ORM\JoinColumn(name="messaging_message_id", referencedColumnName="id", nullable=false)
      */
     protected $messagingMessage;
@@ -99,10 +112,10 @@ abstract class AbstractMessagingUserMessageRead implements BundleSerializableInt
      *
      * @var int
      *
-     * @ORM\Column(type="smallint", name="version", nullable=true)
+     * @ORM\Column(type="smallint", name="version", nullable=false, options={"default": 1})
      * @ORM\Version
      */
-    protected $version;
+    protected $version = 1;
 
     /**
      * Set the created by
@@ -174,6 +187,37 @@ abstract class AbstractMessagingUserMessageRead implements BundleSerializableInt
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the last read on
+     *
+     * @param \DateTime $lastReadOn new value being set
+     *
+     * @return MessagingUserMessageRead
+     */
+    public function setLastReadOn($lastReadOn)
+    {
+        $this->lastReadOn = $lastReadOn;
+
+        return $this;
+    }
+
+    /**
+     * Get the last read on
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime|string
+
+     */
+    public function getLastReadOn($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->lastReadOn);
+        }
+
+        return $this->lastReadOn;
     }
 
     /**

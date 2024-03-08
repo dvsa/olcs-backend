@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class BusRegistrationInputFactory

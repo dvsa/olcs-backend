@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleServiceFactory;
 

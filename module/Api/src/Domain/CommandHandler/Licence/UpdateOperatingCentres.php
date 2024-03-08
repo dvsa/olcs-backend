@@ -14,7 +14,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * @see \Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence\UpdateOperatingCentresTest

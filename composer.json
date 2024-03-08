@@ -23,10 +23,10 @@
         "league/flysystem": "^1.0",
         "league/flysystem-webdav": "1.0.10",
         "monolog/monolog": "^2.9",
-        "olcs/olcs-logging": "^5.0.0",
-        "olcs/olcs-transfer": "^5.0.0",
-        "olcs/olcs-utils": "^5.0.0",
-        "olcs/olcs-xmltools": "^5.0.0",
+        "olcs/olcs-logging": "^6.0.0",
+        "olcs/olcs-transfer": "^6.0.0",
+        "olcs/olcs-utils": "^6.0.0",
+        "olcs/olcs-xmltools": "^6.0.0",
         "oro/doctrine-extensions": "^2",
         "phprtflite/phprtflite": "~1.3.3",
         "phpseclib/phpseclib": "^2.0.6",
@@ -49,7 +49,8 @@
         "laminas/laminas-view": "^2.23",
         "laminas/laminas-i18n": "^2.17",
         "laminas/laminas-serializer": "^2.13",
-        "laminas/laminas-eventmanager": "^3.5"
+        "laminas/laminas-eventmanager": "^3.5",
+        "psr/container": "^1.1|^2"
     },
     "autoload": {
         "classmap": [

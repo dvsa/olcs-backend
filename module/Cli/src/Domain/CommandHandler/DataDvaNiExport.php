@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Domain\Repository;
 

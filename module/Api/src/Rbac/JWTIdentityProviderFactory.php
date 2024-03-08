@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Authentication\Cognito\Client;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 /**

@@ -15,6 +15,7 @@ return [
 
         'canAccessLicence' => Validators\CanAccessLicence::class,
         'canAccessApplication' => Validators\CanAccessApplication::class,
+        'canAccessConversation' => Validators\CanAccessConversation::class,
         'canAccessCompanySubsidiary' => Validators\CanAccessCompanySubsidiary::class,
         'canAccessOrganisation' => Validators\CanAccessOrganisation::class,
         'canAccessOrganisationPerson' => Validators\CanAccessOrganisationPerson::class,

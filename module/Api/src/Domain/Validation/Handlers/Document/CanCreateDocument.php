@@ -7,7 +7,7 @@ use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as CreateDocumentDto;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadDto;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Can Create a Document
@@ -95,6 +95,10 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
 
         if ($dto->getContinuationDetail()) {
             $this->setIsValid($this->canAccessContinuationDetail($dto->getContinuationDetail()));
+        }
+
+        if ($dto->getMessagingConversation()) {
+            $this->setIsValid($this->canAccessConversation($dto->getMessagingConversation()));
         }
 
         return $this->getIsValid();

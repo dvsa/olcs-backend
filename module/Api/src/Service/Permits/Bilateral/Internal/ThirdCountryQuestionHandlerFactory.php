@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\ThirdCountryAnswerSaver;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class ThirdCountryQuestionHandlerFactory implements FactoryInterface
 {

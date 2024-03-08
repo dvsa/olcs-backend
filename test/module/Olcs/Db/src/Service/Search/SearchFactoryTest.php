@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Elastica\Client as ElasticaClient;
 use Elasticsearch\Client;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Olcs\Db\Service\Search\Search;
 use Olcs\Db\Service\Search\SearchFactory;

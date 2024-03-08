@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateLightGoodsVehicleCon
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\Organisation;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\Sla;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -16,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
 use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -23,7 +25,10 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
 
 /**
@@ -31,20 +36,25 @@ use Mockery as m;
  */
 class SubmitApplicationTest extends CommandHandlerTestCase
 {
+    use MocksServicesTrait;
+    use MocksAbstractCommandHandlerServicesTrait;
+
     public const APP_ID = 9001;
     public const LIC_ID = 8001;
     public const TASK_ID = 6001;
     public const VERSION = 10;
     public const TRAFFIC_AREA = 'TA';
 
-    /** @var SubmitApplication  */
+    /** @var SubmitApplication */
     protected $sut;
     /** @var  Entity\Licence\Licence | m\MockInterface */
     private $mockLic;
     /** @var  Entity\Application\Application  | m\MockInterface */
     private $mockApp;
 
-    /** @var  m\MockInterface*/
+    private OrganisationEntity $organisation;
+
+    /** @var  m\MockInterface */
     private $mockTmaRepo;
 
     public function setUp(): void
@@ -61,11 +71,15 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $trafficArea = new Entity\TrafficArea\TrafficArea();
         $trafficArea->setId(self::TRAFFIC_AREA);
 
-        $this->mockLic = m::mock(Entity\Licence\Licence::class)->makePartial();
+        $this->organisation = new OrganisationEntity();
+        $this->organisation->setType(new RefData(OrganisationEntity::ORG_TYPE_OTHER));
+
+        $this->mockLic = m::mock(LicenceEntity::class)->makePartial();
         $this->mockLic
             ->setTrafficArea($trafficArea)
             ->setLicenceType(new RefData())
-            ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection());
+            ->setOperatingCentres(new \Doctrine\Common\Collections\ArrayCollection())
+            ->setOrganisation($this->organisation);
 
         $this->mockApp = m::mock(ApplicationEntity::class)->makePartial();
         $this->mockApp
@@ -75,6 +89,7 @@ class SubmitApplicationTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class),
             SlaCalculatorInterface::class => m::mock(SlaCalculator::class),
+            CacheEncryption::class => m::mock(CacheEncryption::class),
         ];
 
         parent::setUp();
@@ -238,6 +253,8 @@ class SubmitApplicationTest extends CommandHandlerTestCase
                 (new Result())->addMessage('unit TexTask created')
             );
         }
+
+        $this->expectedLicenceCacheClear($this->mockLic);
 
         $result = $this->sut->handleCommand($command);
 
@@ -608,7 +625,11 @@ class SubmitApplicationTest extends CommandHandlerTestCase
             ]
         );
 
-        $this->mockLic->shouldReceive('getOrganisation->isLtd')->with()->andReturn($isLtd);
+        if ($isLtd) {
+            $this->organisation->setType(new RefData(OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY));
+        }
+
+        $this->mockLic->setOrganisation($this->organisation);
 
         $mockedSlaEntity = m::mock(\Dvsa\Olcs\Api\Entity\System\Sla::class);
 

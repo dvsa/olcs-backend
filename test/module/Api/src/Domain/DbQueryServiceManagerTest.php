@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\QueryInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

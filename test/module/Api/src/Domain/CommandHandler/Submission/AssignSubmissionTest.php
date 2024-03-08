@@ -8,7 +8,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Query\User\User;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\AssignSubmission;

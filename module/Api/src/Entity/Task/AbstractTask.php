@@ -222,6 +222,15 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     protected $licence;
 
     /**
+     * Messaging
+     *
+     * @var boolean
+     *
+     * @ORM\Column(type="boolean", name="messaging", nullable=false, options={"default": 0})
+     */
+    protected $messaging = 0;
+
+    /**
      * Olbs key
      *
      * @var int
@@ -678,6 +687,30 @@ abstract class AbstractTask implements BundleSerializableInterface, JsonSerializ
     public function getLicence()
     {
         return $this->licence;
+    }
+
+    /**
+     * Set the messaging
+     *
+     * @param boolean $messaging new value being set
+     *
+     * @return Task
+     */
+    public function setMessaging($messaging)
+    {
+        $this->messaging = $messaging;
+
+        return $this;
+    }
+
+    /**
+     * Get the messaging
+     *
+     * @return boolean
+     */
+    public function getMessaging()
+    {
+        return $this->messaging;
     }
 
     /**

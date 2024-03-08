@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class RepositoryFactory implements FactoryInterface
 {

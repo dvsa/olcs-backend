@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplications as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Set the remaining successful permit applications

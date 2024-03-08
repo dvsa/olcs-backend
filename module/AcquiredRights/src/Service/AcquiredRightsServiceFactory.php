@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\AcquiredRights\Service;
 
 use Dvsa\Olcs\AcquiredRights\Client\AcquiredRightsClient;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\Logging\Log\Logger;
 use phpDocumentor\Reflection\Types\Boolean;

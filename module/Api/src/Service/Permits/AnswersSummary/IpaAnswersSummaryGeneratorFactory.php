@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class IpaAnswersSummaryGeneratorFactory implements FactoryInterface
 {

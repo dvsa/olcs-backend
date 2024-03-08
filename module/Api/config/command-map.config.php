@@ -1,14 +1,14 @@
 <?php
 
-use Dvsa\Olcs\Transfer\Command as TransferCommand;
-use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion as AppCompCommand;
-use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Queue as QueueCommand;
+use Dvsa\Olcs\Api\Domain\CommandHandler;
+use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationCompletion as AppCompCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue as QueueCommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command as CommandCli;
 use Dvsa\Olcs\Cli\Domain\CommandHandler as CommandHandlerCli;
+use Dvsa\Olcs\Transfer\Command as TransferCommand;
 
 return [
     // Transfer - Auth
@@ -765,7 +765,7 @@ return [
         => CommandHandler\TransportManagerApplication\UpdateStatus::class,
     TransferCommand\TransportManagerApplication\UpdateDetails::class
         => CommandHandler\TransportManagerApplication\UpdateDetailsFactory::class,
-   TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
+    TransferCommand\TransportManagerApplication\CreateForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\CreateForResponsibilities::class,
     TransferCommand\TransportManagerApplication\UpdateForResponsibilities::class =>
         CommandHandler\TransportManagerApplication\UpdateForResponsibilities::class,
@@ -1046,21 +1046,31 @@ return [
         CommandHandler\FeatureToggle\Create::class,
     TransferCommand\FeatureToggle\Update::class =>
         CommandHandler\FeatureToggle\Update::class,
-    TransferCommand\FeatureToggle\Delete::class =>
+    TransferCommand\FeatureToggle\Delete::class                =>
         CommandHandler\FeatureToggle\Delete::class,
 
     // Transfer - Messaging
-    TransferCommand\Messaging\Conversation\Close::class =>
+    TransferCommand\Messaging\Conversation\Close::class        =>
         CommandHandler\Messaging\Conversation\Close::class,
+    TransferCommand\Messaging\Conversation\Disable::class      =>
+        CommandHandler\Messaging\Conversation\Disable::class,
+    TransferCommand\Messaging\Conversation\Enable::class       =>
+        CommandHandler\Messaging\Conversation\Enable::class,
+    TransferCommand\Messaging\DisableFileUpload::class =>
+        CommandHandler\Messaging\DisableFileUpload::class,
+    TransferCommand\Messaging\EnableFileUpload::class =>
+        CommandHandler\Messaging\EnableFileUpload::class,
+
+    Command\Email\SendNewMessageNotificationToOperators::class => CommandHandler\Email\SendNewMessageNotificationToOperators::class,
 
     // Transfer - IRHP Permit
-    TransferCommand\IrhpPermit\Replace::class =>
+    TransferCommand\IrhpPermit\Replace::class                  =>
         CommandHandler\IrhpPermit\Replace::class,
-    TransferCommand\IrhpPermit\Terminate::class =>
+    TransferCommand\IrhpPermit\Terminate::class                =>
         CommandHandler\IrhpPermit\Terminate::class,
 
     // Transfer - IRHP Permit Application
-    TransferCommand\IrhpApplication\Create::class =>
+    TransferCommand\IrhpApplication\Create::class              =>
         CommandHandler\IrhpApplication\Create::class,
 
     // Transfer - IRHP Permit Stock
@@ -1288,5 +1298,7 @@ return [
 
     CommandCli\InterimEndDateEnforcement::class => CommandHandlerCli\InterimEndDateEnforcement::class,
 
-    TransferCommand\Messaging\Message\Create::class => CommandHandler\Messaging\Message\Create::class,
+    Command\Messaging\Conversation\StoreSnapshot::class  => CommandHandler\Messaging\Conversation\StoreSnapshot::class,
+    TransferCommand\Messaging\Message\Create::class      => CommandHandler\Messaging\Message\Create::class,
+    TransferCommand\Messaging\Conversation\Create::class => CommandHandler\Messaging\Conversation\Create::class,
 ];

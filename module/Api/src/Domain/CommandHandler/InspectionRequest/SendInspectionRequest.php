@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\EmailAwareInterface;
@@ -12,6 +13,8 @@ use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Transfer\Query\SystemParameter\SystemParameter as SysParamQry;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
 /**
  * Send Inspection Request Email
@@ -66,12 +69,11 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
         /* @var array - just to save the time during migration process,
          * InspectionRequest view model used an array, not an object
          */
-
         $inspectionRequest = $this->getRepo()->fetchForInspectionRequest($command->getId());
         $result = new Result();
         if (!empty($inspectionRequest)) {
             $message = new Message(
-                $inspectionRequest['licence']['enforcementArea']['emailAddress'],
+                $this->getEmailFromSysParam($inspectionRequest),
                 sprintf(self::SUBJECT_LINE, $inspectionRequest['id'])
             );
             $translateToWelsh = 'N';
@@ -97,13 +99,29 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
         return $result;
     }
 
+    /**
+     * @param $inspectionRequest
+     * @return mixed
+     * @throws RuntimeException
+     */
+    protected function getEmailFromSysParam($inspectionRequest)
+    {
+        $niFlag = $inspectionRequest['application']['licence']['niFlag'] ?? $inspectionRequest['licence']['niFlag'];
+        $paramId = $niFlag === 'Y' ? SystemParameter::NEW_OP_EMAIL_NI : SystemParameter::NEW_OP_EMAIL_GB;
+        /** @var \Dvsa\Olcs\Api\Domain\QueryHandler\Result $result */
+        $result = $this->handleQuery(SysParamQry::create(['id' => $paramId]));
+        if ($result->isEmpty()) {
+            throw new RuntimeException("The system parameter with id $paramId was not found.");
+        }
+        return $result->getObject()->getParamValue();
+    }
+
     protected function populateInspectionRequestVariables($inspectionRequest, $locale)
     {
         $inspectionRequest['licence']['workshops'] =
             $this->getRepo('Workshop')->fetchForLicence($inspectionRequest['licence']['id'], Query::HYDRATE_ARRAY);
 
-        $workshop = isset($inspectionRequest['licence']['workshops'][0]) ?
-            $inspectionRequest['licence']['workshops'][0] : null;
+        $workshop = $inspectionRequest['licence']['workshops'][0] ?? null;
         $user = $this->getCurrentUser();
 
         $requestDate = '';

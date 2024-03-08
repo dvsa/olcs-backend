@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class VrmFactory

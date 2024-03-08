@@ -6,7 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth\LoginFactoryTest;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 

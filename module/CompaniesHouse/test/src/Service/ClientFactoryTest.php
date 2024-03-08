@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\CompaniesHouse\Test\Service;
 
 use Dvsa\Olcs\CompaniesHouse\Service\Client;
 use Dvsa\Olcs\CompaniesHouse\Service\ClientFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

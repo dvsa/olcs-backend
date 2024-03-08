@@ -13,8 +13,7 @@ use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as GrantGoodsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as GrantPsvCmd;
-use Interop\Container\Containerinterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Container\ContainerInterface;
 
 final class Grant extends AbstractCommandHandler implements TransactionedInterface
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\GovUkAccount;
 
 use Dvsa\Olcs\Api\Service\GovUkAccount\GovUkAccountService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
 class GetGovUkAccountRedirectFactory implements FactoryInterface

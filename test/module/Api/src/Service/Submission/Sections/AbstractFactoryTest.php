@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Service\Submission\Sections\AbstractFactory;
 use Dvsa\OlcsTest\Api\Service\Submission\Sections\Stub\AbstractSectionStub;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\View\Renderer\PhpRenderer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

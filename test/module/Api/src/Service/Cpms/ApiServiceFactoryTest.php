@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Cpms;
 
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Cpms\Service\ApiService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;

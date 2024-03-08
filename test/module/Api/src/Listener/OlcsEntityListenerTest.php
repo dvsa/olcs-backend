@@ -6,7 +6,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Listener\OlcsEntityListener;
 use Dvsa\OlcsTest\Api\Listener\Stub\EntityStub;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use LmcRbacMvc\Service\AuthorizationService;

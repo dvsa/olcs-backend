@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Service\CpmsResponseException;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperService;
 use Dvsa\Olcs\Api\Service\CpmsV2HelperServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;

@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class SupplementedApplicationStepsProviderFactory implements FactoryInterface
 {

@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
 use Dvsa\Olcs\Transfer\Command\LoggerOmitContentInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\AbstractPluginManager;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;

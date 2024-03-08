@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager as ContextPluginMana
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGeneratorFactory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

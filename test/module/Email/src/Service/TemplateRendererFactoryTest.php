@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Email\Service;
 
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;

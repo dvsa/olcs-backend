@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 
 use Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;

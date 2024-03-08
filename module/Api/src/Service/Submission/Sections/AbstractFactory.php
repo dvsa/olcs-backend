@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Submission\Sections;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class AbstractFactory implements FactoryInterface
 {

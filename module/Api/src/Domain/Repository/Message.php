@@ -2,10 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
-use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
@@ -20,7 +19,8 @@ class Message extends AbstractRepository
         $this->getQueryBuilder()->modifyQuery($qb)
             ->withRefdata()
             ->with('createdBy')
-            ->with('lastModifiedBy');
+            ->with('lastModifiedBy')
+            ->order('createdOn', 'desc');
 
         return $qb;
     }
@@ -33,10 +33,18 @@ class Message extends AbstractRepository
             ->with('messagingContent')
             ->withCreatedByWithTeam();
 
+        $qb->leftJoin(
+            $this->alias . '.documents',
+            'd',
+            Query\Expr\Join::WITH,
+            $this->alias . '.messagingConversation = d.messagingConversation'
+        );
+        $qb->addSelect('d');
+
         return $qb;
     }
 
-    public function filterByConversationId(QueryBuilder $qb, $conversationId): QueryBuilder
+    public function filterByConversationId(QueryBuilder $qb, int $conversationId): QueryBuilder
     {
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.messagingConversation', ':messagingConversation'))
@@ -45,7 +53,7 @@ class Message extends AbstractRepository
         return $qb;
     }
 
-    public function getLastMessageByConversationId($conversationId): array
+    public function getLastMessageByConversationId(int $conversationId): array
     {
         $qb = $this->createQueryBuilder();
         $qb = $this->filterByConversationId($qb, $conversationId);
@@ -56,20 +64,62 @@ class Message extends AbstractRepository
 
     public function getUnreadMessagesByConversationIdAndUserId($conversationId, $userId): array
     {
-        $sql = '
-        SELECT messaging_message.* FROM messaging_user_message_read
-        RIGHT JOIN messaging_message ON
-            messaging_user_message_read.messaging_message_id = messaging_message.id
-        WHERE
-            messaging_message.messaging_conversation_id = ?
-          AND
-            (messaging_user_message_read.user_id != ? OR messaging_user_message_read.user_id IS NULL);
-        ';
-        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
-        $rsm->addRootEntityFromClassMetadata(MessagingMessage::class, 'messaging_message');
-        $query = $this->getEntityManager()->createNativeQuery($sql, $rsm);
-        $query->setParameters([$conversationId, $userId]);
+        $qb = $this->createQueryBuilder()
+            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
+            ->andWhere($this->alias . '.messagingConversation = :conversationId')
+            ->andWhere('umr.id IS NULL')
+            ->setParameter('conversationId', $conversationId)
+            ->setParameter('userId', $userId);
 
-        return $query->getResult(Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+    }
+
+    public function getUnreadConversationCountByLicenceIdAndRoles(int $licenceId, array $roleNames): int
+    {
+        $qb = $this->createQueryBuilder();
+
+        $subQuery = $this->getEntityManager()->createQueryBuilder();
+        $subQuery
+            ->select('1')
+            ->from(\Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead::class, 'inner_read')
+            ->leftJoin('inner_read.user', 'inner_user')
+            ->leftJoin('inner_user.roles', 'inner_role')
+            ->where('inner_read.messagingMessage = ' . $this->alias . '.id')
+            ->andWhere($qb->expr()->in('inner_role.role', ':roleNames'));
+
+        $qb
+            ->leftJoin($this->alias . '.messagingConversation', 'inner_conversation')
+            ->leftJoin('inner_conversation.task', 'inner_task')
+            ->groupBy($this->alias . '.messagingConversation')
+            ->where('inner_conversation.isClosed = 0')
+            ->andWhere('inner_task.licence = :licenceId')
+            ->andWhere(
+                $qb->expr()->not(
+                    $qb->expr()->exists($subQuery->getDQL())
+                )
+            );
+
+        $qb->setParameter('licenceId', $licenceId);
+        $qb->setParameter('roleNames', $roleNames);
+
+        return count($qb->getQuery()->getScalarResult());
+    }
+
+    public function getUnreadConversationCountByOrganisationIdAndUserId(int $organisationId, int $userId): int
+    {
+        $qb = $this->createQueryBuilder()
+            ->select('COUNT(c.id)')
+            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
+            ->leftJoin($this->alias . '.messagingConversation', 'c')
+            ->leftJoin('c.task', 't')
+            ->leftJoin('t.licence', 'l')
+            ->leftJoin('l.organisation', 'o')
+            ->andWhere('o.id = :organisationId')
+            ->andWhere('umr.id IS NULL')
+            ->groupBy($this->alias . '.messagingConversation')
+            ->setParameter('organisationId', $organisationId)
+            ->setParameter('userId', $userId);
+
+        return count($qb->getQuery()->getScalarResult());
     }
 }

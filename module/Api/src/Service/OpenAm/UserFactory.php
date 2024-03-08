@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\OpenAm;
 
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Faker\Factory;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * User Factory

@@ -420,6 +420,7 @@ final class CreateTask extends AbstractCommandHandler
         $task->setDescription($command->getDescription());
         $task->setIsClosed($command->getIsClosed());
         $task->setUrgent($command->getUrgent());
+        $task->setMessaging(in_array($command->getMessaging(), ['Y', true]));
 
         $task->setLastModifiedOn(new DateTime());
 

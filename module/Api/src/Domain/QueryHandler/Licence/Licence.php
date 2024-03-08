@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\LicenceStatusAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Psr\Container\ContainerExceptionInterface;

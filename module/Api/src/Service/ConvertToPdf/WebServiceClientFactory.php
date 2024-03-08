@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Service\ConvertToPdf;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\Http\Client as HttpClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class WebServiceClientFactory

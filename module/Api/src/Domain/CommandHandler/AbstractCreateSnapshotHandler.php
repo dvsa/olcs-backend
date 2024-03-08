@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\LicenceProviderInterface;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Interop\Container\Containerinterface;
+use Psr\Container\ContainerInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 
