@@ -109,74 +109,74 @@ return [
             'password' => '%olcs_api_opendj_password%'
         ],
         'invalid_defined_mime_types' => [
-    'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
-    'dotm' => 'application/vnd.ms-word.template.macroEnabled.12',
-    'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
-    'xltm' => 'application/vnd.ms-excel.template.macroEnabled.12',
-    'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
-    'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
-    'ppam' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
-    'pptm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
-    'potm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
-    'ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
-],
+        'docm' => 'application/vnd.ms-word.document.macroEnabled.12',
+        'dotm' => 'application/vnd.ms-word.template.macroEnabled.12',
+        'xlsm' => 'application/vnd.ms-excel.sheet.macroEnabled.12',
+        'xltm' => 'application/vnd.ms-excel.template.macroEnabled.12',
+        'xlam' => 'application/vnd.ms-excel.addin.macroEnabled.12',
+        'xlsb' => 'application/vnd.ms-excel.sheet.binary.macroEnabled.12',
+        'ppam' => 'application/vnd.ms-powerpoint.addin.macroEnabled.12',
+        'pptm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+        'potm' => 'application/vnd.ms-powerpoint.presentation.macroEnabled.12',
+        'ppsm' => 'application/vnd.ms-powerpoint.slideshow.macroEnabled.12',
+        ],
         'valid_mime_types' => [
-    'application/json',
-    'application/msword',
-    'application/pdf',
-    'application/rtf',
-    'application/vnd.ms-excel',
-    'application/vnd.ms-excel',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.ms-xpsdocument',
-    'application/vnd.oasis.opendocument.graphics',
-    'application/vnd.oasis.opendocument.graphics',
-    'application/vnd.oasis.opendocument.image',
-    'application/vnd.oasis.opendocument.presentation',
-    'application/vnd.oasis.opendocument.presentation',
-    'application/vnd.oasis.opendocument.spreadsheet',
-    'application/vnd.oasis.opendocument.spreadsheet',
-    'application/vnd.oasis.opendocument.text',
-    'application/vnd.oasis.opendocument.text',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.openxmlformats-officedocument.presentationml.slide',
-    'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/x-7z-compressed',
-    'application/x-msmetafile',
-    'application/xml',
-    'application/xml',
-    'application/zip',
-    'audio/flac',
-    'audio/m4a',
-    'audio/mpeg',
-    'audio/mpeg',
-    'audio/ogg',
-    'audio/x-aac',
-    'audio/x-aiff',
-    'audio/x-aiff',
-    'audio/x-ms-wma',
-    'audio/x-wav',
-    'image/bmp',
-    'image/gif',
-    'image/jpeg',
-    'image/jpeg',
-    'image/png',
-    'image/tiff',
-    'image/tiff',
-    'image/vnd.djvu',
-    'image/vnd.dwg',
-    'image/vnd.dxf',
-    'image/webp',
-    'message/rfc822',
-    'text/csv',
-    'text/html',
-    'text/plain',
-    'video/3gpp',
-    'video/webm',
-]
+        'application/json',
+        'application/msword',
+        'application/pdf',
+        'application/rtf',
+        'application/vnd.ms-excel',
+        'application/vnd.ms-excel',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.ms-xpsdocument',
+        'application/vnd.oasis.opendocument.graphics',
+        'application/vnd.oasis.opendocument.graphics',
+        'application/vnd.oasis.opendocument.image',
+        'application/vnd.oasis.opendocument.presentation',
+        'application/vnd.oasis.opendocument.presentation',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'application/vnd.oasis.opendocument.spreadsheet',
+        'application/vnd.oasis.opendocument.text',
+        'application/vnd.oasis.opendocument.text',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.openxmlformats-officedocument.presentationml.slide',
+        'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/x-7z-compressed',
+        'application/x-msmetafile',
+        'application/xml',
+        'application/xml',
+        'application/zip',
+        'audio/flac',
+        'audio/m4a',
+        'audio/mpeg',
+        'audio/mpeg',
+        'audio/ogg',
+        'audio/x-aac',
+        'audio/x-aiff',
+        'audio/x-aiff',
+        'audio/x-ms-wma',
+        'audio/x-wav',
+        'image/bmp',
+        'image/gif',
+        'image/jpeg',
+        'image/jpeg',
+        'image/png',
+        'image/tiff',
+        'image/tiff',
+        'image/vnd.djvu',
+        'image/vnd.dwg',
+        'image/vnd.dxf',
+        'image/webp',
+        'message/rfc822',
+        'text/csv',
+        'text/html',
+        'text/plain',
+        'video/3gpp',
+        'video/webm',
+        ]
     ],
 
     // Asset path, URI to olcs-static (CSS, JS, etc) *Environment specific*
@@ -202,7 +202,7 @@ return [
     'client' => [
         'baseuri' => "%companies_house_api_base_uri%",
     ],
-],
+    ],
 
     // SQS Queues
     'message_queue' => [
@@ -211,11 +211,11 @@ return [
     'ProcessInsolvency_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_insolvency_queue%",
     'ProcessInsolvencyDlq_URL' => "%olcs_aws_sqs_base_uri%/%olcs_aws_account_number%/%olcs_aws_sqs_ch_insolvency_dlq%",
     'TransXChangeConsumer_URL' => "%transxchange_aws_sqs_output_uri%",
-],
+    ],
 
     'company_house_dlq' => [
     'notification_email_address' => "%company_house_dlq_notification_email_address%"
-],
+    ],
 
     // CPMS service
     'cpms_api' => [
@@ -236,7 +236,7 @@ return [
             ],
         ],
     ],
-],
+    ],
 
     // CPMS service authentication - used by CpmsIdentityProvider service
     // CPMS service authentication - used by CpmsIdentityProvider service
@@ -264,9 +264,9 @@ return [
         'selfserve_uri' => '%olcs_ss_uri%',
         'internal_uri' => '%olcs_iu_uri%',
     ],
-'awsOptions'=>[
-    'region' =>'%olcs_aws_region%',
-        'version'=>'%olcs_aws_version%',
+    'awsOptions' => [
+    'region' => '%olcs_aws_region%',
+        'version' => '%olcs_aws_version%',
 
 
         's3Options' => [
@@ -279,10 +279,10 @@ return [
     'options' => [
         'transport' => [
             ['type' => 'SMTP', 'options' => ['name' => '%olcs_email_host%', 'host' => '%olcs_email_host%', 'port' => '%olcs_email_port%']],
-            ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key'=>'%domain%/email']],
+            ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key' => '%domain%/email']],
         ]
     ],
-],
+    ],
 
     'mailboxes' => [
     // IMAP connection to a the mailbox for reading inspection request emails
@@ -309,7 +309,7 @@ return [
     'http_client_options' => [
         'timeout' => '30'
     ]
-],
+    ],
 
     'ebsr' => [
     'transexchange_publisher' => [
@@ -355,18 +355,18 @@ return [
     'repute_url' => [
         'uri' => '%olcs_natreg_repute%'
     ],
-],
+    ],
 
     // CUPS print server
     'print' => [
     'server' => 'print.%domain%:631'
-],
+    ],
 
     // If this value is populated then printing will use this service,
     // if it is not populated or missing then the Libreoffice converter will be used
     'convert_to_pdf' => [
     'uri' => 'http://renderer.%domain%:8080/convert-document',
-],
+    ],
 
     /**
      * Configure the location of the application log
@@ -406,22 +406,22 @@ return [
             ]
         ]
     ]
-],
+    ],
 
     // Path to VI extract data
     'vi_extract_files' => [
     'export_path' => '/tmp/ViExtract'
-],
+    ],
 
     // Path to export CSV data for data.gov.uk
     'data-gov-uk-export' => [
     'path' => '/tmp/dataGovUk',
-],
+    ],
 
     // Path to export CSV data for Companies House differences
     'ch-vs-olcs-export' => [
     'path' => '/tmp/companyHouse_vs_Olcs',
-],
+    ],
 
     // Nysiis configuration
     'nysiis' => [
@@ -431,7 +431,7 @@ return [
             'timeout' => 5
         ]
     ]
-],
+    ],
 
     'allow_file_upload' => [
     // list of allowed file extensions that can be uploaded
@@ -453,16 +453,16 @@ return [
             . ',scan,eml'
             . ',mp2,mp3,m4a,3gp,wav,aif,aiff,flac,ogg,wma,ape,aac,amr,webm,ac3',
     ]
-],
+    ],
 
     //If we find these strings in xml validator error messages, don't return the message to the user.
     //This is so we can avoid showing things like directory paths to the user in cases such as schema import errors
     'xml_valid_message_exclude' => [
     '/opt/dvsa',
     'Skipping import of schema'
-],
+    ],
 
-	  // Specifies the batch size to use for disc printing
+      // Specifies the batch size to use for disc printing
     'disc_printing' => [
     // Number of discs to print for each queue job
     'disc_batch_size' => 120,
@@ -470,7 +470,7 @@ return [
     'psv_vehicle_list_batch_size' => 120,
     // Number of GOODS vehicle lists to print for each queue job
     'gv_vehicle_list_batch_size' => 120,
-],
+    ],
 
     // GDS Verify configuration
     'gds_verify' => [
@@ -492,12 +492,12 @@ return [
         '/opt/dvsa/gds-verify/certs/gds_verify_enc.pem',
         '/opt/dvsa/gds-verify/certs/gds_secondary_verify_enc.pem'
     ],
-],
+    ],
 
     // Key used to encrypt data stored in the Doctrine EncryptedStringType
     'olcs-doctrine' => [
     'encryption_key' => '%olcs_doctrine_encryption_key%'
-],
+    ],
 
     'cache-encryption' => [
         'node_suffix' => 'api',
@@ -507,7 +507,7 @@ return [
             'mode' => '%cache_encryption_mode%',
         ],
         'secrets' => [
-    'node' => '%cache_encryption_secret_api%',
+        'node' => '%cache_encryption_secret_api%',
             'shared' => '%cache_encryption_secret_shared%',
         ],
     ],
@@ -521,19 +521,19 @@ return [
                     'port' => 6379,
                 ],
                 'lib_options' => [
-    \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_IGBINARY
-],
+            \Redis::OPT_SERIALIZER => \Redis::SERIALIZER_IGBINARY
+            ],
                 'ttl' => 3600, //one hour, likely to be overridden based on use case
                 'namespace' => 'zfcache',
             ],
             'plugins' => [
-    [
+        [
         'name' => 'exception_handler',
         'options' => [
             'throw_exceptions' => false,
         ],
-    ],
-],
+        ],
+        ],
         ],
     ],
 
@@ -562,23 +562,23 @@ return [
                 ],
             ],
             'openam' => [
-    'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
-    'timeout' => 3000,
-    'urls' => [
+        'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
+        'timeout' => 3000,
+        'urls' => [
         'internal' => 'http://iuauth.%domain%:8080/secure/',
         'selfserve' => 'http://ssauth.%domain%:8080/secure/',
-    ],
-    'cookie' => [
+        ],
+        'cookie' => [
         'name' => 'secureToken',
         'domain' => null, // @NOTE This must be implemented
-    ],
-    'client' => [
+        ],
+        'client' => [
         'options' => [
             'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
             'timeout' => 60,
         ],
-    ],
-],
+        ],
+        ],
         ],
     ],
     'acquired_rights' => [
@@ -607,7 +607,7 @@ return [
         'redirect_uri' => [
     'logged_in' => '%olcs_ss_uri%/govuk-id/loggedin',
     'logged_out' => '%olcs_ss_uri%/govuk-id/loggedout',
-],
+    ],
         'expected_core_identity_issuer' => '%govuk_account_id_assurance_issuer%',
         'proxy' => 'http://%shd_proxy%',
     ],
