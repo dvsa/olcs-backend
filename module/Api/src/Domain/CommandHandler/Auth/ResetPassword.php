@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
-use Dvsa\Olcs\Api\Domain\Command\Auth\ResetPasswordOpenAm;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -12,7 +11,6 @@ use Dvsa\Olcs\Api\Domain\Repository\UserPasswordReset as UserPasswordResetRepo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\User\UserPasswordReset as UserPasswordResetEntity;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
-use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Transfer\Command\Auth\ResetPassword as ResetPasswordCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -45,10 +43,6 @@ class ResetPassword extends AbstractCommandHandler
     public function handleCommand(CommandInterface $command): Result
     {
         assert($command instanceof ResetPasswordCmd);
-
-        if ($this->adapter instanceof OpenAm) {
-            return $this->proxyCommand($command, ResetPasswordOpenAm::class);
-        }
 
         $userPasswordResetRepo = $this->getRepo('UserPasswordReset');
         assert($userPasswordResetRepo instanceof UserPasswordResetRepo);

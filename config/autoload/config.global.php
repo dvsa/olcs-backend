@@ -298,17 +298,6 @@ return [
         ],
     ],
 
-    // AUTH config
-    'openam' => [
-    'username' => 'olcs_app',
-    'password' => '%olcs_api_opendj_password%',
-    'uri' => 'http://dir.%domain%:8080',
-    'pid_header' => 'X-Pid',
-    'http_client_options' => [
-        'timeout' => '30'
-    ]
-    ],
-
     'ebsr' => [
     'transexchange_publisher' => [
         'uri' => 'http://localhost:8080/txc-%transxchange_version%/publisherService',
@@ -559,24 +548,6 @@ return [
                     ],
                 ],
             ],
-            'openam' => [
-        'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
-        'timeout' => 3000,
-        'urls' => [
-        'internal' => 'http://iuauth.%domain%:8080/secure/',
-        'selfserve' => 'http://ssauth.%domain%:8080/secure/',
-        ],
-        'cookie' => [
-        'name' => 'secureToken',
-        'domain' => null, // @NOTE This must be implemented
-        ],
-        'client' => [
-        'options' => [
-            'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
-            'timeout' => 60,
-        ],
-        ],
-        ],
         ],
     ],
     'acquired_rights' => [

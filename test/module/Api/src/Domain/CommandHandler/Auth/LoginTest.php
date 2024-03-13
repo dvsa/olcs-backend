@@ -6,10 +6,8 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Login;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -65,33 +63,6 @@ class LoginTest extends CommandHandlerTestCase
         ]));
     }
 
-    /**
-     * @test
-     */
-    public function handleCommandAdapterSetsRealmFromCommandWhenAdapterIsOpenAM()
-    {
-        // Setup
-        $openAMAdapter = $this->authenticationAdapter(OpenAm::class);
-        $openAMAdapter->allows('setIdentity')->withArgs([$testUsername = 'testUsername']);
-        $openAMAdapter->allows('setCredential')->withArgs([$testPassword = 'testPassword']);
-
-        $this->sut = new Login($this->authenticationService(), $openAMAdapter);
-        parent::setUp();
-
-        $this->authenticationService()->allows('authenticate')->andReturns(
-            new \Laminas\Authentication\Result(\Laminas\Authentication\Result::FAILURE, false)
-        );
-
-        // Expectations
-        $openAMAdapter->expects('setRealm')->withArgs([$testRealm = 'testRealm']);
-
-        // Execute
-        $this->sut->handleCommand(\Dvsa\Olcs\Transfer\Command\Auth\Login::create([
-            'username' => $testUsername,
-            'password' => $testPassword,
-            'realm' => $testRealm
-        ]));
-    }
 
     /**
      * @test

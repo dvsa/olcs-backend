@@ -192,9 +192,6 @@ return [
             \Dvsa\Olcs\Api\Service\Publication\Process\PluginManager::class =>
                 \Dvsa\Olcs\Api\Service\Publication\Process\PluginManagerFactory::class,
 
-            \Dvsa\Olcs\Api\Service\OpenAm\ClientInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\ClientFactory::class,
-            \Dvsa\Olcs\Api\Service\OpenAm\UserInterface::class => \Dvsa\Olcs\Api\Service\OpenAm\UserFactory::class,
-
             \Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator::class =>
                 \Dvsa\Olcs\Api\Service\Submission\SubmissionGeneratorFactory::class,
 
@@ -204,7 +201,6 @@ return [
             \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient::class =>
                 \Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory::class,
             \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::class => \Dvsa\Olcs\Api\Rbac\IdentityProviderFactory::class,
-            \Dvsa\Olcs\Api\Rbac\PidIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\PidIdentityProviderFactory::class,
             \Dvsa\Olcs\Api\Rbac\JWTIdentityProvider::class => \Dvsa\Olcs\Api\Rbac\JWTIdentityProviderFactory::class,
             \Dvsa\Olcs\CompaniesHouse\Service\Client::class => \Dvsa\Olcs\CompaniesHouse\Service\ClientFactory::class,
             'TransExchangeXmlMapping' =>

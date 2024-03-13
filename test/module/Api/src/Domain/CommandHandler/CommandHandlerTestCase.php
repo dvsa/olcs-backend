@@ -81,7 +81,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     /** @var  m\MockInterface | QueryHandlerManager */
     protected $queryHandler;
     /** @var  m\MockInterface | IdentityProviderInterface */
-    protected $pidIdentityProvider;
+    protected $identityProvider;
     /** @var  m\MockInterface | TransactionManagerInterface */
     protected $mockTransationMngr;
 
@@ -98,7 +98,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
-        $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
+        $this->identityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
         $sm = m::mock(ContainerInterface::class);
@@ -106,7 +106,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->identityProvider);
         if (property_exists($this, 'submissionConfig')) {
             $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
         }
@@ -329,7 +329,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     public function expectedSideEffectAsSystemUser($class, $data, $result, $times = 1)
     {
-        $this->pidIdentityProvider
+        $this->identityProvider
             ->shouldReceive('setMasqueradedAsSystemUser')
             ->with(true)
             ->shouldReceive('setMasqueradedAsSystemUser')
