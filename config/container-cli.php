@@ -15,6 +15,7 @@ $appConfig = ArrayUtils::merge($appConfig, [
     ],
     'module_listener_options' => [
         'module_map_cache_key' => 'cli.module.cache',
+        'config_cache_key' => 'cli.config.cache',
     ],
 ]);
 
