@@ -121,7 +121,7 @@ class ByOrganisationTest extends QueryHandlerTestCase
                 [ 'id' => 3, 'organisation_id' => 1, 'licNo' => 'C3' ],
             ]
         );
-        
+
         $licence = m::mock(Licence::class);
         $licence->shouldReceive('getLicNo')
                 ->times(6)
