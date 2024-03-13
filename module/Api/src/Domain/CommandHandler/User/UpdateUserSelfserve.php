@@ -33,12 +33,10 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     TransactionedInterface,
     CacheAwareInterface,
-    OpenAmUserAwareInterface,
     ConfigAwareInterface
 {
     use CacheAwareTrait;
     use ConfigAwareTrait;
-    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -113,17 +111,8 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        // VOL-2661 Remove instance check
-        if ($this->provider === JWTIdentityProvider::class) {
-            if ($this->authAdapter->doesUserExist($user->getLoginId())) {
-                $this->authAdapter->changeAttribute($user->getLoginId(), 'email', $user->getContactDetails()->getEmailAddress());
-            }
-        } else {
-            $this->getOpenAmUser()->updateUser(
-                $user->getPid(),
-                $user->getLoginId(),
-                $command->getContactDetails()['emailAddress']
-            );
+        if ($this->authAdapter->doesUserExist($user->getLoginId())) {
+            $this->authAdapter->changeAttribute($user->getLoginId(), 'email', $user->getContactDetails()->getEmailAddress());
         }
 
         $userId = $user->getId();
