@@ -6,6 +6,8 @@ use ArrayIterator;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Messaging\ApplicationLicenceList\ByOrganisation as Qry;
@@ -47,11 +49,37 @@ class ByOrganisationTest extends QueryHandlerTestCase
             ]
         );
 
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')
+                ->times(6)
+                ->andReturn('ABC');
+        $app1 = m::mock(Application::class);
+        $app1->shouldReceive('getLicence')
+             ->times(3)
+             ->andReturn($licence);
+        $app1->shouldReceive('getId')
+             ->twice()
+             ->andReturn(3);
+        $app2 = m::mock(Application::class);
+        $app2->shouldReceive('getLicence')
+             ->times(3)
+             ->andReturn($licence);
+        $app2->shouldReceive('getId')
+             ->twice()
+             ->andReturn(4);
+        $app3 = m::mock(Application::class);
+        $app3->shouldReceive('getLicence')
+             ->times(3)
+             ->andReturn($licence);
+        $app3->shouldReceive('getId')
+             ->twice()
+             ->andReturn(5);
+
         $applications = new ArrayIterator(
             [
-                [ 'id' => 1, 'licence_id' => 1 ],
-                [ 'id' => 2, 'licence_id' => 2 ],
-                [ 'id' => 3, 'licence_id' => 3 ],
+                $app1,
+                $app2,
+                $app3,
             ]
         );
 
@@ -93,12 +121,38 @@ class ByOrganisationTest extends QueryHandlerTestCase
                 [ 'id' => 3, 'organisation_id' => 1, 'licNo' => 'C3' ],
             ]
         );
+        
+        $licence = m::mock(Licence::class);
+        $licence->shouldReceive('getLicNo')
+                ->times(6)
+                ->andReturn('ABC');
+        $app1 = m::mock(Application::class);
+        $app1->shouldReceive('getLicence')
+             ->times(3)
+             ->andReturn($licence);
+        $app1->shouldReceive('getId')
+             ->twice()
+             ->andReturn(3);
+        $app2 = m::mock(Application::class);
+        $app2->shouldReceive('getLicence')
+             ->times(3)
+             ->andReturn($licence);
+        $app2->shouldReceive('getId')
+             ->twice()
+             ->andReturn(4);
+        $app3 = m::mock(Application::class);
+        $app3->shouldReceive('getLicence')
+             ->times(3)
+             ->andReturn($licence);
+        $app3->shouldReceive('getId')
+             ->twice()
+             ->andReturn(5);
 
         $applications = new ArrayIterator(
             [
-                [ 'id' => 1, 'licence_id' => 1 ],
-                [ 'id' => 2, 'licence_id' => 2 ],
-                [ 'id' => 3, 'licence_id' => 3 ],
+                $app1,
+                $app2,
+                $app3,
             ]
         );
 
