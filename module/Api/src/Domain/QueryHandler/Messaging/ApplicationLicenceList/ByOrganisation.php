@@ -62,7 +62,7 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
 
         foreach ($applications as $application) {
             $licence = '';
-            if ($application->getLicence() && $licence = $application->getLicence()->getLicNo()) {
+            if ($application->getLicence() && $application->getLicence()->getLicNo()) {
                 $licence = $application->getLicence()->getLicNo() . ' / ';
             }
             $results['applications'][$application->getId()] = $licence . $application->getId();
