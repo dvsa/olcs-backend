@@ -30,7 +30,7 @@ class CanCreateMessageWithConversation extends AbstractHandler implements AuthAw
     public function isValid($dto)
     {
         // Exit early if no permission
-        if (!$this->isGranted(Permission::CAN_REPLY_TO_CONVERSATIONS)){
+        if (!$this->isGranted(Permission::CAN_REPLY_TO_CONVERSATIONS)) {
             return false;
         }
 

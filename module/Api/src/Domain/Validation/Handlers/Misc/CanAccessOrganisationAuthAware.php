@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 class CanAccessOrganisationAuthAware extends CanAccessOrganisationWithId implements AuthAwareInterface
 {
     use AuthAwareTrait;
+
     protected function getId($dto)
     {
         return (int)($dto->getOrganisation() ?: $this->getCurrentOrganisation()->getId());
