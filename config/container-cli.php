@@ -12,7 +12,10 @@ if (file_exists(__DIR__ . '/development.config.php')) {
 $appConfig = ArrayUtils::merge($appConfig, [
     'modules' => [
         'Dvsa\Olcs\Cli'
-    ]
+    ],
+    'module_listener_options' => [
+        'module_map_cache_key' => 'cli.module.cache',
+    ],
 ]);
 
 return Application::init($appConfig)
