@@ -389,17 +389,18 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Abstracted paginator logic so it can be re-used with alternative queries
      *
-     * @param QueryBuilder $qb          Doctrine query builder
-     * @param int          $hydrateMode Hydrate mode
+     * @param QueryBuilder $qb              Doctrine query builder
+     * @param int          $hydrateMode     Hydrate mode
+     * @param QueryInterface $originalQuery Original query
      *
      * @return \ArrayIterator|\Traversable
      */
-    public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY)
+    public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY, QueryInterface $originalQuery = null)
     {
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
-        if ($this->query instanceof PagedQueryInterface) {
+        if ($originalQuery instanceof PagedQueryInterface) {
             $paginator = $this->getPaginator($query);
 
             return $paginator->getIterator($hydrateMode);
