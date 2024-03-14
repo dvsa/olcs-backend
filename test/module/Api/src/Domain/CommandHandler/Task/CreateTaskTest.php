@@ -52,9 +52,9 @@ class CreateTaskTest extends CommandHandlerTestCase
     {
         $this->sut = new CreateTask();
 
-        $this->mockRepo('Task', m::mock(Repository\Task::class)->makePartial());
-        $this->mockRepo('TaskAllocationRule', Repository\TaskAllocationRule::class);
-        $this->mockRepo('SystemParameter', Repository\SystemParameter::class);
+        $this->mockRepo(Repository\Task::class, m::mock(Repository\Task::class)->makePartial());
+        $this->mockRepo(Repository\TaskAllocationRule::class, Repository\TaskAllocationRule::class);
+        $this->mockRepo(Repository\SystemParameter::class, Repository\SystemParameter::class);
 
         parent::setUp();
 
@@ -162,7 +162,7 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $this->repoMap['Task']->shouldReceive('save')
+        $this->repoMap[Repository\Task::class]->shouldReceive('save')
             ->once()
             ->with(m::type(TaskEntity::class))
             ->andReturnUsing(
@@ -214,12 +214,12 @@ class CreateTaskTest extends CommandHandlerTestCase
     {
         $command = Cmd::create($this->getData(null));
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1)
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2)
             ->once()
             ->andReturn($rules);
 
-        $this->repoMap['SystemParameter']->shouldReceive('fetchValue')
+        $this->repoMap[Repository\SystemParameter::class]->shouldReceive('fetchValue')
             ->with('task.default_team')
             ->once()
             ->andReturn(999)
@@ -266,8 +266,8 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn($this->rules);
 
@@ -289,12 +289,12 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B')
             ->once()
             ->andReturn($this->rules)
             ->getMock();
@@ -317,8 +317,8 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rules);
 
@@ -340,12 +340,12 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1, null, 'B')
+            ->with(1, 2, null, 'B')
             ->once()
             ->andReturn($this->rules);
 
@@ -367,16 +367,16 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1, null, 'B')
+            ->with(1, 2, null, 'B')
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV)
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV)
             ->once()
             ->andReturn($this->rules);
 
@@ -398,20 +398,20 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1, null, 'B')
+            ->with(1, 2, null, 'B')
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV)
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV)
             ->once()
             ->andReturn([])
             ->shouldReceive('fetchByParameters')
-            ->with(1)
+            ->with(1, 2)
             ->once()
             ->andReturn($this->rules);
 
@@ -433,8 +433,8 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
 
@@ -481,8 +481,8 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
 
@@ -526,8 +526,8 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
 
@@ -565,8 +565,8 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
 
@@ -632,8 +632,8 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_PSV, 'B')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
 
@@ -688,7 +688,7 @@ class CreateTaskTest extends CommandHandlerTestCase
      */
     protected function mockSaveTask($user = null)
     {
-        $this->repoMap['Task']->shouldReceive('save')
+        $this->repoMap[Repository\Task::class]->shouldReceive('save')
             ->once()
             ->with(m::type(TaskEntity::class))
             ->andReturnUsing(
@@ -793,8 +793,8 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchByParameters')
-            ->with(1, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+            ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn($this->rules);
 

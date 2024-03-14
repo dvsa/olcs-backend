@@ -9,20 +9,13 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Dvsa\Olcs\Api\Entity\System\Category;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule as TaskAllocationRuleRepo;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule as TaskAllocationRuleRepo;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\EntityRepository;
 
-/**
- * Task Allocation Rule Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class TaskAllocationRuleTest extends RepositoryTestCase
 {
     /**
@@ -43,12 +36,12 @@ class TaskAllocationRuleTest extends RepositoryTestCase
      * @param bool $isMlh
      * @param string $query
      */
-    public function testFetchByParameters($category, $operatorType, $trafficArea, $isMlh, $query)
+    public function testFetchByParameters($category, $subCategory, $operatorType, $trafficArea, $isMlh, $query)
     {
         $qb = $this->createMockQb('[QUERY]');
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
-            ->andReturn('RESULT');
+            ->andReturn(['foo', 'bar']);
 
         /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
@@ -61,8 +54,8 @@ class TaskAllocationRuleTest extends RepositoryTestCase
             ->andReturn($repo);
 
         $this->assertEquals(
-            'RESULT',
-            $this->sut->fetchByParameters($category, null, $operatorType, $trafficArea, $isMlh)
+            ['foo', 'bar'],
+            $this->sut->fetchByParameters($category, $subCategory, $operatorType, $trafficArea, $isMlh)
         );
         $this->assertEquals(
             $query,
@@ -81,26 +74,38 @@ class TaskAllocationRuleTest extends RepositoryTestCase
             // category, operatorType, trafficArea, isMlh, query
             [
                 111,
+                222,
                 'gv',
                 'B',
                 1,
-                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea = [[B]] ' .
-                'AND m.isMlh = [[1]]'
+                '[QUERY] AND m.category = [[111]] AND m.subCategory = [[222]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea = [[B]] ' .
+                'AND m.isMlh = [[true]]'
             ],
             [
                 111,
+                222,
                 'gv',
                 'B',
                 null,
-                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea = [[B]] ' .
+                '[QUERY] AND m.category = [[111]] AND m.subCategory = [[222]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea = [[B]] ' .
                 'AND m.isMlh IS NULL'
             ],
             [
                 111,
+                222,
                 'gv',
                 null,
                 null,
-                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea IS NULL ' .
+                '[QUERY] AND m.category = [[111]] AND m.subCategory = [[222]] AND m.goodsOrPsv = [[gv]] AND m.trafficArea IS NULL ' .
+                'AND m.isMlh IS NULL'
+            ],
+            [
+                111,
+                222,
+                null,
+                null,
+                null,
+                '[QUERY] AND m.category = [[111]] AND m.subCategory = [[222]] AND m.goodsOrPsv IS NULL AND m.trafficArea IS NULL ' .
                 'AND m.isMlh IS NULL'
             ],
             [
@@ -108,7 +113,8 @@ class TaskAllocationRuleTest extends RepositoryTestCase
                 null,
                 null,
                 null,
-                '[QUERY] AND m.category = [[111]] AND m.goodsOrPsv IS NULL AND m.trafficArea IS NULL ' .
+                null,
+                '[QUERY] AND m.category = [[111]] AND m.subCategory IS NULL AND m.goodsOrPsv IS NULL AND m.trafficArea IS NULL ' .
                 'AND m.isMlh IS NULL'
             ],
         ];

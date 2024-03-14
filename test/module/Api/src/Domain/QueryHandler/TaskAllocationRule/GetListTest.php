@@ -3,23 +3,19 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TaskAllocationRule;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\TaskAllocationRule\GetList as QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\TaskAllocationRule\GetList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
-/**
- * TaskAllocationRule GetListTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class GetListTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
         $this->sut = new QueryHandler();
 
-        $this->mockRepo('TaskAllocationRule', \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule::class);
+        $this->mockRepo(Repository\TaskAllocationRule::class, Repository\TaskAllocationRule::class);
         parent::setUp();
     }
 
@@ -50,6 +46,7 @@ class GetListTest extends QueryHandlerTestCase
             ->with(
                 [
                     'category',
+                    'subCategory',
                     'team',
                     'user' => ['contactDetails' => ['person']],
                     'trafficArea',
@@ -60,7 +57,7 @@ class GetListTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar'])
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']
+        $this->repoMap[Repository\TaskAllocationRule::class]
             ->shouldReceive('fetchList')
             ->once()
             ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
