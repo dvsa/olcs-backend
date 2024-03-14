@@ -21,8 +21,7 @@ trait UpdateTaskAllocationRuleTrait
         Entity\Task\TaskAllocationRule $entity,
         Repository\TaskAllocationRule $repository,
         CommandInterface $command
-    ): Entity\Task\TaskAllocationRule
-    {
+    ): Entity\Task\TaskAllocationRule {
         $this->updateTaskAllocationRuleCommandInstanceCheck($command);
 
         $entity->setCategory(

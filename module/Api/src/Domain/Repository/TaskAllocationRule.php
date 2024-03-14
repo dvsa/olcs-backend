@@ -19,8 +19,7 @@ class TaskAllocationRule extends AbstractRepository
         ?string $operatorType = null,
         ?string $ta = null,
         ?bool $isMlh = null
-    ): array
-    {
+    ): array {
         $qb = $this->createQueryBuilder();
 
         $qb
@@ -83,8 +82,7 @@ class TaskAllocationRule extends AbstractRepository
         QueryBuilder $qb,
         QueryInterface $query,
         $compositeFields = array()
-    ): void
-    {
+    ): void {
         // add calculated columns to allow ordering by them
         parent::buildDefaultListQuery($qb, $query, ['categoryDescription', 'criteria', 'trafficAreaName']);
 
