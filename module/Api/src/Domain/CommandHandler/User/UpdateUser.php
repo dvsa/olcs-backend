@@ -71,7 +71,6 @@ final class UpdateUser extends AbstractUserCommandHandler implements
      * @throws ForbiddenException
      * @throws ValidationException
      * @throws RuntimeException
-     * @throws FailedRequestException
      * @throws Exception
      */
     public function handleCommand(CommandInterface $command): Result
