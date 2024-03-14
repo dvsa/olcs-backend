@@ -400,7 +400,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
-        if ($originalQuery instanceof PagedQueryInterface) {
+        if ($this->query instanceof PagedQueryInterface || ($originalQuery instanceof PagedQueryInterface)) {
             $paginator = $this->getPaginator($query);
 
             return $paginator->getIterator($hydrateMode);
