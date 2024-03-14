@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
+use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -41,10 +42,10 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $licences = $licenceRepository->fetchByOrganisationId($orgId);
 
+        /** @var Application[] $applications */
         $applications = $applicationRepository->fetchByOrganisationIdAndStatuses(
             $orgId,
-            Entity::ALL_APPLICATION_STATUSES,
-            AbstractQuery::HYDRATE_ARRAY
+            [Entity::APPLICATION_STATUS_UNDER_CONSIDERATION, Entity::APPLICATION_STATUS_UNDER_CONSIDERATION],
         );
 
         $results = array_fill_keys(['licences', 'applications'], []);
@@ -60,7 +61,11 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
         }
 
         foreach ($applications as $application) {
-            $results['applications'][$application['id']] = $application['id'];
+            $licence = '';
+            if ($application->getLicence() && $application->getLicence()->getLicNo()) {
+                $licence = $application->getLicence()->getLicNo() . ' / ';
+            }
+            $results['applications'][$application->getId()] = $licence . $application->getId();
         }
 
         return [

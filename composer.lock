@@ -6403,16 +6403,16 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "v6.0.0",
+            "version": "v6.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-utils.git",
-                "reference": "d639bbac153fc7bf7c940b3ebf67c3a239011818"
+                "reference": "81f54b9e367400e4478364e8c2622fbce3f65f61"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/d639bbac153fc7bf7c940b3ebf67c3a239011818",
-                "reference": "d639bbac153fc7bf7c940b3ebf67c3a239011818",
+                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/81f54b9e367400e4478364e8c2622fbce3f65f61",
+                "reference": "81f54b9e367400e4478364e8c2622fbce3f65f61",
                 "shasum": ""
             },
             "require": {
@@ -6429,7 +6429,6 @@
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
                 "johnkary/phpunit-speedtrap": "^4.0",
-                "mockery/mockery": "^1.6",
                 "olcs/olcs-logging": "^6.0",
                 "phpunit/phpunit": "^9.6"
             },
@@ -6448,29 +6447,29 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Utils",
             "support": {
-                "source": "https://github.com/dvsa/olcs-utils/tree/v6.0.0"
+                "source": "https://github.com/dvsa/olcs-utils/tree/v6.1.0"
             },
-            "time": "2024-02-20T11:46:06+00:00"
+            "time": "2024-03-07T14:35:46+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
-            "version": "v6.0.0",
+            "version": "v6.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-xmltools.git",
-                "reference": "b1bb6af86346d7ce99db9ebad683b0472e61960f"
+                "reference": "0418d37cbef88ff6f87193621f6a171f1f3b36cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-xmltools/zipball/b1bb6af86346d7ce99db9ebad683b0472e61960f",
-                "reference": "b1bb6af86346d7ce99db9ebad683b0472e61960f",
+                "url": "https://api.github.com/repos/dvsa/olcs-xmltools/zipball/0418d37cbef88ff6f87193621f6a171f1f3b36cd",
+                "reference": "0418d37cbef88ff6f87193621f6a171f1f3b36cd",
                 "shasum": ""
             },
             "require": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
                 "laminas/laminas-filter": "^2.0",
-                "laminas/laminas-servicemanager": "^3.3",
+                "laminas/laminas-servicemanager": "^3.11",
                 "laminas/laminas-stdlib": "^3.0",
                 "laminas/laminas-validator": "^2.0",
                 "laminas/laminas-xml": "^1.2",
@@ -6482,6 +6481,7 @@
                 "johnkary/phpunit-speedtrap": "^4.0",
                 "mikey179/vfsstream": "^1.6.11",
                 "mockery/mockery": "^1.6",
+                "phpstan/phpstan-mockery": "^1.1",
                 "phpunit/phpunit": "^9.6"
             },
             "type": "library",
@@ -6499,9 +6499,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "XML tools for OLCS",
             "support": {
-                "source": "https://github.com/dvsa/olcs-xmltools/tree/v6.0.0"
+                "source": "https://github.com/dvsa/olcs-xmltools/tree/v6.0.1"
             },
-            "time": "2024-02-20T11:40:49+00:00"
+            "time": "2024-03-07T14:36:10+00:00"
         },
         {
             "name": "oro/doctrine-extensions",

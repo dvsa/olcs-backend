@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\InspectionRequest;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence;
@@ -25,6 +26,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest\SendInspectionRequest;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
 
 /**
  * Inspection Request / SendInspectionRequest
@@ -140,7 +142,8 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
                 ],
             ],
         ],
-        'translateToWelsh' => 'N'
+        'translateToWelsh' => 'N',
+        'niFlag' => 'N',
     ];
 
     private $stubApplicationData = [
@@ -203,6 +206,8 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             TemplateRenderer::class => m::mock(TemplateRenderer::class),
             AuthorizationService::class => m::mock(AuthorizationService::class)
         ];
+
+        $this->queryHandler = m::mock(QueryHandlerManager::class);
 
         parent::setUp();
     }
@@ -377,9 +382,16 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             'blank'
         );
 
+        $mockQryResult = m::mock(QueryResult::class);
+        $this->queryHandler->shouldReceive('handleQuery')->once()->andReturn($mockQryResult);
+        $mockQryResult->shouldReceive('isEmpty')->once()->andReturn(false);
+        $resultObj = m::mock(QueryResult::class);
+        $mockQryResult->shouldReceive('getObject')->once()->andReturn($resultObj);
+        $resultObj->shouldReceive('getParamValue')->once()->andReturn('im-an-address@email.com');
+
         $result = new Result();
         $data = [
-            'to' => 'foo@bar.com',
+            'to' => 'im-an-address@email.com',
             'locale' => 'en_GB',
             'subject' => "[ Maintenance Inspection ] REQUEST={$inspectionRequestId},STATUS="
         ];
@@ -588,12 +600,19 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
 
         $result = new Result();
         $data = [
-            'to' => 'foo@bar.com',
+            'to' => 'im-another-address@email.com',
             'locale' => 'en_GB',
             'subject' => "[ Maintenance Inspection ] REQUEST={$inspectionRequestId},STATUS="
         ];
 
         $this->expectedSideEffect(SendEmail::class, $data, $result);
+
+        $mockQryResult = m::mock(QueryResult::class);
+        $this->queryHandler->shouldReceive('handleQuery')->once()->andReturn($mockQryResult);
+        $mockQryResult->shouldReceive('isEmpty')->once()->andReturn(false);
+        $resultObj = m::mock(QueryResult::class);
+        $mockQryResult->shouldReceive('getObject')->once()->andReturn($resultObj);
+        $resultObj->shouldReceive('getParamValue')->once()->andReturn('im-another-address@email.com');
 
         $result = $this->sut->handleCommand($command);
 
@@ -633,5 +652,38 @@ class SendInspectionRequestTest extends CommandHandlerTestCase
             'id' => []
         ];
         $this->assertEquals($expectedResult, $result->toArray());
+    }
+
+    public function testThrowsExceptionNoSysParam()
+    {
+        $mockQryResult = m::mock(QueryResult::class);
+        $this->queryHandler->shouldReceive('handleQuery')->once()->andReturn($mockQryResult);
+        $mockQryResult->shouldReceive('isEmpty')->once()->andReturn(true);
+
+        $inspectionRequestId = 189781;
+        $inspectionRequest = [
+            'id' => $inspectionRequestId,
+            'requestDate' => '2015-04-17T14:13:56+00:00',
+            'dueDate' => '2015-04-18T14:13:56+00:00',
+            'licence' => $this->stubLicenceData,
+        ];
+
+        $data = [
+            'id' => $inspectionRequestId
+        ];
+        $this->mockAuthService();
+
+        $command = Cmd::create($data);
+
+        $this->repoMap['InspectionRequest']
+            ->shouldReceive('fetchForInspectionRequest')
+            ->with($inspectionRequestId)
+            ->once()
+            ->andReturn($inspectionRequest);
+
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\RuntimeException::class);
+        $this->expectExceptionMessage('The system parameter with id NEW_OP_EMAIL_GB was not found.');
+
+        $this->sut->handleCommand($command);
     }
 }
