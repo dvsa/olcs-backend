@@ -102,7 +102,6 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
             $this->savePhoneContacts($cmdContactDetails['phoneContacts'], $contactDetails);
         }
 
-
         $this->adapter->changeAttribute($user->getLoginId(), 'email', $cmdContactDetails['emailAddress']);
 
         $userId = $user->getId();
