@@ -132,18 +132,18 @@ class TaskAllocationRuleTest extends RepositoryTestCase
         $qb = $this->createMockQb('[QUERY]');
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
-            ->times($expectSubsequentCall ? 2: 1)
+            ->times($expectSubsequentCall ? 2 : 1)
             ->andReturnValues($returnValues);
 
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
             ->with('m')
-            ->times($expectSubsequentCall ? 2: 1)
+            ->times($expectSubsequentCall ? 2 : 1)
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
             ->with(Entity::class)
-            ->times($expectSubsequentCall ? 2: 1)
+            ->times($expectSubsequentCall ? 2 : 1)
             ->andReturn($repo);
 
         $this->assertEquals(
