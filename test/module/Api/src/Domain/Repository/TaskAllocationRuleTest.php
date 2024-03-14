@@ -29,7 +29,7 @@ class TaskAllocationRuleTest extends RepositoryTestCase
     /**
      * Test fetch by parameters
      *
-     * @dataProvider paramProvider
+     * @dataProvider fetchByParametersDataProvider
      * @param int $category
      * @param string $operatorType
      * @param string $trafficArea
@@ -41,16 +41,18 @@ class TaskAllocationRuleTest extends RepositoryTestCase
         $qb = $this->createMockQb('[QUERY]');
         $qb->shouldReceive('getQuery->getResult')
             ->with(Query::HYDRATE_OBJECT)
+            ->once()
             ->andReturn(['foo', 'bar']);
 
-        /** @var EntityRepository $repo */
         $repo = m::mock(EntityRepository::class);
         $repo->shouldReceive('createQueryBuilder')
             ->with('m')
+            ->once()
             ->andReturn($qb);
 
         $this->em->shouldReceive('getRepository')
             ->with(Entity::class)
+            ->once()
             ->andReturn($repo);
 
         $this->assertEquals(
@@ -68,7 +70,7 @@ class TaskAllocationRuleTest extends RepositoryTestCase
      *
      * @return array
      */
-    public function paramProvider()
+    public function fetchByParametersDataProvider(): array
     {
         return [
             // category, operatorType, trafficArea, isMlh, query
@@ -116,6 +118,55 @@ class TaskAllocationRuleTest extends RepositoryTestCase
                 null,
                 '[QUERY] AND m.category = [[111]] AND m.subCategory IS NULL AND m.goodsOrPsv IS NULL AND m.trafficArea IS NULL ' .
                 'AND m.isMlh IS NULL'
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider fetchByParametersAttemptsLookupWithoutSubCategoryWhenCallReturnsNoResultsDataProvider
+     * @param array $returnValues
+     * @param bool $expectSubsequentCall
+     */
+    public function testFetchByParametersAttemptsLookupWithoutSubCategoryWhenCallReturnsNoResults(array $returnValues, bool $expectSubsequentCall)
+    {
+        $qb = $this->createMockQb('[QUERY]');
+        $qb->shouldReceive('getQuery->getResult')
+            ->with(Query::HYDRATE_OBJECT)
+            ->times($expectSubsequentCall ? 2: 1)
+            ->andReturnValues($returnValues);
+
+        $repo = m::mock(EntityRepository::class);
+        $repo->shouldReceive('createQueryBuilder')
+            ->with('m')
+            ->times($expectSubsequentCall ? 2: 1)
+            ->andReturn($qb);
+
+        $this->em->shouldReceive('getRepository')
+            ->with(Entity::class)
+            ->times($expectSubsequentCall ? 2: 1)
+            ->andReturn($repo);
+
+        $this->assertEquals(
+            ['foo'],
+            $this->sut->fetchByParameters(1, 2)
+        );
+    }
+
+    public function fetchByParametersAttemptsLookupWithoutSubCategoryWhenCallReturnsNoResultsDataProvider(): array
+    {
+        return [
+            'Subcategory returns result' => [
+                [
+                    ['foo'],
+                ],
+                false
+            ],
+            'Subcategory returns no results' => [
+                [
+                    [],
+                    ['foo'],
+                ],
+                true
             ],
         ];
     }
