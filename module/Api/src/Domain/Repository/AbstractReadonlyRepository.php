@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
@@ -564,10 +565,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Get Reference
      *
-     * @param string     $entityClass Entity class FQN
-     * @param string|int $id          id
+     * @param class-string<T> $entityClass Entity class FQN
+     * @param string|int $id id
      *
-     * @return null|$entityClass
+     * @return T|null The entity reference.
+     *
+     * @template T
+     * @throws ORMException
      */
     public function getReference($entityClass, $id)
     {

@@ -62,7 +62,7 @@ class TaskAllocationRuleTest extends RepositoryTestCase
 
         $this->assertEquals(
             'RESULT',
-            $this->sut->fetchByParameters($category, $operatorType, $trafficArea, $isMlh)
+            $this->sut->fetchByParameters($category, null, $operatorType, $trafficArea, $isMlh)
         );
         $this->assertEquals(
             $query,

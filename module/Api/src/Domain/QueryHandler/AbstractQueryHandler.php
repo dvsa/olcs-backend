@@ -136,15 +136,17 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
-     * Get the repository
+     * Get repository
      *
-     * @param string $name Repository name
+     * @param class-string<T>|null $name Name of the repository or FQCN.
      *
-     * @return RepositoryInterface
+     * @return T The repository reference.
      *
      * @throws RuntimeException
+     *
+     * @template T of RepositoryInterface
      */
-    protected function getRepo($name = null)
+    protected function getRepo(string $name = null): RepositoryInterface
     {
         if ($name === null) {
             $name = $this->repoServiceName;

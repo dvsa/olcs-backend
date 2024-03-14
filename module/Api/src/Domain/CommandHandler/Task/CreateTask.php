@@ -1,10 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
 use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -15,17 +18,14 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
-/**
- * Create Task
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 final class CreateTask extends AbstractCommandHandler
 {
-    protected $repoServiceName = 'Task';
+    protected $repoServiceName = Repository\Task::class;
 
-    protected $extraRepos = ['TaskAllocationRule', 'SystemParameter'];
+    protected $extraRepos = [
+        Repository\TaskAllocationRule::class,
+        Repository\SystemParameter::class,
+    ];
 
     protected $alphaNumericTranslations = [
         0 => 'Z',
@@ -40,14 +40,7 @@ final class CreateTask extends AbstractCommandHandler
         9 => 'N'
     ];
 
-    /**
-     * Handle command
-     *
-     * @param \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask $command Command
-     *
-     * @return Result
-     */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): Result
     {
         $task = $this->createTaskObject($command);
 
@@ -67,14 +60,7 @@ final class CreateTask extends AbstractCommandHandler
         return $result;
     }
 
-    /**
-     * Auto assign task
-     *
-     * @param Task $task Task
-     *
-     * @return void
-     */
-    private function autoAssignTask(Task $task)
+    private function autoAssignTask(Task $task): void
     {
         if ($task->getLicence() !== null) {
             $rules = $this->getRulesBasedOnLicence($task);
@@ -96,15 +82,10 @@ final class CreateTask extends AbstractCommandHandler
 
     /**
      * Fall back on system configuration to populate user and team
-     *
-     * @param Task $task Task
-     *
-     * @return void
      */
-    private function assignToDefault(Task $task)
+    private function assignToDefault(Task $task): void
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\SystemParameter $repo */
-        $repo = $this->getRepo('SystemParameter');
+        $repo = $this->getRepo(Repository\SystemParameter::class);
 
         $teamId = $repo->fetchValue('task.default_team');
         if ($teamId !== null) {
@@ -117,16 +98,7 @@ final class CreateTask extends AbstractCommandHandler
         }
     }
 
-    /**
-     * Assign by rule
-     *
-     * @param Task               $task          Task
-     * @param TaskAllocationRule $rule          TaskAllocationRule
-     * @param bool               $useAlphaSplit Should use Alpha split
-     *
-     * @return void
-     */
-    protected function assignByRule(Task $task, TaskAllocationRule $rule, $useAlphaSplit)
+    protected function assignByRule(Task $task, TaskAllocationRule $rule, bool $useAlphaSplit): void
     {
         $task->setAssignedToTeam($rule->getTeam());
         if ($rule->getUser() !== null) {
@@ -136,15 +108,7 @@ final class CreateTask extends AbstractCommandHandler
         }
     }
 
-    /**
-     * Assign by alpha split
-     *
-     * @param Task               $task Task
-     * @param TaskAllocationRule $rule TaskAllocationRule
-     *
-     * @return void
-     */
-    protected function assignByAlphaSplit(Task $task, TaskAllocationRule $rule)
+    protected function assignByAlphaSplit(Task $task, TaskAllocationRule $rule): void
     {
         $taskAlphaSplits = $rule->getTaskAlphaSplits();
         if ($taskAlphaSplits === null) {
@@ -163,29 +127,22 @@ final class CreateTask extends AbstractCommandHandler
         $task->setAssignedToUser($alphaSplits->first()->getUser());
     }
 
-    /**
-     * Get rules based on category
-     *
-     * @param Task $task Task
-     *
-     * @return array
-     */
-    protected function getRulesBasedOnCategory(Task $task)
+    protected function getRulesBasedOnCategory(Task $task): array
     {
-        return $this->getRepo('TaskAllocationRule')->fetchByParameters($task->getCategory()->getId());
+        return $this
+            ->getRepo(Repository\TaskAllocationRule::class)
+            ->fetchByParameters(
+                $task->getCategory()->getId(),
+                $task->getSubCategory()->getId(),
+                null,
+                null,
+                null
+            );
     }
 
-    /**
-     * Get rules based on licence
-     *
-     * @param Task $task Task
-     *
-     * @return array
-     */
-    protected function getRulesBasedOnLicence(Task $task)
+    protected function getRulesBasedOnLicence(Task $task): array
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule $repo */
-        $repo = $this->getRepo('TaskAllocationRule');
+        $repo = $this->getRepo(Repository\TaskAllocationRule::class);
 
         $licence = $task->getLicence();
         $app = $task->getApplication();
@@ -194,12 +151,6 @@ final class CreateTask extends AbstractCommandHandler
         $trafficArea = (
             $licenceTrafficArea !== null
             ? $licenceTrafficArea->getId()
-            : null
-        );
-        $category = $task->getCategory();
-        $categoryId = (
-            $category !== null
-            ? $category->getId()
             : null
         );
 
@@ -224,7 +175,8 @@ final class CreateTask extends AbstractCommandHandler
         // Goods Licence
         if ($operatorType === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
             $rules = $repo->fetchByParameters(
-                $categoryId,
+                $task->getCategory()->getId(),
+                $task->getSubCategory()->getId(),
                 Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 $trafficArea,
                 $licence->getOrganisation()->isMlh()
@@ -237,9 +189,11 @@ final class CreateTask extends AbstractCommandHandler
         // PSV licence or no rules found for Goods Licence
         // search rules by category, operator type and traffic area
         $rules = $repo->fetchByParameters(
-            $categoryId,
+            $task->getCategory()->getId(),
+            $task->getSubCategory()->getId(),
             $operatorType,
-            $trafficArea
+            $trafficArea,
+            null
         );
         if (count($rules) >= 1) {
             return $rules;
@@ -247,9 +201,11 @@ final class CreateTask extends AbstractCommandHandler
 
         // search rules by category and traffic area
         $rules = $repo->fetchByParameters(
-            $categoryId,
+            $task->getCategory()->getId(),
+            $task->getSubCategory()->getId(),
             null,
-            $trafficArea
+            $trafficArea,
+            null
         );
         if (count($rules) >= 1) {
             return $rules;
@@ -257,25 +213,21 @@ final class CreateTask extends AbstractCommandHandler
 
         // search rules by category and operator type
         $rules = $repo->fetchByParameters(
-            $categoryId,
-            $operatorType
+            $task->getCategory()->getId(),
+            $task->getSubCategory()->getId(),
+            $operatorType,
+            null,
+            null
         );
         if (count($rules) >= 1) {
             return $rules;
         }
 
         // search rules by category only
-        return $repo->fetchByParameters($categoryId);
+        return $repo->fetchByParameters($task->getCategory()->getId(), $task->getSubCategory()->getId(), null, null, null);
     }
 
-    /**
-     * Get letter for alpha split
-     *
-     * @param Task $task Task
-     *
-     * @return string
-     */
-    protected function getLetterForAlphaSplit(Task $task)
+    protected function getLetterForAlphaSplit(Task $task): string
     {
         $letter = '';
         $organisation = $task->getLicence()->getOrganisation();
@@ -311,16 +263,9 @@ final class CreateTask extends AbstractCommandHandler
         return $letter;
     }
 
-    /**
-     * Create task object
-     *
-     * @param \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask $command Command
-     *
-     * @return Task
-     */
-    private function createTaskObject(CommandInterface $command)
+    private function createTaskObject(CommandInterface $command): Task
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\Task $repo */
+        /** @var Repository\Task $repo */
         $repo = $this->getRepo();
 
         // Required

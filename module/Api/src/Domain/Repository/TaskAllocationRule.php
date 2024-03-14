@@ -1,78 +1,90 @@
 <?php
 
-/**
- * Task Allocation Rule
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule as Entity;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-/**
- * Task Allocation Rule
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class TaskAllocationRule extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    /**
-     * Fetch allocation rules by parameters
-     *
-     * @param int $categoryId
-     * @param string $operatorType
-     * @param string $ta
-     * @param bool $isMlh
-     * @return array
-     */
-    public function fetchByParameters($categoryId, $operatorType = null, $ta = null, $isMlh = null)
+    public function fetchByParameters(
+        int $categoryId,
+        ?int $subCategoryId = null,
+        ?string $operatorType = null,
+        ?string $ta = null,
+        ?bool $isMlh = null
+    ): array
     {
         $qb = $this->createQueryBuilder();
 
-        $qb->andWhere($qb->expr()->eq('m.category', ':category'))
+        $qb
+            ->andWhere($qb->expr()->eq('m.category', ':category'))
             ->setParameter('category', $categoryId);
 
+        if ($subCategoryId) {
+            $qb
+                ->andWhere($qb->expr()->eq('m.subCategory', ':subCategory'))
+                ->setParameter('subCategory', $subCategoryId);
+        } else {
+            $qb
+                ->andWhere($qb->expr()->isNull('m.subCategory'));
+        }
+
         if ($operatorType) {
-            $qb->andWhere($qb->expr()->eq('m.goodsOrPsv', ':operatorType'))
+            $qb
+                ->andWhere($qb->expr()->eq('m.goodsOrPsv', ':operatorType'))
                 ->setParameter('operatorType', $operatorType);
         } else {
-            $qb->andWhere($qb->expr()->isNull('m.goodsOrPsv'));
+            $qb
+                ->andWhere($qb->expr()->isNull('m.goodsOrPsv'));
         }
 
         if ($ta) {
-            $qb->andWhere($qb->expr()->eq('m.trafficArea', ':trafficArea'))
+            $qb
+                ->andWhere($qb->expr()->eq('m.trafficArea', ':trafficArea'))
                 ->setParameter('trafficArea', $ta);
         } else {
-            $qb->andWhere($qb->expr()->isNull('m.trafficArea'));
+            $qb
+                ->andWhere($qb->expr()->isNull('m.trafficArea'));
         }
 
         if ($isMlh !== null) {
-            $qb->andWhere($qb->expr()->eq('m.isMlh', ':isMlh'))
+            $qb
+                ->andWhere($qb->expr()->eq('m.isMlh', ':isMlh'))
                 ->setParameter('isMlh', $isMlh);
         } else {
-            $qb->andWhere($qb->expr()->isNull('m.isMlh'));
+            $qb
+                ->andWhere($qb->expr()->isNull('m.isMlh'));
         }
-        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        $result = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+
+        /**
+         * Allows task allocation rules with a sub-category defined to supersede rules without (as initial calls
+         * will always have a sub-category set (as every task has a sub-category))
+         *
+         * Finding no task allocation rules (using sub-category conditional), will fall back to rule discovery
+         * without a sub-category defined.
+         */
+        if ($subCategoryId !== null && count($result) === 0) {
+            return $this->fetchByParameters($categoryId, null, $operatorType, $ta, $isMlh);
+        }
+
+        return $result;
     }
 
-    /**
-     * Build defailt list query
-     *
-     * @param \Doctrine\ORM\QueryBuilder $qb
-     * @param \Dvsa\Olcs\Transfer\Query\QueryInterface $query
-     * @param array $compositeFields
-     */
     public function buildDefaultListQuery(
-        \Doctrine\ORM\QueryBuilder $qb,
-        \Dvsa\Olcs\Transfer\Query\QueryInterface $query,
+        QueryBuilder $qb,
+        QueryInterface $query,
         $compositeFields = array()
-    ) {
+    ): void
+    {
         // add calculated columns to allow ordering by them
         parent::buildDefaultListQuery($qb, $query, ['categoryDescription', 'criteria', 'trafficAreaName']);
 

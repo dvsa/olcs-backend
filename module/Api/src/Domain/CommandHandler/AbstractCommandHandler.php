@@ -241,14 +241,17 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     }
 
     /**
-     * get repository
+     * Get repository
      *
-     * @param string|null $name name of repository
+     * @param class-string<T>|null $name Name of the repository or FQCN.
      *
-     * @return RepositoryInterface
+     * @return T The repository reference.
+     *
      * @throws RuntimeException
+     *
+     * @template T of RepositoryInterface
      */
-    protected function getRepo($name = null)
+    protected function getRepo(string $name = null): RepositoryInterface
     {
         if ($name === null) {
             $name = $this->repoServiceName;
