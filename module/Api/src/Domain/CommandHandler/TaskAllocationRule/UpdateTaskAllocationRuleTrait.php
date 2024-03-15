@@ -28,7 +28,7 @@ trait UpdateTaskAllocationRuleTrait
             $repository->getReference(Entity\System\Category::class, $command->getCategory())
         );
         $entity->setSubCategory(
-            $repository->getReference(Entity\System\Category::class, $command->getSubCategory())
+            $repository->getReference(Entity\System\SubCategory::class, $command->getSubCategory())
         );
         $entity->setTeam(
             $repository->getReference(Entity\User\Team::class, $command->getTeam())

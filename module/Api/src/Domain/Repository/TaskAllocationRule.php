@@ -62,15 +62,22 @@ class TaskAllocationRule extends AbstractRepository
                 ->andWhere($qb->expr()->isNull('m.isMlh'));
         }
 
-        $result = $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+        return $qb->getQuery()->getResult(Query::HYDRATE_OBJECT);
+    }
 
-        /**
-         * Allows task allocation rules with a sub-category defined to supersede rules without (as initial calls
-         * will always have a sub-category set (as every task has a sub-category))
-         *
-         * Finding no task allocation rules (using sub-category conditional), will fall back to rule discovery
-         * without a sub-category defined.
-         */
+    /**
+     * Returns matching task allocation rules (as per $this->fetchByParameters); attempting to find a matching
+     * task allocation rule using provided arguments (including sub-category). Should a rule not be found when
+     * using sub-category, attempts to find a matching rule without sub-category.
+     */
+    public function fetchByParametersWithFallbackWhenSubCategoryNotFound(
+        int $categoryId,
+        int $subCategoryId,
+        ?string $operatorType = null,
+        ?string $ta = null,
+        ?bool $isMlh = null
+    ): array {
+        $result = $this->fetchByParameters($categoryId, $subCategoryId, $operatorType, $ta, $isMlh);
         if ($subCategoryId !== null && count($result) === 0) {
             return $this->fetchByParameters($categoryId, null, $operatorType, $ta, $isMlh);
         }

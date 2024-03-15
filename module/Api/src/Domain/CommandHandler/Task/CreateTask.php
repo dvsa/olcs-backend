@@ -141,7 +141,7 @@ final class CreateTask extends AbstractCommandHandler
     {
         return $this
             ->getRepo(Repository\TaskAllocationRule::class)
-            ->fetchByParameters(
+            ->fetchByParametersWithFallbackWhenSubCategoryNotFound(
                 $task->getCategory()->getId(),
                 $task->getSubCategory()->getId()
             );
@@ -184,7 +184,7 @@ final class CreateTask extends AbstractCommandHandler
 
         // Goods Licence
         if ($operatorType === Entity\Licence\Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
-            $rules = $repo->fetchByParameters(
+            $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
                 $task->getCategory()->getId(),
                 $task->getSubCategory()->getId(),
                 Entity\Licence\Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
@@ -198,7 +198,7 @@ final class CreateTask extends AbstractCommandHandler
 
         // PSV licence or no rules found for Goods Licence
         // search rules by category, operator type and traffic area
-        $rules = $repo->fetchByParameters(
+        $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
             $task->getCategory()->getId(),
             $task->getSubCategory()->getId(),
             $operatorType,
@@ -209,7 +209,7 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // search rules by category and traffic area
-        $rules = $repo->fetchByParameters(
+        $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
             $task->getCategory()->getId(),
             $task->getSubCategory()->getId(),
             null,
@@ -220,7 +220,7 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // search rules by category and operator type
-        $rules = $repo->fetchByParameters(
+        $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
             $task->getCategory()->getId(),
             $task->getSubCategory()->getId(),
             $operatorType
@@ -230,7 +230,7 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // search rules by category only
-        return $repo->fetchByParameters($task->getCategory()->getId(), $task->getSubCategory()->getId());
+        return $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound($task->getCategory()->getId(), $task->getSubCategory()->getId());
     }
 
     protected function getLetterForAlphaSplit(Entity\Task\Task $task): string
