@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanCreateMessageWithConve
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryTestCase;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
 
@@ -20,7 +19,7 @@ class CanCreateMessageWithConversationTest extends AbstractHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CanCreateMessageWithConversation;
+        $this->sut = new CanCreateMessageWithConversation();
 
         parent::setUp();
     }

@@ -17,7 +17,7 @@ class CanCreateConversationForOrganisationTest extends AbstractHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CanCreateConversationForOrganisation;
+        $this->sut = new CanCreateConversationForOrganisation();
 
         parent::setUp();
     }

@@ -17,7 +17,7 @@ class CanCloseConversationWithIdTest extends AbstractHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CanCloseConversationWithId;
+        $this->sut = new CanCloseConversationWithId();
 
         parent::setUp();
     }

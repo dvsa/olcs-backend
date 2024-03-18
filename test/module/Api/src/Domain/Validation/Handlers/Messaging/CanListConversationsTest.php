@@ -17,7 +17,7 @@ class CanListConversationsTest extends AbstractHandlerTestCase
 
     public function setUp(): void
     {
-        $this->sut = new CanListConversationsByOrganisation;
+        $this->sut = new CanListConversationsByOrganisation();
 
         parent::setUp();
     }
