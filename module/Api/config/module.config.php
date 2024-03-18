@@ -521,7 +521,7 @@ return [
                 ApiSrv\EventHistory\CreatorFactory::class,
             ApiSrv\EventHistory\Creator::class => ApiSrv\EventHistory\CreatorFactory::class,
 
-            ApiSrv\GovUkAccount\GovUkAccountService::class => ApiSrv\GovUkAccount\GovUkAccountServiceFactory::class,
+            ApiSrv\GovUkAccount\GovUkAccountService::class => ApiSrv\GovUkAccount\GovUkAccountServiceFactory::class
         ],
     ],
     'view_manager' => [

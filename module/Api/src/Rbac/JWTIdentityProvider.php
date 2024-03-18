@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Domain\Exception\HeaderNotFoundException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Cli\Request\CliRequest;
 use Firebase\JWT\ExpiredException;
 use Laminas\Http\Header\HeaderInterface;
 use Laminas\Http\Request;
@@ -67,7 +68,7 @@ class JWTIdentityProvider implements IdentityProviderInterface
             return $this->identity;
         }
 
-        if ($this->request instanceof \Laminas\Console\Request) {
+        if ($this->request instanceof CliRequest) {
             return $this->identity = new Identity($this->getSystemUser());
         }
 
