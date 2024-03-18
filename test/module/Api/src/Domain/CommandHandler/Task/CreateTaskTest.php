@@ -214,7 +214,7 @@ class CreateTaskTest extends CommandHandlerTestCase
     {
         $command = Cmd::create($this->getData(null));
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2)
             ->once()
             ->andReturn($rules);
@@ -266,7 +266,7 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true);
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn($this->rules);
@@ -289,11 +289,11 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true);
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B')
             ->once()
             ->andReturn($this->rules)
@@ -317,7 +317,7 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rules);
@@ -340,11 +340,11 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, null, 'B')
             ->once()
             ->andReturn($this->rules);
@@ -367,15 +367,15 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, null, 'B')
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV)
             ->once()
             ->andReturn($this->rules);
@@ -398,19 +398,19 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, null, 'B')
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV)
             ->once()
             ->andReturn([])
-            ->shouldReceive('fetchByParameters')
+            ->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2)
             ->once()
             ->andReturn($this->rules);
@@ -433,7 +433,7 @@ class CreateTaskTest extends CommandHandlerTestCase
 
         $this->mockLicence(Licence::LICENCE_CATEGORY_GOODS_VEHICLE, true);
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
@@ -481,7 +481,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
@@ -526,7 +526,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
@@ -565,7 +565,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
@@ -632,7 +632,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_PSV, 'B')
             ->once()
             ->andReturn($this->rulesForAlphaSplit);
@@ -793,7 +793,7 @@ class CreateTaskTest extends CommandHandlerTestCase
             ->once()
             ->getMock();
 
-        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParameters')
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchByParametersWithFallbackWhenSubCategoryNotFound')
             ->with(1, 2, Licence::LICENCE_CATEGORY_GOODS_VEHICLE, 'B', false)
             ->once()
             ->andReturn($this->rules);

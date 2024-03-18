@@ -18,6 +18,9 @@ use Mockery as m;
 
 class TaskAllocationRuleTest extends RepositoryTestCase
 {
+    /** @var TaskAllocationRuleRepo|m\MockInterface */
+    protected $sut;
+
     /**
      * Set up
      */
@@ -148,7 +151,7 @@ class TaskAllocationRuleTest extends RepositoryTestCase
 
         $this->assertEquals(
             ['foo'],
-            $this->sut->fetchByParameters(1, 2)
+            $this->sut->fetchByParametersWithFallbackWhenSubCategoryNotFound(1, 2)
         );
     }
 
