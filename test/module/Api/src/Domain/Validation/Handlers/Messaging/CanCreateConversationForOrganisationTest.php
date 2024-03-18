@@ -32,15 +32,16 @@ class CanCreateConversationForOrganisationTest extends AbstractHandlerTestCase
         $permission = Permission::CAN_CREATE_CONVERSATION;
         $dto = m::mock(CommandInterface::class);
 
-        if ($hasPermission) {
-            $dto->shouldReceive('getLicence')->once()->andReturn($orgId);
-        }
-
         $this->setIsGranted($permission, $hasPermission);
 
-        $this->setIsValid('canAccessLicence', [$orgId], $canAccess);
+        if ($hasPermission === false) {
+            $this->assertSame($expected, $this->sut->isValid($dto));
+        } else {
+            $this->setIsValid('canAccessLicence', [$orgId], $canAccess);
+            $dto->shouldReceive('getLicence')->twice()->andReturn($orgId);
 
-        $this->assertSame($expected, $this->sut->isValid($dto));
+            $this->assertSame($expected, $this->sut->isValid($dto));
+        }
     }
 
     public function dpTestIsValid()

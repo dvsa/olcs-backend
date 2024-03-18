@@ -2,7 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Messaging;
 
+use Dvsa\Olcs\Api\Domain\Repository\MessagingConversation as ConversationRepo;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanCreateMessageWithConversation;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Repository\RepositoryTestCase;
@@ -26,7 +28,7 @@ class CanCreateMessageWithConversationTest extends AbstractHandlerTestCase
     /**
      * @dataProvider dpTestIsValid
      */
-    public function testIsValid($canAccess, $hasPermission, $expected)
+    public function testIsValid($canAccess, $hasPermission, $isOpen, $expected)
     {
         /** @var CommandInterface $dto */
         $conversationId = 1;
@@ -35,23 +37,35 @@ class CanCreateMessageWithConversationTest extends AbstractHandlerTestCase
 
         $this->setIsGranted($permission, $hasPermission);
 
-        if ($hasPermission) {
+        if ($hasPermission === false) {
+            $this->assertSame($expected, $this->sut->isValid($dto));
+        } else {
+            $mockRepo = $this->mockRepo(ConversationRepo::class);
+
+            $mockConversationEntity = m::mock(MessagingConversation::class);
+            $mockConversationEntity->shouldReceive('getIsClosed')->andReturn(!$isOpen);
+
+            $mockRepo->shouldReceive('fetchById')->with($conversationId)->andReturn($mockConversationEntity);
+
+            $this->setIsValid('canAccessConversation', [$conversationId], $canAccess);
+
             $dto->shouldReceive('getConversation')->once()->andReturn($conversationId);
-            m::mock(Dvsa\Olcs\Api\Domain\Repository\MessagingConversation);
+
+            $this->assertSame($expected, $this->sut->isValid($dto));
         }
-
-        $this->setIsValid('canAccessOrganisation', [$conversationId], $canAccess);
-
-        $this->assertSame($expected, $this->sut->isValid($dto));
     }
 
     public function dpTestIsValid()
     {
         return [
-            [true, true, true],
-            [true, false, false],
-            [false, true, false],
-            [false, false, false],
+            [true, true, true, true],
+            [true, true, false, false],
+            [true, false, true, false],
+            [true, false, false, false],
+            [false, true, true, false],
+            [false, true, false, false],
+            [false, false, true, false],
+            [false, false, false, false],
         ];
     }
 }
