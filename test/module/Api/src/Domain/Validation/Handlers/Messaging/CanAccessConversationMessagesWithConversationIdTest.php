@@ -31,14 +31,14 @@ class CanAccessConversationMessagesWithConversationIdTest extends AbstractHandle
         $conversationId = 1;
         $dto = m::mock(CommandInterface::class);
         if ($hasPermission) {
-            $dto->shouldReceive('getConversation')->once()->andReturn($id);
+            $dto->shouldReceive('getConversation')->once()->andReturn($conversationId);
         }
 
         $permission = Permission::CAN_LIST_MESSAGES;
 
         $this->setIsGranted($permission, $hasPermission);
 
-        $this->setIsValid('canAccessConversation', [$id], $canAccess);
+        $this->setIsValid('canAccessConversation', [$conversationId], $canAccess);
 
         $this->assertSame($expected, $this->sut->isValid($dto));
     }
