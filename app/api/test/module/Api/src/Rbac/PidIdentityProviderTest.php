@@ -7,6 +7,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
+use Dvsa\Olcs\Cli\Request\CliRequest;
 use Laminas\Http\Header\Cookie;
 use Laminas\Http\Headers as HttpHeaders;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -67,7 +68,7 @@ class PidIdentityProviderTest extends MockeryTestCase
             ->once()
             ->getMock();
 
-        $mockRequest = m::mock(\Laminas\Console\Request::class);
+        $mockRequest = m::mock(CliRequest::class);
 
         $sut = new PidIdentityProvider($mockRepo, $mockRequest, 'X-Pid', 'cookie name');
 

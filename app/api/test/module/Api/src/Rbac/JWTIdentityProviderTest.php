@@ -7,13 +7,12 @@ namespace Dvsa\OlcsTest\Api\Rbac;
 use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\Exception\HeaderNotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
+use Dvsa\Olcs\Cli\Request\CliRequest;
 use Firebase\JWT\ExpiredException;
-use Laminas\Console\Request as ConsoleRequest;
 use Laminas\Http\Headers;
 use Laminas\Http\Request;
 use Laminas\ServiceManager\ServiceManager;
@@ -182,7 +181,7 @@ class JWTIdentityProviderTest extends MockeryTestCase
     public function getIdentityReturnsSystemUserWhenConsoleRequest()
     {
         // Setup
-        $sut = new JWTIdentityProvider($this->userRepository(), new ConsoleRequest(), $this->client());
+        $sut = new JWTIdentityProvider($this->userRepository(), new CliRequest(), $this->client());
 
         $user = UserEntity::create('', UserEntity::USER_TYPE_INTERNAL, ['loginId' => 'systemUser']);
 

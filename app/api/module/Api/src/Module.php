@@ -83,22 +83,11 @@ class Module implements BootstrapListenerInterface
             $content = substr($content, 0, 1000) . '...';
         }
 
-        if ($response instanceof \Laminas\Console\Response) {
-            $priority = $response->getErrorLevel() === 0 ? \Laminas\Log\Logger::DEBUG : \Laminas\Log\Logger::ERR;
-            Logger::log(
-                $priority,
-                'CLI Response Sent',
-                ['errorLevel' => $response->getErrorLevel(), 'content' => $content]
-            );
-        }
-
-        if ($response instanceof \Laminas\Http\PhpEnvironment\Response) {
-            Logger::logResponse(
-                $response->getStatusCode(),
-                'API Response Sent',
-                ['status' => $response->getStatusCode(), 'content' => $content]
-            );
-        }
+        Logger::logResponse(
+            $response->getStatusCode(),
+            'API Response Sent',
+            ['status' => $response->getStatusCode(), 'content' => $content]
+        );
     }
 
     /**
