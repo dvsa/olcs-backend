@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "081dc4ba17b1de2c863e53db50ff9012",
+    "content-hash": "2bc51a74b0ae515a145063e76da0c4d2",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6088,31 +6088,34 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "dev-migrate-to-laminas-cli-vol-3615",
+            "version": "v7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-logging.git",
-                "reference": "199db60138befe67b568c13c70848568ccdcb85e"
+                "reference": "7acff4c1353ac162cb2fdd568ff27908885ef88e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-logging/zipball/199db60138befe67b568c13c70848568ccdcb85e",
-                "reference": "199db60138befe67b568c13c70848568ccdcb85e",
+                "url": "https://api.github.com/repos/dvsa/olcs-logging/zipball/7acff4c1353ac162cb2fdd568ff27908885ef88e",
+                "reference": "7acff4c1353ac162cb2fdd568ff27908885ef88e",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "laminas/laminas-eventmanager": "^3.0",
                 "laminas/laminas-log": "^2.12",
                 "laminas/laminas-mvc": "^3.3",
                 "laminas/laminas-session": "^2.8.7",
                 "laminas/laminas-stdlib": "^3.0",
                 "php": "^7.4",
+                "psr/container": "^1.1|^2",
                 "psr/log": "^1.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
                 "johnkary/phpunit-speedtrap": "^4.0",
                 "mockery/mockery": "^1.6",
+                "phpstan/phpstan-mockery": "^1.1",
                 "phpunit/phpunit": "^9.6"
             },
             "type": "library",
@@ -6133,9 +6136,9 @@
             ],
             "description": "Logging Module for OLCS",
             "support": {
-                "source": "https://github.com/dvsa/olcs-logging/tree/migrate-to-laminas-cli-vol-3615"
+                "source": "https://github.com/dvsa/olcs-logging/tree/v7.0.0"
             },
-            "time": "2024-03-05T09:24:51+00:00"
+            "time": "2024-03-18T14:23:57+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
@@ -11959,9 +11962,7 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "olcs/olcs-logging": 20
-    },
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
