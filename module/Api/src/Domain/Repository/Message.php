@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 
 use Doctrine\DBAL\ParameterType;
 use Doctrine\ORM\Query;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -49,6 +50,18 @@ class Message extends AbstractRepository
         $qb
             ->andWhere($qb->expr()->eq($this->alias . '.messagingConversation', ':messagingConversation'))
             ->setParameter('messagingConversation', $conversationId);
+
+        return $qb;
+    }
+
+    public function addReadersToMessages(QueryBuilder $qb): QueryBuilder
+    {
+        $qb->leftJoin($this->alias . '.userMessageReads', 'urm')
+           ->leftJoin('urm.user', 'urmu')
+           ->leftJoin('urmu.contactDetails', 'urmcd')
+           ->leftJoin('urmcd.person', 'urmcdp')
+           ->leftJoin('urmu.roles', 'urmur')
+           ->addSelect('urm, urmcd, urmcdp, urmu, urmur');
 
         return $qb;
     }

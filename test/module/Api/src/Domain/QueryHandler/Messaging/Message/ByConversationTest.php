@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging\Message;
 
 use ArrayIterator;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Message\ByConversation;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -12,6 +13,7 @@ use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Transfer\Query\Messaging\Messages\ByConversation as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -37,27 +39,51 @@ class ByConversationTest extends QueryHandlerTestCase
     {
         $query = Qry::create([
             'conversation' => 1,
+            'includeReadRoles' => true,
+            'readRoles' => [Role::ROLE_OPERATOR_USER],
         ]);
 
         $messages = new ArrayIterator(
             [
-                ['id' => 1,'messaging_conversation_id' => '1','messaging_content_id' => '1'],
-                ['id' => 2,'messaging_conversation_id' => '1','messaging_content_id' => '2'],
-                ['id' => 3,'messaging_conversation_id' => '1','messaging_content_id' => '3'],
-                ['id' => 4,'messaging_conversation_id' => '1','messaging_content_id' => '4'],
-                ['id' => 5,'messaging_conversation_id' => '1','messaging_content_id' => '5'],
-                ['id' => 6,'messaging_conversation_id' => '1','messaging_content_id' => '6'],
-                ['id' => 7,'messaging_conversation_id' => '1','messaging_content_id' => '7'],
-                ['id' => 8,'messaging_conversation_id' => '1','messaging_content_id' => '8'],
-            ]
+                ['id' => 1, 'messaging_conversation_id' => '1', 'messaging_content_id' => '1', 'userMessageReads' => [['user' => ['roles' => [['role' => Role::ROLE_OPERATOR_USER]]]]]],
+                ['id' => 2, 'messaging_conversation_id' => '1', 'messaging_content_id' => '2', 'userMessageReads' => [['user' => ['roles' => [['role' => Role::ROLE_OPERATOR_TM]]]]]],
+                ['id' => 3, 'messaging_conversation_id' => '1', 'messaging_content_id' => '3', 'userMessageReads' => [['user' => ['roles' => []]]]],
+                ['id' => 4, 'messaging_conversation_id' => '1', 'messaging_content_id' => '4', 'userMessageReads' => [['user' => ['roles' => []]]]],
+                ['id' => 5, 'messaging_conversation_id' => '1', 'messaging_content_id' => '5', 'userMessageReads' => [['user' => ['roles' => []]]]],
+                ['id' => 6, 'messaging_conversation_id' => '1', 'messaging_content_id' => '6', 'userMessageReads' => [['user' => ['roles' => []]]]],
+                ['id' => 7, 'messaging_conversation_id' => '1', 'messaging_content_id' => '7', 'userMessageReads' => [['user' => ['roles' => []]]]],
+                ['id' => 8, 'messaging_conversation_id' => '1', 'messaging_content_id' => '8', 'userMessageReads' => [['user' => ['roles' => []]]]],
+            ],
         );
         $conversation = new MessagingConversation();
         $mockQb = m::mock(QueryBuilder::class);
-        $this->repoMap[Repository\Message::class]->shouldReceive('getBaseMessageListWithContentQuery')->andReturn($mockQb);
-        $this->repoMap[Repository\Message::class]->shouldReceive('filterByConversationId')->andReturn($mockQb);
-        $this->repoMap[Repository\Message::class]->shouldReceive('fetchPaginatedList')->with($mockQb)->once()->andReturn($messages);
-        $this->repoMap[Repository\Message::class]->shouldReceive('fetchPaginatedCount')->with($mockQb)->once()->andReturn(10);
-        $this->repoMap[Repository\Conversation::class]->shouldReceive('fetchById')->with(1)->once()->andReturn($conversation);
+        $this->repoMap[Repository\Message::class]
+            ->shouldReceive('getBaseMessageListWithContentQuery')
+            ->once()
+            ->andReturn($mockQb);
+        $this->repoMap[Repository\Message::class]
+            ->shouldReceive('filterByConversationId')
+            ->once()
+            ->andReturn($mockQb);
+        $this->repoMap[Repository\Message::class]
+            ->shouldReceive('addReadersToMessages')
+            ->once()
+            ->andReturn($mockQb);
+        $this->repoMap[Repository\Message::class]
+            ->shouldReceive('fetchPaginatedList')
+            ->with($mockQb, Query::HYDRATE_ARRAY, $query)
+            ->once()
+            ->andReturn($messages);
+        $this->repoMap[Repository\Message::class]
+            ->shouldReceive('fetchPaginatedCount')
+            ->with($mockQb)
+            ->once()
+            ->andReturn(10);
+        $this->repoMap[Repository\Conversation::class]
+            ->shouldReceive('fetchById')
+            ->with(1)
+            ->once()
+            ->andReturn($conversation);
 
         foreach ($messages as $message) {
             $this->repoMap[Repository\Message::class]
@@ -101,5 +127,7 @@ class ByConversationTest extends QueryHandlerTestCase
         $this->assertEquals(10, $result['count']);
         $this->assertEquals(456, $result['application']['id']);
         $this->assertEquals(123, $result['licence']['id']);
+        $this->assertNotEmpty($result['result'][0]['userMessageReads']);
+        $this->assertEmpty($result['result'][1]['userMessageReads']);
     }
 }
