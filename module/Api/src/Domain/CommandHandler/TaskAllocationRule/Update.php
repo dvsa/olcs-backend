@@ -1,49 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\TaskAllocationRule;
 
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\TaskAllocationRule\Update as Cmd;
 
-/**
- * Update TaskAllocationRule
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 final class Update extends AbstractCommandHandler
 {
-    protected $repoServiceName = 'TaskAllocationRule';
+    use UpdateTaskAllocationRuleTrait;
 
-    public function handleCommand(CommandInterface $command)
+    protected $extraRepos = [
+        Repository\TaskAllocationRule::class
+    ];
+
+    /**
+     * @param Cmd|CommandInterface $command Cmd
+     * @return Result
+     * @throws ORMException
+     * @throws RuntimeException
+     * @throws NotFoundException
+     */
+    public function handleCommand(CommandInterface $command): Result
     {
-        /* @var $command Cmd */
-        $repo = $this->getRepo();
+        $repo = $this->getRepo(Repository\TaskAllocationRule::class);
 
-        /* @var $taskAllocationRule \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule */
-        $taskAllocationRule = $repo->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $taskAllocationRule = $repo->fetchById($command->getId(), Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $taskAllocationRule->setCategory(
-            $repo->getReference(\Dvsa\Olcs\Api\Entity\System\Category::class, $command->getCategory())
-        );
-        $taskAllocationRule->setTeam(
-            $repo->getReference(\Dvsa\Olcs\Api\Entity\User\Team::class, $command->getTeam())
-        );
-        $taskAllocationRule->setUser(
-            $repo->getReference(\Dvsa\Olcs\Api\Entity\User\User::class, $command->getUser())
-        );
-        $taskAllocationRule->setGoodsOrPsv($repo->getRefdataReference($command->getGoodsOrPsv()));
-        $isMlh = null;
-        if ($command->getIsMlh() === 'Y') {
-            $isMlh = true;
-        } elseif ($command->getIsMlh() === 'N') {
-            $isMlh = false;
-        }
-        $taskAllocationRule->setIsMlh($isMlh);
-        $taskAllocationRule->setTrafficArea(
-            $repo->getReference(\Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea::class, $command->getTrafficArea())
-        );
+        $taskAllocationRule = $this->updateTaskAllocationRule($taskAllocationRule, $repo, $command);
 
         $repo->save($taskAllocationRule);
 

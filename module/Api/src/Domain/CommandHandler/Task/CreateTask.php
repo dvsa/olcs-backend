@@ -1,33 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Task;
 
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\Exception\ORMException;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Task\Task;
-use Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule;
-use Dvsa\Olcs\Api\Entity\User\Team;
-use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Exception;
 
-/**
- * Create Task
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 final class CreateTask extends AbstractCommandHandler
 {
-    protected $repoServiceName = 'Task';
+    protected $extraRepos = [
+        Repository\SystemParameter::class,
+        Repository\Task::class,
+        Repository\TaskAllocationRule::class,
+    ];
 
-    protected $extraRepos = ['TaskAllocationRule', 'SystemParameter'];
-
-    protected $alphaNumericTranslations = [
+    protected array $alphaNumericTranslations = [
         0 => 'Z',
         1 => 'O',
         2 => 'T',
@@ -41,13 +38,12 @@ final class CreateTask extends AbstractCommandHandler
     ];
 
     /**
-     * Handle command
-     *
-     * @param \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask $command Command
-     *
+     * @param \Dvsa\Olcs\Transfer\Command\Task\CreateTask|CommandInterface $command
      * @return Result
+     * @throws ORMException
+     * @throws RuntimeException
      */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): Result
     {
         $task = $this->createTaskObject($command);
 
@@ -55,7 +51,7 @@ final class CreateTask extends AbstractCommandHandler
             $this->autoAssignTask($task);
         }
 
-        $this->getRepo()->save($task);
+        $this->getRepo(Repository\Task::class)->save($task);
 
         $result = new Result();
         $result->addId('task', $task->getId());
@@ -68,13 +64,9 @@ final class CreateTask extends AbstractCommandHandler
     }
 
     /**
-     * Auto assign task
-     *
-     * @param Task $task Task
-     *
-     * @return void
+     * @throws RuntimeException|ORMException
      */
-    private function autoAssignTask(Task $task)
+    private function autoAssignTask(Entity\Task\Task $task): void
     {
         if ($task->getLicence() !== null) {
             $rules = $this->getRulesBasedOnLicence($task);
@@ -96,37 +88,24 @@ final class CreateTask extends AbstractCommandHandler
 
     /**
      * Fall back on system configuration to populate user and team
-     *
-     * @param Task $task Task
-     *
-     * @return void
+     * @throws RuntimeException|ORMException
      */
-    private function assignToDefault(Task $task)
+    private function assignToDefault(Entity\Task\Task $task): void
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\SystemParameter $repo */
-        $repo = $this->getRepo('SystemParameter');
+        $repo = $this->getRepo(Repository\SystemParameter::class);
 
         $teamId = $repo->fetchValue('task.default_team');
         if ($teamId !== null) {
-            $task->setAssignedToTeam($this->getRepo()->getReference(Team::class, $teamId));
+            $task->setAssignedToTeam($this->getRepo(Repository\Task::class)->getReference(Entity\User\Team::class, $teamId));
         }
 
         $userId = $repo->fetchValue('task.default_user');
         if ($userId !== null) {
-            $task->setAssignedToUser($this->getRepo()->getReference(User::class, $userId));
+            $task->setAssignedToUser($this->getRepo(Repository\Task::class)->getReference(Entity\User\User::class, $userId));
         }
     }
 
-    /**
-     * Assign by rule
-     *
-     * @param Task               $task          Task
-     * @param TaskAllocationRule $rule          TaskAllocationRule
-     * @param bool               $useAlphaSplit Should use Alpha split
-     *
-     * @return void
-     */
-    protected function assignByRule(Task $task, TaskAllocationRule $rule, $useAlphaSplit)
+    protected function assignByRule(Entity\Task\Task $task, Entity\Task\TaskAllocationRule $rule, bool $useAlphaSplit): void
     {
         $task->setAssignedToTeam($rule->getTeam());
         if ($rule->getUser() !== null) {
@@ -136,15 +115,7 @@ final class CreateTask extends AbstractCommandHandler
         }
     }
 
-    /**
-     * Assign by alpha split
-     *
-     * @param Task               $task Task
-     * @param TaskAllocationRule $rule TaskAllocationRule
-     *
-     * @return void
-     */
-    protected function assignByAlphaSplit(Task $task, TaskAllocationRule $rule)
+    protected function assignByAlphaSplit(Entity\Task\Task $task, Entity\Task\TaskAllocationRule $rule): void
     {
         $taskAlphaSplits = $rule->getTaskAlphaSplits();
         if ($taskAlphaSplits === null) {
@@ -164,28 +135,24 @@ final class CreateTask extends AbstractCommandHandler
     }
 
     /**
-     * Get rules based on category
-     *
-     * @param Task $task Task
-     *
-     * @return array
+     * @throws RuntimeException
      */
-    protected function getRulesBasedOnCategory(Task $task)
+    protected function getRulesBasedOnCategory(Entity\Task\Task $task): array
     {
-        return $this->getRepo('TaskAllocationRule')->fetchByParameters($task->getCategory()->getId());
+        return $this
+            ->getRepo(Repository\TaskAllocationRule::class)
+            ->fetchByParametersWithFallbackWhenSubCategoryNotFound(
+                $task->getCategory()->getId(),
+                $task->getSubCategory()->getId()
+            );
     }
 
     /**
-     * Get rules based on licence
-     *
-     * @param Task $task Task
-     *
-     * @return array
+     * @throws RuntimeException
      */
-    protected function getRulesBasedOnLicence(Task $task)
+    protected function getRulesBasedOnLicence(Entity\Task\Task $task): array
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule $repo */
-        $repo = $this->getRepo('TaskAllocationRule');
+        $repo = $this->getRepo(Repository\TaskAllocationRule::class);
 
         $licence = $task->getLicence();
         $app = $task->getApplication();
@@ -194,12 +161,6 @@ final class CreateTask extends AbstractCommandHandler
         $trafficArea = (
             $licenceTrafficArea !== null
             ? $licenceTrafficArea->getId()
-            : null
-        );
-        $category = $task->getCategory();
-        $categoryId = (
-            $category !== null
-            ? $category->getId()
             : null
         );
 
@@ -222,10 +183,11 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // Goods Licence
-        if ($operatorType === Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
-            $rules = $repo->fetchByParameters(
-                $categoryId,
-                Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
+        if ($operatorType === Entity\Licence\Licence::LICENCE_CATEGORY_GOODS_VEHICLE) {
+            $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
+                $task->getCategory()->getId(),
+                $task->getSubCategory()->getId(),
+                Entity\Licence\Licence::LICENCE_CATEGORY_GOODS_VEHICLE,
                 $trafficArea,
                 $licence->getOrganisation()->isMlh()
             );
@@ -236,8 +198,9 @@ final class CreateTask extends AbstractCommandHandler
 
         // PSV licence or no rules found for Goods Licence
         // search rules by category, operator type and traffic area
-        $rules = $repo->fetchByParameters(
-            $categoryId,
+        $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
+            $task->getCategory()->getId(),
+            $task->getSubCategory()->getId(),
             $operatorType,
             $trafficArea
         );
@@ -246,8 +209,9 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // search rules by category and traffic area
-        $rules = $repo->fetchByParameters(
-            $categoryId,
+        $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
+            $task->getCategory()->getId(),
+            $task->getSubCategory()->getId(),
             null,
             $trafficArea
         );
@@ -256,8 +220,9 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // search rules by category and operator type
-        $rules = $repo->fetchByParameters(
-            $categoryId,
+        $rules = $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound(
+            $task->getCategory()->getId(),
+            $task->getSubCategory()->getId(),
             $operatorType
         );
         if (count($rules) >= 1) {
@@ -265,37 +230,30 @@ final class CreateTask extends AbstractCommandHandler
         }
 
         // search rules by category only
-        return $repo->fetchByParameters($categoryId);
+        return $repo->fetchByParametersWithFallbackWhenSubCategoryNotFound($task->getCategory()->getId(), $task->getSubCategory()->getId());
     }
 
-    /**
-     * Get letter for alpha split
-     *
-     * @param Task $task Task
-     *
-     * @return string
-     */
-    protected function getLetterForAlphaSplit(Task $task)
+    protected function getLetterForAlphaSplit(Entity\Task\Task $task): string
     {
         $letter = '';
         $organisation = $task->getLicence()->getOrganisation();
         switch ($organisation->getType()) {
-            case Organisation::ORG_TYPE_REGISTERED_COMPANY:
-            case Organisation::ORG_TYPE_LLP:
-            case Organisation::ORG_TYPE_OTHER:
+            case Entity\Organisation\Organisation::ORG_TYPE_REGISTERED_COMPANY:
+            case Entity\Organisation\Organisation::ORG_TYPE_LLP:
+            case Entity\Organisation\Organisation::ORG_TYPE_OTHER:
                 $companyName = strtoupper($organisation->getName());
                 if (strlen($companyName) > 4 && substr($companyName, 0, 4) === 'THE ') {
                     $companyName = substr($companyName, 4);
                 }
                 $letter = substr($companyName, 0, 1);
                 break;
-            case Organisation::ORG_TYPE_SOLE_TRADER:
+            case Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER:
                 $organisationPerson = $organisation->getOrganisationPersons()->first();
                 if ($organisationPerson) {
                     $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
                 }
                 break;
-            case Organisation::ORG_TYPE_PARTNERSHIP:
+            case Entity\Organisation\Organisation::ORG_TYPE_PARTNERSHIP:
                 $organisationPersons = $organisation->getOrganisationPersons();
                 $criteria = Criteria::create();
                 $criteria->orderBy(array('id' => Criteria::ASC));
@@ -312,101 +270,83 @@ final class CreateTask extends AbstractCommandHandler
     }
 
     /**
-     * Create task object
-     *
-     * @param \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask $command Command
-     *
+     * @param \Dvsa\Olcs\Transfer\Command\Task\CreateTask|CommandInterface $command
      * @return Task
+     * @throws ORMException
+     * @throws RuntimeException
+     * @throws Exception
      */
-    private function createTaskObject(CommandInterface $command)
+    private function createTaskObject(CommandInterface $command): Entity\Task\Task
     {
-        /** @var \Dvsa\Olcs\Api\Domain\Repository\Task $repo */
-        $repo = $this->getRepo();
+        /** @var Repository\Task $repo */
+        $repo = $this->getRepo(Repository\Task::class);
 
         // Required
         $category = $repo->getCategoryReference($command->getCategory());
         $subCategory = $repo->getSubCategoryReference($command->getSubCategory());
 
-        $task = new Task($category, $subCategory);
+        $task = new Entity\Task\Task($category, $subCategory);
 
         // Optional relationships
         $userId = (int)$command->getAssignedToUser();
-        $task->setAssignedToUser($repo->getReference(User::class, $userId));
+        $task->setAssignedToUser($repo->getReference(Entity\User\User::class, $userId));
         $task->setAssignedToTeam($repo->getTeamReference((int)$command->getAssignedToTeam(), $userId));
 
         if ($command->getApplication() !== null) {
-            $application = $this->getRepo()->getReference(Application::class, $command->getApplication());
+            $application = $repo->getReference(Entity\Application\Application::class, $command->getApplication());
             $task->setApplication($application);
         }
 
         if ($command->getLicence() !== null) {
-            $Licence = $this->getRepo()->getReference(Licence::class, $command->getLicence());
+            $Licence = $repo->getReference(Entity\Licence\Licence::class, $command->getLicence());
             $task->setLicence($Licence);
         }
 
         if ($command->getBusReg() !== null) {
             $task->setBusReg(
-                $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Bus\BusReg::class, $command->getBusReg())
+                $repo->getReference(Entity\Bus\BusReg::class, $command->getBusReg())
             );
         }
 
         if ($command->getCase() !== null) {
             $task->setCase(
-                $this->getRepo()->getReference(\Dvsa\Olcs\Api\Entity\Cases\Cases::class, $command->getCase())
+                $repo->getReference(Entity\Cases\Cases::class, $command->getCase())
             );
         }
 
         if ($command->getSubmission() !== null) {
             $task->setSubmission(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\Submission\Submission::class,
-                    $command->getSubmission()
-                )
+                $repo->getReference(Entity\Submission\Submission::class, $command->getSubmission())
             );
         }
 
         if ($command->getTransportManager() !== null) {
             $task->setTransportManager(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\Tm\TransportManager::class,
-                    $command->getTransportManager()
-                )
+                $repo->getReference(Entity\Tm\TransportManager::class, $command->getTransportManager())
             );
         }
 
         if ($command->getSurrender() !== null) {
             $task->setSurrender(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\Surrender::class,
-                    $command->getSurrender()
-                )
+                $repo->getReference(Entity\Surrender::class, $command->getSurrender())
             );
         }
 
         if ($command->getIrfoOrganisation() !== null) {
             $task->setIrfoOrganisation(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\Organisation\Organisation::class,
-                    $command->getIrfoOrganisation()
-                )
+                $repo->getReference(Entity\Organisation\Organisation::class, $command->getIrfoOrganisation())
             );
         }
 
         if ($command->getIrhpApplication() !== null) {
             $task->setIrhpApplication(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\Permits\IrhpApplication::class,
-                    $command->getIrhpApplication()
-                )
+                $repo->getReference(Entity\Permits\IrhpApplication::class, $command->getIrhpApplication())
             );
         }
 
         if ($command->getAssignedByUser() !== null) {
             $task->setAssignedByUser(
-                $this->getRepo()->getReference(
-                    \Dvsa\Olcs\Api\Entity\User\User::class,
-                    $command->getAssignedByUser()
-                )
+                $repo->getReference(Entity\User\User::class, $command->getAssignedByUser())
             );
         }
 

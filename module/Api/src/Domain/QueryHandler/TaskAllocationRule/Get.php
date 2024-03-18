@@ -1,27 +1,35 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TaskAllocationRule;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\TaskAllocationRule\Get as Qry;
 
-/**
- * Get a single TaskAllocationRule
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class Get extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'TaskAllocationRule';
+    protected $extraRepos = [
+        Repository\TaskAllocationRule::class,
+    ];
 
-    public function handleQuery(QueryInterface $query)
+    /**
+     * @param Qry $query
+     * @throws RuntimeException
+     */
+    public function handleQuery(QueryInterface $query): Result
     {
-        $repo = $this->getRepo();
+        $repo = $this->getRepo(Repository\TaskAllocationRule::class);
 
         return $this->result(
             $repo->fetchUsingId($query),
             [
                 'category',
+                'subCategory',
                 'team',
                 'user' => ['contactDetails' => ['person']],
                 'trafficArea',

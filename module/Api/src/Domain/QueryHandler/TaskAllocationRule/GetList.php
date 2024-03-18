@@ -1,30 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\TaskAllocationRule;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Query\TaskAllocationRule\GetList as Qry;
 
-/**
- * Get List of Task Allocation Rules
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class GetList extends AbstractQueryHandler
 {
-    protected $repoServiceName = 'TaskAllocationRule';
+    protected $extraRepos = [
+        Repository\TaskAllocationRule::class,
+    ];
 
     /**
-     * @param \Dvsa\Olcs\Transfer\Query\TaskAllocationRule\GetList $query
+     * @param Qry $query
      * @return array
-     * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
+     * @throws RuntimeException
      */
-    public function handleQuery(QueryInterface $query)
+    public function handleQuery(QueryInterface $query): array
     {
-        /** @var  \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule $repo */
-        $repo = $this->getRepo();
+        $repo = $this->getRepo(Repository\TaskAllocationRule::class);
 
         $repo->disableSoftDeleteable();
 
@@ -46,6 +46,7 @@ class GetList extends AbstractQueryHandler
                 $result,
                 [
                     'category',
+                    'subCategory',
                     'team',
                     'user' => ['contactDetails' => ['person']],
                     'trafficArea',
@@ -62,7 +63,7 @@ class GetList extends AbstractQueryHandler
      *
      * @param Entity\Task\TaskAllocationRule|Entity\Task\TaskAlphaSplit $entity
      */
-    private function cleanDeletedUser($entity)
+    private function cleanDeletedUser($entity): void
     {
         $user = $entity->getUser();
 
