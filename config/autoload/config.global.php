@@ -264,17 +264,15 @@ return [
         'selfserve_uri' => '%olcs_ss_uri%',
         'internal_uri' => '%olcs_iu_uri%',
     ],
-    'awsOptions' => [
-    'region' => '%olcs_aws_region%',
+    'awsOptions' => array_filter([
+        'region' => '%olcs_aws_region%',
         'version' => '%olcs_aws_version%',
-
-
-        's3Options' => [
-    'roleArn' => $isProduction ? null : '%olcs_aws_s3_role_arn%',
-            'roleSessionName' => $isProduction ? null : '%olcs_aws_s3_role_session_name%'
+        's3Options' => $isProductionAccount ? null : [
+            'roleArn' => '%olcs_aws_s3_role_arn%',
+            'roleSessionName' => '%olcs_aws_s3_role_session_name%'
         ]
-    ],
-    'mail' => $isProductionAccount ? null : [
+    ]),
+    'mail' => $isProductionAccount ? [] : [
     'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
     'options' => [
         'transport' => [
