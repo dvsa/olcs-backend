@@ -4,11 +4,9 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
- * Can List Conversation messages
+ * Can List Conversation messages by Licence
  */
 class CanListConversationsByLicence extends CanListConversations implements AuthAwareInterface
 {

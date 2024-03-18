@@ -4,13 +4,11 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\AbstractHandler;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
  * Can List Conversation messages by Organisation
  */
-class CanListConversationsByOrganisation extends AbstractHandler implements AuthAwareInterface
+class CanListConversationsByOrganisation extends CanListConversations implements AuthAwareInterface
 {
     use AuthAwareTrait;
 
@@ -23,8 +21,10 @@ class CanListConversationsByOrganisation extends AbstractHandler implements Auth
      */
     public function isValid($dto)
     {
-        return $this->isGranted(Permission::CAN_LIST_CONVERSATIONS)
-               &&
-               $this->canAccessOrganisation($dto->getOrganisation());
+        if (!$this->canAccessOrganisation($dto->getOrganisation())) {
+            return false;
+        };
+
+        return parent::isValid($dto);
     }
 }

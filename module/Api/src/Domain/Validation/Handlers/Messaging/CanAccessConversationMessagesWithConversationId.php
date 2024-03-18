@@ -23,8 +23,8 @@ class CanAccessConversationMessagesWithConversationId extends AbstractHandler im
      */
     public function isValid($dto)
     {
-        return $this->canAccessConversation($dto->getConversation())
+        return $this->isGranted(Permission::CAN_LIST_MESSAGES)
                &&
-               $this->isGranted(Permission::CAN_LIST_MESSAGES);
+               $this->canAccessConversation($dto->getConversation());
     }
 }

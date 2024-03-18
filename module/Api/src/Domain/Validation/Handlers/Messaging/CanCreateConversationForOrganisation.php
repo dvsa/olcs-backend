@@ -23,7 +23,7 @@ class CanCreateConversationForOrganisation extends AbstractHandler implements Au
      */
     public function isValid($dto)
     {
-        if (!$this->isGranted(Permission::CAN_CREATE_CONVERSATIONS)) {
+        if (!$this->isGranted(Permission::CAN_CREATE_CONVERSATION)) {
             return false;
         }
 
