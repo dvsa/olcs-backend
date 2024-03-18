@@ -23,6 +23,8 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\HasLifecycleCallbacks
  * @ORM\Table(name="task_allocation_rule",
  *    indexes={
+ *        @ORM\Index(name="fk_task_allocation_rule_sub_category_id_sub_category_id",
+     *     columns={"sub_category_id"}),
  *        @ORM\Index(name="ix_task_allocation_rule_category_id", columns={"category_id"}),
  *        @ORM\Index(name="ix_task_allocation_rule_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_task_allocation_rule_goods_or_psv", columns={"goods_or_psv"}),
@@ -102,6 +104,16 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
      * @Gedmo\Blameable(on="update")
      */
     protected $lastModifiedBy;
+
+    /**
+     * Sub category
+     *
+     * @var \Dvsa\Olcs\Api\Entity\System\SubCategory
+     *
+     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\SubCategory", fetch="LAZY")
+     * @ORM\JoinColumn(name="sub_category_id", referencedColumnName="id", nullable=true)
+     */
+    protected $subCategory;
 
     /**
      * Team
@@ -321,6 +333,30 @@ abstract class AbstractTaskAllocationRule implements BundleSerializableInterface
     public function getLastModifiedBy()
     {
         return $this->lastModifiedBy;
+    }
+
+    /**
+     * Set the sub category
+     *
+     * @param \Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory entity being set as the value
+     *
+     * @return TaskAllocationRule
+     */
+    public function setSubCategory($subCategory)
+    {
+        $this->subCategory = $subCategory;
+
+        return $this;
+    }
+
+    /**
+     * Get the sub category
+     *
+     * @return \Dvsa\Olcs\Api\Entity\System\SubCategory
+     */
+    public function getSubCategory()
+    {
+        return $this->subCategory;
     }
 
     /**

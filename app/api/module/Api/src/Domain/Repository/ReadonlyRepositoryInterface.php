@@ -72,10 +72,12 @@ interface ReadonlyRepositoryInterface
     /**
      * Get Reference
      *
-     * @param string     $entityClass Entity class FQN
-     * @param string|int $id          id
+     * @param class-string<T> $entityClass Entity class FQN
+     * @param string|int $id id
      *
-     * @return null|$entityClass
+     * @return T|null Entity reference
+     *
+     * @template T
      */
     public function getReference($entityClass, $id);
 }
