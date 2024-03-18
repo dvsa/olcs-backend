@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7eaa8c3708f6b0fbc5e6cbcd283d46b9",
+    "content-hash": "081dc4ba17b1de2c863e53db50ff9012",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -6347,16 +6347,16 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "v6.5.0",
+            "version": "v6.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "1bcbf1228944bdc15eb59da03af6206f00983f25"
+                "reference": "95142e4af09b8625710f9998441e219ed5210b69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/1bcbf1228944bdc15eb59da03af6206f00983f25",
-                "reference": "1bcbf1228944bdc15eb59da03af6206f00983f25",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/95142e4af09b8625710f9998441e219ed5210b69",
+                "reference": "95142e4af09b8625710f9998441e219ed5210b69",
                 "shasum": ""
             },
             "require": {
@@ -6397,9 +6397,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/v6.5.0"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/v6.6.0"
             },
-            "time": "2024-03-05T16:35:41+00:00"
+            "time": "2024-03-18T12:38:27+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -11959,11 +11959,14 @@
     "platform": {
         "php": "^7.4",
         "ext-intl": "*",
-        "ext-json": "*"
+        "ext-json": "*",
+        "ext-curl": "*",
+        "ext-redis": "*",
+        "ext-pdo": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
         "ext-redis": "4.3"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
