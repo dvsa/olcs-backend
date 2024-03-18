@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
 use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -19,14 +18,16 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = ['Conversation', 'Message'];
 
+    /** @param GetConversationsByLicenceQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetConversationsByLicenceQuery);
         $conversationRepository = $this->getRepository();
 
         $conversationsQuery = $conversationRepository->getBaseConversationListQuery($query);
         $conversationsQuery = $conversationRepository->filterByLicenceId($conversationsQuery, $query->getLicence());
         $conversationsQuery = $conversationRepository->applyOrderByOpen($conversationsQuery);
+        $conversationsQuery = $conversationRepository->filterByStatuses($conversationsQuery, $query->getStatuses());
+
         $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery);
         foreach ($conversations as $key => $value) {
             $unreadMessageCount = $this->getUnreadMessageCountForUser($value);
@@ -46,7 +47,7 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
     private function getUnreadMessageCountForUser($conversation): int
     {
         $messageRepository = $this->getRepo('Message');
-        assert($messageRepository instanceof MessageRepo);
+
         $results = $messageRepository->getUnreadMessagesByConversationIdAndUserId($conversation['id'], $this->getUser()->getId());
         return count($results);
     }

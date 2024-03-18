@@ -67,4 +67,23 @@ class Conversation extends AbstractRepository
 
         return $qb;
     }
+
+    public function filterByStatuses(QueryBuilder $qb, array $statuses)
+    {
+        $conditions = [];
+
+        if (in_array('open', $statuses)) {
+            $conditions[] = $this->alias . '.isClosed = 0';
+        }
+
+        if (in_array('closed', $statuses)) {
+            $conditions[] = $this->alias . '.isClosed = 1';
+        }
+
+        if (count($conditions) > 0) {
+            $qb->andWhere($qb->expr()->orX()->addMultiple($conditions));
+        }
+
+        return $qb;
+    }
 }
