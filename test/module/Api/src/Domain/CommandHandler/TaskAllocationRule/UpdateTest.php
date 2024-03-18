@@ -2,20 +2,16 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TaskAllocationRule;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TaskAllocationRule\Update as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\TaskAllocationRule\Update as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
+use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Transfer\Command\TaskAllocationRule\Update as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Mockery as m;
 
-/**
- * TaskAllocationRule UpdateTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class UpdateTest extends CommandHandlerTestCase
 {
     /**
@@ -24,7 +20,7 @@ class UpdateTest extends CommandHandlerTestCase
     public function setUp(): void
     {
         $this->sut = new CommandHandler();
-        $this->mockRepo('TaskAllocationRule', \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule::class);
+        $this->mockRepo(Repository\TaskAllocationRule::class, Repository\TaskAllocationRule::class);
 
         parent::setUp();
     }
@@ -80,10 +76,10 @@ class UpdateTest extends CommandHandlerTestCase
         $tar = new \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule();
         $tar->setId(1304);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchUsingId')
-            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 42)->once()->andReturn($tar);
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchById')
+            ->with($command->getId(), \Doctrine\ORM\Query::HYDRATE_OBJECT, 42)->once()->andReturn($tar);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('save')->once()->andReturnUsing(
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule $tar) use ($goodsOrPsv, $expected) {
                 $this->assertSame($this->references[CategoryEntity::class][1], $tar->getCategory());
                 $this->assertSame($this->references[TeamEntity::class][2], $tar->getTeam());
@@ -140,10 +136,10 @@ class UpdateTest extends CommandHandlerTestCase
         $tar = new \Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule();
         $tar->setId(1304);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchUsingId')
-            ->with($command, \Doctrine\ORM\Query::HYDRATE_OBJECT, 42)->once()->andReturn($tar);
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchById')
+            ->with($command->getId(), \Doctrine\ORM\Query::HYDRATE_OBJECT, 42)->once()->andReturn($tar);
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('save')->once()->andReturnUsing(
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\Task\TaskAllocationRule $tar) {
                 $this->assertSame($this->references[CategoryEntity::class][1], $tar->getCategory());
                 $this->assertSame($this->references[TeamEntity::class][2], $tar->getTeam());

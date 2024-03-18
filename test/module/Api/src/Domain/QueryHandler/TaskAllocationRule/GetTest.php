@@ -2,23 +2,19 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TaskAllocationRule;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\TaskAllocationRule\Get as QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Transfer\Query\TaskAllocationRule\Get as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Mockery as m;
 
-/**
- * TaskAllocationRule GetTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class GetTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
         $this->sut = new QueryHandler();
-        $this->mockRepo('TaskAllocationRule', \Dvsa\Olcs\Api\Domain\Repository\TaskAllocationRule::class);
+        $this->mockRepo(Repository\TaskAllocationRule::class, Repository\TaskAllocationRule::class);
         parent::setUp();
     }
 
@@ -31,6 +27,7 @@ class GetTest extends QueryHandlerTestCase
             ->with(
                 [
                     'category',
+                    'subCategory',
                     'team',
                     'user' => ['contactDetails' => ['person']],
                     'trafficArea',
@@ -41,7 +38,7 @@ class GetTest extends QueryHandlerTestCase
             ->andReturn(['foo' => 'bar'])
             ->getMock();
 
-        $this->repoMap['TaskAllocationRule']->shouldReceive('fetchUsingId')->with($query)->once()->andReturn($mockTas);
+        $this->repoMap[Repository\TaskAllocationRule::class]->shouldReceive('fetchUsingId')->with($query)->once()->andReturn($mockTas);
 
         $this->assertSame(
             ['foo' => 'bar'],

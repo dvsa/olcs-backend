@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Rbac;
 
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Cli\Request\CliRequest;
 use Laminas\Http\Header\GenericHeader;
 use Laminas\Http\Request;
 use LmcRbacMvc\Identity\IdentityInterface;
@@ -69,7 +70,7 @@ class PidIdentityProvider implements IdentityProviderInterface
      */
     private function authenticate()
     {
-        if ($this->request instanceof \Laminas\Console\Request) {
+        if ($this->request instanceof CliRequest) {
             $auth = IdentityProviderInterface::SYSTEM_USER;
             return $this->repository->fetchById($auth);
         } else {

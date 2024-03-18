@@ -98,38 +98,6 @@ class ModuleTest extends MockeryTestCase
         $this->assertNotContains('API Response is empty', current($logWriter->events));
     }
 
-    public function testLogResponseCli()
-    {
-        $logWriter = $this->setupLogger();
-
-        $mockRespone = m::mock(\Laminas\Console\Response::class);
-        $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
-        $mockRespone->shouldReceive('getErrorLevel')->with()->twice()->andReturn(0);
-
-        $this->sut->logResponse($mockRespone);
-
-        $this->assertCount(1, $logWriter->events);
-        $this->assertSame(\Laminas\Log\Logger::DEBUG, $logWriter->events[0]['priority']);
-        $this->assertSame('CLI Response Sent', $logWriter->events[0]['message']);
-        $this->assertSame(['errorLevel' => 0, 'content' => 'CONTENT'], $logWriter->events[0]['extra']);
-    }
-
-    public function testLogResponseCliError()
-    {
-        $logWriter = $this->setupLogger();
-
-        $mockRespone = m::mock(\Laminas\Console\Response::class);
-        $mockRespone->shouldReceive('getContent')->with()->once()->andReturn('CONTENT');
-        $mockRespone->shouldReceive('getErrorLevel')->with()->twice()->andReturn(1);
-
-        $this->sut->logResponse($mockRespone);
-
-        $this->assertCount(1, $logWriter->events);
-        $this->assertSame(\Laminas\Log\Logger::ERR, $logWriter->events[0]['priority']);
-        $this->assertSame('CLI Response Sent', $logWriter->events[0]['message']);
-        $this->assertSame(['errorLevel' => 1, 'content' => 'CONTENT'], $logWriter->events[0]['extra']);
-    }
-
     public function testLogResponseContentLong()
     {
         $logWriter = $this->setupLogger();

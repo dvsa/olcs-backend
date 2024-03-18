@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
@@ -389,17 +390,18 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Abstracted paginator logic so it can be re-used with alternative queries
      *
-     * @param QueryBuilder $qb          Doctrine query builder
-     * @param int          $hydrateMode Hydrate mode
+     * @param QueryBuilder $qb              Doctrine query builder
+     * @param int          $hydrateMode     Hydrate mode
+     * @param QueryInterface $originalQuery Original query
      *
      * @return \ArrayIterator|\Traversable
      */
-    public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY)
+    public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY, QueryInterface $originalQuery = null)
     {
         $query = $qb->getQuery();
         $query->setHydrationMode($hydrateMode);
 
-        if ($this->query instanceof PagedQueryInterface) {
+        if ($this->query instanceof PagedQueryInterface || ($originalQuery instanceof PagedQueryInterface)) {
             $paginator = $this->getPaginator($query);
 
             return $paginator->getIterator($hydrateMode);
@@ -564,10 +566,13 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Get Reference
      *
-     * @param string     $entityClass Entity class FQN
-     * @param string|int $id          id
+     * @param class-string<T> $entityClass Entity class FQN
+     * @param string|int $id id
      *
-     * @return null|$entityClass
+     * @return T|null The entity reference.
+     *
+     * @template T
+     * @throws ORMException
      */
     public function getReference($entityClass, $id)
     {
