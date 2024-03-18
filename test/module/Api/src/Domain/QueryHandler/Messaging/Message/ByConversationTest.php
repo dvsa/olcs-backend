@@ -118,8 +118,7 @@ class ByConversationTest extends QueryHandlerTestCase
         $this->repoMap[Repository\MessagingUserMessageRead::class]->shouldReceive('save')->times(count($messages));
 
         $result = $this->sut->handleQuery($query);
-
-
+        
         $this->assertArrayHasKey('application', $result);
         $this->assertArrayHasKey('licence', $result);
         $this->assertArrayHasKey('result', $result);
