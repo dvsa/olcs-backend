@@ -68,7 +68,7 @@ class Conversation extends AbstractRepository
         return $qb;
     }
 
-    public function filterByStatuses(QueryBuilder $qb, array $statuses)
+    public function filterByStatuses(QueryBuilder $qb, array $statuses): QueryBuilder
     {
         $conditions = [];
 
