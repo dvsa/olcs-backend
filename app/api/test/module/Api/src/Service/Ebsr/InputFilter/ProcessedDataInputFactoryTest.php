@@ -20,7 +20,7 @@ class ProcessedDataInputFactoryTest extends TestCase
      */
     public function testInvoke()
     {
-        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);

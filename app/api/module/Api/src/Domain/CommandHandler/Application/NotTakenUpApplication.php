@@ -80,9 +80,7 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
                     Delete::create(
                         [
                             'ids' => array_map(
-                                function ($tm) {
-                                    return $tm->getId();
-                                },
+                                fn($tm) => $tm->getId(),
                                 $transportManagers
                             )
                         ]

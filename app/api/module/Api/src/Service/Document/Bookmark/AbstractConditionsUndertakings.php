@@ -31,9 +31,7 @@ abstract class AbstractConditionsUndertakings extends DynamicBookmark
         return implode(
             "\n\n",
             array_map(
-                function ($v) {
-                    return $v['notes'];
-                },
+                fn($v) => $v['notes'],
                 $this->data['conditionUndertakings']
             )
         );

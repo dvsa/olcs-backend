@@ -201,7 +201,7 @@ class EventHistory extends AbstractRepository
                     continue;
                 }
                 $element['newValue'] = $cleanValues[0][$keys[$i]];
-                $element['oldValue'] = isset($cleanValues[1][$keys[$i]]) ? $cleanValues[1][$keys[$i]] : '';
+                $element['oldValue'] = $cleanValues[1][$keys[$i]] ?? '';
                 $element['name'] = $keys[$i];
                 $returnValues[] = $element;
             }

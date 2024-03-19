@@ -11,7 +11,7 @@ use Mockery as m;
  */
 class ApplicantsResponsesTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ApplicantsResponses';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\ApplicantsResponses::class;
 
     /**
      * Filter provider

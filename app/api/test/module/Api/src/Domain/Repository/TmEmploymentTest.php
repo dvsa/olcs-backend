@@ -25,7 +25,7 @@ class TmEmploymentTest extends RepositoryTestCase
 
     public function testBuildDefaultQuery()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('te')->once()->andReturn($mockQb);
 
@@ -43,7 +43,7 @@ class TmEmploymentTest extends RepositoryTestCase
 
     public function testFetchByTransportManager()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('te')->once()->andReturn($mockQb);
 

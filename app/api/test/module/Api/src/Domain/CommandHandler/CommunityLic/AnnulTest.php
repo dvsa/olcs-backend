@@ -192,7 +192,7 @@ class AnnulTest extends CommandHandlerTestCase
 
     public function testCommandHandlerWithException()
     {
-        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $licenceId = 1;
         $communityLicenceIds = [10];

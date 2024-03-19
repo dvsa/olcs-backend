@@ -109,13 +109,9 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
         $ext = FileHelper::getExtension($path);
 
         $cfgDs = $this->config['document_share'];
-        $mimeExclude = (isset($cfgDs['invalid_defined_mime_types']) ? $cfgDs['invalid_defined_mime_types'] : []);
+        $mimeExclude = ($cfgDs['invalid_defined_mime_types'] ?? []);
 
-        if (isset($mimeExclude[$ext])) {
-            return $mimeExclude[$ext];
-        }
-
-        return $file->getMimeType();
+        return $mimeExclude[$ext] ?? $file->getMimeType();
     }
 
     /**

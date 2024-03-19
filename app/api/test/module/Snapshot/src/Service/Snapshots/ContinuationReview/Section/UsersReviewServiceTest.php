@@ -22,9 +22,7 @@ class UsersReviewServiceTest extends MockeryTestCase
         $mockTranslator = m::mock(TranslatorInterface::class)
             ->shouldReceive('translate')
             ->andReturnUsing(
-                function ($arg) {
-                    return $arg . '_translated';
-                }
+                fn($arg) => $arg . '_translated'
             )
             ->getMock();
 

@@ -431,7 +431,7 @@ class IrhpPermitWindowTest extends RepositoryTestCase
 
     public function testFindOverlappingWindowsByType()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->once()->andReturn($mockQb);
         $mockWindow = m::mock(IrhpPermitWindowEntity::class);
 

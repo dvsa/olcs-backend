@@ -376,7 +376,7 @@ class ContactDetails extends AbstractContactDetails
      */
     private function getDefaultParameter($params, $var, $default = null)
     {
-        return isset($params[$var]) ? $params[$var] : $default;
+        return $params[$var] ?? $default;
     }
 
     /**

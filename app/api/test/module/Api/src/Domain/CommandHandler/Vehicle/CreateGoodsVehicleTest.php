@@ -122,7 +122,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationSelfserve()
     {
-        $this->expectException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
+        $this->expectException(RequiresConfirmationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -160,7 +160,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationSelfserveIdentifyDuplicates()
     {
-        $this->expectException(RequiresConfirmationException::class, 'Vehicle exists on other licence');
+        $this->expectException(RequiresConfirmationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -200,7 +200,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternal()
     {
-        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
+        $this->expectException(RequiresConfirmationException::class);
 
         $data = [
             'licence' => self::LIC_ID,
@@ -260,7 +260,7 @@ class CreateGoodsVehicleTest extends CommandHandlerTestCase
 
     public function testHandleCommandRequiredConfirmationInternalIdentifyDuplicates()
     {
-        $this->expectException(RequiresConfirmationException::class, '["OB12345678","APP-' . self::LIC_ID . '"]');
+        $this->expectException(RequiresConfirmationException::class);
 
         $data = [
             'licence' => self::LIC_ID,

@@ -233,7 +233,7 @@ abstract class SendEbsrAbstract extends AbstractCommandHandler implements EmailA
      */
     private function getTemplateVariables($command)
     {
-        $submissionErrors = isset($this->submissionResult['errors']) ? $this->submissionResult['errors'] : [];
+        $submissionErrors = $this->submissionResult['errors'] ?? [];
 
         //if the submission failed, we won't have a bus reg, so use any data the pack processor was able to extract
         if (!$this->busReg instanceof BusRegEntity) {

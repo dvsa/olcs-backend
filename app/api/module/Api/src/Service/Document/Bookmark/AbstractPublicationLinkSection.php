@@ -191,7 +191,7 @@ abstract class AbstractPublicationLinkSection extends DynamicBookmark
     {
         $parser  = $this->getParser();
 
-        $class = explode('\\', get_called_class());
+        $class = explode('\\', static::class);
         $className = end($class);
 
         $snippetFiles = $this->getBookmarkSnippetsByClass($className);

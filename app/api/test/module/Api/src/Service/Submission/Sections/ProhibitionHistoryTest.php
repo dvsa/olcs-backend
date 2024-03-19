@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class ProhibitionHistoryTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ProhibitionHistory';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\ProhibitionHistory::class;
 
     /**
      * Filter provider

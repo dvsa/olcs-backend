@@ -160,7 +160,7 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
         $expectedOcConds = [];
         $expectedOcUnds = [];
 
-        list($licConds, $licUnds, $ocConds, $ocUnds) = $this->sut->splitUpConditionsAndUndertakings($data);
+        [$licConds, $licUnds, $ocConds, $ocUnds] = $this->sut->splitUpConditionsAndUndertakings($data);
 
         $this->assertEquals($expectedLicConds, $licConds);
         $this->assertEquals($expectedLicUnds, $licUnds);
@@ -640,7 +640,7 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        list($licConds, $licUnds, $ocConds, $ocUnds) = $this->sut->splitUpConditionsAndUndertakings($data);
+        [$licConds, $licUnds, $ocConds, $ocUnds] = $this->sut->splitUpConditionsAndUndertakings($data);
 
         $this->assertEquals($expectedLicConds, $licConds);
         $this->assertEquals($expectedLicUnds, $licUnds);
@@ -1088,7 +1088,7 @@ class ConditionsUndertakingsReviewServiceTest extends MockeryTestCase
             ]
         ];
 
-        list($licConds, $licUnds, $ocConds, $ocUnds) = $this->sut->splitUpConditionsAndUndertakings($data, false);
+        [$licConds, $licUnds, $ocConds, $ocUnds] = $this->sut->splitUpConditionsAndUndertakings($data, false);
 
         $this->assertEquals($expectedLicConds, $licConds);
         $this->assertEquals($expectedLicUnds, $licUnds);

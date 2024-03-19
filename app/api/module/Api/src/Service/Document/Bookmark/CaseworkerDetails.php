@@ -69,7 +69,7 @@ class CaseworkerDetails extends DynamicBookmark
     public function render()
     {
         $userData = $this->data[0];
-        $licData = isset($this->data[1]) ? $this->data[1] : [];
+        $licData = $this->data[1] ?? [];
 
         $directDial = $this->fetchDirectDial();
 
@@ -79,9 +79,7 @@ class CaseworkerDetails extends DynamicBookmark
             ? 'Office of the Traffic Commissioner'
             : '';
 
-        $taName = isset($licData['trafficArea']['name'])
-            ? $licData['trafficArea']['name']
-            : '';
+        $taName = $licData['trafficArea']['name'] ?? '';
 
         $details = $userData['contactDetails'];
 

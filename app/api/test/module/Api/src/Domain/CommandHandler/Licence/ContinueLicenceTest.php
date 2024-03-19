@@ -847,9 +847,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             $instance = $this->setUpMockService(LicenceRepo::class);
 
             // Inject default licence instance
-            $instance->allows('fetchUsingId')->andReturnUsing(function ($id) {
-                return $this->licenceForGoodsLicence($id);
-            })->byDefault();
+            $instance->allows('fetchUsingId')->andReturnUsing(fn($id) => $this->licenceForGoodsLicence($id))->byDefault();
 
             $repositoryServiceManager->setService('Licence', $instance);
         }
@@ -866,9 +864,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
             $instance = $this->setUpMockService(ContinuationDetailRepo::class);
 
             // Inject default entity
-            $instance->allows('fetchForLicence')->andReturnUsing(function () {
-                return [];
-            })->byDefault();
+            $instance->allows('fetchForLicence')->andReturnUsing(fn() => [])->byDefault();
 
             $repositoryServiceManager->setService('ContinuationDetail', $instance);
         }
@@ -886,9 +882,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
                     assert(is_callable([$entity, 'getId']));
                     $this->licenceRepository()
                         ->allows('fetchById')
-                        ->withArgs(function ($licenceId) use ($entity) {
-                            return $licenceId === $entity->getId();
-                        })
+                        ->withArgs(fn($licenceId) => $licenceId === $entity->getId())
                         ->andReturn($entity)
                         ->byDefault();
                     break;
@@ -898,9 +892,7 @@ class ContinueLicenceTest extends CommandHandlerTestCase
                         assert(is_callable([$licence, 'getId']));
                         $this->continuationDetailRepository()
                             ->allows('fetchForLicence')
-                            ->withArgs(function ($licenceId) use ($licence) {
-                                return $licenceId === $licence->getId();
-                            })
+                            ->withArgs(fn($licenceId) => $licenceId === $licence->getId())
                             ->andReturn([$entity])
                             ->byDefault();
                         break;

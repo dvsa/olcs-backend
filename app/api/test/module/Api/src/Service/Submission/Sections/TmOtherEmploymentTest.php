@@ -8,7 +8,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
  */
 class TmOtherEmploymentTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TmOtherEmployment';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\TmOtherEmployment::class;
 
     /**
      * Filter provider

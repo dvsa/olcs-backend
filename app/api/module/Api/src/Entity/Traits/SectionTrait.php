@@ -123,8 +123,7 @@ trait SectionTrait
 
         // populate the summary
         $countByStatus = array_count_values($this->sectionCompletion);
-        $totalCompleted = isset($countByStatus[SectionableInterface::SECTION_COMPLETION_COMPLETED])
-            ? $countByStatus[SectionableInterface::SECTION_COMPLETION_COMPLETED] : 0;
+        $totalCompleted = $countByStatus[SectionableInterface::SECTION_COMPLETION_COMPLETED] ?? 0;
 
         $this->sectionCompletion['totalSections'] = $totalSections;
         $this->sectionCompletion['totalCompleted'] = $totalCompleted;

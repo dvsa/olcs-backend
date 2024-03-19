@@ -175,7 +175,7 @@ class Cases extends AbstractRepository
     public function buildDefaultListQuery(
         \Doctrine\ORM\QueryBuilder $qb,
         \Dvsa\Olcs\Transfer\Query\QueryInterface $query,
-        $compositeFields = array()
+        $compositeFields = []
     ) {
         // add calculated columns to allow ordering by them
         parent::buildDefaultListQuery($qb, $query, ['caseType']);

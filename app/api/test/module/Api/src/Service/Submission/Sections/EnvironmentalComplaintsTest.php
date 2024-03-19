@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class EnvironmentalComplaintsTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\EnvironmentalComplaints';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\EnvironmentalComplaints::class;
 
     /**
      * Filter provider

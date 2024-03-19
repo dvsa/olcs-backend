@@ -29,7 +29,7 @@ class EbsrSubmissionListTest extends QueryHandlerTestCase
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
 
         $this->mockedSmServices = [
-            'LmcRbacMvc\Service\AuthorizationService' => m::mock('LmcRbacMvc\Service\AuthorizationService')
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
 
         parent::setUp();
@@ -87,7 +87,7 @@ class EbsrSubmissionListTest extends QueryHandlerTestCase
         $resultCount = 2;
         $organisationId = 5;
 
-        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($this->getCurrentUser(null, $organisationId));
 

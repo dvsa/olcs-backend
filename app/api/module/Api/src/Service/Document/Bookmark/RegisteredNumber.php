@@ -19,9 +19,6 @@ class RegisteredNumber extends DynamicBookmark
 
     public function render()
     {
-        if (isset($this->data['organisation']['companyOrLlpNo'])) {
-            return $this->data['organisation']['companyOrLlpNo'];
-        }
-        return '';
+        return $this->data['organisation']['companyOrLlpNo'] ?? '';
     }
 }

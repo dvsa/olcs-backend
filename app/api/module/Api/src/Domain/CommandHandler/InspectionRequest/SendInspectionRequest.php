@@ -216,9 +216,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             ->fetchByOrganisationId($inspectionRequest['licence']['organisation']['id']);
 
         $licenceNos = array_map(
-            function ($licence) {
-                return $licence['licNo'];
-            },
+            fn($licence) => $licence['licNo'],
             $inspectionRequest['licence']['organisation']['licences']
         );
 
@@ -226,9 +224,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
 
         $filtered = array_filter(
             $licenceNos,
-            function ($licNo) use ($currentLicNo) {
-                return ($licNo !== $currentLicNo) && !empty($licNo);
-            }
+            fn($licNo) => ($licNo !== $currentLicNo) && !empty($licNo)
         );
 
         return array_values($filtered); // ignore keys;
@@ -271,9 +267,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
             ->fetchWithContactDetailsByLicence($inspectionRequest['licence']['id']);
 
         return array_map(
-            function ($tmLicence) {
-                return $tmLicence['forename'] . ' ' . $tmLicence['familyName'];
-            },
+            fn($tmLicence) => $tmLicence['forename'] . ' ' . $tmLicence['familyName'],
             $inspectionRequest['licence']['tmLicences']
         );
     }
@@ -281,9 +275,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
     protected function getTradingNames($inspectionRequest)
     {
         return array_map(
-            function ($tradingName) {
-                return $tradingName['name'];
-            },
+            fn($tradingName) => $tradingName['name'],
             $inspectionRequest['licence']['organisation']['tradingNames']
         );
     }
@@ -291,9 +283,7 @@ final class SendInspectionRequest extends AbstractCommandHandler implements Emai
     protected function getPeopleFromPeopleData($peopleData)
     {
         return array_map(
-            function ($peopleResult) {
-                return $peopleResult['person'];
-            },
+            fn($peopleResult) => $peopleResult['person'],
             $peopleData
         );
     }

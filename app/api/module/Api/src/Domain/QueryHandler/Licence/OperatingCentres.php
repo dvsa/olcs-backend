@@ -44,7 +44,7 @@ class OperatingCentres extends AbstractQueryHandler
                 'canHaveCommunityLicences' => $licence->canHaveCommunityLicences(),
                 'canHaveSchedule41' => false,
                 'possibleEnforcementAreas' => $this->getPossibleEnforcementAreas($licence),
-                'possibleTrafficAreas' => $this->getPossibleTrafficAreas($licence),
+                'possibleTrafficAreas' => $this->getPossibleTrafficAreas(),
                 // Vars used for add form
                 'canAddAnother' => true,
                'documents' =>

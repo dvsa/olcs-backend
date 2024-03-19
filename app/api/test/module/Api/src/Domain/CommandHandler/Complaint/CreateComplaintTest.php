@@ -95,7 +95,7 @@ class CreateComplaintTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\Command\Result::class, $result);
         $this->assertTrue(property_exists($result, 'ids'));
         $this->assertTrue(property_exists($result, 'messages'));
         $this->assertContains('Complaint created', $result->getMessages());

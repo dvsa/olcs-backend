@@ -130,7 +130,7 @@ class PsvDiscPageTest extends m\Adapter\Phpunit\MockeryTestCase
             ->with('snippet', $expectedRowOne)
             ->andReturn('foo');
 
-        $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\PsvDiscPage', ['getSnippet']);
+        $bookmark = $this->createPartialMock(\Dvsa\Olcs\Api\Service\Document\Bookmark\PsvDiscPage::class, ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')

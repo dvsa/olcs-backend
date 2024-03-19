@@ -34,7 +34,7 @@ class ModuleTest extends MockeryTestCase
         $mockShm = m::mock();
         $mockShm->shouldReceive('attach')->once()
             ->with(
-                'Laminas\Mvc\SendResponseListener',
+                \Laminas\Mvc\SendResponseListener::class,
                 SendResponseEvent::EVENT_SEND_RESPONSE,
                 m::type('callable')
             );

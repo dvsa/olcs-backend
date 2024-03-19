@@ -202,7 +202,7 @@ interface CpmsHelperInterface
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
-    public function reversePayment($receiptReference, $paymentMethod, $fees = array());
+    public function reversePayment($receiptReference, $paymentMethod, $fees = []);
 
     /**
      * @param mixed $amount

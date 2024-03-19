@@ -39,8 +39,8 @@ class ParserFactoryTest extends \PHPUnit\Framework\TestCase
     public function typeProvider()
     {
         return [
-            ['application/rtf', 'Dvsa\Olcs\Api\Service\Document\Parser\RtfParser'],
-            ['application/x-rtf', 'Dvsa\Olcs\Api\Service\Document\Parser\RtfParser']
+            ['application/rtf', \Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class],
+            ['application/x-rtf', \Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class]
         ];
     }
 }

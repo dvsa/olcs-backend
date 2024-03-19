@@ -37,11 +37,9 @@ class DataDvaNiExportCommandTest extends AbstractBatchCommandCases
 
         $this->mockCommandHandlerManager->expects($this->once())
             ->method('handleCommand')
-            ->with($this->callback(function ($command) use ($params) {
-                return $command instanceof DataDvaNiExport
-                    && $command->getReportName() === $params['reportName']
-                    && $command->getPath() === $params['path'];
-            }))
+            ->with($this->callback(fn($command) => $command instanceof DataDvaNiExport
+                && $command->getReportName() === $params['reportName']
+                && $command->getPath() === $params['path']))
             ->willReturn(new Result());
 
         $this->executeCommand([

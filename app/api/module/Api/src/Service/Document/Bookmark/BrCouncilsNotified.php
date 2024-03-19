@@ -32,9 +32,7 @@ class BrCouncilsNotified extends DynamicBookmark
         $localAuthoritys = implode(
             ', ',
             array_map(
-                function ($item) {
-                    return $item['description'];
-                },
+                fn($item) => $item['description'],
                 $this->data['localAuthoritys']
             )
         );

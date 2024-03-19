@@ -32,7 +32,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
         $id = $command->getId();
         $applicationId = $command->getApplication();
 
-        list($prefix, $id) = $this->splitTypeAndId($id);
+        [$prefix, $id] = $this->splitTypeAndId($id);
 
         // If it's a delta, we can just edit it anytime
         if ($prefix === 'A') {

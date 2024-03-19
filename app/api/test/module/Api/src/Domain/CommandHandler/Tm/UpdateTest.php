@@ -203,13 +203,11 @@ class UpdateTest extends CommandHandlerTestCase
     {
         // Setup
         $serviceLocator = $this->setUpServiceLocator();
-        $sut = $this->setUpSut($serviceLocator);
+        $sut = $this->setUpSut();
         $command = Cmd::create(['homeAddressId' => $expectedAddressId = 1234,]);
 
         // Define Expectations
-        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($expectedAddressId) {
-            return $command instanceof SaveAddress && $command->getId() === $expectedAddressId;
-        })->atLeast()->once()->andReturn(new Result());
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(fn($command) => $command instanceof SaveAddress && $command->getId() === $expectedAddressId)->atLeast()->once()->andReturn(new Result());
 
         // Execute
         $sut->handleCommand($command);
@@ -227,9 +225,7 @@ class UpdateTest extends CommandHandlerTestCase
         $command = Cmd::create([]);
 
         // Define Expectations
-        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) {
-            return $command instanceof SaveAddress && null === $command->getId();
-        })->atLeast()->once()->andReturn(new Result());
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(fn($command) => $command instanceof SaveAddress && null === $command->getId())->atLeast()->once()->andReturn(new Result());
 
         // Execute
         $sut->handleCommand($command);
@@ -250,9 +246,7 @@ class UpdateTest extends CommandHandlerTestCase
         $this->transportManagerRepository()->shouldReceive('fetchById')->with($transportManagerId)->andReturn($mockTransportManager);
 
         // Define Expectations
-        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
-            return $command instanceof SaveAddress && $command->getId() === $homeAddressId;
-        })->once()->andReturn(new Result());
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(fn($command) => $command instanceof SaveAddress && $command->getId() === $homeAddressId)->once()->andReturn(new Result());
 
         // Execute
         $sut->handleCommand($command);
@@ -270,9 +264,7 @@ class UpdateTest extends CommandHandlerTestCase
         $command = Cmd::create(['homeAddressId' => $homeAddressId = 4321]);
 
         // Define Expectations
-        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
-            return $command instanceof SaveAddress && $command->getId() === $homeAddressId && null === $command->getContactType();
-        })->once()->andReturn(new Result());
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(fn($command) => $command instanceof SaveAddress && $command->getId() === $homeAddressId && null === $command->getContactType())->once()->andReturn(new Result());
 
         // Execute
         $sut->handleCommand($command);
@@ -291,16 +283,12 @@ class UpdateTest extends CommandHandlerTestCase
         $homeAddressSaveResult = new Result();
         $homeAddressSaveResult->addId('address', $newHomeAddressId = 4321);
         $homeAddressSaveResult->setFlag('hasChanged', true);
-        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) {
-            return $command instanceof SaveAddress && null === $command->getId();
-        })->once()->andReturn($homeAddressSaveResult);
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(fn($command) => $command instanceof SaveAddress && null === $command->getId())->once()->andReturn($homeAddressSaveResult);
 
         // Define Expectation
-        $this->contactDetailsRepository()->shouldReceive('save')->withArgs(function ($entity) use ($newHomeAddressId) {
-            return $entity instanceof ContactDetailsEntity
-                && ($address = $entity->getAddress()) instanceof Address
-                && $address->getId() === $newHomeAddressId;
-        })->once();
+        $this->contactDetailsRepository()->shouldReceive('save')->withArgs(fn($entity) => $entity instanceof ContactDetailsEntity
+            && ($address = $entity->getAddress()) instanceof Address
+            && $address->getId() === $newHomeAddressId)->once();
 
         // Execute
         $sut->handleCommand($command);
@@ -318,9 +306,7 @@ class UpdateTest extends CommandHandlerTestCase
         $command = Cmd::create(['homeAddressId' => $homeAddressId = 1234]);
         $homeAddressSaveResult = new Result();
         $homeAddressSaveResult->setFlag('hasChanged', false);
-        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(function ($command) use ($homeAddressId) {
-            return $command instanceof SaveAddress && $command->getId() === $homeAddressId;
-        })->once()->andReturn($homeAddressSaveResult);
+        $this->commandHandlerManager()->shouldReceive('handleCommand')->withArgs(fn($command) => $command instanceof SaveAddress && $command->getId() === $homeAddressId)->once()->andReturn($homeAddressSaveResult);
 
         // Execute
         $result = $sut->handleCommand($command);

@@ -26,9 +26,7 @@ class SafetyReviewServiceTest extends MockeryTestCase
         $mockTranslator = m::mock(TranslatorInterface::class)
             ->shouldReceive('translate')
             ->andReturnUsing(
-                function ($arg) {
-                    return $arg . '_translated';
-                }
+                fn($arg) => $arg . '_translated'
             )
             ->getMock();
 
@@ -290,7 +288,7 @@ class SafetyReviewServiceTest extends MockeryTestCase
     {
         $this->assertEquals(
             'continuations.safety-details.label',
-            $this->sut->getSummaryHeader(new ContinuationDetail())
+            $this->sut->getSummaryHeader()
         );
     }
 }

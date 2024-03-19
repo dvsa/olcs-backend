@@ -29,7 +29,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testFetchWithContactDetailsByApplication()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
@@ -60,7 +60,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testFetchDetails()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
@@ -90,7 +90,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testFetchDetailsEmpty()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
@@ -199,7 +199,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testFetchForTransportManager()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
@@ -230,7 +230,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testFetchByTmAndApplication()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
@@ -252,7 +252,7 @@ class TransportManagerApplicationTest extends RepositoryTestCase
 
     public function testFetchForResponsibilities()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('tma')->once()->andReturn($mockQb);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();

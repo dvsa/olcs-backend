@@ -51,10 +51,6 @@ class BilateralRequiredGenerator
     ) {
         $requiredKey = $standardOrCabotage . '-' . $permitUsageSelection;
 
-        if (isset($postData[$requiredKey])) {
-            return $postData[$requiredKey];
-        }
-
-        return null;
+        return $postData[$requiredKey] ?? null;
     }
 }

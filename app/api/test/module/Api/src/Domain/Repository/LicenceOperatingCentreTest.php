@@ -28,7 +28,7 @@ class LicenceOperatingCentreTest extends RepositoryTestCase
 
     public function testFetchByLicence()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('loc')->once()->andReturn($mockQb);
 

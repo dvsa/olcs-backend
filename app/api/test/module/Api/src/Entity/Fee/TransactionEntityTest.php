@@ -48,7 +48,7 @@ class TransactionEntityTest extends EntityTester
 
         $feeTransactions = $sut->getFeeTransactions();
 
-        $this->assertInstanceOf('Doctrine\Common\Collections\ArrayCollection', $feeTransactions);
+        $this->assertInstanceOf(\Doctrine\Common\Collections\ArrayCollection::class, $feeTransactions);
     }
 
     /**

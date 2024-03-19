@@ -36,7 +36,7 @@ class VehiclesSpecifiedTest extends MockeryTestCase
 
     public function testRenderWithGoodsVehiclesSpecified()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\VehiclesSpecified')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\VehiclesSpecified::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -110,7 +110,7 @@ class VehiclesSpecifiedTest extends MockeryTestCase
             'BOOKMARK3' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header)
             ->andReturn('header|')
@@ -148,7 +148,7 @@ class VehiclesSpecifiedTest extends MockeryTestCase
 
     public function testRenderWithPsvVehiclesSpecified()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\VehiclesSpecified')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\VehiclesSpecified::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -213,7 +213,7 @@ class VehiclesSpecifiedTest extends MockeryTestCase
             'BOOKMARK3' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header)
             ->andReturn('header|')

@@ -74,15 +74,12 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
 
         try {
             $result = $this->handleCommand($command);
-        } catch (NotReadyException $e) {
+        } catch (NotReadyException | NysiisException $e) {
             Logger::logException($e, \Laminas\Log\Logger::WARN);
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (EmailNotSentException $e) {
             Logger::logException($e, \Laminas\Log\Logger::WARN);
             return $this->retry($item, $this->retryAfter, $e->getMessage());
-        } catch (NysiisException $e) {
-            Logger::logException($e, \Laminas\Log\Logger::WARN);
-            return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (DomainException $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             $message = !empty($e->getMessages()) ? implode(', ', $e->getMessages()) : $e->getMessage();
@@ -90,13 +87,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         } catch (LaminasServiceException $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->handleLaminasServiceException($item, $e);
-        } catch (ORMException $e) {
-            Logger::logException($e, \Laminas\Log\Logger::ERR);
-            return $this->failed($item, $e->getMessage());
-        } catch (DBALException $e) {
-            Logger::logException($e, \Laminas\Log\Logger::ERR);
-            return $this->failed($item, $e->getMessage());
-        } catch (\Exception $e) {
+        } catch (ORMException | DBALException | \Exception $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->failed($item, $e->getMessage());
         }

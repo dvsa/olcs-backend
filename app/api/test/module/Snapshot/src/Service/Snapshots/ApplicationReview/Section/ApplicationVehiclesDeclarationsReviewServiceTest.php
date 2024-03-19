@@ -47,9 +47,7 @@ class ApplicationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
     {
         $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
-                function ($string) {
-                    return $string . '-translated';
-                }
+                fn($string) => $string . '-translated'
             );
 
         $this->assertEquals($expected, $this->sut->getConfigFromData($data));

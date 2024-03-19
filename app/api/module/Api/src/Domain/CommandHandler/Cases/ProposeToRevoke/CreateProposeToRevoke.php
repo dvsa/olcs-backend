@@ -69,9 +69,7 @@ final class CreateProposeToRevoke extends AbstractCommandHandler implements Tran
     {
         $case = $this->getRepo()->getReference(Cases::class, $command->getCase());
         $reasons = array_map(
-            function ($reasonId) {
-                return $this->getRepo()->getReference(Reason::class, $reasonId);
-            },
+            fn($reasonId) => $this->getRepo()->getReference(Reason::class, $reasonId),
             $command->getReasons()
         );
         $presidingTc = $this->getRepo()->getReference(PresidingTc::class, $command->getPresidingTc());

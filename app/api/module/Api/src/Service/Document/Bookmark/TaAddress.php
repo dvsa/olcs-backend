@@ -45,7 +45,7 @@ class TaAddress extends DynamicBookmark
             $trafficArea = $licence['trafficArea']['name'];
             $address = $licence['trafficArea']['contactDetails']['address'];
         } else {
-            $trafficArea = isset($licence['trafficArea']['name']) ? $licence['trafficArea']['name'] : '';
+            $trafficArea = $licence['trafficArea']['name'] ?? '';
             $address = [];
         }
 

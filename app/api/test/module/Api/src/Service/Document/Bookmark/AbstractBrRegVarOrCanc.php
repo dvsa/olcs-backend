@@ -41,8 +41,7 @@ class AbstractBrRegVarOrCanc extends \PHPUnit\Framework\TestCase
 
         if ($expected === false) {
             $this->expectException(
-                \Exception::class,
-                'Failed to generate bookmark ' . $this->bookmarkClass
+                \Exception::class
             );
         }
         $this->assertEquals($expected, $bookmark->render());

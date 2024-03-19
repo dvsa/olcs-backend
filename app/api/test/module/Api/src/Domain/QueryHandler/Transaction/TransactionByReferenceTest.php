@@ -36,7 +36,7 @@ class TransactionByReferenceTest extends QueryHandlerTestCase
 
         $query = Qry::create(['reference' => $paymentRef]);
 
-        $mockPayment = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockPayment = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
 
         $this->repoMap['Transaction']
             ->shouldReceive('fetchByReference')

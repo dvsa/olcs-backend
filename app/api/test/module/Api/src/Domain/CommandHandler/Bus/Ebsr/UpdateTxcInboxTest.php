@@ -39,7 +39,7 @@ class UpdateTxcInboxTest extends CommandHandlerTestCase
         $localAuthorityId = 888;
 
         $user = m::mock();
-        $mockLocalAuthority = m::mock('Dvsa\Olcs\Api\Entity\Bus\LocalAuthority')->makePartial();
+        $mockLocalAuthority = m::mock(\Dvsa\Olcs\Api\Entity\Bus\LocalAuthority::class)->makePartial();
 
         $mockLocalAuthority->shouldReceive('getId')
             ->andReturn($localAuthorityId);

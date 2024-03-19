@@ -248,9 +248,7 @@ class User extends AbstractRepository
 
         if (isset($data['roles'])) {
             $data['roles'] = array_map(
-                function ($role) {
-                    return $this->roleRepo->fetchOneByRole($role);
-                },
+                fn($role) => $this->roleRepo->fetchOneByRole($role),
                 $data['roles']
             );
         }
@@ -317,9 +315,7 @@ class User extends AbstractRepository
     public function findUserNameAvailable($base, callable $fncSfx = null, $tryCnt = self::USERNAME_GEN_TRY_COUNT)
     {
         if ($fncSfx === null) {
-            $fncSfx = function ($base, $idx) {
-                return $base . ($idx > 0 ? (string)$idx : '');
-            };
+            $fncSfx = fn($base, $idx) => $base . ($idx > 0 ? (string)$idx : '');
         }
 
         $this->disableSoftDeleteable();

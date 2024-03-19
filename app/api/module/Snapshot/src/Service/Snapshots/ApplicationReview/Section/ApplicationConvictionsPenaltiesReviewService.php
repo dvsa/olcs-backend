@@ -24,7 +24,7 @@ class ApplicationConvictionsPenaltiesReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         if ($data['prevConviction'] == 'N') {
             $multiItemsArray['multiItems'][] = [

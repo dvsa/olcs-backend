@@ -40,15 +40,11 @@ class SummaryTest extends QueryHandlerTestCase
             ->shouldReceive('getCategoryReference')
             ->zeroOrMoreTimes()
             ->andReturnUsing(
-                function ($category) {
-                    return $category;
-                }
+                fn($category) => $category
             )
             ->shouldReceive('getSubCategoryReference')
             ->andReturnUsing(
-                function ($category) {
-                    return $category;
-                }
+                fn($category) => $category
             );
     }
 

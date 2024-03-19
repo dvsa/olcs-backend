@@ -63,7 +63,7 @@ final class DispatchDocument extends AbstractCommandHandler implements AuthAware
                 $this->attemptPrint(
                     $documentResult->getId('document'),
                     $command->getDescription(),
-                    ($command->getUser() ? $command->getUser() : $this->getCurrentUser()),
+                    ($command->getUser() ?: $this->getCurrentUser()),
                     $command->getPrintCopiesCount()
                 )
             );

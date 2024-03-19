@@ -34,13 +34,13 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         $id = 4;
         $query = Qry::create(['id' => $id]);
 
-        $mockIrfoPsvAuth = m::mock('\Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth')->makePartial();
+        $mockIrfoPsvAuth = m::mock(\Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth::class)->makePartial();
         $mockIrfoPsvAuth->setId($id);
 
         $status = new RefData('irfo_auth_s_pending');
         $mockIrfoPsvAuth->setStatus($status);
 
-        $mockApplicationFee = m::mock('\Dvsa\Olcs\Api\Entity\Fee\Fee')->makePartial();
+        $mockApplicationFee = m::mock(\Dvsa\Olcs\Api\Entity\Fee\Fee::class)->makePartial();
 
         $feeStatus = new RefData(Fee::STATUS_PAID);
         $mockApplicationFee->setFeeStatus($feeStatus);
@@ -74,13 +74,13 @@ class IrfoPsvAuthTest extends QueryHandlerTestCase
         $id = 4;
         $query = Qry::create(['id' => $id]);
 
-        $mockIrfoPsvAuth = m::mock('\Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth')->makePartial();
+        $mockIrfoPsvAuth = m::mock(\Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth::class)->makePartial();
         $mockIrfoPsvAuth->setId($id);
 
         $status = new RefData('irfo_auth_s_pending');
         $mockIrfoPsvAuth->setStatus($status);
 
-        $mockApplicationFee = m::mock('\Dvsa\Olcs\Api\Entity\Fee\Fee')->makePartial();
+        $mockApplicationFee = m::mock(\Dvsa\Olcs\Api\Entity\Fee\Fee::class)->makePartial();
 
         $feeStatus = new RefData('feeStatus');
         $mockApplicationFee->setFeeStatus($feeStatus);

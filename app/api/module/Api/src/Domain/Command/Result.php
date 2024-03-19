@@ -40,7 +40,7 @@ final class Result
             if (isset($this->ids[$name])) {
                 if (!is_array($this->ids[$name])) {
                     $current = $this->ids[$name];
-                    $this->ids[$name] = array($current);
+                    $this->ids[$name] = [$current];
                 }
                 array_push($this->ids[$name], $id);
             } else {
@@ -64,7 +64,7 @@ final class Result
      */
     public function getId($name)
     {
-        return isset($this->ids[$name]) ? $this->ids[$name] : null;
+        return $this->ids[$name] ?? null;
     }
 
     /**
@@ -123,7 +123,7 @@ final class Result
      */
     public function getFlag($name)
     {
-        return isset($this->flags[$name]) ? $this->flags[$name] : null;
+        return $this->flags[$name] ?? null;
     }
 
     /**

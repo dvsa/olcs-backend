@@ -8,7 +8,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
  */
 class CaseOutlineTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\CaseOutline';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\CaseOutline::class;
 
     /**
      * Filter provider

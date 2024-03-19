@@ -4100,7 +4100,7 @@ class IrhpApplicationEntityTest extends EntityTester
 
         $this->assertEquals(
             $expectedAnswer,
-            $entity->getAnswer($step, $isSnapshot)
+            $entity->getAnswer($step)
         );
     }
 

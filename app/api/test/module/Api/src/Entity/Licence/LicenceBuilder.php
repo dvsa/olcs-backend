@@ -28,7 +28,7 @@ class LicenceBuilder implements BuilderInterface
     public function __construct(int $id = null)
     {
         $this->instance = new Licence(OrganisationBuilder::anOrganisation()->build(), new RefData(Licence::LICENCE_STATUS_VALID));
-        $this->instance->setId(null === $id ? static::AN_ID : $id);
+        $this->instance->setId($id ?? static::AN_ID);
     }
 
     /**

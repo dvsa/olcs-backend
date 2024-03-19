@@ -34,7 +34,7 @@ class Module implements BootstrapListenerInterface
         $payloadValidationListener->attach($eventManager, 1);
 
         $eventManager->getSharedManager()->attach(
-            'Laminas\Mvc\SendResponseListener',
+            \Laminas\Mvc\SendResponseListener::class,
             SendResponseEvent::EVENT_SEND_RESPONSE,
             function (SendResponseEvent $e) {
                 $this->logResponse($e->getResponse());
