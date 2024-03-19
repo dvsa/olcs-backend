@@ -5,7 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\Repository;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation as Entity;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
-use Dvsa\Olcs\Api\Entity\User\Role;
+use Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class Conversation extends AbstractRepository
@@ -52,22 +52,11 @@ class Conversation extends AbstractRepository
         return $qb;
     }
 
-    public function filterByApplicationId(QueryBuilder $qb, $applicationId): QueryBuilder
-    {
-        $qb
-            ->innerJoin($this->alias . '.task', 't')
-            ->andWhere($qb->expr()->isNotNull('t.application'))
-            ->andWhere($qb->expr()->eq('t.application', ':application'))
-            ->setParameter('application', $applicationId);
-
-        return $qb;
-    }
-
     public function applyOrderForListing(QueryBuilder $qb, array $roleNames): QueryBuilder
     {
         $subQuery = $this->getEntityManager()->createQueryBuilder();
         $subQuery->select('1')
-                 ->from(\Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead::class, 'inner_read')
+                 ->from(MessagingUserMessageRead::class, 'inner_read')
                  ->leftJoin('inner_read.user', 'inner_user')
                  ->leftJoin('inner_user.roles', 'inner_role')
                  ->where('inner_read.messagingMessage = irmm.id')
