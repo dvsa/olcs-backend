@@ -2,9 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 
-use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
@@ -43,14 +41,13 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $mockConfig = [
             'auth' => [
-                'identity_provider' => PidIdentityProvider::class
+                'identity_provider' => JWTIdentityProvider::class
             ]
         ];
 
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class),
             ValidatableAdapterInterface::class => m::mock(ValidatableAdapterInterface::class),
             'Config' => $mockConfig
         ];
@@ -131,8 +128,10 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($user);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', null, 'test1@test.me');
+        $this->mockedSmServices[ValidatableAdapterInterface::class]->shouldReceive('changeAttribute')
+            ->once()
+            ->with('login_id', 'email', 'test1@test.me')
+            ->andReturnTrue();
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -195,9 +194,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', null, 'test1@test.me');
 
         $command = Cmd::create($data);
 
@@ -314,6 +310,11 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     $savedUser = $user;
                 }
             );
+
+        $this->mockedSmServices[ValidatableAdapterInterface::class]->shouldReceive('changeAttribute')
+            ->once()
+            ->with('login_id', 'email', 'test1@test.me')
+            ->andReturnTrue();
 
         $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);
@@ -451,9 +452,6 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($user);
 
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('some-pid', null, 'test1@test.me');
-
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
             ->with($userId, Query::HYDRATE_OBJECT, 1)
@@ -478,6 +476,11 @@ class UpdateMyAccountTest extends CommandHandlerTestCase
                     $savedUser = $user;
                 }
             );
+
+        $this->mockedSmServices[ValidatableAdapterInterface::class]->shouldReceive('changeAttribute')
+            ->once()
+            ->with('login_id', 'email', 'test1@test.me')
+            ->andReturnTrue();
 
         $this->expectedUserCacheClear([$userId]);
         $result = $this->sut->handleCommand($command);

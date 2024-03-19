@@ -38,9 +38,6 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
-use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
@@ -83,7 +80,6 @@ class UpdateUserTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class),
             ValidatableAdapterInterface::class => $mockAuthAdapter,
             PasswordService::class => $mockPasswordService,
             'Config' => $mockConfig

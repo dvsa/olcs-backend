@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\CreateNewUser;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUser as Sut;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
@@ -23,7 +22,6 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
@@ -70,7 +68,6 @@ class CreateNewUserTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class),
         ];
 
         parent::setUp();

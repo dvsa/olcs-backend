@@ -13,8 +13,8 @@ use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory as EventHistoryEntity;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
+use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Transfer\Query\User\User as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
@@ -36,13 +36,12 @@ class UserTest extends QueryHandlerTestCase
 
         $mockedConfig = [
             'auth' => [
-                'identity_provider' => PidIdentityProvider::class
+                'identity_provider' => JWTIdentityProvider::class
             ]
         ];
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class),
             'Config' => $mockedConfig
         ];
 
@@ -58,22 +57,9 @@ class UserTest extends QueryHandlerTestCase
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
 
-        $this->mockedSmServices[UserInterface::class]
-            ->shouldReceive('fetchUser')
-            ->once()
-            ->with('pid')
-            ->andReturn(
-                [
-                    'meta' => [
-                        'locked' => '20170110090018.001Z',
-                    ]
-                ]
-            );
-
         $userId = 100;
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
         $mockUser->shouldReceive('getId')->andReturn($userId);
-        $mockUser->shouldReceive('getPid')->andReturn('pid');
         $mockUser->shouldReceive('serialize')->once()->andReturn(['foo' => 'bar']);
         $mockUser->shouldReceive('getUserType')->once()->andReturn('internal');
         $mockUser->shouldReceive('getLastLoginAt')->once()->andReturn('2016-12-06T16:12:46+0000');
@@ -102,7 +88,7 @@ class UserTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'userType' => 'internal',
                 'lastLoggedInOn' => '2016-12-06T16:12:46+0000',
-                'lockedOn' => '2017-01-10T09:00:18+00:00',
+                'lockedOn' => null,
                 'latestPasswordResetEvent' => 'PASSWORD RESET EVENT'
             ],
             $result
@@ -117,18 +103,6 @@ class UserTest extends QueryHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
-
-        $this->mockedSmServices[UserInterface::class]
-            ->shouldReceive('fetchUser')
-            ->once()
-            ->with('pid')
-            ->andReturn(
-                [
-                    'meta' => [
-                        'locked' => '20170110090018.001Z',
-                    ]
-                ]
-            );
 
         $userId = 100;
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);
@@ -162,7 +136,7 @@ class UserTest extends QueryHandlerTestCase
                 'foo' => 'bar',
                 'userType' => 'internal',
                 'lastLoggedInOn' => null,
-                'lockedOn' => '2017-01-10T09:00:18+00:00',
+                'lockedOn' => null,
                 'latestPasswordResetEvent' => 'PASSWORD RESET EVENT'
             ],
             $result
@@ -177,12 +151,6 @@ class UserTest extends QueryHandlerTestCase
             ->once()
             ->with(PermissionEntity::CAN_MANAGE_USER_INTERNAL, null)
             ->andReturn(true);
-
-        $this->mockedSmServices[UserInterface::class]
-            ->shouldReceive('fetchUser')
-            ->once()
-            ->with('pid')
-            ->andReturn(['lastLoginTime' => null]);
 
         $userId = 100;
         $mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class);

@@ -18,8 +18,6 @@ return [
     TransferCommand\Auth\ChangeExpiredPassword::class => CommandHandler\Auth\ChangeExpiredPasswordFactory::class,
     TransferCommand\Auth\ResetPassword::class => CommandHandler\Auth\ResetPasswordFactory::class,
     TransferCommand\Auth\ForgotPassword::class => CommandHandler\Auth\ForgotPasswordFactory::class,
-    Command\Auth\ForgotPasswordOpenAm::class => CommandHandler\Auth\ForgotPasswordOpenAmFactory::class,
-    Command\Auth\ResetPasswordOpenAm::class => CommandHandler\Auth\ResetPasswordOpenAmFactory::class,
 
     // Transfer - Audit
     TransferCommand\Audit\ReadApplication::class => CommandHandler\Audit\ReadApplication::class,

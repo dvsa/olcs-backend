@@ -15,7 +15,6 @@ use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
@@ -41,7 +40,6 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
@@ -104,7 +102,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * @var IdentityProviderInterface
      */
-    private $pidIdentityProvider;
+    private $identityProvider;
 
     /**
      * @var Result
@@ -194,10 +192,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof NamingServiceAwareInterface) {
             $this->setNamingService($mainServiceLocator->get('DocumentNamingService'));
-        }
-
-        if ($this instanceof OpenAmUserAwareInterface) {
-            $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
         }
 
         if ($this instanceof TransExchangeAwareInterface) {
@@ -291,9 +285,9 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return IdentityProviderInterface
      */
-    protected function getPidIdentityProvider()
+    protected function getIdentityProvider()
     {
-        return $this->pidIdentityProvider;
+        return $this->identityProvider;
     }
 
     /**
@@ -414,10 +408,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected function handleSideEffectAsSystemUser(CommandInterface $command)
     {
-        $pidIdentityProvider = $this->getPidIdentityProvider();
-        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $identityProvider = $this->getIdentityProvider();
+        $identityProvider->setMasqueradedAsSystemUser(true);
         $result = $this->getCommandHandler()->handleCommand($command, false);
-        $pidIdentityProvider->setMasqueradedAsSystemUser(false);
+        $identityProvider->setMasqueradedAsSystemUser(false);
 
         return $result;
     }
@@ -431,10 +425,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected function handleSideEffectsAsSystemUser(array $commands)
     {
-        $pidIdentityProvider = $this->getPidIdentityProvider();
-        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $identityProvider = $this->getIdentityProvider();
+        $identityProvider->setMasqueradedAsSystemUser(true);
         $result = $this->handleSideEffects($commands);
-        $pidIdentityProvider->setMasqueradedAsSystemUser(false);
+        $identityProvider->setMasqueradedAsSystemUser(false);
 
         return $result;
     }
@@ -464,10 +458,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      */
     protected function proxyCommandAsSystemUser($originalCommand, $proxyCommandClassName)
     {
-        $pidIdentityProvider = $this->getPidIdentityProvider();
-        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $identityProvider = $this->getIdentityProvider();
+        $identityProvider->setMasqueradedAsSystemUser(true);
         $result = $this->proxyCommand($originalCommand, $proxyCommandClassName);
-        $pidIdentityProvider->setMasqueradedAsSystemUser(true);
+        $identityProvider->setMasqueradedAsSystemUser(true);
 
         return $result;
     }
@@ -569,7 +563,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
         $this->commandHandler = $container->get('CommandHandlerManager');
         $this->queryHandler = $container->get('QueryHandlerManager');
-        $this->pidIdentityProvider = $container->get(IdentityProviderInterface::class);
+        $this->identityProvider = $container->get(IdentityProviderInterface::class);
         if ($this instanceof TransactionedInterface) {
             return new TransactioningCommandHandler($this, $container->get('TransactionManager'));
         }

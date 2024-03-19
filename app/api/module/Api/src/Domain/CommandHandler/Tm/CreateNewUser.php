@@ -13,8 +13,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendTmUserCreated as SendTmUserCreatedDto
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUserTemporaryPassword as SendUserTemporaryPasswordDto;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
@@ -24,9 +22,6 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\OpenAm\Client;
-use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
@@ -40,9 +35,8 @@ use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface, OpenAmUserAwareInterface
+final class CreateNewUser extends AbstractUserCommandHandler implements TransactionedInterface
 {
-    use OpenAmUserAwareTrait;
     use QueueAwareTrait;
 
     public const ERR_EMAIL_REQUIRED = 'ERR_EMAIL_REQUIRED';
@@ -61,7 +55,7 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     protected $usernameErrorKey = 'username';
 
     /**
-     * @var ValidatableAdapterInterface | UserInterface
+     * @var ValidatableAdapterInterface
      */
     private $adapter;
 
@@ -92,11 +86,6 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
      */
     public function handleCommand(CommandInterface $command)
     {
-        // Remove once OpenAM is removed.
-        if (is_null($this->adapter)) {
-            $this->adapter = $this->getOpenAmUser();
-        }
-
         $username = trim($command->getUsername());
         $emailAddress = trim($command->getEmailAddress());
 
@@ -288,11 +277,11 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
         $this->getRepo('User')->save($user);
 
         $password = $this->passwordService->generatePassword();
-        $realm = Client::REALM_SELFSERVE;
+        $realm = PasswordService::REALM_SELFSERVE;
 
         try {
             $this->storeUserInAuthService($command, $password, $realm);
-        } catch (ClientException | FailedRequestException $e) {
+        } catch (ClientException $e) {
             $this->getRepo()->delete($user);
             throw new \RuntimeException("Unable to store user in Auth Service", $e->getCode(), $e);
         }
@@ -350,27 +339,15 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
     }
 
     /**
-     * @throws FailedRequestException
      * @throws ClientException
      */
     private function storeUserInAuthService(Cmd $command, string &$password, $realm)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            $this->adapter->register(
-                $command->getUsername(),
-                $password,
-                $command->getEmailAddress()
-            );
-        } else {
-            $this->adapter->registerUser(
-                $command->getUsername(),
-                $command->getEmailAddress(),
-                $realm,
-                function ($params) use (&$password) {
-                    $password = $params['password'];
-                }
-            );
-        }
+        $this->adapter->register(
+            $command->getUsername(),
+            $password,
+            $command->getEmailAddress()
+        );
     }
 
     /**
@@ -379,9 +356,6 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
      */
     private function generatePid(string $loginId)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            return null;
-        }
-        return $this->adapter->generatePid($loginId);
+        return null;
     }
 }

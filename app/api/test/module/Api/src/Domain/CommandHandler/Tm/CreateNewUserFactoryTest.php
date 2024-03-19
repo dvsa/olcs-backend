@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\CreateNewUser;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\CreateNewUserFactory;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -80,7 +79,6 @@ class CreateNewUserFactoryTest extends MockeryTestCase
         $serviceManager->setService(AuthorizationService::class, $this->setUpMockService(AuthorizationService::class));
         $serviceManager->setService(ValidatableAdapterInterface::class, $this->setUpMockService(ValidatableAdapterInterface::class));
         $serviceManager->setService(PasswordService::class, $this->setUpMockService(PasswordService::class));
-        $serviceManager->setService(UserInterface::class, $this->setUpMockService(UserInterface::class));
         $this->setupRespositories();
     }
 

@@ -3,12 +3,9 @@
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\Olcs\Api\Rbac\PidIdentityProvider;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\ContainerExceptionInterface;
@@ -19,10 +16,8 @@ use Psr\Container\NotFoundExceptionInterface;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
+class User extends AbstractQueryHandler
 {
-    use OpenAmUserAwareTrait;
-
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['EventHistory', 'EventHistoryType'];
@@ -56,13 +51,6 @@ class User extends AbstractQueryHandler implements OpenAmUserAwareInterface
             );
 
         $lockedOn = null;
-        if ($this->config['auth']['identity_provider'] === PidIdentityProvider::class) {
-            $authDetails = $this->getOpenAmUser()->fetchUser($user->getPid());
-            if (!empty($authDetails['meta']['locked'])) {
-                $lockedOn = \DateTime::createFromFormat('YmdHis.uT', $authDetails['meta']['locked'])
-                    ->format(\DateTime::W3C);
-            }
-        }
 
         return $this->result(
             $user,
