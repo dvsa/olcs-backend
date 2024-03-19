@@ -21,9 +21,7 @@ return array(
         'configuration' => array(
             'orm_default' => array(
                 // If running as CLI then use different directory to avoid permissions problems
-                'proxy_dir'         => (PHP_SAPI === 'cli') ?
-                    sys_get_temp_dir() . '/EntityCli/Proxy' :
-                    sys_get_temp_dir() . '/Entity/Proxy',
+                'proxy_dir'         => 'data/cache/DoctrineORMModule',
                 'proxy_namespace'   => 'Dvsa\Olcs\Api\Entity\Proxy',
                 'datetime_functions' => [
                     'date'          => 'Oro\ORM\Query\AST\Functions\SimpleFunction',
