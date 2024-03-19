@@ -21,6 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrWithdrawn;
 class SendEbsrWithdrawnTest extends SendEbsrEmailTestAbstract
 {
     protected $template = 'ebsr-withdrawn';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrWithdrawn';
+    protected $sutClass = \Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrWithdrawn::class;
     protected $cmdClass = SendEbsrWithdrawn::class;
 }

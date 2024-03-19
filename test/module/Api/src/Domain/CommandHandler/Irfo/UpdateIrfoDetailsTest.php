@@ -285,7 +285,7 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
         $this->assertEquals($expected, $result->toArray());
 
         $this->assertInstanceOf(
-            'Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails',
+            \Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails::class,
             $savedOrganisation->getIrfoContactDetails()
         );
         $this->assertEquals(
@@ -294,7 +294,7 @@ class UpdateIrfoDetailsTest extends CommandHandlerTestCase
         );
 
         $this->assertInstanceOf(
-            'Dvsa\Olcs\Api\Entity\ContactDetails\Address',
+            \Dvsa\Olcs\Api\Entity\ContactDetails\Address::class,
             $savedOrganisation->getIrfoContactDetails()->getAddress()
         );
         $this->assertEquals(

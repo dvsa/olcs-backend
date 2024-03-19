@@ -22,6 +22,6 @@ class S9RequestModeTest extends TestCase
     {
         $sut = new BookmarkNs\S9RequestMode();
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType', $sut);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Service\Document\Bookmark\StatementContactType::class, $sut);
     }
 }

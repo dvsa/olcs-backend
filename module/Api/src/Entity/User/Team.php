@@ -56,11 +56,9 @@ class Team extends AbstractTeam
     {
         $printers = $this->getTeamPrinters();
         $defaultTeamPrinter = $printers->filter(
-            function ($pr) {
-                return !$pr->getUser() && !$pr->getSubCategory();
-            }
+            fn($pr) => !$pr->getUser() && !$pr->getSubCategory()
         )->first(); // should be only 1 default printer
-        return $defaultTeamPrinter ? $defaultTeamPrinter : null;
+        return $defaultTeamPrinter ?: null;
     }
 
     public function updateDefaultPrinter($newDefaultPrinter)

@@ -731,7 +731,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
         $newFeeResult = new Result();
         $newFeeResult->addId('fee', 100);
-        $newFeeResult->addMessage('Overpayment balancing fee created', 100);
+        $newFeeResult->addMessage('Overpayment balancing fee created');
         $this->expectedSideEffect(CreateOverpaymentFeeCmd::class, $newFeeData, $newFeeResult);
 
         $fee2 = $this->getStubFee(100, 0.01, FeeTypeEntity::FEE_TYPE_ADJUSTMENT); // overpayment
@@ -1276,9 +1276,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->andReturn(0.01);
 
         $this->expectException(
-            \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class,
-            'ohnoes',
-            500
+            \Dvsa\Olcs\Api\Domain\Exception\RestResponseException::class
         );
 
         $this->sut->handleCommand($command);
@@ -1602,7 +1600,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
             ->andReturn($waive);
 
         $rejectResult = new Result();
-        $rejectResult->addMessage('Waive transaction cancelled', $paymentId);
+        $rejectResult->addMessage('Waive transaction cancelled');
         $this->expectedSideEffect(
             RejectWaiveCmd::class,
             ['id' => 99],
@@ -1682,7 +1680,7 @@ class PayOutstandingFeesTest extends CommandHandlerTestCase
         ];
         $this->expectedSideEffect(CreateOverpaymentFeeCmd::class, $opData, new Result());
 
-        $this->expectException(BadRequestException::class, 'invalid payment method: foo');
+        $this->expectException(BadRequestException::class);
 
         $this->sut->handleCommand($command);
     }

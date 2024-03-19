@@ -31,7 +31,7 @@ class CreatePsvVehicleList extends AbstractCommandConsumer
         return [
             'bookmarks' => $options['bookmarks'],
             'queries'   => $options['queries'],
-            'user' => isset($options['user']) ? $options['user'] : $item->getCreatedBy()->getId()
+            'user' => $options['user'] ?? $item->getCreatedBy()->getId()
         ];
     }
 }

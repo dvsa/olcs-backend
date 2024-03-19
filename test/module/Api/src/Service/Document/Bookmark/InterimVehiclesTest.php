@@ -27,9 +27,7 @@ class InterimVehiclesTest extends MockeryTestCase
         $bookmark = m::mock(InterimVehicles::class)->makePartial();
         $bookmark->shouldReceive('translate')
             ->andReturnUsing(
-                function ($text) {
-                    return $text . '_translated';
-                }
+                fn($text) => $text . '_translated'
             );
 
         $bookmark->setData($data);

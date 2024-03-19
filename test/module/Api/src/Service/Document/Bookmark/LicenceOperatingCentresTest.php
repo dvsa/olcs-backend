@@ -35,7 +35,7 @@ class LicenceOperatingCentresTest extends MockeryTestCase
 
     public function testRenderWithGoodsLicenceOperatingCentres()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceOperatingCentres')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceOperatingCentres::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -131,7 +131,7 @@ class LicenceOperatingCentresTest extends MockeryTestCase
             'BOOKMARK2' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header)
             ->andReturn('header|')
@@ -165,7 +165,7 @@ class LicenceOperatingCentresTest extends MockeryTestCase
 
     public function testRenderWithPsvLicenceOperatingCentres()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceOperatingCentres')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceOperatingCentres::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -210,7 +210,7 @@ class LicenceOperatingCentresTest extends MockeryTestCase
             'BOOKMARK2' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header)
             ->andReturn('header|')

@@ -458,9 +458,7 @@ class RepositoryTestCase extends MockeryTestCase
     {
         $instance = m::mock(EntityManager::class);
         $instance->shouldIgnoreMissing();
-        $instance->shouldReceive('getRepository->createQueryBuilder')->andReturnUsing(function () use ($serviceLocator) {
-            return $serviceLocator->get(QueryBuilder::class);
-        })->byDefault();
+        $instance->shouldReceive('getRepository->createQueryBuilder')->andReturnUsing(fn() => $serviceLocator->get(QueryBuilder::class))->byDefault();
         return $instance;
     }
 

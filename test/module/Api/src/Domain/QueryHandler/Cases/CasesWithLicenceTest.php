@@ -29,13 +29,13 @@ class CasesWithLicenceTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 24]);
 
-        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
 
         $this->repoMap['Cases']->shouldReceive('fetchWithLicenceUsingId')
             ->with($query)
             ->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class, $result);
     }
 }

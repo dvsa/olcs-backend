@@ -140,9 +140,7 @@ class ProcessInsolvency extends AbstractConsumer
 
         $filteredPractitioners = $this->filterPractitioners($practitioners);
 
-        return new ArrayCollection(array_map(function ($practitioner) {
-            return $this->mapToEntity($practitioner);
-        }, $filteredPractitioners));
+        return new ArrayCollection(array_map(fn($practitioner) => $this->mapToEntity($practitioner), $filteredPractitioners));
     }
 
 
@@ -365,9 +363,7 @@ class ProcessInsolvency extends AbstractConsumer
      */
     private function filterPractitioners(array $practitionerData): array
     {
-        $practitionerData = array_filter($practitionerData, function ($practitioner) {
-            return empty($practitioner['ceased_to_act_on']);
-        });
+        $practitionerData = array_filter($practitionerData, fn($practitioner) => empty($practitioner['ceased_to_act_on']));
 
         return array_values(array_unique($practitionerData, SORT_REGULAR));
     }

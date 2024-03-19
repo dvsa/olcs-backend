@@ -25,9 +25,9 @@ final class ById implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($id) = $arguments;
+        [$id] = $arguments;
 
-        list($alias) = $qb->getRootAliases();
+        [$alias] = $qb->getRootAliases();
 
         $qb->andWhere($qb->expr()->eq($alias . '.id', ':byId'))
             ->setParameter('byId', $id);

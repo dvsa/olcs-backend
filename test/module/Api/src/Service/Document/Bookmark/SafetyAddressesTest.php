@@ -35,7 +35,7 @@ class SafetyAddressesTest extends MockeryTestCase
     public function testRenderWithSafetyAddresses()
     {
         /** @var SafetyAddresses|m\Mock $bookmark */
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\SafetyAddresses')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\SafetyAddresses::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -128,7 +128,7 @@ class SafetyAddressesTest extends MockeryTestCase
             'checkbox2' => 'X'
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $row1)
             ->andReturn('row1|')

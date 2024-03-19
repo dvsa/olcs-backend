@@ -175,9 +175,7 @@ class ProcessTest extends CommandHandlerTestCase
                 $this->mapRefData(Licence::LICENCE_TYPE_SPECIAL_RESTRICTED),
                 m::on(
                     // compare date objects
-                    function ($arg) use ($now) {
-                        return $arg == $now;
-                    }
+                    fn($arg) => $arg == $now
                 ),
                 $this->mapReference(TrafficArea::class, 'B')
             )
@@ -297,9 +295,7 @@ class ProcessTest extends CommandHandlerTestCase
                 $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL),
                 m::on(
                     // compare date objects
-                    function ($arg) use ($now) {
-                        return $arg == $now;
-                    }
+                    fn($arg) => $arg == $now
                 ),
                 $this->mapReference(TrafficArea::class, 'N')
             )
@@ -360,9 +356,7 @@ class ProcessTest extends CommandHandlerTestCase
                 $this->mapRefData(Licence::LICENCE_TYPE_STANDARD_NATIONAL),
                 m::on(
                     // compare date objects
-                    function ($arg) use ($now) {
-                        return $arg == $now;
-                    }
+                    fn($arg) => $arg == $now
                 ),
                 $this->mapReference(TrafficArea::class, 'B')
             )

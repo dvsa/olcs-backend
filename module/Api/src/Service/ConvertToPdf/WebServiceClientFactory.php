@@ -28,7 +28,7 @@ class WebServiceClientFactory implements FactoryInterface
         if (!isset($config['convert_to_pdf']['uri'])) {
             throw new \RuntimeException('Missing print service config[convert_to_pdf][uri]');
         }
-        $options = isset($config['convert_to_pdf']['options']) ? $config['convert_to_pdf']['options'] : [];
+        $options = $config['convert_to_pdf']['options'] ?? [];
         $httpClient = new HttpClient($config['convert_to_pdf']['uri'], $options);
         $wrapper = new ClientAdapterLoggingWrapper();
         $wrapper->wrapAdapter($httpClient);

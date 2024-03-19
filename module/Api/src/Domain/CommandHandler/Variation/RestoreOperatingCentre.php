@@ -32,7 +32,7 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
     {
         $applicationId = $command->getApplication();
 
-        list($prefix, $id) = $this->splitTypeAndId($command->getId());
+        [$prefix, $id] = $this->splitTypeAndId($command->getId());
 
         if ($prefix === 'A') {
 
@@ -90,6 +90,6 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
 
         $id = (int)substr($ref, 1);
 
-        return array($type, $id);
+        return [$type, $id];
     }
 }

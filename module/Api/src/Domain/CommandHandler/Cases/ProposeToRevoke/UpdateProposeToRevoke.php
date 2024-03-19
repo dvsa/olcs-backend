@@ -39,9 +39,7 @@ final class UpdateProposeToRevoke extends AbstractCommandHandler implements Tran
         $proposeToRevoke = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
         $reasons = array_map(
-            function ($reasonId) {
-                return $this->getRepo()->getReference(Reason::class, $reasonId);
-            },
+            fn($reasonId) => $this->getRepo()->getReference(Reason::class, $reasonId),
             $command->getReasons()
         );
         $presidingTc = $this->getRepo()->getReference(PresidingTc::class, $command->getPresidingTc());

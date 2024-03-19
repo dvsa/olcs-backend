@@ -296,7 +296,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testUploadGeneratedContentError()
     {
-        $this->expectException(\Exception::class, 'any error');
+        $this->expectException(\Exception::class);
 
         $this->fileUploader
             ->shouldReceive('upload')
@@ -328,7 +328,7 @@ class DocumentGeneratorTest extends MockeryTestCase
 
     public function testGenerateFromTemplateWithDocumentIdNotFound()
     {
-        $this->expectException('\Exception', 'Template not found');
+        $this->expectException('\Exception');
 
         $this->documentRepo->shouldReceive('fetchById')->with(412)->once()
             ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\NotFoundException::class);

@@ -14,7 +14,7 @@ use Mockery as m;
  */
 class MostSeriousInfringementTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\MostSeriousInfringement';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\MostSeriousInfringement::class;
 
     protected $expectedResult = [
         'id' => 66,

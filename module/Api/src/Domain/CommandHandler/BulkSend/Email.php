@@ -48,7 +48,7 @@ final class Email extends AbstractCommandHandler implements UploaderAwareInterfa
         $fp = fopen('php://memory', 'r+');
         fputs($fp, $file->getContent());
 
-        $this->processFile($fp, $command);
+        $this->processFile($fp);
 
         return $this->result;
     }

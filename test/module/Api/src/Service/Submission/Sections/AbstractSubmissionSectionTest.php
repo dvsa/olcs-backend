@@ -455,7 +455,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
         $cu
             ->setId($id)
             ->setVersion((100 + $id))
-            ->setCreatedOn($createdOn ? $createdOn : new \DateTime('2011-01-23'))
+            ->setCreatedOn($createdOn ?: new \DateTime('2011-01-23'))
             ->setAddedVia(
                 $this->generateRefDataEntity($addedVia ?: $addedViaByParent)
             )

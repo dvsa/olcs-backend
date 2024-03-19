@@ -35,7 +35,7 @@ trait RestResponseTrait
      * @param array $data
      * @return Response
      */
-    public function respond($errorCode, $summary = null, $data = array())
+    public function respond($errorCode, $summary = null, $data = [])
     {
         $response = $this->getNewResponse();
 
@@ -43,14 +43,14 @@ trait RestResponseTrait
 
         $response->setContent(
             json_encode(
-                array(
-                    'Response' => array(
+                [
+                    'Response' => [
                         'Code' => $errorCode,
                         'Message' => $response->getReasonPhrase(),
                         'Summary' => $summary,
                         'Data' => $data
-                    )
-                )
+                    ]
+                ]
             )
         );
 

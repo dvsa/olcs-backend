@@ -151,13 +151,11 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->once()
             ->shouldReceive('setCountrys')
-            ->withArgs(function ($arg) {
-                return $arg instanceof ArrayCollection
-                    && $arg->count() == 3
-                    && $arg->contains($this->references[Country::class]['DE'])
-                    && $arg->contains($this->references[Country::class]['FR'])
-                    && $arg->contains($this->references[Country::class]['NL']);
-            })
+            ->withArgs(fn($arg) => $arg instanceof ArrayCollection
+                && $arg->count() == 3
+                && $arg->contains($this->references[Country::class]['DE'])
+                && $arg->contains($this->references[Country::class]['FR'])
+                && $arg->contains($this->references[Country::class]['NL']))
             ->once();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')
@@ -246,13 +244,11 @@ class UpdateCountriesTest extends CommandHandlerTestCase
             ->withNoArgs()
             ->once()
             ->shouldReceive('setCountrys')
-            ->withArgs(function ($arg) {
-                return $arg instanceof ArrayCollection
-                    && $arg->count() == 3
-                    && $arg->contains($this->references[Country::class]['DE'])
-                    && $arg->contains($this->references[Country::class]['FR'])
-                    && $arg->contains($this->references[Country::class]['NL']);
-            })
+            ->withArgs(fn($arg) => $arg instanceof ArrayCollection
+                && $arg->count() == 3
+                && $arg->contains($this->references[Country::class]['DE'])
+                && $arg->contains($this->references[Country::class]['FR'])
+                && $arg->contains($this->references[Country::class]['NL']))
             ->once();
 
         $this->repoMap['IrhpApplication']->shouldReceive('fetchById')

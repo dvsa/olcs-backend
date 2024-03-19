@@ -171,10 +171,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         ?IrhpApplication $exclude = null
     ): ?IrhpApplication {
         $activeApplications = $this->getIrhpApplications()->filter(
-            function ($element) use ($stock) {
-                return ($element->getIrhpPermitType()->getId() === $stock->getIrhpPermitType()->getId())
-                    && in_array($element->getStatus(), IrhpInterface::ACTIVE_STATUSES);
-            }
+            fn($element) => ($element->getIrhpPermitType()->getId() === $stock->getIrhpPermitType()->getId())
+                && in_array($element->getStatus(), IrhpInterface::ACTIVE_STATUSES)
         );
 
         if ($activeApplications->isEmpty()) {
@@ -219,15 +217,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('regNo', $regNo))
-            ->orderBy(array('variationNo' => Criteria::DESC));
+            ->orderBy(['variationNo' => Criteria::DESC]);
 
         $matchedBusReg = $this->getBusRegs()->matching($criteria);
 
         if (!empty($notInStatus)) {
             $matchedBusReg = $matchedBusReg->filter(
-                function ($element) use ($notInStatus) {
-                    return !in_array($element->getStatus(), $notInStatus);
-                }
+                fn($element) => !in_array($element->getStatus(), $notInStatus)
             );
         }
 
@@ -247,7 +243,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('licence', $this))
-            ->orderBy(array('routeNo' => Criteria::DESC))
+            ->orderBy(['routeNo' => Criteria::DESC])
             ->setMaxResults(1);
 
         return !empty($this->getBusRegs()->matching($criteria)->current())
@@ -320,16 +316,14 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getActiveCommunityLicences()
     {
         return $this->getCommunityLics()->filter(
-            function ($element) {
-                return ($element->getIssueNo() != 0) && in_array(
-                    $element->getStatus(),
-                    [
-                        CommunityLicEntity::STATUS_PENDING,
-                        CommunityLicEntity::STATUS_ACTIVE,
-                        CommunityLicEntity::STATUS_SUSPENDED,
-                    ]
-                );
-            }
+            fn($element) => ($element->getIssueNo() != 0) && in_array(
+                $element->getStatus(),
+                [
+                    CommunityLicEntity::STATUS_PENDING,
+                    CommunityLicEntity::STATUS_ACTIVE,
+                    CommunityLicEntity::STATUS_SUSPENDED,
+                ]
+            )
         );
     }
 
@@ -341,14 +335,12 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getActiveVariations()
     {
         return $this->getApplications()->filter(
-            function ($element) {
-                return ($element->getIsVariation() === true) && in_array(
-                    $element->getStatus(),
-                    [
-                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                    ]
-                );
-            }
+            fn($element) => ($element->getIsVariation() === true) && in_array(
+                $element->getStatus(),
+                [
+                    Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                ]
+            )
         );
     }
 
@@ -465,17 +457,15 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $hasOfficeCopy = false;
 
         $officeCopy = $this->getCommunityLics()->filter(
-            function ($element) {
-                return ($element->getIssueNo() == 0) && in_array(
-                    $element->getStatus(),
-                    [
-                        CommunityLicEntity::STATUS_PENDING,
-                        CommunityLicEntity::STATUS_ACTIVE,
-                        CommunityLicEntity::STATUS_WITHDRAWN,
-                        CommunityLicEntity::STATUS_SUSPENDED,
-                    ]
-                );
-            }
+            fn($element) => ($element->getIssueNo() == 0) && in_array(
+                $element->getStatus(),
+                [
+                    CommunityLicEntity::STATUS_PENDING,
+                    CommunityLicEntity::STATUS_ACTIVE,
+                    CommunityLicEntity::STATUS_WITHDRAWN,
+                    CommunityLicEntity::STATUS_SUSPENDED,
+                ]
+            )
         )->current();
 
         if ($officeCopy) {
@@ -497,14 +487,12 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         /** @var ArrayCollection $otherActiveLicences */
         $otherActiveLicences = $this->getOrganisation()->getLicences()->filter(
-            function ($element) {
-                return ($element->getGoodsOrPsv() == $this->getGoodsOrPsv())
-                    && ($element->getId() != $this->getId())
-                    && in_array(
-                        $element->getStatus(),
-                        $this->getLicenceStatusesStrictlyActive()
-                    );
-            }
+            fn($element) => ($element->getGoodsOrPsv() == $this->getGoodsOrPsv())
+                && ($element->getId() != $this->getId())
+                && in_array(
+                    $element->getStatus(),
+                    $this->getLicenceStatusesStrictlyActive()
+                )
         );
 
         // goods_or_psv can be null
@@ -629,13 +617,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     private function sortConditionsUndertakings(&$conditionsUndertakings)
     {
-        usort($conditionsUndertakings, function ($a, $b) {
-            if ($a['createdOn'] == $b['createdOn']) {
-                return 0;
-            }
-
-            return ($a['createdOn'] > $b['createdOn']) ? +1 : -1;
-        });
+        usort($conditionsUndertakings, fn($a, $b) => $a['createdOn'] <=> $b['createdOn']);
     }
 
     /**
@@ -856,9 +838,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $allCases = (array) $this->getCases()->getIterator();
         return array_filter(
             $allCases,
-            function ($case) {
-                return $case->isOpen();
-            }
+            fn($case) => $case->isOpen()
         );
     }
 
@@ -1014,12 +994,10 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         }
 
         return $this->getApplications()->filter(
-            function ($element) use ($status) {
-                return in_array(
-                    $element->getStatus(),
-                    $status
-                );
-            }
+            fn($element) => in_array(
+                $element->getStatus(),
+                $status
+            )
         );
     }
 
@@ -1033,9 +1011,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getApplicationsByStatus($status)
     {
         return $this->getApplications()->filter(
-            function ($element) use ($status) {
-                return in_array($element->getStatus(), $status);
-            }
+            fn($element) => in_array($element->getStatus(), $status)
         );
     }
 
@@ -1047,15 +1023,13 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getConditionUndertakingsAddedViaLicence()
     {
         return $this->getConditionUndertakings()->filter(
-            function ($element) {
-                return ($element->getDeletedDate() === null)
-                    && in_array(
-                        $element->getAddedVia(),
-                        [
-                            ConditionUndertaking::ADDED_VIA_LICENCE,
-                        ]
-                    );
-            }
+            fn($element) => ($element->getDeletedDate() === null)
+                && in_array(
+                    $element->getAddedVia(),
+                    [
+                        ConditionUndertaking::ADDED_VIA_LICENCE,
+                    ]
+                )
         );
     }
 
@@ -1068,16 +1042,14 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getConditionUndertakingsAddedViaImport()
     {
         return $this->getConditionUndertakings()->filter(
-            function ($element) {
-                return ($element->getDeletedDate() === null)
-                    && ($element->getApplication() === null)
-                    && in_array(
-                        $element->getAddedVia(),
-                        [
-                            ConditionUndertaking::ADDED_VIA_APPLICATION,
-                        ]
-                    );
-            }
+            fn($element) => ($element->getDeletedDate() === null)
+                && ($element->getApplication() === null)
+                && in_array(
+                    $element->getAddedVia(),
+                    [
+                        ConditionUndertaking::ADDED_VIA_APPLICATION,
+                    ]
+                )
         );
     }
 
@@ -1182,12 +1154,11 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $iterator = $this->getPublicationLinks()->getIterator();
 
         $iterator->uasort(
-            function ($a, $b) {
+            fn($a, $b) =>
                 /** @var PublicationLinkEntity $a */
                 /** @var PublicationLinkEntity $b */
-                return strtotime($b->getPublication()->getPubDate()) -
-                    strtotime($a->getPublication()->getPubDate());
-            }
+                strtotime($b->getPublication()->getPubDate()) -
+                strtotime($a->getPublication()->getPubDate())
         );
         $publicationLinks = new ArrayCollection(iterator_to_array($iterator));
 
@@ -1367,7 +1338,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getTrafficAreaForTaskAllocation()
     {
         $organisation = $this->getOrganisation();
-        $isGoods = ($this->isGoods() === null) ? $this->isGoodsApplication() : $this->isGoods();
+        $isGoods = $this->isGoods() ?? $this->isGoodsApplication();
         if ($isGoods && $organisation->isMlh() && $organisation->getLeadTcArea() !== null) {
             return $organisation->getLeadTcArea();
         }
@@ -1481,16 +1452,14 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getActiveContinuationDetails()
     {
         return $this->getContinuationDetails()->filter(
-            function ($element) {
-                return in_array(
-                    $element->getStatus(),
-                    [
-                        ContinuationDetail::STATUS_ACCEPTABLE,
-                        ContinuationDetail::STATUS_UNACCEPTABLE,
-                        ContinuationDetail::STATUS_PRINTED,
-                    ]
-                );
-            }
+            fn($element) => in_array(
+                $element->getStatus(),
+                [
+                    ContinuationDetail::STATUS_ACCEPTABLE,
+                    ContinuationDetail::STATUS_UNACCEPTABLE,
+                    ContinuationDetail::STATUS_PRINTED,
+                ]
+            )
         );
     }
 
@@ -1524,16 +1493,14 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getNotSubmittedOrUnderConsiderationVariations()
     {
         return $this->getApplications()->filter(
-            function ($element) {
-                return ($element->getIsVariation() === true)
-                    && in_array(
-                        $element->getStatus(),
-                        [
-                            Application::APPLICATION_STATUS_NOT_SUBMITTED,
-                            Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
-                        ]
-                    );
-            }
+            fn($element) => ($element->getIsVariation() === true)
+                && in_array(
+                    $element->getStatus(),
+                    [
+                        Application::APPLICATION_STATUS_NOT_SUBMITTED,
+                        Application::APPLICATION_STATUS_UNDER_CONSIDERATION,
+                    ]
+                )
         );
     }
 
@@ -1660,9 +1627,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     public function getValidIrhpApplications()
     {
         return $this->getIrhpApplications()->filter(
-            function ($element) {
-                return $element->isValid();
-            }
+            fn($element) => $element->isValid()
         );
     }
 

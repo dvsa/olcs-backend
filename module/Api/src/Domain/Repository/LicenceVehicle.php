@@ -341,9 +341,7 @@ class LicenceVehicle extends AbstractRepository
     private function filterByVehicleIds(QueryBuilder $qb, QueryInterface $query, string $vehicleTable)
     {
         if ($query instanceof FiltersByVehicleIdsInterface && is_array($vehicleIds = $query->getVehicleIds())) {
-            $vehicleIds = array_values(array_map(function ($vehicleId) {
-                return (int) $vehicleId;
-            }, $vehicleIds));
+            $vehicleIds = array_values(array_map(fn($vehicleId) => (int) $vehicleId, $vehicleIds));
             $qb->andWhere(new Func(sprintf('%s.id IN', $vehicleTable), [':vehicleIds']));
             $qb->setParameter('vehicleIds', $vehicleIds);
         }

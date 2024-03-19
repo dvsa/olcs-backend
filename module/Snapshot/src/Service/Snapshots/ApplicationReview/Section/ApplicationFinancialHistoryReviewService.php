@@ -25,7 +25,7 @@ class ApplicationFinancialHistoryReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
 
         $config = [

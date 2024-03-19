@@ -45,7 +45,7 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         // @NOTE Tmp solution during migration
         $feData = $this->queryHandlerManager

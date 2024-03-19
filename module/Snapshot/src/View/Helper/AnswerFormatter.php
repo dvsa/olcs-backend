@@ -31,7 +31,7 @@ class AnswerFormatter extends AbstractHelper
             $data['answer'] = (array)$data['answer'];
         }
 
-        $escape = isset($data['escape']) ? $data['escape'] : true;
+        $escape = $data['escape'] ?? true;
 
         foreach ($data['answer'] as $answer) {
             switch ($data['questionType']) {

@@ -32,8 +32,6 @@ class ApplicationTrailerLimit extends DynamicBookmark
      */
     public function render()
     {
-        return isset($this->data['application']['totAuthTrailers'])
-            ? $this->data['application']['totAuthTrailers']
-            : 0;
+        return $this->data['application']['totAuthTrailers'] ?? 0;
     }
 }

@@ -25,7 +25,7 @@ class VariationOperatingCentre extends AbstractQueryHandler
     {
         $id = $query->getId();
 
-        list($prefix, $id) = $this->splitTypeAndId($id);
+        [$prefix, $id] = $this->splitTypeAndId($id);
 
         if (!in_array($prefix, ['L', 'A'])) {
             throw new \Exception('Couldn\'t determine identity');

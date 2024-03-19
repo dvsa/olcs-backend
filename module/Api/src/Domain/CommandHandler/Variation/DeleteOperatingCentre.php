@@ -39,7 +39,7 @@ final class DeleteOperatingCentre extends AbstractCommandHandler implements Tran
             throw new BadRequestException('could-not-remove-message');
         }
 
-        list($type, $id) = $this->splitTypeAndId($command->getId());
+        [$type, $id] = $this->splitTypeAndId($command->getId());
 
         if ($type === 'A') {
             $this->result->addMessage('Removed application operating centre delta record');
@@ -84,7 +84,7 @@ final class DeleteOperatingCentre extends AbstractCommandHandler implements Tran
 
     protected function canDeleteRecord(ApplicationEntity $application, $ref)
     {
-        list($type, $id) = $this->splitTypeAndId($ref);
+        [$type, $id] = $this->splitTypeAndId($ref);
 
         // If we have an application operating centre record
         if ($type === 'A') {

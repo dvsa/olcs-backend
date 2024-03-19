@@ -85,9 +85,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
             case User::USER_TYPE_TRANSPORT_MANAGER:
                 $data['userType'] = User::USER_TYPE_OPERATOR;
                 $data['organisations'] = array_map(
-                    function ($item) {
-                        return $item->getOrganisation();
-                    },
+                    fn($item) => $item->getOrganisation(),
                     $this->getCurrentUser()->getOrganisationUsers()->toArray()
                 );
                 break;

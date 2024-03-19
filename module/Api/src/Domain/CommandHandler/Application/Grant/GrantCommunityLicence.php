@@ -86,15 +86,13 @@ final class GrantCommunityLicence extends AbstractCommandHandler implements Tran
     protected function voidActivePending(Licence $licence)
     {
         $activePendingLicences = $licence->getCommunityLics()->filter(
-            function ($element) {
-                return in_array(
-                    $element->getStatus(),
-                    [
-                        CommunityLic::STATUS_ACTIVE,
-                        CommunityLic::STATUS_PENDING,
-                    ]
-                );
-            }
+            fn($element) => in_array(
+                $element->getStatus(),
+                [
+                    CommunityLic::STATUS_ACTIVE,
+                    CommunityLic::STATUS_PENDING,
+                ]
+            )
         );
 
         /** @var CommunityLic $activePendingLicence */

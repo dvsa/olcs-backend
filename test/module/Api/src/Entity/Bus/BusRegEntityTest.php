@@ -2850,7 +2850,7 @@ class BusRegEntityTest extends EntityTester
         ];
         foreach ($this->getAllStatuses() as $status) {
             $allowedByStatus = in_array($status, $allowedStatuses, true);
-            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+            foreach ($isLatestVariationAllowed as [$isLatestVariation, $allowedByIsLatestVariation]) {
                 yield [
                     'status' => $status,
                     'isLatestVariation' => $isLatestVariation,
@@ -2930,7 +2930,7 @@ class BusRegEntityTest extends EntityTester
         ];
         foreach ($this->getAllStatuses() as $status) {
             $allowedByStatus = in_array($status, $allowedStatuses, true);
-            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+            foreach ($isLatestVariationAllowed as [$isLatestVariation, $allowedByIsLatestVariation]) {
                 yield [
                     'status' => $status,
                     'isLatestVariation' => $isLatestVariation,
@@ -2965,7 +2965,7 @@ class BusRegEntityTest extends EntityTester
         ];
         foreach ($this->getAllStatuses() as $status) {
             $allowedByStatus = in_array($status, $allowedStatuses, true);
-            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+            foreach ($isLatestVariationAllowed as [$isLatestVariation, $allowedByIsLatestVariation]) {
                 yield [
                     'status' => $status,
                     'isLatestVariation' => $isLatestVariation,
@@ -3008,7 +3008,7 @@ class BusRegEntityTest extends EntityTester
         ];
         foreach ($this->getAllStatuses() as $status) {
             $allowedByStatus = in_array($status, $allowedStatuses, true);
-            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+            foreach ($isLatestVariationAllowed as [$isLatestVariation, $allowedByIsLatestVariation]) {
                 yield [
                     'status' => $status,
                     'isLatestVariation' => $isLatestVariation,
@@ -3045,7 +3045,7 @@ class BusRegEntityTest extends EntityTester
         ];
         foreach ($this->getAllStatuses() as $status) {
             $allowedByStatus = in_array($status, $allowedStatuses, true);
-            foreach ($isLatestVariationAllowed as list($isLatestVariation, $allowedByIsLatestVariation)) {
+            foreach ($isLatestVariationAllowed as [$isLatestVariation, $allowedByIsLatestVariation]) {
                 yield [
                     'status' => $status,
                     'isLatestVariation' => $isLatestVariation,

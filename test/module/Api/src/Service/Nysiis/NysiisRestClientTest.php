@@ -87,7 +87,7 @@ class NysiisRestClientTest extends MockeryTestCase
         $restClient = $this->basicRestClient($inputJson);
         $restClient->shouldReceive('send')->once()->andReturn($response);
 
-        $this->expectException(NysiisException::class, $errorMessage);
+        $this->expectException(NysiisException::class);
 
         $sut = new NysiisRestClient($restClient);
         $sut->makeRequest($volFirstName, $volFamilyName);

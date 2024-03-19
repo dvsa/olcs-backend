@@ -130,7 +130,7 @@ class CompareTest extends CommandHandlerTestCase
             $this->mockApi
                 ->shouldReceive('getCompanyProfile')->with($companyNumber, true)->once()
                 ->andThrow(new \Exception('Company number validation passsed'));
-            $this->expectException(NotReadyException::class, 'Company number validation passsed');
+            $this->expectException(NotReadyException::class);
         } else {
             $this->expectedSideEffect(
                 CreateAlertCmd::class,
@@ -273,40 +273,40 @@ class CompareTest extends CommandHandlerTestCase
 
     public function noChangesProvider()
     {
-        return array(
-            'no changes' => array(
+        return [
+            'no changes' => [
                 'companyNumber' => '03127414',
-                'stubResponse' => array(
-                    'registered_office_address' => array(
+                'stubResponse' => [
+                    'registered_office_address' => [
                         'address_line_1' => '120 Aldersgate Street',
                         'address_line_2' => 'London',
                         'postal_code' => 'EC1A 4JQ',
-                    ),
+                    ],
                     'last_full_members_list_date' => '2014-11-17',
-                    'accounts' => array(
+                    'accounts' => [
                         'next_due' => '2015-09-30',
-                        'last_accounts' => array(
+                        'last_accounts' => [
                             'type' => 'full',
                             'made_up_to' => '2013-12-31',
-                        ),
-                        'accounting_reference_date' => array(
+                        ],
+                        'accounting_reference_date' => [
                             'day' => '31',
                             'month' => '12',
-                        ),
+                        ],
                         'next_made_up_to' => '2014-12-31',
                         'overdue' => false,
-                    ),
+                    ],
                     'date_of_creation' => '1995-11-17',
-                    'sic_codes' => array(
+                    'sic_codes' => [
                         0 => '62020',
-                    ),
+                    ],
                     'undeliverable_registered_office_address' => false,
-                    'annual_return' => array(
+                    'annual_return' => [
                         'next_due' => '2015-12-15',
                         'overdue' => false,
                         'next_made_up_to' => '2015-11-17',
                         'last_made_up_to' => '2014-11-17',
-                    ),
+                    ],
                     'company_name' => 'VALTECH LIMITED',
                     'jurisdiction' => 'england-wales',
                     'company_number' => '03127414',
@@ -314,40 +314,40 @@ class CompareTest extends CommandHandlerTestCase
                     'has_been_liquidated' => false,
                     'has_insolvency_history' => false,
                     'etag' => 'ec52ec76d16210d1133df1b4c9bb8f797a38d09c',
-                    'officer_summary' => array(
+                    'officer_summary' => [
                         'resigned_count' => 17,
-                        'officers' => array(
-                            0 => array(
+                        'officers' => [
+                            0 => [
                                 'officer_role' => 'director',
                                 'name' => 'DILLON, Andrew',
                                 'date_of_birth' => [
                                     'year' => '1979',
                                     'month' => '02',
                                 ],
-                            ),
-                            1 => array(
+                            ],
+                            1 => [
                                 'officer_role' => 'director',
                                 'name' => 'HALL, Philip',
                                 'date_of_birth' => [
                                     'year' => '1968',
                                     'month' => '12',
                                 ],
-                            ),
-                            2 => array(
+                            ],
+                            2 => [
                                 'officer_role' => 'director',
                                 'name' => 'SKINNER, Mark James',
                                 'date_of_birth' => [
                                     'year' => '1969',
                                     'month' => '06',
                                 ],
-                            ),
-                        ),
+                            ],
+                        ],
                         'active_count' => 3,
-                    ),
+                    ],
                     'company_status' => 'active',
                     'can_file' => true,
-                ),
-                'stubSavedData' => array(
+                ],
+                'stubSavedData' => [
                     'addressLine1' => '120 Aldersgate Street',
                     'addressLine2' => 'London',
                     'companyName' => 'VALTECH LIMITED',
@@ -359,28 +359,28 @@ class CompareTest extends CommandHandlerTestCase
                     'region' => null,
                     'id' => 2,
                     'version' => 1,
-                    'officers' => array(
-                        array(
+                    'officers' => [
+                        [
                             'dateOfBirth' => new \DateTime('1979-02-01'),
                             'name' => 'DILLON, Andrew',
                             'role' => 'director'
-                        ),
-                        array(
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1968-12-01'),
                             'name' => 'HALL, Philip',
                             'role' => 'director',
-                        ),
-                        array(
+                        ],
+                        [
                             'dateOfBirth' => new \DateTime('1969-06-01'),
                             'name' => 'SKINNER, Mark James',
                             'role' => 'director',
-                        ),
-                    ),
+                        ],
+                    ],
                     'companyStatus' => 'active',
                     'country' => null,
-                )
-            ),
-        );
+                ]
+            ],
+        ];
     }
 
     public function firstTimeProvider()
@@ -1098,8 +1098,7 @@ class CompareTest extends CommandHandlerTestCase
             ->andThrowExceptions([new \Exception('unit_error_message')]);
 
         $this->expectException(
-            NotReadyException::class,
-            'Error getting data from Companies House API : unit_error_message'
+            NotReadyException::class
         );
 
         $command = Cmd::create(['companyNumber' => $companyNr]);

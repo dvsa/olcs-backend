@@ -216,7 +216,7 @@ class RestoreTest extends CommandHandlerTestCase
 
     public function testHandleCommandWithException()
     {
-        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $licenceId = 1;
         $communityLicenceIds = [10];

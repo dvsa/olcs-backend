@@ -68,7 +68,7 @@ abstract class AbstractBookmark
     public function getSnippet($className = null)
     {
         if ($className === null) {
-            $className = explode('\\', get_called_class());
+            $className = explode('\\', static::class);
             $className = array_pop($className);
         }
 

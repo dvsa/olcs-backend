@@ -21,10 +21,6 @@ class Meetingvenue extends SingleValueAbstract
      */
     public function render()
     {
-        if (isset($this->data['venue']['name'])) {
-            return $this->data['venue']['name'];
-        }
-
-        return $this->data['venueOther'];
+        return $this->data['venue']['name'] ?? $this->data['venueOther'];
     }
 }

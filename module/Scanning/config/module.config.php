@@ -1,40 +1,40 @@
 <?php
 
-return array(
-    'router' => array(
-        'routes' => array(
-            'document' => array(
+return [
+    'router' => [
+        'routes' => [
+            'document' => [
                 'type' => 'literal',
-                'options' => array(
+                'options' => [
                     'route' => '/scanning/document',
-                    'defaults' => array(
+                    'defaults' => [
                         'controller' => Dvsa\Olcs\Scanning\Controller\DocumentController::class,
-                    ),
-                ),
-            ),
-        ),
-    ),
-    'service_manager' => array(
-        'invokables' => array(),
-    ),
-    'controllers' => array(
-        'factories' => array(
+                    ],
+                ],
+            ],
+        ],
+    ],
+    'service_manager' => [
+        'invokables' => [],
+    ],
+    'controllers' => [
+        'factories' => [
             Dvsa\Olcs\Scanning\Controller\DocumentController::class =>
                 Dvsa\Olcs\Scanning\Controller\DocumentControllerFactory::class
-        ),
-    ),
-    'view_manager' => array(
+        ],
+    ],
+    'view_manager' => [
         'display_not_found_reason' => false,
         'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/error',
         'exception_template'       => 'error/error',
-        'template_map' => array(
+        'template_map' => [
             'layout/layout'           => __DIR__ . '/../view/layout/layout.phtml',
             'error/error'               => __DIR__ . '/../view/error/error.phtml',
-        ),
-        'strategies' => array(
+        ],
+        'strategies' => [
             'ViewJsonStrategy'
-        ),
-    )
-);
+        ],
+    ]
+];

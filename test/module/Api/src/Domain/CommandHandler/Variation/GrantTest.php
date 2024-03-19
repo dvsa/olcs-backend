@@ -115,9 +115,7 @@ class GrantTest extends CommandHandlerTestCase
             ->andReturn($newLicenceVehicles)
             ->once()
             ->shouldReceive('setGrantAuthority')
-            ->with(m::on(function ($refData) {
-                return $refData instanceof RefData && $refData->getId() === RefData::GRANT_AUTHORITY_DELEGATED;
-            }))
+            ->with(m::on(fn($refData) => $refData instanceof RefData && $refData->getId() === RefData::GRANT_AUTHORITY_DELEGATED))
             ->once()
             ->getMock();
 

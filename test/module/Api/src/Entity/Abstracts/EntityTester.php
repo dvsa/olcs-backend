@@ -112,7 +112,7 @@ abstract class EntityTester extends MockeryTestCase
     public function testGettersAndSetters()
     {
         foreach ($this->getGettersAndSetters() as $testCase) {
-            list($methodName, $testValue) = $testCase;
+            [$methodName, $testValue] = $testCase;
 
             $classToTestName = $this->getClassToTestName();
             $entity = $this->instantiate($classToTestName);
@@ -145,7 +145,7 @@ abstract class EntityTester extends MockeryTestCase
 
             $this->assertEquals(2, count($entity->{'get' . $methodName}()));
 
-            $collection = new ArrayCollection(array('bish', 'bash', 'bosh'));
+            $collection = new ArrayCollection(['bish', 'bash', 'bosh']);
 
             $entity->{'add' . $methodName}($collection);
 
@@ -189,14 +189,14 @@ abstract class EntityTester extends MockeryTestCase
                     }
 
                     if ($methodName == 'Id') {
-                        $testValue = rand(10000, 200000);
+                        $testValue = random_int(10000, 200000);
                     } elseif ($methodName == 'IsDeleted') {
                         $testValue = 1;
                     } else {
-                        $testValue = $methodName . '_test_' . rand(10000, 200000);
+                        $testValue = $methodName . '_test_' . random_int(10000, 200000);
                     }
 
-                    $testMethods[] = array($methodName, $testValue);
+                    $testMethods[] = [$methodName, $testValue];
                 }
             }
         }
@@ -221,7 +221,7 @@ abstract class EntityTester extends MockeryTestCase
 
         $methods = $reflection->getMethods();
 
-        $testMethods = array(null);
+        $testMethods = [null];
 
         foreach ($methods as $method) {
             if (substr($method->getName(), 0, 3) == 'add') {

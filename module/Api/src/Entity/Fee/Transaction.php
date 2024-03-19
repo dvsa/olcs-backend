@@ -175,10 +175,9 @@ class Transaction extends AbstractTransaction implements OrganisationProviderInt
 
         if (!empty($this->getFeeTransactions())) {
             $ftIds = array_map(
-                function ($ft) {
+                fn($ft) =>
                     /** @var FeeTransaction $ft */
-                    return $ft->getId();
-                },
+                    $ft->getId(),
                 $this->getFeeTransactions()->toArray()
             );
         }

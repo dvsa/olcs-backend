@@ -35,7 +35,7 @@ class TachographDetailsTest extends MockeryTestCase
 
     public function testRenderWithTachographDetails()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\TachographDetails')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\TachographDetails::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -60,7 +60,7 @@ class TachographDetailsTest extends MockeryTestCase
             'checkbox3' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $content)
             ->andReturn('content')

@@ -80,15 +80,11 @@ class OperatingCentres extends DynamicBookmark
     {
         return array_filter(
             $input,
-            function ($val) use ($licenceId) {
-                return (
-                    $val['attachedTo']['id'] === ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE
-                    && $val['isFulfilled'] === 'N'
-                    && $val['isDraft'] === 'N'
-                    && isset($val['licence']['id'])
-                    && $val['licence']['id'] === $licenceId
-                );
-            }
+            fn($val) => $val['attachedTo']['id'] === ConditionUndertaking::ATTACHED_TO_OPERATING_CENTRE
+            && $val['isFulfilled'] === 'N'
+            && $val['isDraft'] === 'N'
+            && isset($val['licence']['id'])
+            && $val['licence']['id'] === $licenceId
         );
     }
 }

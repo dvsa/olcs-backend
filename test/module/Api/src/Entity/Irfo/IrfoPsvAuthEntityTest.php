@@ -581,7 +581,7 @@ class IrfoPsvAuthEntityTest extends EntityTester
 
     public function testReexpectException()
     {
-        $this->expectException(BadRequestException::class, 'Irfo Psv Auth cannot be reset');
+        $this->expectException(BadRequestException::class);
 
         $this->entity
             ->setStatus(

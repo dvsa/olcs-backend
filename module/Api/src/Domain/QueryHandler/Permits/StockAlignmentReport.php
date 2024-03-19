@@ -53,9 +53,7 @@ class StockAlignmentReport extends AbstractQueryHandler
 
             if (
                 !$restrictedCountries->exists(
-                    function ($key, $element) use ($hungary) {
-                        return $hungary->getId() === $element->getId();
-                    }
+                    fn($key, $element) => $hungary->getId() === $element->getId()
                 )
             ) {
                 // all permits allow travel to Hungary so record the candidate as requiring a permit for Hungary

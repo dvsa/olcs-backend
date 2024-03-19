@@ -33,7 +33,7 @@ class ApplicationPsvOcTotalAuthReviewService extends AbstractReviewService
      * @param array $data
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         $config = [
             'header' => 'review-operating-centres-authorisation-title',

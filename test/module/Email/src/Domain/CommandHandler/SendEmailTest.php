@@ -44,9 +44,7 @@ class SendEmailTest extends CommandHandlerTestCase
 
         $this->mockedSmServices['translator'] = m::mock(Translator::class);
         $this->mockedSmServices['translator']->shouldReceive('translate')->andReturnUsing(
-            function ($message) {
-                return 'translated-' . $message;
-            }
+            fn($message) => 'translated-' . $message
         );
 
         $this->mockedSmServices['EmailService'] = m::mock(Email::class);

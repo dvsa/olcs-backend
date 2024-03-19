@@ -33,14 +33,14 @@ class XmlStructureInputFactoryTest extends TestCase
             'xml_valid_message_exclude' => $xmlMessageExclude
         ];
 
-        $mockXsdValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockXsdValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
         $mockXsdValidator->shouldReceive('setXsd')->once()
             ->with('http://www.transxchange.org.uk/schema/' . $schemaVersion . '/TransXChange_registration.xsd');
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
         $mockXsdValidator->shouldReceive('setXmlMessageExclude')->once()->with($xmlMessageExclude);
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
-        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
+        $mockValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
@@ -57,7 +57,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $sut = new XmlStructureInputFactory();
         $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(\Laminas\InputFilter\Input::class, $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(5, $service->getValidatorChain());
     }
@@ -75,7 +75,7 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
@@ -85,7 +85,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $sut = new XmlStructureInputFactory();
         $service = $sut->__invoke($mockSl, Input::class);
 
-        $this->assertInstanceOf('Laminas\InputFilter\Input', $service);
+        $this->assertInstanceOf(\Laminas\InputFilter\Input::class, $service);
         $this->assertCount(1, $service->getFilterChain());
         $this->assertCount(0, $service->getValidatorChain());
     }
@@ -106,7 +106,7 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
@@ -134,7 +134,7 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
@@ -163,7 +163,7 @@ class XmlStructureInputFactoryTest extends TestCase
             ]
         ];
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);

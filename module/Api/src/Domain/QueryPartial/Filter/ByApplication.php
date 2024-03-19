@@ -26,10 +26,10 @@ final class ByApplication implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($applicationId) = $arguments;
+        [$applicationId] = $arguments;
 
         if ($applicationId !== null) {
-            list($alias) = $qb->getRootAliases();
+            [$alias] = $qb->getRootAliases();
 
             $qb->andWhere($qb->expr()->eq($alias . '.application', ':applicationId'))
                 ->setParameter('applicationId', $applicationId);

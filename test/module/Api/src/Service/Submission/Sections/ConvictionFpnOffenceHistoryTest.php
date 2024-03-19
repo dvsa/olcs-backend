@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Conviction;
  */
 class ConvictionFpnOffenceHistoryTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\ConvictionFpnOffenceHistory';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\ConvictionFpnOffenceHistory::class;
 
     /**
      * Filter provider

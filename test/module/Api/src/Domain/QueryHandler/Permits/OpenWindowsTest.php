@@ -75,16 +75,12 @@ class OpenWindowsTest extends QueryHandlerTestCase
             ->andReturn($stocks);
 
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindows')
-            ->with(100, m::on(function ($dateTime) use ($dateTimeAsString) {
-                return ($dateTime->format('Y-m-d H:i:s') == $dateTimeAsString);
-            }))
+            ->with(100, m::on(fn($dateTime) => $dateTime->format('Y-m-d H:i:s') == $dateTimeAsString))
             ->once()
             ->andReturn([]);
 
         $this->repoMap['IrhpPermitWindow']->shouldReceive('fetchOpenWindows')
-            ->with(200, m::on(function ($dateTime) use ($dateTimeAsString) {
-                return ($dateTime->format('Y-m-d H:i:s') == $dateTimeAsString);
-            }))
+            ->with(200, m::on(fn($dateTime) => $dateTime->format('Y-m-d H:i:s') == $dateTimeAsString))
             ->once()
             ->andReturn([$irhpPermitWindowB]);
 

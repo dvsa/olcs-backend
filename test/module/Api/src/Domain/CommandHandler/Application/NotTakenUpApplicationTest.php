@@ -146,7 +146,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->expectedSideEffect(Delete::class, ['ids' => array(1,2)], new Result());
+        $this->expectedSideEffect(Delete::class, ['ids' => [1,2]], new Result());
 
         $this->expectedSideEffect(
             ReturnAllCommunityLicences::class,
@@ -267,7 +267,7 @@ class NotTakenUpApplicationTest extends CommandHandlerTestCase
             new Result()
         );
 
-        $this->expectedSideEffect(Delete::class, ['ids' => array(1,2)], new Result());
+        $this->expectedSideEffect(Delete::class, ['ids' => [1,2]], new Result());
 
         $this->expectedSideEffect(
             ReturnAllCommunityLicences::class,

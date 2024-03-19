@@ -610,7 +610,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     public function testFetchAllVehiclesCount()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
 
         $mockQb->shouldReceive('select')->with('count(m.id)')->once()->andReturnSelf();
@@ -624,7 +624,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     public function testFetchActiveVehiclesCount()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
 
         $mockQb->shouldReceive('select')->with('count(m.id)')->once()->andReturnSelf();
@@ -672,7 +672,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $licenceId = 1;
         $includeRemoved = false;
 
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
 
         $mockQb->shouldReceive('innerJoin')->with('m.vehicle', 'v')->once()->andReturnSelf();
@@ -695,7 +695,7 @@ class LicenceVehicleTest extends RepositoryTestCase
 
     public function testFetchForRemoval()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('m')->once()->andReturn($mockQb);
 
         $mockQb->shouldReceive('innerJoin')->with('m.vehicle', 'v')->once()->andReturnSelf();
@@ -749,9 +749,7 @@ class LicenceVehicleTest extends RepositoryTestCase
         $query->shouldIgnoreMissing($query);
 
         // Define Expectations
-        $queryBuilder->shouldNotReceive('andWhere')->withArgs(function ($expression) {
-            return $expression instanceof Query\Expr\Func && $expression->getName() === 'v.id IN';
-        });
+        $queryBuilder->shouldNotReceive('andWhere')->withArgs(fn($expression) => $expression instanceof Query\Expr\Func && $expression->getName() === 'v.id IN');
 
         // Execute
         $sut->createPaginatedVehiclesDataForLicenceQuery($query, 1);

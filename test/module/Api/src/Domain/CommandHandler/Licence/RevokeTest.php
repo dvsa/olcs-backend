@@ -97,21 +97,21 @@ class RevokeTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('licence' => 532),
+            ['licence' => 532],
             $ceaseDiscsResult
         );
 
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licence' => 532, 'id' => null),
+            ['licence' => 532, 'id' => null],
             $removeVehicleResult
         );
 
         $removeTmResult = new Result();
         $this->expectedSideEffect(
             DeleteTransportManagerLicence::class,
-            array('licence' => $licence, 'id' => null),
+            ['licence' => $licence, 'id' => null],
             $removeTmResult
         );
 
@@ -187,21 +187,21 @@ class RevokeTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeasePsvDiscs::class,
-            array('licence' => 532),
+            ['licence' => 532],
             $ceaseDiscsResult
         );
 
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licence' => 532, 'id' => null),
+            ['licence' => 532, 'id' => null],
             $removeVehicleResult
         );
 
         $removeTmResult = new Result();
         $this->expectedSideEffect(
             DeleteTransportManagerLicence::class,
-            array('licence' => $licence, 'id' => null),
+            ['licence' => $licence, 'id' => null],
             $removeTmResult
         );
 
@@ -267,21 +267,21 @@ class RevokeTest extends CommandHandlerTestCase
         $ceaseDiscsResult = new Result();
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
-            array('licence' => 532),
+            ['licence' => 532],
             $ceaseDiscsResult
         );
 
         $removeVehicleResult = new Result();
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licence' => 532, 'id' => null),
+            ['licence' => 532, 'id' => null],
             $removeVehicleResult
         );
 
         $removeTmResult = new Result();
         $this->expectedSideEffect(
             DeleteTransportManagerLicence::class,
-            array('licence' => $licence, 'id' => null),
+            ['licence' => $licence, 'id' => null],
             $removeTmResult
         );
 
@@ -347,17 +347,17 @@ class RevokeTest extends CommandHandlerTestCase
 
         $this->expectedSideEffect(
             CeaseGoodsDiscs::class,
-            array('licence' => 532),
+            ['licence' => 532],
             new Result()
         );
         $this->expectedSideEffect(
             RemoveLicenceVehicle::class,
-            array('licence' => 532, 'id' => null),
+            ['licence' => 532, 'id' => null],
             new Result()
         );
         $this->expectedSideEffect(
             DeleteTransportManagerLicence::class,
-            array('licence' => $licence, 'id' => null),
+            ['licence' => $licence, 'id' => null],
             new Result()
         );
         $this->expectedSideEffect(

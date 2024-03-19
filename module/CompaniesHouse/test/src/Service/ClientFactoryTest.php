@@ -34,7 +34,7 @@ class ClientFactoryTest extends MockeryTestCase
     public function testOptionsBaseUriMissing()
     {
         //  expect
-        $this->expectException(\RuntimeException::class, 'Missing required option companies_house.client.baseuri');
+        $this->expectException(\RuntimeException::class);
 
         //  call
         $this->sl->shouldReceive('get')->with('Configuration')->once()->andReturn(

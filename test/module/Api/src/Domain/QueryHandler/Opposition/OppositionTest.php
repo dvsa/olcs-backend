@@ -33,13 +33,13 @@ class OppositionTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 1]);
 
-        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
 
         $this->repoMap['Opposition']->shouldReceive('fetchUsingId')
             ->with($query)
             ->andReturn($mockResult);
 
         $result = $this->sut->handleQuery($query);
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class, $result);
     }
 }

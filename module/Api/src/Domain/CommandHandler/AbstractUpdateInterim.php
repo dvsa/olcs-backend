@@ -186,8 +186,8 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
                 $application->setInterimStatus($status);
             }
 
-            $interimOcs = $command->getOperatingCentres() !== null ? $command->getOperatingCentres() : [];
-            $interimVehicles = $command->getVehicles() !== null ? $command->getVehicles() : [];
+            $interimOcs = $command->getOperatingCentres() ?? [];
+            $interimVehicles = $command->getVehicles() ?? [];
             $this->result->addMessage('Interim data updated');
         } else {
             $application->setInterimReason(null);

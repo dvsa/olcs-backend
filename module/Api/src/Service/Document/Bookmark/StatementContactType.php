@@ -29,6 +29,6 @@ class StatementContactType extends DynamicBookmark
 
     public function render()
     {
-        return isset($this->data['contactType']['description']) ? $this->data['contactType']['description'] : '';
+        return $this->data['contactType']['description'] ?? '';
     }
 }

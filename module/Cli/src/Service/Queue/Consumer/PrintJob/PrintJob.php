@@ -29,9 +29,9 @@ class PrintJob extends AbstractCommandConsumer
         return [
             'id' => $item->getId(),
             'title' => $options['jobName'],
-            'documents' => isset($options['documents']) ? $options['documents'] : [$item->getEntityId()],
-            'user' => isset($options['userId']) ? $options['userId'] : null,
-            'copies' => (isset($options['copies']) ? $options['copies'] : null),
+            'documents' => $options['documents'] ?? [$item->getEntityId()],
+            'user' => $options['userId'] ?? null,
+            'copies' => ($options['copies'] ?? null),
         ];
     }
 }
