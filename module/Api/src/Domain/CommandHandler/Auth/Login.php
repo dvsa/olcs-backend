@@ -17,7 +17,6 @@ use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Dvsa\Olcs\Api\Domain\Util\DoctrineExtension\Logger;
 use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -68,10 +67,6 @@ class Login extends AbstractCommandHandler
 
         $this->adapter->setIdentity($command->getUsername());
         $this->adapter->setCredential($command->getPassword());
-
-        if ($this->adapter instanceof OpenAm) {
-            $this->adapter->setRealm($command->getRealm());
-        }
 
         try {
             $user = $this->findUserInDatabaseByLoginIdOrFail($command->getUsername());

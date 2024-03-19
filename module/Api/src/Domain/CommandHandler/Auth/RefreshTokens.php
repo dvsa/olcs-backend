@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
-use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Transfer\Command\Auth\RefreshTokens as RefreshTokensCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
@@ -19,7 +18,7 @@ class RefreshTokens extends AbstractCommandHandler implements AuthAwareInterface
     use AuthAwareTrait;
 
     /**
-     * @var ValidatableAdapterInterface|OpenAm|CognitoAdapter
+     * @var ValidatableAdapterInterface|CognitoAdapter
      */
     protected ValidatableAdapterInterface $adapter;
 

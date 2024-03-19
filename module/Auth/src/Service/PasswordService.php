@@ -8,6 +8,8 @@ use Faker\Generator;
 
 class PasswordService
 {
+    public const REALM_INTERNAL = 'internal';
+    public const REALM_SELFSERVE = 'selfserve';
     public const MINIMUM_LENGTH = 12;
 
     public const ERR_MESSAGE_TOO_SHORT = 'Password length cannot be less than 12';

@@ -36,7 +36,7 @@ trait MocksAbstractCommandHandlerServicesTrait
         $this->commandHandlerManager();
         $this->repositoryServiceManager();
         $this->queryHandlerManager();
-        $this->pidIdentityProvider();
+        $this->identityProvider();
         $this->transactionManager();
         $this->cacheEncryption();
         $this->translator();
@@ -83,7 +83,7 @@ trait MocksAbstractCommandHandlerServicesTrait
     /**
      * @return IdentityProviderInterface|MockInterface
      */
-    protected function pidIdentityProvider(): MockInterface
+    protected function identityProvider(): MockInterface
     {
         if (! $this->serviceManager()->has(IdentityProviderInterface::class)) {
             $this->serviceManager()->setService(

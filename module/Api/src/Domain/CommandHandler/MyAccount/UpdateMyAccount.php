@@ -12,15 +12,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Psr\Container\ContainerInterface;
@@ -33,13 +30,11 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
     AuthAwareInterface,
     TransactionedInterface,
     CacheAwareInterface,
-    OpenAmUserAwareInterface,
     ConfigAwareInterface
 {
     use AuthAwareTrait;
     use CacheAwareTrait;
     use ConfigAwareTrait;
-    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -107,16 +102,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
             $this->savePhoneContacts($cmdContactDetails['phoneContacts'], $contactDetails);
         }
 
-        $provider = $this->getConfig()['auth']['identity_provider'];
-        if ($provider === JWTIdentityProvider::class) {
-            $this->adapter->changeAttribute($user->getLoginId(), 'email', $cmdContactDetails['emailAddress']);
-        } else {
-            $this->getOpenAmUser()->updateUser(
-                $user->getPid(),
-                null,
-                $cmdContactDetails['emailAddress']
-            );
-        }
+        $this->adapter->changeAttribute($user->getLoginId(), 'email', $cmdContactDetails['emailAddress']);
 
         $userId = $user->getId();
         $this->clearUserCaches([$userId]);
