@@ -145,7 +145,7 @@ abstract class EntityTester extends MockeryTestCase
 
             $this->assertEquals(2, count($entity->{'get' . $methodName}()));
 
-            $collection = new ArrayCollection(array('bish', 'bash', 'bosh'));
+            $collection = new ArrayCollection(['bish', 'bash', 'bosh']);
 
             $entity->{'add' . $methodName}($collection);
 
@@ -196,7 +196,7 @@ abstract class EntityTester extends MockeryTestCase
                         $testValue = $methodName . '_test_' . rand(10000, 200000);
                     }
 
-                    $testMethods[] = array($methodName, $testValue);
+                    $testMethods[] = [$methodName, $testValue];
                 }
             }
         }
@@ -221,7 +221,7 @@ abstract class EntityTester extends MockeryTestCase
 
         $methods = $reflection->getMethods();
 
-        $testMethods = array(null);
+        $testMethods = [null];
 
         foreach ($methods as $method) {
             if (substr($method->getName(), 0, 3) == 'add') {

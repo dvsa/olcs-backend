@@ -88,7 +88,7 @@ class TaskAllocationRule extends AbstractRepository
     public function buildDefaultListQuery(
         QueryBuilder $qb,
         QueryInterface $query,
-        $compositeFields = array()
+        $compositeFields = []
     ): void {
         // add calculated columns to allow ordering by them
         parent::buildDefaultListQuery($qb, $query, ['categoryDescription', 'criteria', 'trafficAreaName']);

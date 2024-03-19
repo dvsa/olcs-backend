@@ -932,7 +932,7 @@ return [
         ]
     ],
     'publications' => [
-        'LicencePublication' => array(
+        'LicencePublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\BusNote::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousLicencePublicationNo::class,
@@ -947,8 +947,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class,
             ],
-        ),
-        'ApplicationPublication' => array(
+        ],
+        'ApplicationPublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking::class,
@@ -963,8 +963,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class
             ],
-        ),
-        'VariationPublication' => array(
+        ],
+        'VariationPublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
@@ -980,8 +980,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Variation\Text3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class,
             ],
-        ),
-        'Schedule41TruePublication' => array(
+        ],
+        'Schedule41TruePublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\People::class,
             ],
@@ -989,8 +989,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Schedule41\Text1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class
             ],
-        ),
-        'Schedule41UntruePublication' => array(
+        ],
+        'Schedule41UntruePublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers::class,
@@ -1002,8 +1002,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Schedule41\Text3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class
             ],
-        ),
-        'HearingPublication' => array(
+        ],
+        'HearingPublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
@@ -1016,8 +1016,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class
             ],
-        ),
-        'HearingDecision' => array(
+        ],
+        'HearingDecision' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\PreviousHearingData::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
@@ -1030,8 +1030,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\DecisionText1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class
             ],
-        ),
-        'TmHearingPublication' => array(
+        ],
+        'TmHearingPublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
@@ -1043,8 +1043,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\TransportManager\Police::class
             ],
-        ),
-        'TmHearingDecision' => array(
+        ],
+        'TmHearingDecision' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
@@ -1056,8 +1056,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\TransportManager\Police::class
             ],
-        ),
-        'BusGrantNew' => array(
+        ],
+        'BusGrantNew' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class,
@@ -1069,8 +1069,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantNewText3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class
             ],
-        ),
-        'BusGrantVariation' => array(
+        ],
+        'BusGrantVariation' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class,
@@ -1082,8 +1082,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantVarText3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class
             ],
-        ),
-        'BusGrantCancel' => array(
+        ],
+        'BusGrantCancel' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceDesignation::class,
@@ -1094,8 +1094,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class
             ],
-        ),
-        'ImpoundingLicencePublication' => array(
+        ],
+        'ImpoundingLicencePublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
@@ -1108,8 +1108,8 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Impounding\Text2::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Licence\Police::class
             ],
-        ),
-        'ImpoundingApplicationPublication' => array(
+        ],
+        'ImpoundingApplicationPublication' => [
             'context' => [
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue::class,
                 Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\HearingDate::class,
@@ -1122,7 +1122,7 @@ return [
                 Dvsa\Olcs\Api\Service\Publication\Process\Impounding\Text2::class,
                 Dvsa\Olcs\Api\Service\Publication\Process\Application\Police::class
             ],
-        ),
+        ],
     ],
     'submissions' => require(__DIR__ . '/submissions.config.php'),
     'ebsr' => [

@@ -29,7 +29,7 @@ final class TmOtherEmployment extends AbstractSection
 
             /** @var TmEmployment $entity */
             foreach ($tmEmployments as $entity) {
-                $thisRow = array();
+                $thisRow = [];
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['position'] = $entity->getPosition();

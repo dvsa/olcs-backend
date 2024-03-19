@@ -548,7 +548,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $expr = Criteria::expr();
         $criteria = Criteria::create()
             ->andWhere($expr->isNull('deletedDate'))
-            ->orderBy(array('createdOn' => Criteria::DESC))
+            ->orderBy(['createdOn' => Criteria::DESC])
             ->setMaxResults(1);
         $matches = $this->tradingNames->matching($criteria);
         if (!empty($matches)) {

@@ -27,7 +27,7 @@ final class ConvictionFpnOffenceHistory extends AbstractSection
 
         /** @var Conviction $entity */
         foreach ($convictions as $entity) {
-            $thisRow = array();
+            $thisRow = [];
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
             $thisRow['offenceDate'] = $this->formatDate($entity->getOffenceDate());

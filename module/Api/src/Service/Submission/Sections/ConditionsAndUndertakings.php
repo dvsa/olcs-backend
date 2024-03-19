@@ -117,7 +117,7 @@ final class ConditionsAndUndertakings extends AbstractSection
     private function generateTableRow(ConditionUndertaking $entity, $parentId = '')
     {
         /** @var ConditionUndertaking $entity */
-        $thisEntity = array();
+        $thisEntity = [];
         $thisEntity['id'] = $entity->getId();
         $thisEntity['version'] = $entity->getVersion();
         $thisEntity['createdOn'] = $this->formatDate($entity->getCreatedOn());

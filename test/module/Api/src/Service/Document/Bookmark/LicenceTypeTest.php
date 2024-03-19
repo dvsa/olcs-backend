@@ -23,14 +23,14 @@ class LicenceTypeTest extends \PHPUnit\Framework\TestCase
     {
         $bookmark = new LicenceType();
         $bookmark->setData(
-            array(
-                'goodsOrPsv' => array(
+            [
+                'goodsOrPsv' => [
                     'description' => 'foo'
-                ),
-                'licenceType' => array(
+                ],
+                'licenceType' => [
                     'description' => 'bar'
-                )
-            )
+                ]
+            ]
         );
 
         $this->assertEquals('foo bar', $bookmark->render());

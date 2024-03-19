@@ -28,7 +28,7 @@ final class TmQualifications extends AbstractSection
 
             /** @var TmQualification $entity */
             foreach ($tmQualifications as $entity) {
-                $thisRow = array();
+                $thisRow = [];
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['qualificationType'] = $entity->getQualificationType()->getDescription();

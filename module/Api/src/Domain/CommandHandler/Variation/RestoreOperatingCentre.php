@@ -90,6 +90,6 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
 
         $id = (int)substr($ref, 1);
 
-        return array($type, $id);
+        return [$type, $id];
     }
 }

@@ -4880,7 +4880,7 @@ class ApplicationEntityTest extends EntityTester
         return new Organisation();
     }
 
-    private function createMockApplicationOrganisationPersons($actions = array())
+    private function createMockApplicationOrganisationPersons($actions = [])
     {
         $applicationOrganisationPersons = [];
 

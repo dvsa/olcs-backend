@@ -21,7 +21,7 @@ class TrafficAreaReviewService extends AbstractReviewService
      * @param array $data
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         return [
             'header' => 'review-operating-centres-traffic-area-title',

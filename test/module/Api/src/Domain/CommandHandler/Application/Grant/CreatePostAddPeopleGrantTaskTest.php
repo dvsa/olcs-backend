@@ -286,7 +286,7 @@ class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
         return $application;
     }
 
-    private function createMockApplicationOrganisationPersons($actions = array())
+    private function createMockApplicationOrganisationPersons($actions = [])
     {
         $applicationOrganisationPersons = [];
 

@@ -37,7 +37,7 @@ final class Penalties extends AbstractSection
 
             /** @var SiPenalty $appliedPenalty */
             foreach ($si->getAppliedPenalties() as $appliedPenalty) {
-                $penalty = array();
+                $penalty = [];
                 $penalty['id'] = $appliedPenalty->getId();
                 $penalty['version'] = $appliedPenalty->getVersion();
                 $penalty['penaltyType'] = $appliedPenalty->getSiPenaltyType()->getDescription();
@@ -49,7 +49,7 @@ final class Penalties extends AbstractSection
 
             /** @var SiPenaltyErruImposed $imposedPenalty */
             foreach ($si->getImposedErrus() as $imposedPenalty) {
-                $penalty = array();
+                $penalty = [];
                 $penalty['id'] = $imposedPenalty->getId();
                 $penalty['version'] = $imposedPenalty->getVersion();
                 $penalty['finalDecisionDate'] = $this->formatDate($imposedPenalty->getFinalDecisionDate());
@@ -62,7 +62,7 @@ final class Penalties extends AbstractSection
 
             /** @var SiPenaltyErruRequested $requestedPenalty */
             foreach ($si->getRequestedErrus() as $requestedPenalty) {
-                $penalty = array();
+                $penalty = [];
                 $penalty['id'] = $requestedPenalty->getId();
                 $penalty['version'] = $requestedPenalty->getVersion();
                 $penalty['penaltyType'] = $requestedPenalty->getSiPenaltyRequestedType()->getDescription();

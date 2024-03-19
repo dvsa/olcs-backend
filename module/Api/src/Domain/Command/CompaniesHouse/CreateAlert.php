@@ -17,7 +17,7 @@ final class CreateAlert extends \Dvsa\Olcs\Transfer\Command\AbstractCommand
     /**
      * @var array
      */
-    protected $reasons = array();
+    protected $reasons = [];
 
     /**
      * Gets the value of companyNumber.

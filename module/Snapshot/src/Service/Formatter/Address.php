@@ -33,7 +33,7 @@ class Address
      *
      * @return string
      */
-    public static function format($data, $column = array())
+    public static function format($data, $column = [])
     {
         if (isset($column['addressFields'])) {
             if ($column['addressFields'] == 'FULL') {
@@ -42,13 +42,13 @@ class Address
                 $fields = $column['addressFields'];
             }
         } else {
-            $fields = array(
+            $fields = [
                 'addressLine1',
                 'town'
-            );
+            ];
         }
 
-        $parts = array();
+        $parts = [];
 
         if ($data instanceof \Dvsa\Olcs\Api\Entity\ContactDetails\Address) {
             $data = [

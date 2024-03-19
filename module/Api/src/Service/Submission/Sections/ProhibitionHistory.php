@@ -27,7 +27,7 @@ final class ProhibitionHistory extends AbstractSection
 
         /** @var Prohibition $entity */
         foreach ($prohibitions as $prohibition) {
-            $thisRow = array();
+            $thisRow = [];
             $thisRow['id'] = $prohibition->getId();
             $thisRow['version'] = $prohibition->getVersion();
             $thisRow['prohibitionDate'] = $this->formatDate($prohibition->getProhibitionDate());

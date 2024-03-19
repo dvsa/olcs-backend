@@ -34,35 +34,35 @@ final class Cases extends AbstractQueryHandler
                 'appeal' => ['outcome'],
                 'stays' => ['outcome', 'stayType'],
                 'legacyOffences',
-                'transportManager' => array(
-                    'homeCd' => array(
+                'transportManager' => [
+                    'homeCd' => [
                         'person'
-                    )
-                ),
-                'licence' => array(
+                    ]
+                ],
+                'licence' => [
                     'licenceType',
                     'status',
                     'trafficArea',
-                    'establishmentCd' => array(
+                    'establishmentCd' => [
                         'address'
-                    ),
-                    'organisation' => array(
+                    ],
+                    'organisation' => [
                         'type',
                         'disqualifications',
                         'tradingNames',
-                        'organisationPersons' => array(
-                            'person' => array(
+                        'organisationPersons' => [
+                            'person' => [
                                 'contactDetails'
-                            )
-                        ),
-                        'contactDetails' => array(
+                            ]
+                        ],
+                        'contactDetails' => [
                             'address'
-                        )
-                    )
-                ),
-                'application' => array(
+                        ]
+                    ]
+                ],
+                'application' => [
                     'operatingCentres',
-                    'publicationLinks' => array(
+                    'publicationLinks' => [
                         'filter' => function ($element) {
                             return in_array(
                                 (string)$element->getPublicationSection(),
@@ -73,12 +73,12 @@ final class Cases extends AbstractQueryHandler
                             );
                         },
                         'publication'
-                    )
-                ),
+                    ]
+                ],
                 'tmDecisions',
-                'erruRequest' => array(
+                'erruRequest' => [
                     'msiType'
-                )
+                ]
             ],
             [
                 'latestNote' => $latestNote

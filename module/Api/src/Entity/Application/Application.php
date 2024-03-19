@@ -571,8 +571,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function hasIncreaseInOperatingCentre()
     {
-        $licence = array();
-        $variation = array();
+        $licence = [];
+        $variation = [];
 
         // Makes dealing with the records easier.
         /* @var $lOperatingCentre \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */

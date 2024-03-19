@@ -40,7 +40,7 @@ final class Result
             if (isset($this->ids[$name])) {
                 if (!is_array($this->ids[$name])) {
                     $current = $this->ids[$name];
-                    $this->ids[$name] = array($current);
+                    $this->ids[$name] = [$current];
                 }
                 array_push($this->ids[$name], $id);
             } else {

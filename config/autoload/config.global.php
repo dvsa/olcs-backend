@@ -466,7 +466,7 @@ return [
     'cache' => [
         'adapter' => [
             'name'    => 'filesystem',
-            'options' => array('ttl' => 300),
+            'options' => ['ttl' => 300],
         ],
     ],
     // Entity identifier

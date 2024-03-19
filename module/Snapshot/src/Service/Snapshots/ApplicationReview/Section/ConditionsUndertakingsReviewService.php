@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
  */
 class ConditionsUndertakingsReviewService extends AbstractReviewService
 {
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         return [];
     }

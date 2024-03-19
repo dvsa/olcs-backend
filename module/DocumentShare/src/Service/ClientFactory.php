@@ -59,7 +59,7 @@ class ClientFactory implements FactoryInterface
     {
         if (is_null($this->options)) {
             $options = $container->get('Configuration');
-            $this->options = isset($options['document_share']) ? $options['document_share'] : array();
+            $this->options = isset($options['document_share']) ? $options['document_share'] : [];
         }
 
         $options = isset($this->options[$key]) ? $this->options[$key] : null;

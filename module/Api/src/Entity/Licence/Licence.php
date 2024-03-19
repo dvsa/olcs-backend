@@ -219,7 +219,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     ) {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('regNo', $regNo))
-            ->orderBy(array('variationNo' => Criteria::DESC));
+            ->orderBy(['variationNo' => Criteria::DESC]);
 
         $matchedBusReg = $this->getBusRegs()->matching($criteria);
 
@@ -247,7 +247,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     {
         $criteria = Criteria::create()
             ->where(Criteria::expr()->eq('licence', $this))
-            ->orderBy(array('routeNo' => Criteria::DESC))
+            ->orderBy(['routeNo' => Criteria::DESC])
             ->setMaxResults(1);
 
         return !empty($this->getBusRegs()->matching($criteria)->current())

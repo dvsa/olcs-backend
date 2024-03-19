@@ -22,7 +22,7 @@ class S3FileOptionsFactory implements FactoryInterface
         );
         $bucket = $config['mail']['options']['transport'][$arraykey]['options']['bucket'];
         $key = $config['mail']['options']['transport'][$arraykey]['options']['key'];
-        return array($awsOptions, $s3Options, $bucket, $key);
+        return [$awsOptions, $s3Options, $bucket, $key];
     }
 
     /**
