@@ -137,9 +137,9 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
         $application->setRequestInspection(true);
         $application->setRequestInspectionDelay($duePeriod);
         $application->setRequestInspectionComment($caseworkerNotes);
-        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(true);
+        $this->getIdentityProvider()->setMasqueradedAsSystemUser(true);
         $this->getRepo()->save($application);
-        $this->getPidIdentityProvider()->setMasqueradedAsSystemUser(false);
+        $this->getIdentityProvider()->setMasqueradedAsSystemUser(false);
         $result = new Result();
         $result->addMessage('Inspection request details saved');
         return $result;

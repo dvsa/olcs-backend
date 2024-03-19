@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
-use Dvsa\Olcs\Api\Domain\Command\Auth\ForgotPasswordOpenAm;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendForgotPassword as ForgotPasswordEmailCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
@@ -31,7 +30,6 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
     protected $repoServiceName = 'UserPasswordReset';
     protected $extraRepos = ['User'];
 
-    public const OPENAM_ADAPTER_CONFIG_VALUE = 'openam';
     public const MSG_USER_NOT_FOUND = 'auth.forgot-password.user-not-found';
     public const MSG_USER_NOT_ALLOWED_RESET = 'auth.forgot-password.not-eligible';
 
@@ -73,10 +71,6 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
             $this->result->setFlag('success', false);
             $this->result->addMessage(self::MSG_USER_NOT_ALLOWED_RESET);
             return $this->result;
-        }
-
-        if ($this->config['auth']['default_adapter'] === self::OPENAM_ADAPTER_CONFIG_VALUE) {
-            return $this->proxyCommand($command, ForgotPasswordOpenAm::class);
         }
 
         // Register user in Cognito if they haven't been migrated via login yet

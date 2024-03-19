@@ -7,7 +7,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
@@ -48,10 +47,7 @@ class CreateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockRepo('User', User::class);
         $this->mockRepo('ContactDetails', ContactDetails::class);
 
-        $this->mockedSmServices = [
-            AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class)
-        ];
+        $this->mockedSmServices = [AuthorizationService::class => m::mock(AuthorizationService::class)];
 
         parent::setUp();
     }

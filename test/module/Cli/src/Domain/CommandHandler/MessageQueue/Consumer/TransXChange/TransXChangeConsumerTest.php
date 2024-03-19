@@ -406,7 +406,7 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
         $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
+        $this->identityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
         foreach ($this->repoMap as $alias => $service) {
@@ -421,7 +421,7 @@ class TransXChangeConsumerTest extends CommandHandlerTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
-        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->identityProvider);
 
         // Actual service mocks.
         $this->xmlParser = m::mock(ParseXmlString::class);

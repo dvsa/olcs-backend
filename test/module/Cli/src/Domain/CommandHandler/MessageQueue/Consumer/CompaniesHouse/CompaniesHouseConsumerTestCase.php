@@ -18,7 +18,7 @@ abstract class CompaniesHouseConsumerTestCase extends CommandHandlerTestCase
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->queryHandler = m::mock(QueryHandlerManager::class);
         $this->commandHandler = m::mock(CommandHandlerManager::class);
-        $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
+        $this->identityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
         foreach ($this->repoMap as $alias => $service) {
@@ -33,7 +33,7 @@ abstract class CompaniesHouseConsumerTestCase extends CommandHandlerTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
-        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->identityProvider);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);

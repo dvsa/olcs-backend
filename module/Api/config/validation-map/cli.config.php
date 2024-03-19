@@ -18,7 +18,6 @@ return [
     CliCommandHandler\RemoveReadAudit::class => IsSystemUser::class,
     CliCommandHandler\CleanUpAbandonedVariations::class => IsSystemUser::class,
     CliCommandHandler\Bus\Expire::class => IsSystemUser::class,
-    CliCommandHandler\ImportUsersFromCsv::class => IsSystemUser::class,
     CliCommandHandler\LastTmLetter::class => IsSystemUser::class,
     CliCommandHandler\Permits\MarkSuccessfulDaPermitApplications::class => IsSystemUser::class,
     CliCommandHandler\Permits\MarkSuccessfulRemainingPermitApplications::class => IsSystemUser::class,

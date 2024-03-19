@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
@@ -86,7 +85,6 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
         $this->eventHistoryCreator();
         $this->passwordService();
         $this->adapter();
-        $this->userInterface();
         $this->config();
         $this->repositoryServiceManager();
     }
@@ -166,20 +164,6 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
         return $this->serviceManager->get('Config');
     }
 
-    /**
-     * @return UserInterface|m\MockInterface
-     */
-    protected function userInterface(): m\MockInterface
-    {
-        if (! $this->serviceManager->has(UserInterface::class)) {
-            $this->serviceManager->setService(
-                UserInterface::class,
-                $this->setUpMockService(UserInterface::class)
-            );
-        }
-
-        return $this->serviceManager->get(UserInterface::class);
-    }
 
     /**
      * @return RepositoryServiceManager|m\MockInterface

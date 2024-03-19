@@ -22,7 +22,7 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
      */
     public function testExecuteWithException($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(false);
 
@@ -44,7 +44,7 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
      */
     public function testExecute($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(false);
 
@@ -66,7 +66,7 @@ abstract class AbstractDbQueryTestCase extends BaseAbstractDbQueryTestCase
      */
     public function testExecuteAsSystemUser($inputParams, $inputTypes, $expectedParams, $expectedTypes)
     {
-        $this->mockPidIdentityProvider
+        $this->mockIdentityProvider
             ->shouldReceive('getMasqueradedAsSystemUser')
             ->andReturn(true);
 

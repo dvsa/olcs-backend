@@ -26,12 +26,10 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheById;
@@ -285,10 +283,6 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         if ($this instanceof NationalRegisterAwareInterface) {
             $this->setNationalRegisterConfig($mainServiceLocator->get('Config')['nr']);
-        }
-
-        if ($this instanceof OpenAmUserAwareInterface) {
-            $this->setOpenAmUser($mainServiceLocator->get(UserInterface::class));
         }
 
         if ($this instanceof CacheAwareInterface) {

@@ -9,7 +9,6 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve as Cmd;
@@ -47,7 +46,6 @@ class DeleteUserSelfserveTest extends CommandHandlerTestCase
 
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
-            UserInterface::class => m::mock(UserInterface::class),
             AuthorizationService::class => $this->mockAuth,
         ];
 
