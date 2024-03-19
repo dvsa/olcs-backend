@@ -50,6 +50,7 @@ class ByOrganisationTest extends QueryHandlerTestCase
         $conversations = new ArrayIterator([['id' => 1, 'isClosed' => false,], ['id' => 2, 'isClosed' => true,],]);
         $mockQb = m::mock(QueryBuilder::class);
         $this->repoMap[Repository\Conversation::class]->shouldReceive('getByOrganisationId')->once()->andReturn($mockQb);
+        $this->repoMap[Repository\Conversation::class]->shouldReceive('filterByStatuses')->once()->with($mockQb, [])->andReturn($mockQb);
         $this->repoMap[Repository\Conversation::class]->shouldReceive('fetchPaginatedList')->once()->andReturn($conversations);
         $this->repoMap[Repository\Conversation::class]->shouldReceive('fetchPaginatedCount')->once()->andReturn(10);
         $this->repoMap[Repository\Message::class]->shouldReceive('getUnreadMessagesByConversationIdAndUserId')->andReturn([]);
@@ -72,6 +73,7 @@ class ByOrganisationTest extends QueryHandlerTestCase
         $conversations = new ArrayIterator([$conversation1 = ['id' => 1, 'isClosed' => true,], $conversation2 = ['id' => 2, 'isClosed' => false,], $conversation3 = ['id' => 3, 'isClosed' => false,], $conversation4 = ['id' => 4, 'isClosed' => false,],]);
         $mockQb = m::mock(QueryBuilder::class);
         $this->repoMap[Repository\Conversation::class]->shouldReceive('getByOrganisationId')->once()->andReturn($mockQb);
+        $this->repoMap[Repository\Conversation::class]->shouldReceive('filterByStatuses')->once()->with($mockQb, [])->andReturn($mockQb);
         $this->repoMap[Repository\Conversation::class]->shouldReceive('fetchPaginatedList')->once()->andReturn($conversations);
         $this->repoMap[Repository\Conversation::class]->shouldReceive('fetchPaginatedCount')->once()->andReturn(0);
         $this->repoMap[Repository\Message::class]->shouldReceive('getLastMessageByConversationId')->once()->with(1)->andReturn(['createdOn' => '2023-11-06T12:17:12+0000']);
