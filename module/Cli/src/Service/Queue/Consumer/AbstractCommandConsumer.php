@@ -74,7 +74,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
 
         try {
             $result = $this->handleCommand($command);
-        } catch (NotReadyException|NysiisException $e) {
+        } catch (NotReadyException | NysiisException $e) {
             Logger::logException($e, \Laminas\Log\Logger::WARN);
             return $this->retry($item, $e->getRetryAfter(), $e->getMessage());
         } catch (EmailNotSentException $e) {
@@ -87,7 +87,7 @@ abstract class AbstractCommandConsumer extends AbstractConsumer
         } catch (LaminasServiceException $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->handleLaminasServiceException($item, $e);
-        } catch (ORMException|DBALException|\Exception $e) {
+        } catch (ORMException | DBALException | \Exception $e) {
             Logger::logException($e, \Laminas\Log\Logger::ERR);
             return $this->failed($item, $e->getMessage());
         }

@@ -30,9 +30,9 @@ final class Oppositions extends AbstractSection
                 /** @var Opposition $a */
                 /** @var Opposition $b */
                 strnatcmp(
-                $b->getOppositionType()->getDescription(),
-                $a->getOppositionType()->getDescription()
-            )
+                    $b->getOppositionType()->getDescription(),
+                    $a->getOppositionType()->getDescription()
+                )
         );
 
         $iterator->uasort(
