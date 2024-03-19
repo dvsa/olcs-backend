@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Transfer\Query\Messaging\Messages\UnreadCountByOrganisationAndUser as UnreadCountByOrganisationAndUserQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
-class UnreadCountByOrganisationAndUser extends AbstractConversationQueryHandler implements ToggleRequiredInterface
+class UnreadCountByOrganisationAndRoles extends AbstractConversationQueryHandler implements ToggleRequiredInterface
 {
     use ToggleAwareTrait;
 
