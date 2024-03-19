@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
-use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
+use Doctrine\ORM\AbstractQuery;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByLicence as GetConversationsByLicenceQuery;
+use Dvsa\Olcs\Api\Entity\User\Role;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class ByLicence extends AbstractConversationQueryHandler implements ToggleRequiredInterface
@@ -17,48 +17,36 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
     use ToggleAwareTrait;
 
     protected $toggleConfig = [FeatureToggle::MESSAGING];
-    protected $extraRepos = ['Conversation', 'Message'];
+    protected $extraRepos = [Repository\Conversation::class, Repository\Message::class];
 
     public function handleQuery(QueryInterface $query)
     {
-        assert($query instanceof GetConversationsByLicenceQuery);
-        $conversationRepository = $this->getRepository();
+        $conversationRepository = $this->getRepo(Repository\Conversation::class);
 
         $conversationsQuery = $conversationRepository->getBaseConversationListQuery($query);
         $conversationsQuery = $conversationRepository->filterByLicenceId($conversationsQuery, $query->getLicence());
-        $conversationsQuery = $conversationRepository->applyOrderByOpen($conversationsQuery);
-        $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery);
-        foreach ($conversations as $key => $value) {
-            $unreadMessageCount = $this->getUnreadMessageCountForUser($value);
-            $conversations[$key]['userContextUnreadCount'] = $unreadMessageCount;
-            $conversations[$key]['userContextStatus'] = $this->stringifyMessageStatusForUser($value, $unreadMessageCount);
-            $conversations[$key]['latestMessage'] = $this->getLatestMessageMetadata((int)$value['id']);
-        }
+        $conversationsQuery = $conversationRepository->applyOrderForListing($conversationsQuery, $this->getFilteringRoles());
+        $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery, AbstractQuery::HYDRATE_ARRAY, $query);
 
-        $conversations = $this->orderResultPrioritisingNewMessages($conversations);
+        foreach ($conversations as &$conversation) {
+            $hasUnread = (int)$conversation['has_unread'];
+            $conversation = $conversation[0];
+            $conversation['userContextUnreadCount'] = $hasUnread;
+            $conversation['userContextStatus'] = $this->stringifyMessageStatus($conversation, $hasUnread > 0);
+            $conversation['latestMessage'] = $this->getLatestMessageMetadata((int)$conversation['id']);
+            unset($conversation);
+        }
 
         return [
             'result' => $conversations,
-            'count' => $conversationRepository->fetchPaginatedCount($conversationsQuery),
+            'count'  => $conversationRepository->fetchPaginatedCount($conversationsQuery),
         ];
-    }
-
-    private function getUnreadMessageCountForUser($conversation): int
-    {
-        $messageRepository = $this->getRepo('Message');
-        assert($messageRepository instanceof MessageRepo);
-        $results = $messageRepository->getUnreadMessagesByConversationIdAndUserId($conversation['id'], $this->getUser()->getId());
-        return count($results);
     }
 
     private function getLatestMessageMetadata(int $conversationId): array
     {
-        $messageRepository = $this->getRepo('Message');
-        return $messageRepository->getLastMessageByConversationId($conversationId);
-    }
+        $messageRepository = $this->getRepo(Repository\Message::class);
 
-    private function getRepository(): ConversationRepo
-    {
-        return $this->getRepo('Conversation');
+        return $messageRepository->getLastMessageForConversation($conversationId);
     }
 }

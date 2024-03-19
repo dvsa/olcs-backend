@@ -66,7 +66,7 @@ class Message extends AbstractRepository
         return $qb;
     }
 
-    public function getLastMessageByConversationId(int $conversationId): array
+    public function getLastMessageForConversation(int $conversationId): array
     {
         $qb = $this->createQueryBuilder();
         $qb = $this->filterByConversationId($qb, $conversationId);
@@ -75,19 +75,7 @@ class Message extends AbstractRepository
         return $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
     }
 
-    public function getUnreadMessagesByConversationIdAndUserId($conversationId, $userId): array
-    {
-        $qb = $this->createQueryBuilder()
-            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
-            ->andWhere($this->alias . '.messagingConversation = :conversationId')
-            ->andWhere('umr.id IS NULL')
-            ->setParameter('conversationId', $conversationId)
-            ->setParameter('userId', $userId);
-
-        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
-    }
-
-    public function getUnreadConversationCountByLicenceIdAndRoles(int $licenceId, array $roleNames): int
+    private function getUnreadMessageCountBaseQuery(): QueryBuilder
     {
         $qb = $this->createQueryBuilder();
 
@@ -105,12 +93,26 @@ class Message extends AbstractRepository
             ->leftJoin('inner_conversation.task', 'inner_task')
             ->groupBy($this->alias . '.messagingConversation')
             ->where('inner_conversation.isClosed = 0')
-            ->andWhere('inner_task.licence = :licenceId')
-            ->andWhere(
-                $qb->expr()->not(
-                    $qb->expr()->exists($subQuery->getDQL())
-                )
-            );
+            ->andWhere($qb->expr()->not($qb->expr()->exists($subQuery)));
+
+        return $qb;
+    }
+
+    public function getUnreadMessageCountByConversationAndRoles(int $conversationId, array $roleNames): int
+    {
+        $qb = $this->getUnreadMessageCountBaseQuery();
+        $qb->andWhere('inner_conversation.id = :conversationId');
+
+        $qb->setParameter('conversationId', $conversationId);
+        $qb->setParameter('roleNames', $roleNames);
+
+        return count($qb->getQuery()->getScalarResult());
+    }
+
+    public function getUnreadConversationCountByLicenceAndRoles(int $licenceId, array $roleNames): int
+    {
+        $qb = $this->getUnreadMessageCountBaseQuery();
+        $qb->andWhere('inner_task.licence = :licenceId');
 
         $qb->setParameter('licenceId', $licenceId);
         $qb->setParameter('roleNames', $roleNames);
@@ -118,20 +120,16 @@ class Message extends AbstractRepository
         return count($qb->getQuery()->getScalarResult());
     }
 
-    public function getUnreadConversationCountByOrganisationIdAndUserId(int $organisationId, int $userId): int
+    public function getUnreadConversationCountByOrganisationAndRoles(int $organisationId, array $roleNames): int
     {
-        $qb = $this->createQueryBuilder()
-            ->select('COUNT(c.id)')
-            ->leftJoin($this->alias . '.userMessageReads', 'umr', 'WITH', 'umr.user = :userId')
-            ->leftJoin($this->alias . '.messagingConversation', 'c')
-            ->leftJoin('c.task', 't')
-            ->leftJoin('t.licence', 'l')
-            ->leftJoin('l.organisation', 'o')
-            ->andWhere('o.id = :organisationId')
-            ->andWhere('umr.id IS NULL')
-            ->groupBy($this->alias . '.messagingConversation')
-            ->setParameter('organisationId', $organisationId)
-            ->setParameter('userId', $userId);
+        $qb = $this->getUnreadMessageCountBaseQuery();
+
+        $qb->leftJoin('inner_task.licence', 'l')
+           ->leftJoin('l.organisation', 'o')
+           ->andWhere('l.organisation = :organisationId');
+
+        $qb->setParameter('organisationId', $organisationId);
+        $qb->setParameter('roleNames', $roleNames);
 
         return count($qb->getQuery()->getScalarResult());
     }

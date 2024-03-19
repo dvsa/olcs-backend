@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations;
 
+use Doctrine\ORM\AbstractQuery;
 use Dvsa\Olcs\Api\Domain\Repository\Conversation as ConversationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Message as MessageRepo;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
@@ -22,26 +23,25 @@ class ByOrganisation extends AbstractConversationQueryHandler implements ToggleR
     /** @param GetConversationsByOrganisationQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query): array
     {
-        $conversationRepository = $this->getRepo(ConversationRepo::class);
-        $messageRepository = $this->getRepo(MessageRepo::class);
+        $conversationRepo = $this->getRepo(ConversationRepo::class);
+        $messageRepo = $this->getRepo(MessageRepo::class);
 
-        $conversationsQuery = $conversationRepository->getByOrganisationId($query, (int)$query->getOrganisation());
-        $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery);
+        $conversationsQuery = $conversationRepo->getByOrganisationId($query, (int)$query->getOrganisation());
+        $conversationsQuery = $conversationRepo->applyOrderForListing($conversationsQuery, $this->getFilteringRoles());
+        $conversations = $conversationRepo->fetchPaginatedList($conversationsQuery, AbstractQuery::HYDRATE_ARRAY, $query);
 
-        foreach ($conversations as $key => $value) {
-            $unreadMessageCount = count(
-                $messageRepository->getUnreadMessagesByConversationIdAndUserId($value['id'], $this->getUser()->getId())
-            );
-            $conversations[$key]['userContextUnreadCount'] = $unreadMessageCount;
-            $conversations[$key]['userContextStatus'] = $this->stringifyMessageStatusForUser($value, $unreadMessageCount);
-            $conversations[$key]['latestMessage'] = $messageRepository->getLastMessageByConversationId((int)$value['id']);
+        foreach ($conversations as &$conversation) {
+            $hasUnread = (int)$conversation['has_unread'];
+            $conversation = $conversation[0];
+            $conversation['userContextUnreadCount'] = $hasUnread;
+            $conversation['userContextStatus'] = $this->stringifyMessageStatus($conversation, $hasUnread > 0);
+            $conversation['latestMessage'] = $messageRepo->getLastMessageForConversation((int)$conversation['id']);
+            unset($conversation);
         }
-
-        $conversations = $this->orderResultPrioritisingNewMessages($conversations);
 
         return [
             'result' => $conversations,
-            'count' => $conversationRepository->fetchPaginatedCount($conversationsQuery),
+            'count'  => $conversationRepo->fetchPaginatedCount($conversationsQuery),
         ];
     }
 }
