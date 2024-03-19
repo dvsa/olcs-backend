@@ -90,7 +90,7 @@ class CreateTest extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($command);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\Command\Result::class, $result);
         $this->assertEquals($expected, $result->toArray());
     }
 

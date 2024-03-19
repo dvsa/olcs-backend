@@ -37,7 +37,7 @@ class RefDataTest extends RepositoryTestCase
                 ->shouldReceive('setHint')
                 ->with(
                     \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-                    'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+                    \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
                 )
                 ->once()
                 ->shouldReceive('setHint')

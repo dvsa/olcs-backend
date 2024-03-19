@@ -28,8 +28,8 @@ class DocumentControllerTest extends MockeryTestCase
 
     protected function setUp(): void
     {
-        $this->request  = m::mock('\Laminas\Http\Request')->makePartial();
-        $this->response = m::mock('\Laminas\Http\Response')->makePartial();
+        $this->request  = m::mock(\Laminas\Http\Request::class)->makePartial();
+        $this->response = m::mock(\Laminas\Http\Response::class)->makePartial();
 
         $this->sut = m::mock(\Dvsa\Olcs\Scanning\Controller\DocumentController::class)
             ->makePartial()

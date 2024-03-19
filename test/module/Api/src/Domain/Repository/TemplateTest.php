@@ -140,7 +140,7 @@ class TemplateTest extends RepositoryTestCase
             ->once()
             ->andReturnSelf()
             ->shouldReceive('from')
-            ->with('Dvsa\Olcs\Api\Entity\Template\Template', 't')
+            ->with(\Dvsa\Olcs\Api\Entity\Template\Template::class, 't')
             ->once()
             ->andReturnSelf()
             ->shouldReceive('distinct')

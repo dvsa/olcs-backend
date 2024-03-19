@@ -104,7 +104,6 @@ class AllocateCandidatePermits extends AbstractCommandHandler
         }
 
         $assignedPermitMap = array_filter($permitMap);
-        reset($assignedPermitMap);
-        return key($assignedPermitMap);
+        return array_key_first($assignedPermitMap);
     }
 }

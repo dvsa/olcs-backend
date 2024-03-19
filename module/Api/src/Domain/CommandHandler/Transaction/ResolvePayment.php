@@ -155,7 +155,7 @@ final class ResolvePayment extends AbstractCommandHandler implements
                     $result->merge($createTaskResult);
                 }
             } elseif ($fee->getTask() === null) {
-                $result->merge($this->handleSideEffect($this->createCreateTaskCommand($ft)));
+                $result->merge($this->handleSideEffect($this->createCreateTaskCommand()));
                 $fee->setTask(
                     $this->getRepo('Task')->fetchById($result->getId('task'))
                 );

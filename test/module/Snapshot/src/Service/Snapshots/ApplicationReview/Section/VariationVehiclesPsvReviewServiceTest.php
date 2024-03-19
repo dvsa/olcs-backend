@@ -55,9 +55,7 @@ class VariationVehiclesPsvReviewServiceTest extends MockeryTestCase
     {
         $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
-                function ($string) {
-                    return $string . '-translated';
-                }
+                fn($string) => $string . '-translated'
             );
 
         $this->mockVehiclesPsv->shouldReceive('getConfigFromData')

@@ -75,7 +75,7 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
             $this->outputLine('==Email subject: ' . $email['subject']);
 
             // parse subject line
-            list($requestId, $status) = $this->parseSubject($email['subject']);
+            [$requestId, $status] = $this->parseSubject($email['subject']);
 
             if (!$requestId || !$status) {
                 // log warn and continue if invalid subject

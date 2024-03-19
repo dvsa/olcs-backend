@@ -32,9 +32,7 @@ class GenerateCheckFkIntegritySqlTest extends QueryHandlerTestCase
             ->andReturn($this->mockPdo);
 
         $this->mockPdo->shouldReceive('quote')->andReturnUsing(
-            function ($str) {
-                return var_export("[[$str]]", true);
-            }
+            fn($str) => var_export("[[$str]]", true)
         );
 
         parent::setUp();
@@ -173,7 +171,7 @@ class GenerateCheckFkIntegritySqlTest extends QueryHandlerTestCase
     private function assertSameQueries($expectedQueries, $actualQueries)
     {
         $this->assertSame(count($expectedQueries), count($actualQueries), "Incorrect number of queries");
-        foreach (array_map(null, $expectedQueries, $actualQueries) as list($expectedQuery, $actualQuery)) {
+        foreach (array_map(null, $expectedQueries, $actualQueries) as [$expectedQuery, $actualQuery]) {
             $this->assertSameQuery($expectedQuery, $actualQuery);
         }
     }

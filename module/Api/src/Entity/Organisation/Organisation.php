@@ -301,19 +301,17 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     public function getRelatedLicences()
     {
         return $this->getLicences()->filter(
-            function ($element) {
-                return in_array(
-                    $element->getStatus(),
-                    [
-                        LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
-                        LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                        LicenceEntity::LICENCE_STATUS_GRANTED,
-                        LicenceEntity::LICENCE_STATUS_VALID,
-                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                        LicenceEntity::LICENCE_STATUS_CURTAILED,
-                    ]
-                );
-            }
+            fn($element) => in_array(
+                $element->getStatus(),
+                [
+                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            )
         );
     }
 
@@ -384,21 +382,19 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     public function isMlh()
     {
         $totalValidLicences = $this->getLicences()->filter(
-            function ($element) {
-                return in_array(
-                    $element->getStatus(),
-                    [
-                        LicenceEntity::LICENCE_STATUS_VALID,
-                        LicenceEntity::LICENCE_STATUS_CURTAILED,
-                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                    ]
-                ) && in_array(
-                    $element->getGoodsOrPsv(),
-                    [
-                        LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
-                    ]
-                );
-            }
+            fn($element) => in_array(
+                $element->getStatus(),
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                ]
+            ) && in_array(
+                $element->getGoodsOrPsv(),
+                [
+                    LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE,
+                ]
+            )
         )->count();
 
         //if there is more than one valid licence we can skip other checks
@@ -408,15 +404,13 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
         /** @var ArrayCollection $newLicences */
         $newLicences = $this->getLicences()->filter(
-            function ($element) {
-                return in_array(
-                    $element->getStatus(),
-                    [
-                        LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                        LicenceEntity::LICENCE_STATUS_GRANTED,
-                    ]
-                );
-            }
+            fn($element) => in_array(
+                $element->getStatus(),
+                [
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                ]
+            )
         );
 
         //if the number of valid licences, added to the number of potential remaining licences is less than one
@@ -472,18 +466,16 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     public function getLinkedLicences()
     {
         return $this->getLicences()->filter(
-            function ($element) {
-                return !in_array(
-                    $element->getStatus(),
-                    [
-                        LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
-                        LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
-                        LicenceEntity::LICENCE_STATUS_GRANTED,
-                        LicenceEntity::LICENCE_STATUS_WITHDRAWN,
-                        LicenceEntity::LICENCE_STATUS_REFUSED,
-                    ]
-                );
-            }
+            fn($element) => !in_array(
+                $element->getStatus(),
+                [
+                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                    LicenceEntity::LICENCE_STATUS_UNDER_CONSIDERATION,
+                    LicenceEntity::LICENCE_STATUS_GRANTED,
+                    LicenceEntity::LICENCE_STATUS_WITHDRAWN,
+                    LicenceEntity::LICENCE_STATUS_REFUSED,
+                ]
+            )
         );
     }
 
@@ -614,23 +606,21 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
     public function getEligibleIrhpLicences()
     {
         return $this->getLicences()->filter(
-            function ($element) {
-                return ((string)$element->getGoodsOrPsv() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) && in_array(
-                    $element->getStatus(),
-                    [
-                        LicenceEntity::LICENCE_STATUS_VALID,
-                        LicenceEntity::LICENCE_STATUS_SUSPENDED,
-                        LicenceEntity::LICENCE_STATUS_CURTAILED,
-                    ]
-                ) && in_array(
-                    $element->getLicenceType(),
-                    [
-                        LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-                        LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
-                        LicenceEntity::LICENCE_TYPE_RESTRICTED,
-                    ]
-                );
-            }
+            fn($element) => ((string)$element->getGoodsOrPsv() === LicenceEntity::LICENCE_CATEGORY_GOODS_VEHICLE) && in_array(
+                $element->getStatus(),
+                [
+                    LicenceEntity::LICENCE_STATUS_VALID,
+                    LicenceEntity::LICENCE_STATUS_SUSPENDED,
+                    LicenceEntity::LICENCE_STATUS_CURTAILED,
+                ]
+            ) && in_array(
+                $element->getLicenceType(),
+                [
+                    LicenceEntity::LICENCE_TYPE_STANDARD_INTERNATIONAL,
+                    LicenceEntity::LICENCE_TYPE_STANDARD_NATIONAL,
+                    LicenceEntity::LICENCE_TYPE_RESTRICTED,
+                ]
+            )
         );
     }
 
@@ -686,17 +676,13 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         }
 
         $licences = $this->getLicences()->filter(
-            function ($element) {
-                return (
-                    !in_array(
-                        $element->getStatus(),
-                        [
-                            LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
-                            LicenceEntity::LICENCE_STATUS_CANCELLED,
-                        ]
-                    )
-                );
-            }
+            fn($element) => !in_array(
+                $element->getStatus(),
+                [
+                    LicenceEntity::LICENCE_STATUS_NOT_SUBMITTED,
+                    LicenceEntity::LICENCE_STATUS_CANCELLED,
+                ]
+            )
         );
 
         return (count($licences) !== 0);

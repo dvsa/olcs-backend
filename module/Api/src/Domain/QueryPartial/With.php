@@ -24,7 +24,7 @@ final class With implements QueryPartialInterface
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
         $property = $arguments[0];
-        $alias = (isset($arguments[1]) ? $arguments[1] : 'w' . $this->i++);
+        $alias = ($arguments[1] ?? 'w' . $this->i++);
 
         if (strpos($property, '.') === false) {
             $property = $qb->getRootAliases()[0] . '.' . $property;

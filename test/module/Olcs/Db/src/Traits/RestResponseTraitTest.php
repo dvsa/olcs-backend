@@ -25,7 +25,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetNewResponse()
     {
-        $trait = $this->getMockForTrait('\Olcs\Db\Traits\RestResponseTrait');
+        $trait = $this->getMockForTrait(\Olcs\Db\Traits\RestResponseTrait::class);
 
         $response = $trait->getNewResponse();
 
@@ -69,7 +69,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
         );
 
         $trait = $this->getMockForTrait(
-            '\Olcs\Db\Traits\RestResponseTrait',
+            \Olcs\Db\Traits\RestResponseTrait::class,
             [],
             '',
             true,

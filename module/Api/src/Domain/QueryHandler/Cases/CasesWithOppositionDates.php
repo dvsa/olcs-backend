@@ -24,15 +24,13 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
                 'application' => [
                     'operatingCentres',
                     'publicationLinks' => [
-                        'filter' => function ($element) {
-                            return in_array(
-                                (string)$element->getPublicationSection(),
-                                [
-                                    PublicationSectionEntity::APP_NEW_SECTION,
-                                    PublicationSectionEntity::VAR_NEW_SECTION,
-                                ]
-                            );
-                        },
+                        'filter' => fn($element) => in_array(
+                            (string)$element->getPublicationSection(),
+                            [
+                                PublicationSectionEntity::APP_NEW_SECTION,
+                                PublicationSectionEntity::VAR_NEW_SECTION,
+                            ]
+                        ),
                         'publication'
                     ]
                 ],

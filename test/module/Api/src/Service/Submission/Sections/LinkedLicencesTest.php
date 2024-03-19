@@ -11,7 +11,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class LinkedLicencesTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\LinkedLicences::class;
 
     protected $expectedResult = [
         'data' => [

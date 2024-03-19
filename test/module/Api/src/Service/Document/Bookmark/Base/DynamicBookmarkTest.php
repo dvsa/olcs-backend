@@ -26,8 +26,7 @@ class DynamicBookmarkTest extends MockeryTestCase
     public function testValidateDataAndGetQueryThrowException()
     {
         $this->expectException(
-            \Exception::class,
-            'Bookmark Dvsa\OlcsTest\Api\Service\Document\Bookmark\Base\Stub\DynamicBookmarkStub missing bar data'
+            \Exception::class
         );
 
         /** @var DynamicBookmarkStub|m\MockInterface $sut */

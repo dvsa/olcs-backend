@@ -206,7 +206,7 @@ class GenerateNameTest extends CommandHandlerTestCase
 
     public function testHandleFailAppIsVariation()
     {
-        $this->expectException(ValidationException::class, GenerateName::ERR_ONLY_NEW_APP);
+        $this->expectException(ValidationException::class);
 
         $this->mockApp->setIsVariation(true);
 
@@ -222,7 +222,7 @@ class GenerateNameTest extends CommandHandlerTestCase
 
     public function testHandleFailNotSoleTraiderOrPartnership()
     {
-        $this->expectException(ValidationException::class, GenerateName::ERR_ORG_TYPE_INVALID);
+        $this->expectException(ValidationException::class);
 
         $this->mockOrg->setType($this->refData[Entity\Organisation\Organisation::ORG_TYPE_REGISTERED_COMPANY]);
 

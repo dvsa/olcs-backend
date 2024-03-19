@@ -130,7 +130,7 @@ class CompareTest extends CommandHandlerTestCase
             $this->mockApi
                 ->shouldReceive('getCompanyProfile')->with($companyNumber, true)->once()
                 ->andThrow(new \Exception('Company number validation passsed'));
-            $this->expectException(NotReadyException::class, 'Company number validation passsed');
+            $this->expectException(NotReadyException::class);
         } else {
             $this->expectedSideEffect(
                 CreateAlertCmd::class,
@@ -1098,8 +1098,7 @@ class CompareTest extends CommandHandlerTestCase
             ->andThrowExceptions([new \Exception('unit_error_message')]);
 
         $this->expectException(
-            NotReadyException::class,
-            'Error getting data from Companies House API : unit_error_message'
+            NotReadyException::class
         );
 
         $command = Cmd::create(['companyNumber' => $companyNr]);

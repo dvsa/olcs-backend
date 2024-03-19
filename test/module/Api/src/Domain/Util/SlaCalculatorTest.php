@@ -55,9 +55,7 @@ class SlaCalculatorTest extends MockeryTestCase
 
         $this->publicHolidayRepo->shouldReceive('fetchBetweenByTa')
             ->andReturnUsing(
-                function ($startDate, $endDate, $trafficArea) {
-                    return $this->generateSelectPublicHolidaysArray($startDate, $endDate, $trafficArea);
-                }
+                fn($startDate, $endDate, $trafficArea) => $this->generateSelectPublicHolidaysArray($startDate, $endDate)
             );
 
         $ta = $this->generateTa($trafficArea);

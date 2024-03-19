@@ -38,7 +38,7 @@ class CompaniesHouseOfficer extends AbstractCompaniesHouseOfficer
                     $data['dateOfBirth']['year'],
                     $data['dateOfBirth']['month'],
                     // day element of D.o.B. is usually suppressed
-                    isset($data['dateOfBirth']['day']) ? $data['dateOfBirth']['day'] : 1
+                    $data['dateOfBirth']['day'] ?? 1
                 );
                 $dob->setTime(0, 0, 0);
                 $this->setDateOfBirth($dob);

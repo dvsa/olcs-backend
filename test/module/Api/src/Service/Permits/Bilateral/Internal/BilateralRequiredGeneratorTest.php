@@ -24,7 +24,7 @@ class BilateralRequiredGeneratorTest extends MockeryTestCase
 
         $this->assertEquals(
             $expected,
-            $bilateralRequiredGenerator->generate($postData, $permitUsageSelection, $expected)
+            $bilateralRequiredGenerator->generate($postData, $permitUsageSelection)
         );
     }
 

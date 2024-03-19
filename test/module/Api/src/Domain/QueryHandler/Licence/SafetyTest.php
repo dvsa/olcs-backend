@@ -34,15 +34,11 @@ class SafetyTest extends QueryHandlerTestCase
 
         $this->repoMap['Licence']->shouldReceive('getCategoryReference')
             ->andReturnUsing(
-                function ($category) {
-                    return $category;
-                }
+                fn($category) => $category
             )
             ->shouldReceive('getSubCategoryReference')
             ->andReturnUsing(
-                function ($category) {
-                    return $category;
-                }
+                fn($category) => $category
             );
 
         parent::setUp();

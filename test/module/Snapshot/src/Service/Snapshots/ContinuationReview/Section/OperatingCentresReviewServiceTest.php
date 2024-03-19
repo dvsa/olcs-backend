@@ -288,7 +288,7 @@ class OperatingCentresReviewServiceTest extends MockeryTestCase
     {
         $this->assertEquals(
             'continuations.oc-section.table.authorisation',
-            $this->sut->getSummaryHeader(new ContinuationDetail())
+            $this->sut->getSummaryHeader()
         );
     }
 }

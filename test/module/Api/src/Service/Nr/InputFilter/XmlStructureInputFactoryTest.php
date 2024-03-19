@@ -31,12 +31,12 @@ class XmlStructureInputFactoryTest extends TestCase
             'xml_valid_message_exclude' => $xmlExclude
         ];
 
-        $mockXsdValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockXsdValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
         $mockXsdValidator->shouldReceive('setXsd')->once()->with($xmlNs);
         $mockXsdValidator->shouldReceive('setMaxErrors')->once()->with($maxSchemaErrors);
         $mockXsdValidator->shouldReceive('setXmlMessageExclude')->once()->with($xmlExclude);
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();

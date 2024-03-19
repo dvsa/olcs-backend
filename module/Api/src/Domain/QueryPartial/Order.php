@@ -25,9 +25,9 @@ final class Order implements QueryPartialInterface
         if (count($arguments) == 2) {
             $arguments[] = [];
         }
-        list($sort, $order, $compositeFields) = $arguments;
+        [$sort, $order, $compositeFields] = $arguments;
 
-        list($alias) = $qb->getRootAliases();
+        [$alias] = $qb->getRootAliases();
 
         if (strpos($sort, '.') !== false || in_array($sort, $compositeFields)) {
             $qb->addOrderBy($sort, $order);

@@ -8,7 +8,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
  */
 class CaseSummaryTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\CaseSummary';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\CaseSummary::class;
 
     protected $licenceStartDate = '2012-01-01 15:00:00';
 

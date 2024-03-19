@@ -58,14 +58,10 @@ class GeneratorTest extends MockeryTestCase
         ];
 
         $sm->shouldReceive('get')->andReturnUsing(
-            function ($key) {
-                return $this->services[$key];
-            }
+            fn($key) => $this->services[$key]
         );
         $sm->shouldReceive('has')->andReturnUsing(
-            function ($key) {
-                return array_key_exists($key, $this->services);
-            }
+            fn($key) => array_key_exists($key, $this->services)
         );
 
         $this->viewRenderer = m::mock(PhpRenderer::class);
@@ -236,9 +232,7 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
-                function ($view) {
-                    return $view;
-                }
+                fn($view) => $view
             );
     }
 

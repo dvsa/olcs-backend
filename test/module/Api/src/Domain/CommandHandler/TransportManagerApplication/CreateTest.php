@@ -211,16 +211,7 @@ class CreateTest extends CommandHandlerTestCase
     public function testHandleCommandWithException()
     {
         $this->expectException(
-            ValidationException::class,
-            var_export(
-                [
-                    'registeredUser' => [
-                        TransportManagerApplicationEntity::ERROR_TM_EXIST =>
-                            'forename familyName has already been added to this application'
-                    ]
-                ],
-                true
-            )
+            ValidationException::class
         );
         $command = Command::create(['application' => 863, 'user' => 234, 'action' => 'D']);
 

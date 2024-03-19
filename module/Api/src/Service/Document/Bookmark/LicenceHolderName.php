@@ -35,9 +35,7 @@ class LicenceHolderName extends DynamicBookmark
 
         if (!empty($this->data['tradingNames'])) {
             $tradingNames = array_map(
-                function ($tradingName) {
-                    return $tradingName['name'];
-                },
+                fn($tradingName) => $tradingName['name'],
                 $this->data['tradingNames']
             );
             $tradingAs = sprintf("\nT/A %s", implode(', ', $tradingNames));

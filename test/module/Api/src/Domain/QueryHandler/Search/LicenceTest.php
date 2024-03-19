@@ -218,7 +218,7 @@ class LicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class, $result);
         $this->entityAccessLogger->shouldHaveReceived('logAccessToEntity', [$licence]);
     }
 

@@ -112,7 +112,7 @@ abstract class EntityTester extends MockeryTestCase
     public function testGettersAndSetters()
     {
         foreach ($this->getGettersAndSetters() as $testCase) {
-            list($methodName, $testValue) = $testCase;
+            [$methodName, $testValue] = $testCase;
 
             $classToTestName = $this->getClassToTestName();
             $entity = $this->instantiate($classToTestName);
@@ -189,11 +189,11 @@ abstract class EntityTester extends MockeryTestCase
                     }
 
                     if ($methodName == 'Id') {
-                        $testValue = rand(10000, 200000);
+                        $testValue = random_int(10000, 200000);
                     } elseif ($methodName == 'IsDeleted') {
                         $testValue = 1;
                     } else {
-                        $testValue = $methodName . '_test_' . rand(10000, 200000);
+                        $testValue = $methodName . '_test_' . random_int(10000, 200000);
                     }
 
                     $testMethods[] = [$methodName, $testValue];

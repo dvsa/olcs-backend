@@ -443,15 +443,13 @@ class Cases extends AbstractCases implements
     public function getConditionUndertakingsAddedViaCase()
     {
         return $this->getConditionUndertakings()->filter(
-            function ($element) {
-                return ($element->getDeletedDate() === null)
-                    && in_array(
-                        $element->getAddedVia(),
-                        [
-                            ConditionUndertaking::ADDED_VIA_CASE,
-                        ]
-                    );
-            }
+            fn($element) => ($element->getDeletedDate() === null)
+                && in_array(
+                    $element->getAddedVia(),
+                    [
+                        ConditionUndertaking::ADDED_VIA_CASE,
+                    ]
+                )
         );
     }
 

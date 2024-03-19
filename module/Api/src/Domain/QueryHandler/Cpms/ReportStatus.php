@@ -39,7 +39,7 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
                 // already know what the download url will be based on the reference
                 'completed' => $data['completed'],
                 'token' => $this->parseToken($data),
-                'extension' => isset($data['file_extension']) ? $data['file_extension'] : null,
+                'extension' => $data['file_extension'] ?? null,
             ];
         }
 

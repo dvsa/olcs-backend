@@ -547,7 +547,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testFetchWithTmLicences()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
@@ -561,7 +561,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testFetchForNtu()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
@@ -592,7 +592,7 @@ class ApplicationTest extends RepositoryTestCase
 
     public function testFetchAbandonedVariations()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('a')->once()->andReturn($mockQb);
 
         $mockQb->shouldReceive('expr->eq')->with('a.isVariation', ':isVariation')->once()->andReturn('EXPR1');

@@ -76,9 +76,7 @@ class RejectWaiveTest extends CommandHandlerTestCase
             ->shouldReceive('setCompletedDate')
             ->with(
                 m::on(
-                    function ($arg) use ($now) {
-                        return $arg == $now;
-                    }
+                    fn($arg) => $arg == $now
                 )
             )
             ->once()

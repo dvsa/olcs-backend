@@ -25,7 +25,7 @@ class FileProcessorFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FileProcessor
     {
         $config = $container->get('Config');
-        $tmpDir = (isset($config['tmpDirectory']) ? $config['tmpDirectory'] : sys_get_temp_dir());
+        $tmpDir = ($config['tmpDirectory'] ?? sys_get_temp_dir());
         $decompressFilter = $container->get('FilterManager')->get('Decompress');
         $decompressFilter->setAdapter('zip');
         return new FileProcessor($container->get('FileUploader'), new Filesystem(), $decompressFilter, $tmpDir);

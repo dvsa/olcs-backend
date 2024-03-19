@@ -70,15 +70,11 @@ final class ConditionsAndUndertakings extends AbstractSection
 
         usort(
             $tables['undertakings'],
-            function ($a, $b) {
-                return ((int) $a['id'] > (int) $b['id']) ? +1 : -1;
-            }
+            fn($a, $b) => ((int) $a['id'] > (int) $b['id']) ? +1 : -1
         );
         usort(
             $tables['conditions'],
-            function ($a, $b) {
-                return ((int) $a['id'] > (int) $b['id']) ? +1 : -1;
-            }
+            fn($a, $b) => ((int) $a['id'] > (int) $b['id']) ? +1 : -1
         );
 
         $dataToReturnArray = [

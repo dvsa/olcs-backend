@@ -220,8 +220,8 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
 
         $response = $this->send($method, $endPoint, $scope, $params, $fee);
 
-        $statusCode = isset($response['payment_status']['code']) ? $response['payment_status']['code'] : null;
-        $message = ((isset($response['message'])) ? $response['message'] : 'No error message from CPMS')
+        $statusCode = $response['payment_status']['code'] ?? null;
+        $message = ($response['message'] ?? 'No error message from CPMS')
             . ((isset($response['code'])) ? ', code: ' . $response['code'] :  ', no error code from CPMS');
 
         return [
@@ -248,11 +248,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         $scope    = ApiService::SCOPE_QUERY_TXN;
 
         $response = $this->send($method, $endPoint, $scope, [], $fee);
-
-        if (isset($response['auth_code'])) {
-            return $response['auth_code'];
-        }
-        return null;
+        return $response['auth_code'] ?? null;
     }
 
     /**
@@ -905,16 +901,12 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
             : (string) $this->getReceiverReference($fee);
 
         $receiverName = $this->truncate(
-            isset($miscExtraParams['customer_name'])
-                ? $miscExtraParams['customer_name']
-                : $fee->getCustomerNameForInvoice(),
+            $miscExtraParams['customer_name'] ?? $fee->getCustomerNameForInvoice(),
             self::PARAM_RECEIVER_NAME_LIMIT
         );
 
         $receiverAddress = $this->formatAddress(
-            isset($miscExtraParams['customer_address'])
-                ? $miscExtraParams['customer_address']
-                : $fee->getCustomerAddressForInvoice()
+            $miscExtraParams['customer_address'] ?? $fee->getCustomerAddressForInvoice()
         );
         $this->validateReceiverParams(compact('receiverReference', 'receiverName', 'receiverAddress'));
 
@@ -1213,18 +1205,10 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
         if (isset($config['cpms']['invoice_prefix'])) {
             $this->setInvoicePrefix($config['cpms']['invoice_prefix']);
         }
-        $this->niSchemaId = isset($config['cpms_credentials']['client_id_ni'])
-            ? $config['cpms_credentials']['client_id_ni']
-            : null;
-        $this->niClientSecret = isset($config['cpms_credentials']['client_secret_ni'])
-            ? $config['cpms_credentials']['client_secret_ni']
-            : null;
-        $this->schemaId = isset($config['cpms_credentials']['client_id'])
-            ? $config['cpms_credentials']['client_id']
-            : null;
-        $this->clientSecret = isset($config['cpms_credentials']['client_secret'])
-            ? $config['cpms_credentials']['client_secret']
-            : null;
+        $this->niSchemaId = $config['cpms_credentials']['client_id_ni'] ?? null;
+        $this->niClientSecret = $config['cpms_credentials']['client_secret_ni'] ?? null;
+        $this->schemaId = $config['cpms_credentials']['client_id'] ?? null;
+        $this->clientSecret = $config['cpms_credentials']['client_secret'] ?? null;
         $this->cpmsClient = $container->get(ApiServiceFactory::class);
         $this->feesHelper = $container->get('FeesHelperService');
         return $this;

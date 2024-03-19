@@ -32,9 +32,7 @@ class UserAccessTest extends MockeryTestCase
     {
         $mockTranslator = m::mock()
             ->shouldReceive('translate')
-            ->andReturnUsing(function ($text) {
-                return $text . '_translated';
-            })
+            ->andReturnUsing(fn($text) => $text . '_translated')
             ->getMock();
 
         $bookmark = m::mock(UserAccess::class)
@@ -174,7 +172,7 @@ class UserAccessTest extends MockeryTestCase
             'BOOKMARK3' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('tableSnippet', $header)
             ->andReturn('header|')
@@ -237,7 +235,7 @@ class UserAccessTest extends MockeryTestCase
             ->andReturn('table')
             ->getMock();
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with(
                 'snippet',

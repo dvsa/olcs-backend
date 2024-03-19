@@ -113,7 +113,7 @@ class ClientTest extends MockeryTestCase
     public function testGetCompanyProfileErrorResponse($statusCode, $content, $errClass, $errMsg)
     {
         //  expect
-        $this->expectException($errClass, $errMsg);
+        $this->expectException($errClass);
 
         //  call
         $this->mockRequest->shouldReceive('setUri')->once()->with('BASE_URI/company/03127414')->andReturnSelf();

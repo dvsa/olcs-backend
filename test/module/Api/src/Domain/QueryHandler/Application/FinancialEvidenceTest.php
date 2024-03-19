@@ -83,9 +83,7 @@ class FinancialEvidenceTest extends QueryHandlerTestCase
             ->andReturn(
                 array_filter(
                     $organisationLicences,
-                    function ($licence) use ($applicationLicenceId) {
-                        return $licence->getId() !== $applicationLicenceId;
-                    }
+                    fn($licence) => $licence->getId() !== $applicationLicenceId
                 )
             )
             ->getMock();

@@ -62,9 +62,7 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
     {
         // convert to list of roles
         $current = isset($current) ? array_map(
-            static function (Role $role) {
-                return $role->getRole();
-            },
+            static fn(Role $role) => $role->getRole(),
             $current
         ) : [];
 
@@ -83,9 +81,7 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
                     'from' => $current,
                     'to' => $new,
                     'by' => array_map(
-                        function ($role) {
-                            return $role->getRole();
-                        },
+                        fn($role) => $role->getRole(),
                         $currentUser->getRoles()->toArray()
                     ),
                 ]

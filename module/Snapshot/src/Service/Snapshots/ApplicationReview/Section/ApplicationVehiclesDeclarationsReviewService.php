@@ -28,7 +28,7 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
     {
         $subSections = [];
 
-        $psvWhichVehicleSize = isset($data['psvWhichVehicleSizes']['id']) ? $data['psvWhichVehicleSizes']['id'] : null;
+        $psvWhichVehicleSize = $data['psvWhichVehicleSizes']['id'] ?? null;
 
         if ($psvWhichVehicleSize) {
             $subSections[] = [

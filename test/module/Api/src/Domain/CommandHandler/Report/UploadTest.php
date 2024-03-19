@@ -505,7 +505,7 @@ class UploadTest extends CommandHandlerTestCase
 
     public function testHandleCommandError()
     {
-        $this->expectException(\Exception::class, 'any error');
+        $this->expectException(\Exception::class);
 
         $data = [
             'reportType' => null,

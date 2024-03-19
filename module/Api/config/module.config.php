@@ -859,14 +859,14 @@ return [
     'doctrine' => [
         'driver' => [
             'EntityDriver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => [
                     __DIR__ . '/../src/Entity'
                 ]
             ],
             'translatable_metadata_driver' => [
-                'class' => 'Doctrine\ORM\Mapping\Driver\AnnotationDriver',
+                'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
                 'paths' => [
                     'vendor/gedmo/doctrine-extensions/src/Translatable/Entity'
@@ -895,10 +895,10 @@ return [
                     'soft-deleteable' => \Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter::class,
                 ],
                 'types' => [
-                    'yesno' => 'Dvsa\Olcs\Api\Entity\Types\YesNoType',
-                    'yesnonull' => 'Dvsa\Olcs\Api\Entity\Types\YesNoNullType',
-                    'date' => 'Dvsa\Olcs\Api\Entity\Types\DateType',
-                    'datetime' => 'Dvsa\Olcs\Api\Entity\Types\DateTimeType',
+                    'yesno' => \Dvsa\Olcs\Api\Entity\Types\YesNoType::class,
+                    'yesnonull' => \Dvsa\Olcs\Api\Entity\Types\YesNoNullType::class,
+                    'date' => \Dvsa\Olcs\Api\Entity\Types\DateType::class,
+                    'datetime' => \Dvsa\Olcs\Api\Entity\Types\DateTimeType::class,
                     'encrypted_string' => \Dvsa\Olcs\Api\Entity\Types\EncryptedStringType::class
                 ]
             ]
@@ -907,7 +907,7 @@ return [
     'lmc_rbac' => [
         'identity_provider' => \Dvsa\Olcs\Api\Rbac\IdentityProviderInterface::class,
         'role_provider' => [
-            'LmcRbacMvc\Role\ObjectRepositoryRoleProvider' => [
+            \LmcRbacMvc\Role\ObjectRepositoryRoleProvider::class => [
                 'object_manager'     => 'doctrine.entitymanager.orm_default',
                 'class_name'         => \Dvsa\Olcs\Api\Entity\User\Role::class,
                 'role_name_property' => 'role'

@@ -8,7 +8,7 @@ namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
  */
 class NoDataCommentsOnlyTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\NoDataCommentsOnly::class;
 
     /**
      * Filter provider

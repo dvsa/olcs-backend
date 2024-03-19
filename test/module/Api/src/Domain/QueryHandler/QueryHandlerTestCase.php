@@ -172,22 +172,22 @@ class QueryHandlerTestCase extends MockeryTestCase
 
     public function mapRefData($key)
     {
-        return isset($this->refData[$key]) ? $this->refData[$key] : null;
+        return $this->refData[$key] ?? null;
     }
 
     public function mapCategoryReference($key)
     {
-        return isset($this->categoryReferences[$key]) ? $this->categoryReferences[$key] : null;
+        return $this->categoryReferences[$key] ?? null;
     }
 
     public function mapSubCategoryReference($key)
     {
-        return isset($this->subCategoryReferences[$key]) ? $this->subCategoryReferences[$key] : null;
+        return $this->subCategoryReferences[$key] ?? null;
     }
 
     public function mapReference($class, $id)
     {
-        return isset($this->references[$class][$id]) ? $this->references[$class][$id] : null;
+        return $this->references[$class][$id] ?? null;
     }
 
     protected function assertPostConditions(): void
@@ -246,14 +246,14 @@ class QueryHandlerTestCase extends MockeryTestCase
     {
         foreach ($this->commands as $command) {
             /** @var CommandInterface $cmd */
-            list($cmd, $data) = $command;
+            [$cmd, $data] = $command;
 
             $cmdData = $cmd->getArrayCopy();
             $cmdDataToMatch = [];
 
             foreach ($data as $key => $value) {
                 unset($value);
-                $cmdDataToMatch[$key] = isset($cmdData[$key]) ? $cmdData[$key] : null;
+                $cmdDataToMatch[$key] = $cmdData[$key] ?? null;
             }
 
             $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
@@ -267,7 +267,7 @@ class QueryHandlerTestCase extends MockeryTestCase
     {
         foreach ($this->sideEffectQueries as $query) {
             /** @var QueryInterface $qry */
-            list($qry, $data) = $query;
+            [$qry, $data] = $query;
 
             $qryData = $qry->getArrayCopy();
             $qryDataToMatch = [];

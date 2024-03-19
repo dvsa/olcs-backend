@@ -549,7 +549,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testInitiateCardRequestInvalidApiResponse()
     {
-        $this->expectException(CpmsResponseException::class, 'Invalid payment response', 400);
+        $this->expectException(CpmsResponseException::class);
 
         $this->mockSchemaIdChange();
 
@@ -1469,7 +1469,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testRefundFeeSinglePaymentErrorResponse()
     {
-        $this->expectException(CpmsResponseException::class, 'Invalid refund response', 401);
+        $this->expectException(CpmsResponseException::class);
 
         $fee = m::mock(FeeEntity::class);
 
@@ -2035,7 +2035,7 @@ class CpmsV2HelperServiceTest extends MockeryTestCase
 
     public function testSetInvoicePrefixTooLong()
     {
-        $this->expectException(\RuntimeException::class, 'Invoice prefix needs to be less than 8 chars');
+        $this->expectException(\RuntimeException::class);
         $this->sut->setInvoicePrefix('TOO_LONGX');
     }
 

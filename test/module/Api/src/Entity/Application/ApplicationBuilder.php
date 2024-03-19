@@ -27,7 +27,7 @@ class ApplicationBuilder implements BuilderInterface
     public function __construct(Licence $licence, int $id = null, bool $isVariation = false)
     {
         $this->instance = new Application($licence, new RefData(Application::APPLICATION_STATUS_NOT_SUBMITTED), $isVariation);
-        $this->instance->setId(null === $id ? self::AN_ID : $id);
+        $this->instance->setId($id ?? self::AN_ID);
         $this->instance->copyInformationFromLicence($licence);
     }
 

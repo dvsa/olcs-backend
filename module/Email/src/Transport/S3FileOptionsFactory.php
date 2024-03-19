@@ -17,7 +17,7 @@ class S3FileOptionsFactory implements FactoryInterface
         $awsOptions = $config['awsOptions'];
         $s3Options = $awsOptions['s3Options'];
         $arraykey = array_search(
-            '\Dvsa\Olcs\Email\Transport\S3File',
+            \Dvsa\Olcs\Email\Transport\S3File::class,
             array_column($config['mail']['options']['transport'], 'type')
         );
         $bucket = $config['mail']['options']['transport'][$arraykey]['options']['bucket'];
@@ -39,7 +39,7 @@ class S3FileOptionsFactory implements FactoryInterface
     {
         $config = $container->get('Config');
         $s3Client = $container->get('S3Client');
-        list($awsOptions, $s3Options, $bucket, $key) = $this->extractConfig($config);
+        [$awsOptions, $s3Options, $bucket, $key] = $this->extractConfig($config);
         $s3fileOptions = new S3FileOptions([
             'awsOptions' => $awsOptions,
             's3Options' => $s3Options,

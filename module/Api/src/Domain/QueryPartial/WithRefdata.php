@@ -24,7 +24,7 @@ final class WithRefdata implements QueryPartialInterface
      */
     private $with;
 
-    private $refDataEntity = 'Dvsa\\Olcs\\Api\\Entity\\System\\RefData';
+    private $refDataEntity = \Dvsa\Olcs\Api\Entity\System\RefData::class;
 
     public function __construct(EntityManagerInterface $em, With $with)
     {

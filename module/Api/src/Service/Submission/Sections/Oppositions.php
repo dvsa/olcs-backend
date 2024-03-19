@@ -26,14 +26,13 @@ final class Oppositions extends AbstractSection
         $iterator = $case->getOppositions()->getIterator();
 
         $iterator->uasort(
-            function ($a, $b) {
+            fn($a, $b) =>
                 /** @var Opposition $a */
                 /** @var Opposition $b */
-                return strnatcmp(
-                    $b->getOppositionType()->getDescription(),
-                    $a->getOppositionType()->getDescription()
-                );
-            }
+                strnatcmp(
+                $b->getOppositionType()->getDescription(),
+                $a->getOppositionType()->getDescription()
+            )
         );
 
         $iterator->uasort(

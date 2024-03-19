@@ -84,9 +84,7 @@ class ApproveWaiveTest extends CommandHandlerTestCase
             ->with(
                 m::on(
                     // compare date objects
-                    function ($arg) use ($now) {
-                        return $arg == $now;
-                    }
+                    fn($arg) => $arg == $now
                 )
             )
             ->once()

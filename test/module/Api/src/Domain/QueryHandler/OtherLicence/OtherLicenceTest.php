@@ -34,7 +34,7 @@ class OtherLicenceTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 111]);
 
-        $mockOtherLicence = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockOtherLicence = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
         $mockOtherLicence->shouldReceive('serialize')
             ->once()
             ->andReturn(['id' => 111])

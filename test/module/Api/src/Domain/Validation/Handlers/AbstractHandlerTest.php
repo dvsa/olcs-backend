@@ -47,13 +47,11 @@ class AbstractHandlerTest extends AbstractHandlerTestCase
 
     public function testCall()
     {
-        $user = $this->mockUser();
-
         $organisationProvider = m::mock(OrganisationProviderInterface::class);
 
-        $this->setIsValid('isOwner', [$organisationProvider, $user], true);
+        $this->setIsValid('isOwner', [$organisationProvider], true);
 
-        $this->assertEquals(true, $this->sut->isOwner($organisationProvider, $user));
+        $this->assertEquals(true, $this->sut->isOwner($organisationProvider));
     }
 
     public function testCallMissing()
@@ -64,6 +62,6 @@ class AbstractHandlerTest extends AbstractHandlerTestCase
 
         $organisationProvider = m::mock(OrganisationProviderInterface::class);
 
-        $this->sut->isOwner($organisationProvider, $user);
+        $this->sut->isOwner($organisationProvider);
     }
 }

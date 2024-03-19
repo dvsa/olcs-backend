@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class AuthRequestedAppliedForTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\AuthRequestedAppliedFor::class;
 
     /**
      * Filter provider

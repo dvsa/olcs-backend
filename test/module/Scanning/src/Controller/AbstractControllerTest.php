@@ -29,7 +29,7 @@ class AbstractControllerTest extends MockeryTestCase
 
     protected function setUp(): void
     {
-        $this->response = m::mock('\Laminas\Http\Response')->makePartial();
+        $this->response = m::mock(\Laminas\Http\Response::class)->makePartial();
 
         $this->sut = m::mock(\Dvsa\Olcs\Scanning\Controller\AbstractController::class)->makePartial();
         $this->sut->shouldReceive('getResponse')
@@ -63,7 +63,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->create([]);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -74,7 +74,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->delete(3);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -85,7 +85,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->deleteList();
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -96,7 +96,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->get(2);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -107,7 +107,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->getList();
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -118,7 +118,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->head(1);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -129,7 +129,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->options();
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -140,7 +140,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->patch(1, []);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -151,7 +151,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->replaceList([]);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -162,7 +162,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->patchList([]);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -173,7 +173,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->update(3, []);
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Method Not Allowed', $response->getVariable('title'));
     }
@@ -184,7 +184,7 @@ class AbstractControllerTest extends MockeryTestCase
 
         $response = $this->sut->notFoundAction();
 
-        $this->assertInstanceOf('\Laminas\View\Model\JsonModel', $response);
+        $this->assertInstanceOf(\Laminas\View\Model\JsonModel::class, $response);
 
         $this->assertEquals('Page Not Found', $response->getVariable('title'));
     }

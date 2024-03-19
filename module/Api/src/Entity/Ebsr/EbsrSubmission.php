@@ -241,7 +241,7 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
 
         $errorInfo = $this->getDecodedSubmissionResult();
 
-        return isset($errorInfo['errors']) ? $errorInfo['errors'] : [];
+        return $errorInfo['errors'] ?? [];
     }
 
     /**

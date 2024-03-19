@@ -64,7 +64,7 @@ final class Result
      */
     public function getId($name)
     {
-        return isset($this->ids[$name]) ? $this->ids[$name] : null;
+        return $this->ids[$name] ?? null;
     }
 
     /**
@@ -123,7 +123,7 @@ final class Result
      */
     public function getFlag($name)
     {
-        return isset($this->flags[$name]) ? $this->flags[$name] : null;
+        return $this->flags[$name] ?? null;
     }
 
     /**

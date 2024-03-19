@@ -127,7 +127,7 @@ class IrhpPermitRangeEntityTest extends EntityTester
         );
         $entity->setIrhpPermits($data['irhpPermits']);
         $entity->setIrhpCandidatePermits($data['irhpCandidatePermits']);
-        $this->assertEquals($expected, $entity->canDelete($data));
+        $this->assertEquals($expected, $entity->canDelete());
     }
 
     /**

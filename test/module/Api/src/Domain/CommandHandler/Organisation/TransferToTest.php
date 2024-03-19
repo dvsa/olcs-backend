@@ -616,9 +616,9 @@ class TransferToTest extends CommandHandlerTestCase
         $toOrganisation->setId(13);
         $this->expectedOrganisationCacheClearSideEffect(13);
 
-        $ebsrSubmission1 = m::mock('\Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission')->makePartial();
+        $ebsrSubmission1 = m::mock(\Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission::class)->makePartial();
         $ebsrSubmission1->setOrganisation($fromOrganisation);
-        $ebsrSubmission2 = m::mock('\Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission')->makePartial();
+        $ebsrSubmission2 = m::mock(\Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission::class)->makePartial();
         $ebsrSubmission2->setOrganisation($fromOrganisation);
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
