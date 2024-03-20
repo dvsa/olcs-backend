@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Entity\User\Role;
+use Dvsa\Olcs\Transfer\Query\Messaging\Conversations\ByLicence as ByLicenceQuery;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class ByLicence extends AbstractConversationQueryHandler implements ToggleRequiredInterface
@@ -19,7 +19,7 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = [Repository\Conversation::class, Repository\Message::class];
 
-    /** @param GetConversationsByLicenceQuery|QueryInterface $query */
+    /** @param ByLicenceQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query)
     {
         $conversationRepository = $this->getRepo(Repository\Conversation::class);
