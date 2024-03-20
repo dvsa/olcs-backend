@@ -26,6 +26,7 @@ class ByOrganisation extends AbstractConversationQueryHandler implements ToggleR
         $messageRepository = $this->getRepo(MessageRepo::class);
 
         $conversationsQuery = $conversationRepository->getByOrganisationId($query, (int)$query->getOrganisation());
+        $conversationsQuery = $conversationRepository->filterByStatuses($conversationsQuery, $query->getStatuses());
         $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery);
 
         foreach ($conversations as $key => $value) {
