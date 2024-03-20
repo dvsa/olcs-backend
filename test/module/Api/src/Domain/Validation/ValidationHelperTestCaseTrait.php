@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Laminas\ServiceManager\ServiceManager;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
+use Mockery\MockInterface;
 
 /**
  * Validation Helper Test Case Trait
@@ -35,7 +36,7 @@ trait ValidationHelperTestCaseTrait
     protected $validatorManager;
 
     /**
-     * @var AuthorizationService
+     * @var AuthorizationService | MockInterface
      */
     protected $auth;
 
