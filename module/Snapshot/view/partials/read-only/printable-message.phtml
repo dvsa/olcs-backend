@@ -20,6 +20,13 @@
     <div class="govuk-summary-card__content">
       <p class="govuk-body">
         <?php echo nl2br($message->getMessagingContent()->getText()); ?>
+        <?php if ($message->getCreatedBy()->getTeam() !== null): ?>
+          <p class="govuk-caption-m">
+            <?php echo $sender; ?>
+            <br/>
+            Caseworker Team
+          </p>
+        <?php endif; ?>
         <?php if ($enhanced): ?>
           <hr/>
           <?php foreach ($message->getUserMessageReads() as $messageRead): /** @var \Dvsa\Olcs\Api\Entity\Messaging\MessagingUserMessageRead $messageRead */ ?>
@@ -42,12 +49,6 @@
               </em>
             </p>
           <?php endforeach; ?>
-        <?php elseif ($message->getCreatedBy()->getTeam() !== null): ?>
-          <p class="govuk-caption-m">
-            <?php echo $sender; ?>
-            <br/>
-            Caseworker Team
-          </p>
         <?php endif; ?>
       </p>
     </div>
