@@ -25,8 +25,8 @@ class EnqueueCompaniesHouseCompareCommandTest extends AbstractBatchCommandCases
         return [
             Enqueue::create([
                 'messageData' => ['org1', 'org2'],
-                'queueType' => 'Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile',
-                'messageType' => 'Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile',
+                'queueType' => \Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile::class,
+                'messageType' => \Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile::class,
             ]),
         ];
     }

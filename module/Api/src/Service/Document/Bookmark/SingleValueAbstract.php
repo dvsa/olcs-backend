@@ -38,7 +38,7 @@ abstract class SingleValueAbstract extends DynamicBookmark
     public function getQuery(array $data)
     {
         $data = [
-            static::SRCH_FLD_KEY => isset($data[static::SRCH_VAL_KEY]) ? $data[static::SRCH_VAL_KEY] : null,
+            static::SRCH_FLD_KEY => $data[static::SRCH_VAL_KEY] ?? null,
             'bundle' => static::BUNDLE
         ];
 
@@ -54,7 +54,7 @@ abstract class SingleValueAbstract extends DynamicBookmark
      */
     protected function getValue()
     {
-        return isset($this->data[static::FIELD]) ? $this->data[static::FIELD] : null;
+        return $this->data[static::FIELD] ?? null;
     }
 
     /**

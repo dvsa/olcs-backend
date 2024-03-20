@@ -25,7 +25,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetNewResponse()
     {
-        $trait = $this->getMockForTrait('\Olcs\Db\Traits\RestResponseTrait');
+        $trait = $this->getMockForTrait(\Olcs\Db\Traits\RestResponseTrait::class);
 
         $response = $trait->getNewResponse();
 
@@ -49,34 +49,34 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
     public function testRespond($input, $expected)
     {
         $expectedContent = json_encode(
-            array(
-                'Response' => array(
+            [
+                'Response' => [
                     'Code' => $expected['code'],
                     'Message' => $expected['reasonPhrase'],
                     'Summary' => $expected['summary'],
                     'Data' => $expected['data']
-                )
-            )
+                ]
+            ]
         );
 
         $mockResponse = $this->createPartialMock(
             Response::class,
-            array(
+            [
                 'setStatusCode',
                 'setContent',
                 'getReasonPhrase'
-            )
+            ]
         );
 
         $trait = $this->getMockForTrait(
-            '\Olcs\Db\Traits\RestResponseTrait',
-            array(),
+            \Olcs\Db\Traits\RestResponseTrait::class,
+            [],
             '',
             true,
             true,
             true,
             // This argument is an array of mocked methods
-            array('getNewResponse')
+            ['getNewResponse']
         );
 
         $mockResponse->expects($this->once())
@@ -117,34 +117,34 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function providerRespond()
     {
-        return array(
-            array(
-                array(Response::STATUS_CODE_200),
-                array(
+        return [
+            [
+                [Response::STATUS_CODE_200],
+                [
                     'code' => Response::STATUS_CODE_200,
                     'reasonPhrase' => 'Some Phrase',
                     'summary' => null,
-                    'data' => array()
-                )
-            ),
-            array(
-                array(Response::STATUS_CODE_400, 'Summary'),
-                array(
+                    'data' => []
+                ]
+            ],
+            [
+                [Response::STATUS_CODE_400, 'Summary'],
+                [
                     'code' => Response::STATUS_CODE_400,
                     'reasonPhrase' => 'Some Phrase',
                     'summary' => 'Summary',
-                    'data' => array()
-                )
-            ),
-            array(
-                array(Response::STATUS_CODE_404, 'Summary', array('foo' => 'bar')),
-                array(
+                    'data' => []
+                ]
+            ],
+            [
+                [Response::STATUS_CODE_404, 'Summary', ['foo' => 'bar']],
+                [
                     'code' => Response::STATUS_CODE_404,
                     'reasonPhrase' => 'Some Phrase',
                     'summary' => 'Summary',
-                    'data' => array('foo' => 'bar')
-                )
-            )
-        );
+                    'data' => ['foo' => 'bar']
+                ]
+            ]
+        ];
     }
 }

@@ -393,11 +393,7 @@ class PrintJob extends AbstractCommandHandler
      */
     private function getConfigPrintServer()
     {
-        if (isset($this->config['print']['server'])) {
-            return $this->config['print']['server'];
-        }
-
-        return false;
+        return $this->config['print']['server'] ?? false;
     }
 
     /**
@@ -407,11 +403,7 @@ class PrintJob extends AbstractCommandHandler
      */
     private function getConfigUser()
     {
-        if (isset($this->config['print']['options']['user'])) {
-            return $this->config['print']['options']['user'];
-        }
-
-        return false;
+        return $this->config['print']['options']['user'] ?? false;
     }
 
     /**

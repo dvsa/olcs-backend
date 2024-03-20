@@ -159,7 +159,7 @@ class DocManClient implements DocumentStoreInterface
         }
 
         //  process error message
-        $errMssg = (isset($data['message']) ? $data['message'] : false);
+        $errMssg = ($data['message'] ?? false);
         if ($errMssg !== false) {
             Logger::logResponse(Response::STATUS_CODE_404, $errMssg);
         }

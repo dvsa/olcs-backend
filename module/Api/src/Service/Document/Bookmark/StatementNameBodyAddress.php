@@ -32,8 +32,7 @@ class StatementNameBodyAddress extends DynamicBookmark
     public function render()
     {
         $person = $this->data['requestorsContactDetails']['person'];
-        $address = isset($this->data['requestorsContactDetails']['address'])
-                 ? $this->data['requestorsContactDetails']['address'] : [];
+        $address = $this->data['requestorsContactDetails']['address'] ?? [];
 
         $separator = "\n";
 

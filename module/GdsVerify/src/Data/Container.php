@@ -77,7 +77,7 @@ class Container extends \SAML2\Compat\AbstractContainer
      *
      * @return void
      */
-    public function postRedirect($url, $data = array())
+    public function postRedirect($url, $data = [])
     {
     }
 
@@ -89,7 +89,7 @@ class Container extends \SAML2\Compat\AbstractContainer
      *
      * @return void
      */
-    public function redirect($url, $data = array())
+    public function redirect($url, $data = [])
     {
     }
 

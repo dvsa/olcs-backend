@@ -105,12 +105,7 @@ final class ProcessDuplicateVehicleRemoval extends AbstractCommandHandler implem
         }
         usort(
             $removedVehicles,
-            function ($a, $b) {
-                if ($a['vrm'] === $b['vrm']) {
-                    return 0;
-                }
-                return ($a['vrm'] > $b['vrm']) ? +1 : -1;
-            }
+            fn($a, $b) => $a['vrm'] <=> $b['vrm']
         );
         try {
             $message = new \Dvsa\Olcs\Email\Data\Message(

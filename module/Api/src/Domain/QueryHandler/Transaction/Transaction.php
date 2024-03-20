@@ -75,9 +75,7 @@ class Transaction extends AbstractQueryHandler
         // 'A list of fees in chronological order (i.e. in fee id order) with the newest at the bottom.'
         uasort(
             $fees,
-            function ($a, $b) {
-                return ($a['id'] < $b ['id']) ? -1 : 1;
-            }
+            fn($a, $b) => ($a['id'] < $b ['id']) ? -1 : 1
         );
 
         return $fees;

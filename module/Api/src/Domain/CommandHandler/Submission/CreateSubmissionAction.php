@@ -66,9 +66,7 @@ final class CreateSubmissionAction extends AbstractCommandHandler
         }
 
         $actionTypes = array_map(
-            function ($actionTypeId) {
-                return $this->getRepo()->getRefdataReference($actionTypeId);
-            },
+            fn($actionTypeId) => $this->getRepo()->getRefdataReference($actionTypeId),
             $command->getActionTypes()
         );
 
@@ -81,9 +79,7 @@ final class CreateSubmissionAction extends AbstractCommandHandler
 
         if ($command->getReasons() !== null) {
             $reasons = array_map(
-                function ($reasonId) {
-                    return $this->getRepo()->getReference(Reason::class, $reasonId);
-                },
+                fn($reasonId) => $this->getRepo()->getReference(Reason::class, $reasonId),
                 $command->getReasons()
             );
             $submissionAction->setReasons($reasons);

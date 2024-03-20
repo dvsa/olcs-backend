@@ -199,9 +199,7 @@ final class DataGovUkExport extends AbstractDataExport
     private function processOperatorLicences()
     {
         $areas = array_map(
-            function (TrafficAreaEntity $item) {
-                return $item->getName();
-            },
+            fn(TrafficAreaEntity $item) => $item->getName(),
             $this->getTrafficAreas()
         );
 
@@ -219,9 +217,7 @@ final class DataGovUkExport extends AbstractDataExport
     private function processBusRegOnly()
     {
         $areas = array_map(
-            function (TrafficAreaEntity $item) {
-                return $item->getId();
-            },
+            fn(TrafficAreaEntity $item) => $item->getId(),
             $this->getTrafficAreas()
         );
 
@@ -239,9 +235,7 @@ final class DataGovUkExport extends AbstractDataExport
     private function processBusVariation()
     {
         $areas = array_map(
-            function (TrafficAreaEntity $item) {
-                return $item->getId();
-            },
+            fn(TrafficAreaEntity $item) => $item->getId(),
             $this->getTrafficAreas()
         );
 

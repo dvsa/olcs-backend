@@ -21,6 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrReceived;
 class SendEbsrReceivedTest extends SendEbsrEmailTestAbstract
 {
     protected $template = 'ebsr-received';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrReceived';
+    protected $sutClass = \Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrReceived::class;
     protected $cmdClass = SendEbsrReceived::class;
 }

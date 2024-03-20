@@ -39,15 +39,15 @@ class OutstandingFeesTest extends QueryHandlerTestCase
 
         $query = Qry::create(['id' => $organisationId, 'hideExpired' => false]);
 
-        $mockApplication = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface')
+        $mockApplication = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class)
             ->shouldReceive('getId')
             ->andReturn($organisationId)
             ->shouldReceive('serialize')
             ->getMock();
 
         $fees = [
-            $this->getMockFee(98, 198),
-            $this->getMockFee(99, 199),
+            $this->getMockFee(98),
+            $this->getMockFee(99),
         ];
 
         $this->mockedSmServices['FeesHelperService']

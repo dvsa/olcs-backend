@@ -24,11 +24,11 @@ class ApplicationVehiclesDeclarationsReviewService extends AbstractReviewService
      * @param array $data
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         $subSections = [];
 
-        $psvWhichVehicleSize = isset($data['psvWhichVehicleSizes']['id']) ? $data['psvWhichVehicleSizes']['id'] : null;
+        $psvWhichVehicleSize = $data['psvWhichVehicleSizes']['id'] ?? null;
 
         if ($psvWhichVehicleSize) {
             $subSections[] = [

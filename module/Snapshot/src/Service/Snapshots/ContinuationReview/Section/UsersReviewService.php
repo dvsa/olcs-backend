@@ -44,9 +44,7 @@ class UsersReviewService extends AbstractReviewService
             $row[] = ['value' => implode(
                 ',',
                 array_map(
-                    function (Role $role) {
-                        return $this->translate('role.' . $role->getRole());
-                    },
+                    fn(Role $role) => $this->translate('role.' . $role->getRole()),
                     $user->getRoles()->toArray()
                 )
             )];
@@ -56,9 +54,7 @@ class UsersReviewService extends AbstractReviewService
 
         usort(
             $config,
-            function ($a, $b) {
-                return strcmp($a[0]['value'], $b[0]['value']);
-            }
+            fn($a, $b) => strcmp($a[0]['value'], $b[0]['value'])
         );
 
         return (count($config) === 0)

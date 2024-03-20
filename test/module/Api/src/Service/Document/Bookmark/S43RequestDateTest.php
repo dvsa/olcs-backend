@@ -22,6 +22,6 @@ class S43RequestDateTest extends TestCase
     {
         $sut = new BookmarkNs\S43RequestDate();
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Service\Document\Bookmark\StatementRequestDate', $sut);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Service\Document\Bookmark\StatementRequestDate::class, $sut);
     }
 }

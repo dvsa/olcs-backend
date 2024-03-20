@@ -35,7 +35,7 @@ class PhoneNumbersTest extends MockeryTestCase
 
     public function testRenderWithPhoneNumbers()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\PhoneNumbers')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\PhoneNumbers::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -96,7 +96,7 @@ class PhoneNumbersTest extends MockeryTestCase
             'BOOKMARK2' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header1)
             ->andReturn('header1|')

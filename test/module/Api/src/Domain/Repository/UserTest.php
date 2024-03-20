@@ -44,7 +44,7 @@ class UserTest extends RepositoryTestCase
 
     public function testBuildDefaultQuery(): void
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
 
@@ -210,7 +210,7 @@ class UserTest extends RepositoryTestCase
 
     public function testFetchForTma(): void
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
 
@@ -228,7 +228,7 @@ class UserTest extends RepositoryTestCase
 
     public function testFetchByPid(): void
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
 
@@ -333,7 +333,7 @@ class UserTest extends RepositoryTestCase
 
     public function testFetchUsersCountByTeam(): void
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('u')->once()->andReturn($mockQb);
 
         $mockQb->shouldReceive('select')->with('count(u.id)')->once()->andReturnSelf();
@@ -383,9 +383,7 @@ class UserTest extends RepositoryTestCase
         /** @var Repo | m\MockInterface $sut */
         $sut = m::mock(Repo::class)->makePartial();
 
-        $fnc = function ($base, $idx) {
-            return $base . '-' . chr(ord('A') + $idx);
-        };
+        $fnc = fn($base, $idx) => $base . '-' . chr(ord('A') + $idx);
 
         $mockUserE = m::mock(Entity\User\User::class);
         $sut

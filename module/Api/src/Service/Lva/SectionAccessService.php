@@ -132,7 +132,7 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
      * @param array $access
      * @return boolean
      */
-    public function doesHaveAccess($section, array $access = array())
+    public function doesHaveAccess($section, array $access = [])
     {
         $sections = $this->getSections();
 

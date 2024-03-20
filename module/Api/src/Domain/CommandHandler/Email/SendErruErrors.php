@@ -102,11 +102,11 @@ class SendErruErrors extends AbstractCommandHandler implements EmailAwareInterfa
     {
         $filename = basename($document->getFilename());
         $notificationNumber =
-            (isset($input['notificationNumber']) ? $input['notificationNumber'] : self::MISSING_INPUT);
+            ($input['notificationNumber'] ?? self::MISSING_INPUT);
         $memberStateCode =
-            (isset($input['memberStateCode']) ? $input['memberStateCode'] : self::MISSING_INPUT);
+            ($input['memberStateCode'] ?? self::MISSING_INPUT);
         $originatingAuthority =
-            (isset($input['originatingAuthority']) ? $input['originatingAuthority'] : self::MISSING_INPUT);
+            ($input['originatingAuthority'] ?? self::MISSING_INPUT);
         $sentAt = self::MISSING_INPUT;
         $notificationDate = self::MISSING_INPUT;
 
@@ -144,7 +144,7 @@ class SendErruErrors extends AbstractCommandHandler implements EmailAwareInterfa
     {
         $date = self::UNKNOWN_DATE;
         $businessCase =
-            isset($input['notificationNumber']) ? $input['notificationNumber'] : self::UNKNOWN_BUSINESS_CASE;
+            $input['notificationNumber'] ?? self::UNKNOWN_BUSINESS_CASE;
 
         if (isset($input['sentAt'])) {
             //providing we have a date, we know the format is OK as it has been enforced by the XML schema

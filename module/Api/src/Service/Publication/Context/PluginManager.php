@@ -17,8 +17,7 @@ class PluginManager extends AbstractPluginManager
         parent::__construct($configuration);
         $this->addAbstractFactory(new AbstractFactory());
         $this->addInitializer(
-            new AddressFormatterInitializer(),
-            false
+            new AddressFormatterInitializer()
         );
     }
 }

@@ -55,7 +55,7 @@ final class CreateVehicleListDocument extends AbstractCommandHandler implements
             $description = 'Goods Vehicle List';
         }
 
-        $user = $command->getUser() ? $command->getUser() : $this->getCurrentUser()->getId();
+        $user = $command->getUser() ?: $this->getCurrentUser()->getId();
         $documentId = $this->generateDocument($template, $command, $description, $user);
 
         $printData = [

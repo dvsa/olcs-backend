@@ -30,7 +30,7 @@ final class TmPreviousHistory extends AbstractSection
 
             /** @var PreviousConviction $entity */
             foreach ($previousConvictions as $entity) {
-                $thisRow = array();
+                $thisRow = [];
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['offence'] = $entity->getCategoryText();
@@ -45,7 +45,7 @@ final class TmPreviousHistory extends AbstractSection
 
             /** @var OtherLicence $entity */
             foreach ($otherLicences as $entity) {
-                $thisRow = array();
+                $thisRow = [];
                 $thisRow['id'] = $entity->getId();
                 $thisRow['version'] = $entity->getVersion();
                 $thisRow['licNo'] = $entity->getLicNo();

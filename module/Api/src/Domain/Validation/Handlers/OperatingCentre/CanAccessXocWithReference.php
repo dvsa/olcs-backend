@@ -22,7 +22,7 @@ class CanAccessXocWithReference extends AbstractHandler
      */
     public function isValid($dto)
     {
-        list($prefix, $id) = $this->splitTypeAndId($dto->getId());
+        [$prefix, $id] = $this->splitTypeAndId($dto->getId());
 
         if ($prefix === 'A') {
             return $this->canAccessApplicationOperatingCentre($id);

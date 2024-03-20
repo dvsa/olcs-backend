@@ -26,7 +26,7 @@ class YesNoTypeTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             'tinyint(1) NOT NULL COMMENT \'(DC2Type:yesno)\'',
-            $this->type->getSqlDeclaration(array(), $mockPlatform)
+            $this->type->getSqlDeclaration([], $mockPlatform)
         );
     }
 
@@ -47,12 +47,12 @@ class YesNoTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function providerConvertToPhpValue()
     {
-        return array(
-            array(true, 'Y'),
-            array(false, 'N'),
-            array(1, 'Y'),
-            array(0, 'N')
-        );
+        return [
+            [true, 'Y'],
+            [false, 'N'],
+            [1, 'Y'],
+            [0, 'N']
+        ];
     }
 
     /**
@@ -72,18 +72,18 @@ class YesNoTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function providerConvertToDatabaseValue()
     {
-        return array(
-            array('y', 1),
-            array('Y', 1),
-            array('Yes', 1),
-            array('YES', 1),
-            array('yes', 1),
-            array('n', 0),
-            array('N', 0),
-            array('No', 0),
-            array('NO', 0),
-            array('no', 0)
-        );
+        return [
+            ['y', 1],
+            ['Y', 1],
+            ['Yes', 1],
+            ['YES', 1],
+            ['yes', 1],
+            ['n', 0],
+            ['N', 0],
+            ['No', 0],
+            ['NO', 0],
+            ['no', 0]
+        ];
     }
 
     /**

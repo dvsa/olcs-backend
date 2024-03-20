@@ -39,10 +39,10 @@ final class UpdateAddressesStatus extends AbstractUpdateStatus implements AuthAw
             return false;
         }
 
-        $allowedLicTypes = array(
+        $allowedLicTypes = [
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL
-        );
+        ];
 
         // If we need an establishment address
         if (in_array($application->getLicenceType()->getId(), $allowedLicTypes)) {

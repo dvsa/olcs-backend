@@ -670,12 +670,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 ->getIrhpPermitStock()
                 ->getCountry()
                 ->getCountryDesc();
-
-            if ($countryNameA == $countryNameB) {
-                return 0;
-            }
-
-            return ($countryNameA < $countryNameB) ? -1 : 1;
+            return $countryNameA <=> $countryNameB;
         });
 
         return new ArrayCollection(iterator_to_array($iterator));
@@ -2021,11 +2016,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             ]
         ];
 
-        if (isset($commandLookup[$irhpPermitTypeId][$withdrawReason])) {
-            return $commandLookup[$irhpPermitTypeId][$withdrawReason];
-        }
-
-        return null;
+        return $commandLookup[$irhpPermitTypeId][$withdrawReason] ?? null;
     }
 
     /**
@@ -2482,12 +2473,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     {
         $countryName1 = $country1[self::COUNTRY_PROPERTY_NAME];
         $countryName2 = $country2[self::COUNTRY_PROPERTY_NAME];
-
-        if ($countryName1 == $countryName2) {
-            return 0;
-        }
-
-        return ($countryName1 > $countryName2) ? 1 : -1;
+        return $countryName1 <=> $countryName2;
     }
 
     /**

@@ -571,8 +571,8 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      */
     public function hasIncreaseInOperatingCentre()
     {
-        $licence = array();
-        $variation = array();
+        $licence = [];
+        $variation = [];
 
         // Makes dealing with the records easier.
         /* @var $lOperatingCentre \Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre */
@@ -1833,9 +1833,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
 
             $filtered = array_filter(
                 $licences->toArray(),
-                function ($licence) {
-                    return $licence->getId() !== $this->getLicence()->getId();
-                }
+                fn($licence) => $licence->getId() !== $this->getLicence()->getId()
             );
 
             return array_values($filtered);
@@ -2114,9 +2112,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         ];
 
         $publicationLinks = $this->getPublicationLinks()->filter(
-            function ($element) use ($linkTypes) {
-                return in_array((string)$element->getPublicationSection(), $linkTypes);
-            }
+            fn($element) => in_array((string)$element->getPublicationSection(), $linkTypes)
         );
 
         return ($publicationLinks->count() > 0);

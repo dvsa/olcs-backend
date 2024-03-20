@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class TmQualificationsTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TmQualifications';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\TmQualifications::class;
 
     /**
      * Filter provider

@@ -168,7 +168,7 @@ final class UpdateMyAccount extends AbstractUserCommandHandler implements
         }
 
         // Birth date
-        $birthDate = isset($person['birthDate']) ? $person['birthDate'] : null;
+        $birthDate = $person['birthDate'] ?? null;
 
         $personEntity->updatePerson(
             $person['forename'],

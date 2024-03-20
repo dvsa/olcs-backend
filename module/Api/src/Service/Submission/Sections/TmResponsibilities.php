@@ -59,7 +59,7 @@ final class TmResponsibilities extends AbstractSection
      */
     private function extractResponsibilityData(CasesEntity $case, $entity)
     {
-        $thisRow = array();
+        $thisRow = [];
 
         $thisRow['id'] = $entity->getId();
         $thisRow['version'] = $entity->getVersion();

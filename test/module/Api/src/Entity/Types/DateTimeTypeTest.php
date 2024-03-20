@@ -52,8 +52,7 @@ class DateTimeTypeTest extends \PHPUnit\Framework\TestCase
         $value = '00000';
 
         $this->expectException(
-            \Doctrine\DBAL\Types\ConversionException::class,
-            'Could not convert database value "' . $value . '" to Doctrine Type datetime. Expected format: d-m-Y H:i:s'
+            \Doctrine\DBAL\Types\ConversionException::class
         );
 
         $this->sut->convertToPHPValue($value, $this->mockPlatform);

@@ -26,10 +26,10 @@ final class ByBusReg implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($busRegId) = $arguments;
+        [$busRegId] = $arguments;
 
         if ($busRegId !== null) {
-            list($alias) = $qb->getRootAliases();
+            [$alias] = $qb->getRootAliases();
 
             $qb->andWhere($qb->expr()->eq($alias . '.busReg', ':busRegId'))
                 ->setParameter('busRegId', $busRegId);

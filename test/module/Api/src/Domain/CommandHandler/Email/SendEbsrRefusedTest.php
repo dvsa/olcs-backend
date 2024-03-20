@@ -21,6 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
 class SendEbsrRefusedTest extends SendEbsrEmailTestAbstract
 {
     protected $template = 'ebsr-refused';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRefused';
+    protected $sutClass = \Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRefused::class;
     protected $cmdClass = SendEbsrRefused::class;
 }

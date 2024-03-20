@@ -28,6 +28,7 @@ class ByOrganisation extends AbstractConversationQueryHandler implements ToggleR
 
         $conversationsQuery = $conversationRepo->getByOrganisationId($query, (int)$query->getOrganisation());
         $conversationsQuery = $conversationRepo->applyOrderForListing($conversationsQuery, $this->getFilteringRoles());
+        $conversationsQuery = $conversationRepository->filterByStatuses($conversationsQuery, $query->getStatuses());
         $conversations = $conversationRepo->fetchPaginatedList($conversationsQuery, AbstractQuery::HYDRATE_ARRAY, $query);
 
         foreach ($conversations as &$conversation) {

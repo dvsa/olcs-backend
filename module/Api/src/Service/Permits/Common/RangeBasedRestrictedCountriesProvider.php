@@ -78,9 +78,7 @@ class RangeBasedRestrictedCountriesProvider
 
         // get ids of countries included in the range
         $includedCountryIds = array_map(
-            function ($country) {
-                return $country->getId();
-            },
+            fn($country) => $country->getId(),
             $irhpPermitRange->getCountrys()->toArray()
         );
 

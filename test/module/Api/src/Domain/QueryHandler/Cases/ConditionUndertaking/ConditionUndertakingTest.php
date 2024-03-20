@@ -32,7 +32,7 @@ class ConditionUndertakingTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $query = Qry::create(['id' => 1]);
-        $mockResult = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockResult = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
 
         $this->repoMap['ConditionUndertaking']->shouldReceive('fetchUsingCaseId')
             ->with($query)
@@ -40,6 +40,6 @@ class ConditionUndertakingTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\QueryHandler\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\QueryHandler\Result::class, $result);
     }
 }

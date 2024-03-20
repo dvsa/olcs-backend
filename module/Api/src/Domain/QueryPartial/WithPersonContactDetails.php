@@ -32,7 +32,7 @@ final class WithPersonContactDetails implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        $column = (isset($arguments[0])) ? $arguments[0] : 'contactDetails';
+        $column = $arguments[0] ?? 'contactDetails';
 
         if (strpos($column, '.') === false) {
             $column = $qb->getRootAliases()[0] . '.' . $column;

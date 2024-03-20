@@ -246,9 +246,7 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
     public function countValidPermits()
     {
         $permits = $this->getIrhpPermits()->filter(
-            function ($element) {
-                return in_array($element->getStatus(), IrhpPermit::$validStatuses);
-            }
+            fn($element) => in_array($element->getStatus(), IrhpPermit::$validStatuses)
         );
 
         return $permits->count();

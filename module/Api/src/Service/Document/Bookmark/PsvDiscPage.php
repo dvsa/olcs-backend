@@ -54,9 +54,9 @@ class PsvDiscPage extends AbstractDiscList
             $discs[] = [
                 $prefix . 'TITLE'       => $disc['isCopy'] === 'Y' ? 'COPY' : '',
                 $prefix . 'DISC_NO'     => $disc['discNo'],
-                $prefix . 'LINE1'       => isset($orgParts[0]) ? $orgParts[0] : '',
-                $prefix . 'LINE2'       => isset($orgParts[1]) ? $orgParts[1] : '',
-                $prefix . 'LINE3'       => isset($orgParts[2]) ? $orgParts[2] : '',
+                $prefix . 'LINE1'       => $orgParts[0] ?? '',
+                $prefix . 'LINE2'       => $orgParts[1] ?? '',
+                $prefix . 'LINE3'       => $orgParts[2] ?? '',
                 $prefix . 'LICENCE'     => $licence['licNo'],
                 $prefix . 'VALID_DATE'  => isset($licence['inForceDate'])
                     ? $this->formatDate($licence['inForceDate'])

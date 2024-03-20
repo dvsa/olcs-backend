@@ -103,7 +103,7 @@ class Role extends AbstractRole implements RoleInterface
      */
     public function getAllowedRoles()
     {
-        return isset(self::$rolesHierarchy[$this->getRole()]) ? self::$rolesHierarchy[$this->getRole()] : [];
+        return self::$rolesHierarchy[$this->getRole()] ?? [];
     }
 
     public static function anon()

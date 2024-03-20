@@ -41,7 +41,7 @@ class PeopleTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['id' => 724]);
 
-        $mockOrganisation = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockOrganisation = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
         $mockOrganisation->shouldReceive('isSoleTrader')->with()->once()->andReturn('IS_SOLE_TRADER');
         $mockOrganisation->shouldReceive('getDisqualifications')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection(['ONE'])
@@ -84,7 +84,7 @@ class PeopleTest extends QueryHandlerTestCase
         $licence->shouldReceive('serialize')
             ->andReturn(['licence' => 'foo']);
 
-        $mockOrganisation = m::mock('Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface');
+        $mockOrganisation = m::mock(\Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface::class);
         $mockOrganisation->shouldReceive('isSoleTrader')->with()->once()->andReturn('IS_SOLE_TRADER');
         $mockOrganisation->shouldReceive('getDisqualifications')->with()->once()->andReturn(
             new \Doctrine\Common\Collections\ArrayCollection(['ONE'])

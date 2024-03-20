@@ -30,9 +30,7 @@ class People
             Organisation::ORG_TYPE_LLP => 'Partner(s): ',
             Organisation::ORG_TYPE_OTHER => '',
         ];
-        $text = (isset($personPrefixes[$organisation->getType()->getId()])) ?
-            $personPrefixes[$organisation->getType()->getId()] :
-            '';
+        $text = $personPrefixes[$organisation->getType()->getId()] ?? '';
 
         $people = [];
         foreach ($persons as $person) {

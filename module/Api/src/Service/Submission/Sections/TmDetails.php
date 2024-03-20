@@ -22,7 +22,7 @@ final class TmDetails extends AbstractSection
      */
     public function generateSection(CasesEntity $case)
     {
-        $data = array();
+        $data = [];
         $data['id'] = '';
         $data['title'] = '';
         $data['forename'] = '';

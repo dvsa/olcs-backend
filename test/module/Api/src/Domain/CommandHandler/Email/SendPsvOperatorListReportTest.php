@@ -71,8 +71,7 @@ class SendPsvOperatorListReportTest extends CommandHandlerTestCase
     public function testNoEmailThrowException()
     {
         $this->expectException(
-            \InvalidArgumentException::class,
-            'No email address specified in system parameters for the PSV Report'
+            \InvalidArgumentException::class
         );
 
         $command = Cmd::create(['id' => 101]);

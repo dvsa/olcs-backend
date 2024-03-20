@@ -33,7 +33,7 @@ final class AuthRequestedAppliedFor extends AbstractSection
 
         /** @var Application $application */
         foreach ($applications as $application) {
-            $thisData = array();
+            $thisData = [];
             $thisData['id'] = $application->getId();
             $thisData['version'] = $application->getVersion();
             $thisData['currentVehiclesInPossession'] = !empty($activeVehiclesCount) ? $activeVehiclesCount : '0';

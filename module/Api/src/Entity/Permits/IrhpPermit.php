@@ -108,9 +108,7 @@ class IrhpPermit extends AbstractIrhpPermit
         $permitNumber
     ) {
         $expiryDate = $oldPermit
-            ->getExpiryDate()
-            ? $oldPermit->getExpiryDate()
-            : $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
+            ->getExpiryDate() ?: $oldPermit->getIrhpPermitRange()->getIrhpPermitStock()->getValidTo();
 
         $irhpPermit = new self();
         $irhpPermit->replaces = $oldPermit;

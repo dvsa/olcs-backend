@@ -38,7 +38,7 @@ class SafetyAddresses extends DynamicBookmark
             $address = $workshop['contactDetails']['address'];
             $rows[] = [
                 'Address' => trim(
-                    $workshop['contactDetails']['fao'] . ', ' .  $addressFormatter->format($address, ', '),
+                    $workshop['contactDetails']['fao'] . ', ' .  $addressFormatter->format($address),
                     ', '
                 ),
                 'checkbox1' => $workshop['isExternal'] !== 'Y' ? 'X' : '',

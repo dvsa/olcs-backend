@@ -254,7 +254,7 @@ final class Compare extends AbstractCommandHandler
                             '%s-%02d-%02d',
                             $dob['year'],
                             $dob['month'],
-                            isset($dob['day']) ? $dob['day'] : 1
+                            $dob['day'] ?? 1
                         );
                     } elseif (is_object($dob)) {
                         $dob = $dob->format('Y-m-d');

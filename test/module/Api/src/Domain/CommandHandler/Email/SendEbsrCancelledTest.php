@@ -21,6 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrCancelled;
 class SendEbsrCancelledTest extends SendEbsrRegCancelEmailTestAbstract
 {
     protected $template = 'ebsr-cancelled';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrCancelled';
+    protected $sutClass = \Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrCancelled::class;
     protected $cmdClass = SendEbsrCancelled::class;
 }

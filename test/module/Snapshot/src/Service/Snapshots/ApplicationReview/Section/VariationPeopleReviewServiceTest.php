@@ -65,9 +65,7 @@ class VariationPeopleReviewServiceTest extends MockeryTestCase
 
         $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
-                function ($string) {
-                    return $string . '-translated';
-                }
+                fn($string) => $string . '-translated'
             );
 
         $expected = ['freetext' => 'variation-review-people-change-translated'];

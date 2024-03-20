@@ -19,9 +19,6 @@ class OpNameOnly extends DynamicBookmark
 
     public function render()
     {
-        if (isset($this->data['organisation']['name'])) {
-            return $this->data['organisation']['name'];
-        }
-        return '';
+        return $this->data['organisation']['name'] ?? '';
     }
 }

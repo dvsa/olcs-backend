@@ -23,7 +23,7 @@ class ApplicationTypeOfLicenceReviewService extends AbstractReviewService
      * @param array $data
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         $config = [
             'multiItems' => [

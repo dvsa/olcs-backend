@@ -58,9 +58,7 @@ class SafetyReviewService extends AbstractReviewService
         }
         usort(
             $config,
-            function ($a, $b) {
-                return strcmp($a[0]['value'], $b[0]['value']);
-            }
+            fn($a, $b) => strcmp($a[0]['value'], $b[0]['value'])
         );
         return (count($config) === 0)
             ? ['emptyTableMessage' => $this->translate('There are no safety inspectors recorded on your licence')]
@@ -97,9 +95,7 @@ class SafetyReviewService extends AbstractReviewService
                     'header' => true
                 ],
                 [
-                    'value' => $safetyInsVehicles !== null
-                        ? $safetyInsVehicles
-                        : $this->translate('continuations.safety-section.table.not-known'),
+                    'value' => $safetyInsVehicles ?? $this->translate('continuations.safety-section.table.not-known'),
                 ]
             ]
         ];
@@ -122,9 +118,7 @@ class SafetyReviewService extends AbstractReviewService
                     'header' => true
                 ],
                 [
-                    'value' => $safetyInsTrailers !== null
-                        ? $safetyInsTrailers
-                        : $this->translate('continuations.safety-section.table.not-known'),
+                    'value' => $safetyInsTrailers ?? $this->translate('continuations.safety-section.table.not-known'),
                 ]
             ];
         }
@@ -147,9 +141,7 @@ class SafetyReviewService extends AbstractReviewService
                 'header' => true
             ],
             [
-                'value' => $safetyInsVaries !== null
-                    ? $safetyInsVaries
-                    : $this->translate('continuations.safety-section.table.not-known'),
+                'value' => $safetyInsVaries ?? $this->translate('continuations.safety-section.table.not-known'),
             ]
         ];
 

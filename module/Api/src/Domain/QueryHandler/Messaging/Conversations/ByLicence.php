@@ -19,6 +19,7 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
     protected $toggleConfig = [FeatureToggle::MESSAGING];
     protected $extraRepos = [Repository\Conversation::class, Repository\Message::class];
 
+    /** @param GetConversationsByLicenceQuery|QueryInterface $query */
     public function handleQuery(QueryInterface $query)
     {
         $conversationRepository = $this->getRepo(Repository\Conversation::class);
@@ -26,6 +27,8 @@ class ByLicence extends AbstractConversationQueryHandler implements ToggleRequir
         $conversationsQuery = $conversationRepository->getBaseConversationListQuery($query);
         $conversationsQuery = $conversationRepository->filterByLicenceId($conversationsQuery, $query->getLicence());
         $conversationsQuery = $conversationRepository->applyOrderForListing($conversationsQuery, $this->getFilteringRoles());
+        $conversationsQuery = $conversationRepository->filterByStatuses($conversationsQuery, $query->getStatuses());
+
         $conversations = $conversationRepository->fetchPaginatedList($conversationsQuery, AbstractQuery::HYDRATE_ARRAY, $query);
 
         foreach ($conversations as &$conversation) {

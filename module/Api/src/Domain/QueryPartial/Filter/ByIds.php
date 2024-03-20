@@ -26,10 +26,10 @@ final class ByIds implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($ids) = $arguments;
+        [$ids] = $arguments;
 
         if ($ids !== null) {
-            list($alias) = $qb->getRootAliases();
+            [$alias] = $qb->getRootAliases();
 
             $qb->andWhere($qb->expr()->in($alias . '.id', ':byIds'))
                 ->setParameter('byIds', $ids);

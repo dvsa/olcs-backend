@@ -43,7 +43,7 @@ class MultiTransportOptionsTest extends MockeryTestCase
     {
         $transports = [
             ['type' => 'SendMail'],
-            ['type' => '\Dvsa\Olcs\Email\Transport\S3File',
+            ['type' => \Dvsa\Olcs\Email\Transport\S3File::class,
                 'options' => [
                     'bucket' => 'devapp-olcs-pri-olcs-autotest-s3',
                     'key' => '/olcs.da.nonprod.dvsa.aws/email'

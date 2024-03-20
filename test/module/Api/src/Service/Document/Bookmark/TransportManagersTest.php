@@ -34,7 +34,7 @@ class TransportManagersTest extends MockeryTestCase
 
     public function testRenderWithTransportManagers()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\TransportManagers')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\TransportManagers::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -119,7 +119,7 @@ class TransportManagersTest extends MockeryTestCase
             'BOOKMARK2' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header)
             ->andReturn('header|')

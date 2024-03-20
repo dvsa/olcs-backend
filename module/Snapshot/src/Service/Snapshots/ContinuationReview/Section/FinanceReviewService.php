@@ -175,7 +175,7 @@ class FinanceReviewService extends AbstractReviewService
                 ['value' => $item['label'], 'header' => true],
                 [
                     'value' => $item['value'],
-                    'noEscape' => isset($item['noEscape']) ? $item['noEscape'] : false,
+                    'noEscape' => $item['noEscape'] ?? false,
                 ]
             ];
         }

@@ -145,7 +145,7 @@ class CreateCommunityLicenceTest extends CommandHandlerTestCase
 
     public function testHandleCommandNotValid()
     {
-        $this->expectException('Dvsa\Olcs\Api\Domain\Exception\ValidationException');
+        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\ValidationException::class);
 
         $licenceId = 1;
         $data = [

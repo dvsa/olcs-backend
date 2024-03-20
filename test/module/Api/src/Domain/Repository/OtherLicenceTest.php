@@ -25,7 +25,7 @@ class OtherLicenceTest extends RepositoryTestCase
 
     public function testFetchByTransportManager()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('ol')->once()->andReturn($mockQb);
 
@@ -45,7 +45,7 @@ class OtherLicenceTest extends RepositoryTestCase
     {
         $this->setUpSut(Repo::class, true);
 
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $mockQ = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
         $mockQ->shouldReceive('getTransportManager')->with()->twice()->andReturn(33);
@@ -59,7 +59,7 @@ class OtherLicenceTest extends RepositoryTestCase
 
     public function testFetchForTransportManagerApplication()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('ol')->once()->andReturn($mockQb);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();
@@ -75,7 +75,7 @@ class OtherLicenceTest extends RepositoryTestCase
 
     public function testFetchForTransportManagerLicence()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('ol')->once()->andReturn($mockQb);
 
         $this->queryBuilder->shouldReceive('modifyQuery')->with($mockQb)->once()->andReturnSelf();

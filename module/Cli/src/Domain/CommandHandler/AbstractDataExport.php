@@ -170,9 +170,7 @@ abstract class AbstractDataExport extends AbstractCommandHandler
         //  remove Northern Ireland
         $items = array_filter(
             $repo->fetchAll(),
-            function (TrafficAreaEntity $item) {
-                return ($item->getId() !== TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
-            }
+            fn(TrafficAreaEntity $item) => $item->getId() !== TrafficAreaEntity::NORTHERN_IRELAND_TRAFFIC_AREA_CODE
         );
 
         if (count($items) === 0) {

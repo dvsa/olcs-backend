@@ -30,7 +30,7 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
 
     public function testFetchByApplication()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('aoc')->once()->andReturn($mockQb);
 
@@ -50,7 +50,7 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
 
     public function testFetchByS4()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('aoc')->once()->andReturn($mockQb);
 
@@ -211,7 +211,7 @@ class ApplicationOperatingCentreTest extends RepositoryTestCase
 
     public function testFetchByApplicationOrderByAddress()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('aoc')->once()->andReturn($mockQb);
 

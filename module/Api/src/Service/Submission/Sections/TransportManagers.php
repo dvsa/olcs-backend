@@ -25,7 +25,7 @@ final class TransportManagers extends AbstractSection
      * Final results table array
      * @var array
      */
-    private $dataToReturnArray = array();
+    private $dataToReturnArray = [];
 
     /**
      * Generates the TransportManagers section for submissions.
@@ -104,7 +104,7 @@ final class TransportManagers extends AbstractSection
      */
     private function extractTmData(TransportManager $transportManager, $licenceNo)
     {
-        $thisRow = array();
+        $thisRow = [];
         $thisRow['licNo'] = $licenceNo;
         $thisRow['id'] = $transportManager->getId();
         $thisRow['version'] = $transportManager->getVersion();

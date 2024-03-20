@@ -119,16 +119,12 @@ class AbstractPublicationLinkSectionTest extends MockeryTestCase
             ->shouldReceive('replace')
             ->times(2)
             ->andReturnUsing(
-                function ($file, $token) {
-                    return $file . '_' . implode('|', $token) . '@';
-                }
+                fn($file, $token) => $file . '_' . implode('|', $token) . '@'
             )
             ->shouldReceive('getEntitiesAndQuote')
             ->times(6)
             ->andReturnUsing(
-                function ($text) {
-                    return $text === null ? '' : $text . 'f';
-                }
+                fn($text) => $text === null ? '' : $text . 'f'
             )
             ->getMock();
 
