@@ -56,7 +56,7 @@ class ByLicenceTest extends QueryHandlerTestCase
         $this->repoMap[Repository\Conversation::class]
             ->shouldReceive('applyOrderForListing')
             ->once()
-            ->with($mockQb, ['operator-user', 'operator-tm'])
+            ->with($mockQb, ['operator-admin', 'operator-user'])
             ->andReturn($mockQb);
         $this->repoMap[Repository\Conversation::class]
             ->shouldReceive('filterByStatuses')
