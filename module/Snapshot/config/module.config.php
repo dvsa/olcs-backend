@@ -29,6 +29,7 @@ return [
             'ContinuationReview' => Snapshots\ContinuationReview\GeneratorFactory::class,
             'ReviewSnapshot' => Snapshots\ApplicationReview\GeneratorFactory::class,
             Snapshots\Messaging\Generator::class => Snapshots\Messaging\GeneratorFactory::class,
+            Snapshots\Messaging\EnhancedGenerator::class => Snapshots\Messaging\EnhancedGeneratorFactory::class,
             Review\VariationTypeOfLicenceReviewService::class => Review\GenericFactory::class,
             Review\VariationBusinessTypeReviewService::class => Review\GenericFactory::class,
             Review\VariationFinancialEvidenceReviewService::class => Review\VariationFinancialEvidenceReviewServiceFactory::class,

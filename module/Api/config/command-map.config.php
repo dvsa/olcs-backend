@@ -1297,6 +1297,7 @@ return [
     CommandCli\InterimEndDateEnforcement::class => CommandHandlerCli\InterimEndDateEnforcement::class,
 
     Command\Messaging\Conversation\StoreSnapshot::class  => CommandHandler\Messaging\Conversation\StoreSnapshot::class,
+    Command\Messaging\Conversation\StoreEnhancedSnapshot::class  => CommandHandler\Messaging\Conversation\StoreEnhancedSnapshot::class,
     TransferCommand\Messaging\Message\Create::class      => CommandHandler\Messaging\Message\Create::class,
     TransferCommand\Messaging\Conversation\Create::class => CommandHandler\Messaging\Conversation\Create::class,
 ];
