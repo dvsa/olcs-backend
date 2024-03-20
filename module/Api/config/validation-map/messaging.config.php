@@ -18,14 +18,11 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanListConversationsByOrg
 return [
     QueryHandler\Messaging\Conversations\ByLicence::class                            => CanListConversationsByLicence::class,
     QueryHandler\Messaging\Conversations\ByApplicationToLicence::class               => NotIsAnonymousUser::class,
-
     QueryHandler\Messaging\Conversations\ByCaseToLicence::class                      => IsInternalUser::class,
-
     QueryHandler\Messaging\ApplicationLicenceList\ByOrganisation::class              => CanAccessOrganisationAuthAware::class,
     QueryHandler\Messaging\ApplicationLicenceList\ByApplicationToOrganisation::class => IsInternalUser::class,
     QueryHandler\Messaging\ApplicationLicenceList\ByCaseToOrganisation::class        => IsInternalUser::class,
     QueryHandler\Messaging\ApplicationLicenceList\ByLicenceToOrganisation::class     => IsInternalUser::class,
-
     QueryHandler\Messaging\Message\ByConversation::class                             => CanAccessConversationMessagesWithConversationId::class,
     QueryHandler\Messaging\Documents::class                                          => CanAccessDocumentsWithIds::class,
     CommandHandler\Messaging\Conversation\Close::class                               => CanCloseConversationWithId::class,
@@ -36,9 +33,9 @@ return [
     CommandHandler\Messaging\Message\Create::class                                   => CanCreateMessageWithConversation::class,
     CommandHandler\Messaging\Conversation\StoreSnapshot::class                       => IsSideEffect::class,
     QueryHandler\Messaging\Conversations\ByOrganisation::class                       => CanListConversationsByOrganisation::class,
-    QueryHandler\Messaging\Subjects\All::class                                       => NoValidationRequired::class,
+    QueryHandler\Messaging\Subjects\All::class                                       => NotIsAnonymousUser::class,
     CommandHandler\Messaging\Conversation\Create::class                              => CanCreateConversationForOrganisation::class,
     CommandHandler\Email\SendNewMessageNotificationToOperators::class                => IsSideEffect::class,
-    QueryHandler\Messaging\Message\UnreadCountByOrganisationAndUser::class           => CanListConversationsByOrganisation::class,
+    QueryHandler\Messaging\Message\UnreadCountByOrganisationAndRoles::class          => CanListConversationsByOrganisation::class,
     QueryHandler\Messaging\Message\UnreadCountByLicenceAndRoles::class               => IsInternalUser::class
 ];
