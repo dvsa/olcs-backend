@@ -60,7 +60,10 @@ class ByOrganisationTest extends QueryHandlerTestCase
             ->shouldReceive('getByOrganisationId')
             ->once()
             ->andReturn($mockQb);
-        $this->repoMap[Repository\Conversation::class]->shouldReceive('filterByStatuses')->once()->with($mockQb, [])->andReturn($mockQb);
+        $this->repoMap[Repository\Conversation::class]
+            ->shouldReceive('filterByStatuses')
+            ->once()
+            ->with($mockQb, [])->andReturn($mockQb);
         $this->repoMap[Repository\Conversation::class]
             ->shouldReceive('applyOrderForListing')
             ->once()

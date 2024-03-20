@@ -58,7 +58,10 @@ class ByLicenceTest extends QueryHandlerTestCase
             ->once()
             ->with($mockQb, ['operator-user', 'operator-tm'])
             ->andReturn($mockQb);
-        $this->repoMap['Conversation']->shouldReceive('filterByStatuses')->once()->with($mockQb, [])->andReturn($mockQb);
+        $this->repoMap[Repository\Conversation::class]
+            ->shouldReceive('filterByStatuses')
+            ->once()
+            ->with($mockQb, [])->andReturn($mockQb);
         $this->repoMap[Repository\Conversation::class]
             ->shouldReceive('fetchPaginatedList')
             ->once()
