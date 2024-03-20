@@ -4,9 +4,7 @@
     <div class="govuk-summary-card__title-wrapper">
       <h2 class="govuk-summary-card__title">
         <?php
-        if ($message->getCreatedBy()->getTeam()) {
-          $sender = 'Case Worker';
-        } elseif ($message->getCreatedBy()->getContactDetails() !== null && $message->getCreatedBy()->getContactDetails()->getPerson()) {
+        if ($message->getCreatedBy()->getContactDetails() !== null && $message->getCreatedBy()->getContactDetails()->getPerson()) {
           $sender = $message->getCreatedBy()->getContactDetails()->getPerson()->getFullName();
         } else {
           $sender = $message->getCreatedBy()->getLoginId();
@@ -21,6 +19,11 @@
     <div class="govuk-summary-card__content">
       <p class="govuk-body">
         <?php echo nl2br($message->getMessagingContent()->getText()); ?>
+        <?php
+        if ($message->getCreatedBy()->getTeam() !== null) {
+          echo '<p class="govuk-caption-m">'.$sender.'<br/>Caseworker Team</p>';
+        }
+        ?>
       </p>
     </div>
   </div>
