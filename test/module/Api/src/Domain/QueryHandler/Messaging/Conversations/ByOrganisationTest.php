@@ -67,7 +67,7 @@ class ByOrganisationTest extends QueryHandlerTestCase
         $this->repoMap[Repository\Conversation::class]
             ->shouldReceive('applyOrderForListing')
             ->once()
-            ->with($mockQb, ['operator-user', 'operator-tm'])
+            ->with($mockQb, ['operator-admin', 'operator-user', 'operator-tm'])
             ->andReturn($mockQb);
         $this->repoMap[Repository\Conversation::class]
             ->shouldReceive('fetchPaginatedList')
