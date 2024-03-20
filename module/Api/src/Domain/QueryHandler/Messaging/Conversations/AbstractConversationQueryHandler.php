@@ -39,7 +39,6 @@ abstract class AbstractConversationQueryHandler extends AbstractQueryHandler
             return [
                 Role::ROLE_OPERATOR_ADMIN,
                 Role::ROLE_OPERATOR_USER,
-                Role::ROLE_OPERATOR_TM,
             ];
         }
     }
