@@ -67,7 +67,7 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
                 'addressLine4' => $command->getWorkAddressLine4(),
                 'town'         => $command->getWorkTown(),
                 'postcode'     => $command->getWorkPostcode(),
-                'countryCode'  => $command->getWorkCountryCode() ? $command->getWorkCountryCode() : null,
+                'countryCode'  => $command->getWorkCountryCode() ?: null,
                 'contactType'  => ContactDetails::CONTACT_TYPE_TRANSPORT_MANAGER
             ]
         );

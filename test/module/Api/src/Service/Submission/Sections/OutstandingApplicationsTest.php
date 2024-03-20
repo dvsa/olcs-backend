@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class OutstandingApplicationsTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\OutstandingApplications';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\OutstandingApplications::class;
 
     protected $expectedResult = [
         'data' => [

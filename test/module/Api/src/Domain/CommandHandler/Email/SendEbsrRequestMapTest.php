@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRequestMap;
 class SendEbsrRequestMapTest extends SendEbsrEmailTestAbstract
 {
     protected $template = 'ebsr-request-map';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRequestMap';
+    protected $sutClass = \Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRequestMap::class;
     protected $cmdClass = SendEbsrRequestMap::class;
 
     protected $pdfType = 'pdf type';

@@ -31,7 +31,7 @@ class Dashboard extends AbstractQueryHandler
         /** @var Entity\Organisation\Organisation $organisation */
         $organisation =  $this->getRepo()->fetchUsingId($query);
 
-        list($licences, $applications, $variations) = $this->filter($organisation);
+        [$licences, $applications, $variations] = $this->filter($organisation);
 
         return $this->result(
             $organisation,

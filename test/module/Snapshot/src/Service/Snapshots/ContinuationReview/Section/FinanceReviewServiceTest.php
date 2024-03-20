@@ -41,9 +41,7 @@ class FinanceReviewServiceTest extends MockeryTestCase
 
         $mockTranslator = m::mock(TranslatorInterface::class);
         $mockTranslator->shouldReceive('translate')->andReturnUsing(
-            function ($message) {
-                return $message . '_translated';
-            }
+            fn($message) => $message . '_translated'
         );
 
         $abstractReviewServiceServices = m::mock(AbstractReviewServiceServices::class);

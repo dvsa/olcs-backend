@@ -43,7 +43,7 @@ class TaAddressPhone extends DynamicBookmark
     {
         $trafficArea = $this->data['trafficArea'];
         $contactDetails = $trafficArea['contactDetails'];
-        $address = isset($contactDetails['address']) ? $contactDetails['address'] : [];
+        $address = $contactDetails['address'] ?? [];
 
         return implode(
             "\n",

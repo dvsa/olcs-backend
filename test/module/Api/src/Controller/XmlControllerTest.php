@@ -80,7 +80,7 @@ class XmlControllerTest extends TestCase
 
         $this->commandHandlerManager->shouldReceive('handleCommand')
             ->with($command)
-            ->andThrow('\Dvsa\Olcs\Api\Domain\Exception\Exception');
+            ->andThrow(\Dvsa\Olcs\Api\Domain\Exception\Exception::class);
 
         $mockSl = $this->getMockSl($mockResponse, $mockParams);
 

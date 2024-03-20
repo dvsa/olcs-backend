@@ -164,7 +164,7 @@ class CreateStatementTest extends CommandHandlerTestCase
         $this->expectedSideEffect(GenerateSlaTargetDate::class, [], new Result());
         $result = $this->sut->handleCommand($command);
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Domain\Command\Result', $result);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Domain\Command\Result::class, $result);
         $this->assertTrue(property_exists($result, 'ids'));
         $this->assertTrue(property_exists($result, 'messages'));
         $this->assertContains('Statement created', $result->getMessages());

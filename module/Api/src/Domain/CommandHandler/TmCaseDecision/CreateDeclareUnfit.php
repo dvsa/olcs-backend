@@ -79,18 +79,14 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
 
         // set unfitness reasons
         $data['unfitnessReasons'] = array_map(
-            function ($unfitnessReasonId) {
-                return $this->getRepo()->getRefdataReference($unfitnessReasonId);
-            },
+            fn($unfitnessReasonId) => $this->getRepo()->getRefdataReference($unfitnessReasonId),
             $data['unfitnessReasons']
         );
 
         if (!empty($data['rehabMeasures'])) {
             // set rehab measures
             $data['rehabMeasures'] = array_map(
-                function ($rehabMeasureId) {
-                    return $this->getRepo()->getRefdataReference($rehabMeasureId);
-                },
+                fn($rehabMeasureId) => $this->getRepo()->getRefdataReference($rehabMeasureId),
                 $data['rehabMeasures']
             );
         }

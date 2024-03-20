@@ -70,15 +70,11 @@ final class ConditionsAndUndertakings extends AbstractSection
 
         usort(
             $tables['undertakings'],
-            function ($a, $b) {
-                return ((int) $a['id'] > (int) $b['id']) ? +1 : -1;
-            }
+            fn($a, $b) => ((int) $a['id'] > (int) $b['id']) ? +1 : -1
         );
         usort(
             $tables['conditions'],
-            function ($a, $b) {
-                return ((int) $a['id'] > (int) $b['id']) ? +1 : -1;
-            }
+            fn($a, $b) => ((int) $a['id'] > (int) $b['id']) ? +1 : -1
         );
 
         $dataToReturnArray = [
@@ -117,7 +113,7 @@ final class ConditionsAndUndertakings extends AbstractSection
     private function generateTableRow(ConditionUndertaking $entity, $parentId = '')
     {
         /** @var ConditionUndertaking $entity */
-        $thisEntity = array();
+        $thisEntity = [];
         $thisEntity['id'] = $entity->getId();
         $thisEntity['version'] = $entity->getVersion();
         $thisEntity['createdOn'] = $this->formatDate($entity->getCreatedOn());

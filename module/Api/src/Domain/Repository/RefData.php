@@ -31,7 +31,7 @@ class RefData extends AbstractRepository
         $q = $qb->getQuery();
         $q->setHint(
             \Doctrine\ORM\Query::HINT_CUSTOM_OUTPUT_WALKER,
-            'Gedmo\\Translatable\\Query\\TreeWalker\\TranslationWalker'
+            \Gedmo\Translatable\Query\TreeWalker\TranslationWalker::class
         );
         $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_FALLBACK, 1);
         $q->setHint(\Gedmo\Translatable\TranslatableListener::HINT_TRANSLATABLE_LOCALE, $query->getLanguage());

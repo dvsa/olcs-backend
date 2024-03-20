@@ -15,12 +15,8 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\OpenAm\Client;
-use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\User\CreateUserSelfserve as CreateUserSelfserveCommand;
@@ -31,17 +27,15 @@ use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
  */
 final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     AuthAwareInterface,
-    TransactionedInterface,
-    OpenAmUserAwareInterface
+    TransactionedInterface
 {
     use AuthAwareTrait;
-    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails'];
     /**
-     * @var \Dvsa\Olcs\Api\Service\OpenAm\UserInterface|ValidatableAdapterInterface|null
+     * @var ValidatableAdapterInterface|null
      */
     private $adapter;
 
@@ -72,10 +66,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     {
         assert($command instanceof CreateUserSelfserveCommand);
 
-        if (is_null($this->adapter)) {
-            $this->adapter = $this->getOpenAmUser();
-        }
-
         $data = $command->getArrayCopy();
 
         // validate username
@@ -95,9 +85,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
             case User::USER_TYPE_TRANSPORT_MANAGER:
                 $data['userType'] = User::USER_TYPE_OPERATOR;
                 $data['organisations'] = array_map(
-                    function ($item) {
-                        return $item->getOrganisation();
-                    },
+                    fn($item) => $item->getOrganisation(),
                     $this->getCurrentUser()->getOrganisationUsers()->toArray()
                 );
                 break;
@@ -130,7 +118,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
         $password = $this->passwordService->generatePassword();
         try {
             $this->storeUserInAuthService($command, $password);
-        } catch (ClientException | FailedRequestException $e) {
+        } catch (ClientException $e) {
             $this->getRepo()->delete($user);
             throw new \Exception("Unable to store user in Auth Service", $e->getCode(), $e);
         }
@@ -168,36 +156,22 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     /**
      * @param string $loginId
      * @return string
+     *
      */
     private function generatePid(string $loginId)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            return null;
-        }
-        return $this->adapter->generatePid($loginId);
+        return null;
     }
 
     /**
-     * @throws FailedRequestException
      * @throws ClientException
      */
     private function storeUserInAuthService(CreateUserSelfserveCommand $command, string &$password)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            $this->adapter->register(
-                $command->getLoginId(),
-                $password,
-                $command->getContactDetails()['emailAddress']
-            );
-        } else {
-            $this->adapter->registerUser(
-                $command->getLoginId(),
-                $command->getContactDetails()['emailAddress'],
-                Client::REALM_SELFSERVE,
-                function ($params) use (&$password) {
-                    $password = $params['password'];
-                }
-            );
-        }
+        $this->adapter->register(
+            $command->getLoginId(),
+            $password,
+            $command->getContactDetails()['emailAddress']
+        );
     }
 }

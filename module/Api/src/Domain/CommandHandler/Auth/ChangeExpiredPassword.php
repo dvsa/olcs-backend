@@ -10,7 +10,6 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepository;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
-use Dvsa\Olcs\Auth\Adapter\OpenAm;
 use Dvsa\Olcs\Transfer\Command\Auth\ChangeExpiredPassword as ChangeExpiredPasswordCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
@@ -30,7 +29,7 @@ class ChangeExpiredPassword extends AbstractCommandHandler
     public const MSG_INVALID = 'auth.change-password.invalid';
 
     /**
-     * @var ValidatableAdapterInterface|OpenAm|CognitoAdapter
+     * @var ValidatableAdapterInterface|CognitoAdapter
      */
     protected ValidatableAdapterInterface $adapter;
     private UserRepository $userRepository;

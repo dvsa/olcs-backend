@@ -61,9 +61,7 @@ class UpdateCountries extends AbstractCommandHandler implements TransactionedInt
         $irhpApplication->setCountrys(
             new ArrayCollection(
                 array_map(
-                    function ($countryId) {
-                        return $this->getRepo()->getReference(Country::class, $countryId);
-                    },
+                    fn($countryId) => $this->getRepo()->getReference(Country::class, $countryId),
                     $countries
                 )
             )

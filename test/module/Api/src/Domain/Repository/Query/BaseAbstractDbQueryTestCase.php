@@ -36,7 +36,7 @@ abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
 
     private $metaMap = [];
 
-    protected $mockPidIdentityProvider;
+    protected $mockIdentityProvider;
 
     protected $mockUserRepo;
 
@@ -66,13 +66,13 @@ abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
             ->andReturn($this->mockUserRepo)
             ->getMock();
 
-        $this->mockPidIdentityProvider = m::mock(IdentityProviderInterface::class);
+        $this->mockIdentityProvider = m::mock(IdentityProviderInterface::class);
 
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->setService('doctrine.entitymanager.orm_default', $this->em);
         $sm->setService(AuthorizationService::class, $auth);
         $sm->setService('RepositoryServiceManager', $mockRepoServiceManager);
-        $sm->setService(IdentityProviderInterface::class, $this->mockPidIdentityProvider);
+        $sm->setService(IdentityProviderInterface::class, $this->mockIdentityProvider);
 
         $sut = $this->getSut();
         $this->sut = $sut->__invoke($sm, null);
@@ -88,7 +88,7 @@ abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
             $this->metaMap[$entity]->shouldReceive('getTableName')->andReturn($this->tableNameMap[$entity]);
 
             foreach ($this->columnNameMap[$entity] as $column => $details) {
-                $isAssociation = isset($details['isAssociation']) ? $details['isAssociation'] : false;
+                $isAssociation = $details['isAssociation'] ?? false;
 
                 $this->metaMap[$entity]->shouldReceive('isAssociationWithSingleJoinColumn')
                     ->with($column)

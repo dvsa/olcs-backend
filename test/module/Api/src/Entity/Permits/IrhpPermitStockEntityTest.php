@@ -434,7 +434,7 @@ class IrhpPermitStockEntityTest extends EntityTester
         $stock->setIrhpPermitRanges($data['irhpPermitRanges']);
         $stock->setIrhpPermitWindows($data['irhpPermitWindows']);
 
-        $this->assertEquals($expected, $stock->canDelete($data));
+        $this->assertEquals($expected, $stock->canDelete());
     }
 
     /**

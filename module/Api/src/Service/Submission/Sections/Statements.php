@@ -27,7 +27,7 @@ final class Statements extends AbstractSection
 
         /** @var Statement $entity */
         foreach ($statements as $entity) {
-            $thisRow = array();
+            $thisRow = [];
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
             $thisRow['requestedDate'] = $this->formatDate($entity->getRequestedDate());

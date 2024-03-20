@@ -22,6 +22,6 @@ class S9RequestorNameBodyAddressTest extends TestCase
     {
         $sut = new BookmarkNs\S9RequestorNameBodyAddress();
 
-        $this->assertInstanceOf('Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress', $sut);
+        $this->assertInstanceOf(\Dvsa\Olcs\Api\Service\Document\Bookmark\StatementNameBodyAddress::class, $sut);
     }
 }

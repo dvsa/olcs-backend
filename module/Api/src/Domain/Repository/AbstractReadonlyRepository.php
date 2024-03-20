@@ -404,7 +404,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
         if ($this->query instanceof PagedQueryInterface || ($originalQuery instanceof PagedQueryInterface)) {
             $paginator = $this->getPaginator($query);
 
-            return $paginator->getIterator($hydrateMode);
+            return $paginator->getIterator();
         }
 
         return new \ArrayIterator($query->getResult($hydrateMode));
@@ -695,7 +695,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
                 foreach ($sortColumns as $i => $column) {
                     // if multiple order value doesn't exist then use the first one
-                    $order = isset($orderColumns[$i]) ? $orderColumns[$i] : $orderColumns[0];
+                    $order = $orderColumns[$i] ?? $orderColumns[0];
 
                     $queryBuilderHelper->order($column, $order, $compositeFields);
                 }

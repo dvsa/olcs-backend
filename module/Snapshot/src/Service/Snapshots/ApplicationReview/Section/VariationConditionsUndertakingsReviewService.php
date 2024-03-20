@@ -40,9 +40,9 @@ class VariationConditionsUndertakingsReviewService extends AbstractReviewService
      * @param array $data
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
-        list($licConds, $licUnds, $ocConds, $ocUnds) = $this->helper->splitUpConditionsAndUndertakings($data);
+        [$licConds, $licUnds, $ocConds, $ocUnds] = $this->helper->splitUpConditionsAndUndertakings($data);
 
         $subSections = array_merge(
             [],

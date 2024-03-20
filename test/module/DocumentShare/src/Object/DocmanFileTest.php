@@ -41,7 +41,7 @@ class DocmanFileTest extends TestCase
 
     public function testSetContentFromDsStreamExcStream404()
     {
-        $this->expectException(\Exception::class, File::ERR_CANT_OPEN_DOWNLOAD_STREAM);
+        $this->expectException(\Exception::class);
 
         $res = vfsStream::newFile('res')
             ->at($this->vfs)
@@ -54,7 +54,7 @@ class DocmanFileTest extends TestCase
 
     public function testSetContentFromDsStreamExcRes404()
     {
-        $this->expectException(\Exception::class, File::ERR_CANT_OPEN_RES);
+        $this->expectException(\Exception::class);
 
         $stream = vfsStream::newFile('stream')
             ->at($this->vfs)

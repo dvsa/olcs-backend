@@ -26,10 +26,10 @@ final class ByLicence implements QueryPartialInterface
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = [])
     {
-        list($licenceId) = $arguments;
+        [$licenceId] = $arguments;
 
         if ($licenceId !== null) {
-            list($alias) = $qb->getRootAliases();
+            [$alias] = $qb->getRootAliases();
 
             $qb->andWhere($qb->expr()->eq($alias . '.licence', ':licenceId'))
                 ->setParameter('licenceId', $licenceId);

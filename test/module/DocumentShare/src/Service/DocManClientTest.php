@@ -115,7 +115,7 @@ class DocManClientTest extends MockeryTestCase
         static::assertFalse(is_file($filePath));
 
         //  expect
-        $this->expectException(\Exception::class, 'simulate_err');
+        $this->expectException(\Exception::class);
 
         //  call & check
         $this->sut->read('test');

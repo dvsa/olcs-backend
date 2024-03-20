@@ -9,7 +9,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
-use Dvsa\Olcs\Api\Service\OpenAm\UserInterface;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
@@ -57,7 +56,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $this->mockedSmServices = [
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            UserInterface::class => m::mock(UserInterface::class),
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
             'Config' => $mockConfig
         ];
@@ -125,9 +123,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('pid', 'login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
@@ -233,9 +228,6 @@ class UpdateUserSelfserveTest extends CommandHandlerTestCase
         $user->shouldReceive('getUserType')->once()->withNoArgs()->andReturn($userType);
 
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
-
-        $this->mockedSmServices[UserInterface::class]->shouldReceive('updateUser')
-            ->with('pid', 'login_id', 'test1@test.me');
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()

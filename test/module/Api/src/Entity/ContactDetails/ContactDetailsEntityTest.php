@@ -75,8 +75,8 @@ class ContactDetailsEntityTest extends EntityTester
             static::assertNull($sut->getAddress());
         }
 
-        static::assertEquals(isset($expect['email']) ? $expect['email'] : null, $sut->getEmailAddress());
-        static::assertEquals(isset($expect['desc']) ? $expect['desc'] : null, $sut->getDescription());
+        static::assertEquals($expect['email'] ?? null, $sut->getEmailAddress());
+        static::assertEquals($expect['desc'] ?? null, $sut->getDescription());
 
         if (isset($expect['person'])) {
             static::assertEquals($expect['person'], $sut->getPerson());

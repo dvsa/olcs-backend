@@ -81,7 +81,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     /** @var  m\MockInterface | QueryHandlerManager */
     protected $queryHandler;
     /** @var  m\MockInterface | IdentityProviderInterface */
-    protected $pidIdentityProvider;
+    protected $identityProvider;
     /** @var  m\MockInterface | TransactionManagerInterface */
     protected $mockTransationMngr;
 
@@ -98,7 +98,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
                 ->andReturn($service);
         }
 
-        $this->pidIdentityProvider = m::mock(IdentityProviderInterface::class);
+        $this->identityProvider = m::mock(IdentityProviderInterface::class);
         $this->mockTransationMngr = m::mock(TransactionManagerInterface::class);
 
         $sm = m::mock(ContainerInterface::class);
@@ -106,7 +106,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->pidIdentityProvider);
+        $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->identityProvider);
         if (property_exists($this, 'submissionConfig')) {
             $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
         }
@@ -329,7 +329,7 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     public function expectedSideEffectAsSystemUser($class, $data, $result, $times = 1)
     {
-        $this->pidIdentityProvider
+        $this->identityProvider
             ->shouldReceive('setMasqueradedAsSystemUser')
             ->with(true)
             ->shouldReceive('setMasqueradedAsSystemUser')
@@ -452,22 +452,22 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
 
     public function mapRefData($key)
     {
-        return isset($this->refData[$key]) ? $this->refData[$key] : null;
+        return $this->refData[$key] ?? null;
     }
 
     public function mapCategoryReference($key)
     {
-        return isset($this->categoryReferences[$key]) ? $this->categoryReferences[$key] : null;
+        return $this->categoryReferences[$key] ?? null;
     }
 
     public function mapSubCategoryReference($key)
     {
-        return isset($this->subCategoryReferences[$key]) ? $this->subCategoryReferences[$key] : null;
+        return $this->subCategoryReferences[$key] ?? null;
     }
 
     public function mapReference($class, $id)
     {
-        return isset($this->references[$class][$id]) ? $this->references[$class][$id] : null;
+        return $this->references[$class][$id] ?? null;
     }
 
     /**
@@ -477,14 +477,14 @@ abstract class CommandHandlerTestCase extends MockeryTestCase
     {
         foreach ($this->commands as $command) {
             /** @var CommandInterface $cmd */
-            list($cmd, $data) = $command;
+            [$cmd, $data] = $command;
 
             $cmdData = $cmd->getArrayCopy();
             $cmdDataToMatch = [];
 
             foreach ($data as $key => $value) {
                 unset($value);
-                $cmdDataToMatch[$key] = isset($cmdData[$key]) ? $cmdData[$key] : null;
+                $cmdDataToMatch[$key] = $cmdData[$key] ?? null;
             }
 
             $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');

@@ -65,9 +65,7 @@ class OperatingCentresReviewService extends AbstractReviewService
         }
         usort(
             $config,
-            function ($a, $b) {
-                return strcmp($a[0]['value'], $b[0]['value']);
-            }
+            fn($a, $b) => strcmp($a[0]['value'], $b[0]['value'])
         );
 
         return array_merge($header, $config);

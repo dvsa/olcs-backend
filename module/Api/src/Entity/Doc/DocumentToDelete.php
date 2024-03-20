@@ -29,7 +29,7 @@ class DocumentToDelete extends AbstractDocumentToDelete
     private function estimateProcessAfterDate()
     {
         $now = new DateTime();
-        $minutesToAdd = pow(self::PROCESS_AFTER_MINUTES, $this->getAttempts());
+        $minutesToAdd = self::PROCESS_AFTER_MINUTES ** $this->getAttempts();
 
         $now->add(new \DateInterval('PT' . $minutesToAdd . 'M'));
 

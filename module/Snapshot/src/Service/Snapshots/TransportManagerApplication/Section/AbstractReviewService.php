@@ -104,10 +104,8 @@ abstract class AbstractReviewService implements ReviewServiceInterface
     protected function findFiles($files, $category, $subCategory)
     {
         return $files->filter(
-            function ($element) use ($category, $subCategory) {
-                return ((string)$element->getCategory() == $category)
-                    && ((string)$element->getSubCategory() == $subCategory);
-            }
+            fn($element) => ((string)$element->getCategory() == $category)
+                && ((string)$element->getSubCategory() == $subCategory)
         );
     }
 

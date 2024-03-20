@@ -34,7 +34,7 @@ class LicencePartnersTest extends MockeryTestCase
 
     public function testRenderWithLicencePartners()
     {
-        $bookmark = m::mock('Dvsa\Olcs\Api\Service\Document\Bookmark\LicencePartners')
+        $bookmark = m::mock(\Dvsa\Olcs\Api\Service\Document\Bookmark\LicencePartners::class)
             ->makePartial()
             ->shouldAllowMockingProtectedMethods()
             ->shouldReceive('getSnippet')
@@ -83,7 +83,7 @@ class LicencePartnersTest extends MockeryTestCase
             'BOOKMARK2' => ''
         ];
 
-        $mockParser = m::mock('Dvsa\Olcs\Api\Service\Document\Parser\RtfParser')
+        $mockParser = m::mock(\Dvsa\Olcs\Api\Service\Document\Parser\RtfParser::class)
             ->shouldReceive('replace')
             ->with('snippet', $header)
             ->andReturn('header|')

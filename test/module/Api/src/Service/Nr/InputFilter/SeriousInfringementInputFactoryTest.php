@@ -19,8 +19,8 @@ class SeriousInfringementInputFactoryTest extends TestCase
 {
     public function testCreateService()
     {
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
-        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
+        $mockValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
 
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();

@@ -13,11 +13,8 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
@@ -33,12 +30,10 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
     TransactionedInterface,
     CacheAwareInterface,
-    OpenAmUserAwareInterface,
     ConfigAwareInterface
 {
     use CacheAwareTrait;
     use ConfigAwareTrait;
-    use OpenAmUserAwareTrait;
 
     protected $repoServiceName = 'User';
 
@@ -113,17 +108,8 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        // VOL-2661 Remove instance check
-        if ($this->provider === JWTIdentityProvider::class) {
-            if ($this->authAdapter->doesUserExist($user->getLoginId())) {
-                $this->authAdapter->changeAttribute($user->getLoginId(), 'email', $user->getContactDetails()->getEmailAddress());
-            }
-        } else {
-            $this->getOpenAmUser()->updateUser(
-                $user->getPid(),
-                $user->getLoginId(),
-                $command->getContactDetails()['emailAddress']
-            );
+        if ($this->authAdapter->doesUserExist($user->getLoginId())) {
+            $this->authAdapter->changeAttribute($user->getLoginId(), 'email', $user->getContactDetails()->getEmailAddress());
         }
 
         $userId = $user->getId();

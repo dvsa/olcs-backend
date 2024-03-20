@@ -200,7 +200,7 @@ class DiscListTest extends m\Adapter\Phpunit\MockeryTestCase
             ->with('snippet', $expectedRowThree)
             ->andReturn('baz');
 
-        $bookmark = $this->createPartialMock('Dvsa\Olcs\Api\Service\Document\Bookmark\DiscList', ['getSnippet']);
+        $bookmark = $this->createPartialMock(\Dvsa\Olcs\Api\Service\Document\Bookmark\DiscList::class, ['getSnippet']);
 
         $bookmark->expects($this->any())
             ->method('getSnippet')

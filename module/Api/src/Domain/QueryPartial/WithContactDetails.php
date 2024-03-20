@@ -51,7 +51,7 @@ final class WithContactDetails implements QueryPartialInterface
     {
         switch (count($arguments)) {
             case 2:
-                list($property, $alias) = $arguments;
+                [$property, $alias] = $arguments;
                 break;
             case 1:
                 $property = $arguments[0];

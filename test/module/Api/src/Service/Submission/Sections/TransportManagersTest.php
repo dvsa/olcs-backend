@@ -17,7 +17,7 @@ use Mockery as m;
  */
 class TransportManagersTest extends AbstractSubmissionSectionTest
 {
-    protected $submissionSection = '\Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers';
+    protected $submissionSection = \Dvsa\Olcs\Api\Service\Submission\Sections\TransportManagers::class;
 
     /**
      * Filter provider

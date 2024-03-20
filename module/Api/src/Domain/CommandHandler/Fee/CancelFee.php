@@ -45,7 +45,7 @@ final class CancelFee extends AbstractCommandHandler
     protected function maybeCloseFeeTask(Fee $fee)
     {
         if ($fee->getTask()) {
-            $taskIdsToClose = array($fee->getTask()->getId());
+            $taskIdsToClose = [$fee->getTask()->getId()];
             $this->result->merge(
                 $this->handleSideEffect(CloseTasksCmd::create(['ids' => $taskIdsToClose]))
             );

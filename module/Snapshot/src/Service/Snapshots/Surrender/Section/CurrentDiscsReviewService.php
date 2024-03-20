@@ -18,13 +18,13 @@ class CurrentDiscsReviewService extends AbstractReviewService
         $items[] =
             [
                 'label' => 'surrender-review-current-discs-destroyed',
-                'value' => $surrender->getDiscDestroyed() === null ? 0 : $surrender->getDiscDestroyed()
+                'value' => $surrender->getDiscDestroyed() ?? 0
             ];
 
         $items[] =
             [
                 'label' => 'surrender-review-current-discs-lost',
-                'value' => $surrender->getDiscLost() === null ? 0 : $surrender->getDiscLost()
+                'value' => $surrender->getDiscLost() ?? 0
             ];
 
         if ($surrender->getDiscLost() !== null) {
@@ -38,7 +38,7 @@ class CurrentDiscsReviewService extends AbstractReviewService
         $items[] = [
 
             'label' => 'surrender-review-current-discs-stolen',
-            'value' => $surrender->getDiscStolen() === null ? 0 : $surrender->getDiscStolen()
+            'value' => $surrender->getDiscStolen() ?? 0
 
         ];
 

@@ -136,9 +136,7 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
-                function ($view) {
-                    return $view;
-                }
+                fn($view) => $view
             );
 
         /** @var ViewModel $result */
@@ -208,9 +206,7 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
-                function ($view) {
-                    return $view;
-                }
+                fn($view) => $view
             );
 
         /** @var ViewModel $result */
@@ -259,9 +255,7 @@ class GeneratorTest extends MockeryTestCase
             ->once()
             ->with(m::type(ViewModel::class))
             ->andReturnUsing(
-                function ($view) {
-                    return $view;
-                }
+                fn($view) => $view
             );
 
         /** @var ViewModel $result */

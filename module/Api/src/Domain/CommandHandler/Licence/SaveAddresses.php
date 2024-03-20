@@ -29,10 +29,10 @@ final class SaveAddresses extends AbstractCommandHandler implements Transactione
 
     protected $extraRepos = ['ContactDetails', 'PhoneContact'];
 
-    private $phoneTypes = array(
+    private $phoneTypes = [
         'primary' => PhoneContact::TYPE_PRIMARY,
         'secondary' => PhoneContact::TYPE_SECONDARY,
-    );
+    ];
 
     /**
      * Handle command

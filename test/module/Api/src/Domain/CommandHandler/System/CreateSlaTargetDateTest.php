@@ -65,7 +65,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
-        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 
@@ -127,7 +127,7 @@ class CreateSlaTargetDateTest extends CommandHandlerTestCase
         $mockUser->shouldReceive('getUser')
             ->andReturnSelf();
 
-        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($mockUser);
 

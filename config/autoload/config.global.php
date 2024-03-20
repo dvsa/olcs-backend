@@ -273,11 +273,11 @@ return [
         ]
     ]),
     'mail' => $isProductionAccount ? [] : [
-    'type' => '\Dvsa\Olcs\Email\Transport\MultiTransport',
+    'type' => \Dvsa\Olcs\Email\Transport\MultiTransport::class,
     'options' => [
         'transport' => [
             ['type' => 'SMTP', 'options' => ['name' => '%olcs_email_host%', 'host' => '%olcs_email_host%', 'port' => '%olcs_email_port%']],
-            ['type' => '\Dvsa\Olcs\Email\Transport\S3File', 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key' => '%domain%/email']],
+            ['type' => \Dvsa\Olcs\Email\Transport\S3File::class, 'options' => ['bucket' => 'devapp-olcs-pri-olcs-autotest-s3' , 'key' => '%domain%/email']],
         ]
     ],
     ],
@@ -296,17 +296,6 @@ return [
             // SSL (0 or 1)
             'ssl' => '%olcs_imap_ssl%',
         ],
-    ],
-
-    // AUTH config
-    'openam' => [
-    'username' => 'olcs_app',
-    'password' => '%olcs_api_opendj_password%',
-    'uri' => 'http://dir.%domain%:8080',
-    'pid_header' => 'X-Pid',
-    'http_client_options' => [
-        'timeout' => '30'
-    ]
     ],
 
     'ebsr' => [
@@ -477,7 +466,7 @@ return [
     'cache' => [
         'adapter' => [
             'name'    => 'filesystem',
-            'options' => array('ttl' => 300),
+            'options' => ['ttl' => 300],
         ],
     ],
     // Entity identifier
@@ -559,24 +548,6 @@ return [
                     ],
                 ],
             ],
-            'openam' => [
-        'adapter' => \Dvsa\Olcs\Auth\Adapter\OpenAm::class,
-        'timeout' => 3000,
-        'urls' => [
-        'internal' => 'http://iuauth.%domain%:8080/secure/',
-        'selfserve' => 'http://ssauth.%domain%:8080/secure/',
-        ],
-        'cookie' => [
-        'name' => 'secureToken',
-        'domain' => null, // @NOTE This must be implemented
-        ],
-        'client' => [
-        'options' => [
-            'adapter' => \Laminas\Http\Client\Adapter\Curl::class,
-            'timeout' => 60,
-        ],
-        ],
-        ],
         ],
     ],
     'acquired_rights' => [

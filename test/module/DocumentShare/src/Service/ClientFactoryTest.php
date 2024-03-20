@@ -53,17 +53,17 @@ class ClientFactoryTest extends MockeryTestCase
 
     public function provideSetOptions()
     {
-        return array(
-            array(array(), new \RuntimeException('Options could not be found in "document_share.testkey".')),
-            array(
-                array('document_share' => array()),
+        return [
+            [[], new \RuntimeException('Options could not be found in "document_share.testkey".')],
+            [
+                ['document_share' => []],
                 new \RuntimeException('Options could not be found in "document_share.testkey".')
-            ),
-            array(
-                array('document_share' => array('testkey' => array('foo' => 'bar'))),
-                array('foo' => 'bar')
-            )
-        );
+            ],
+            [
+                ['document_share' => ['testkey' => ['foo' => 'bar']]],
+                ['foo' => 'bar']
+            ]
+        ];
     }
 
     public function testEnforceWebDav(): void
@@ -165,7 +165,7 @@ class ClientFactoryTest extends MockeryTestCase
 
             if ($client === User::USER_OS_TYPE_WINDOWS_7) {
                 $this->assertInstanceOf(DocManClient::class, $service);
-                $this->assertInstanceOf('\Laminas\Http\Client', $service->getHttpClient());
+                $this->assertInstanceOf(\Laminas\Http\Client::class, $service->getHttpClient());
                 $this->assertEquals($config['document_share']['client']['workspace'], $service->getWorkspace());
                 $this->assertEquals($config['document_share']['client']['baseuri'], $service->getBaseUri());
                 if (isset($config['document_share']['client']['uuid'])) {

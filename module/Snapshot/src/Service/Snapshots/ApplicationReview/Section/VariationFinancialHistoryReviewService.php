@@ -40,7 +40,7 @@ class VariationFinancialHistoryReviewService extends AbstractReviewService
      * @param array $data
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         return $this->applicationFinancialHistoryReviewService->getConfigFromData($data);
     }

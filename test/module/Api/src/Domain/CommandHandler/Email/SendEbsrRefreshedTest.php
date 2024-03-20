@@ -21,6 +21,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefreshed;
 class SendEbsrRefreshedTest extends SendEbsrEmailTestAbstract
 {
     protected $template = 'ebsr-refreshed';
-    protected $sutClass = '\Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRefreshed';
+    protected $sutClass = \Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrRefreshed::class;
     protected $cmdClass = SendEbsrRefreshed::class;
 }

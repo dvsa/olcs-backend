@@ -63,7 +63,7 @@ class NamingService implements FactoryInterface
 
     protected function valueOrAlt($value = null, $alt = 'Unknown')
     {
-        return $value !== null ? $value : $alt;
+        return $value ?? $alt;
     }
 
     /**

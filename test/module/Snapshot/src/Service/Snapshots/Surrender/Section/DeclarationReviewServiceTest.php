@@ -39,9 +39,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
 
         $this->mockTranslator->shouldReceive('translate')
             ->andReturnUsing(
-                function ($expected) {
-                    return $expected . '-translated';
-                }
+                fn($expected) => $expected . '-translated'
             );
 
         $expected = ['markup' => 'markup-licence-surrender-declaration-translated'];

@@ -85,9 +85,7 @@ abstract class AbstractBatchCommandCases extends TestCase
                 }
                 return false;
             }))
-            ->willReturnCallback(function ($command) {
-                return new Result();
-            });
+            ->willReturnCallback(fn($command) => new Result());
 
         $this->executeCommand();
     }

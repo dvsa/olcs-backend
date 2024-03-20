@@ -43,9 +43,7 @@ trait MocksApplicationOperatingCentreRepositoryTrait
             });
             $instance->allows('fetchByApplicationIdForOperatingCentres')->andReturnUsing(function (int $applicationId) {
                 $aocs = $this->applicationOperatingCentreRepositoryStorage['applicationId'][$applicationId] ?? [];
-                return array_map(function (ApplicationOperatingCentre $aoc) {
-                    return $aoc->serialize(['licence', 'operatingCentre']);
-                }, $aocs);
+                return array_map(fn(ApplicationOperatingCentre $aoc) => $aoc->serialize(['licence', 'operatingCentre']), $aocs);
             })->byDefault();
             $repositoryServiceManager->setService('ApplicationOperatingCentre', $instance);
             $repositoryServiceManager->setService('RepositoryFor__' . ApplicationOperatingCentre::class, $instance);

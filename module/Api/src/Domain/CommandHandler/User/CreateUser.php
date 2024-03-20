@@ -16,27 +16,22 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\OpenAm\Client;
-use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\User\CreateUser as CreateUserCommand;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
+use Mockery\Generator\StringManipulation\Pass\Pass;
 
 /**
  * Create User
  */
 final class CreateUser extends AbstractUserCommandHandler implements
     TransactionedInterface,
-    OpenAmUserAwareInterface,
     AuthAwareInterface
 {
-    use OpenAmUserAwareTrait;
     use AuthAwareTrait;
 
     protected $repoServiceName = 'User';
@@ -44,7 +39,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
     protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
     /**
-     * @var ValidatableAdapterInterface | \Dvsa\Olcs\Api\Service\OpenAm\UserInterface
+     * @var ValidatableAdapterInterface
      */
     private $adapter;
 
@@ -76,10 +71,6 @@ final class CreateUser extends AbstractUserCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         assert($command instanceof CreateUserCommand);
-
-        if (is_null($this->adapter)) {
-            $this->adapter = $this->getOpenAmUser();
-        }
 
         if (!$this->isGranted(Permission::CAN_MANAGE_USER_INTERNAL)) {
             throw new ForbiddenException('You do not have permission to manage the record');
@@ -134,15 +125,15 @@ final class CreateUser extends AbstractUserCommandHandler implements
         $this->getRepo()->save($user);
 
         $password = $this->passwordService->generatePassword();
-        $realm = Client::REALM_SELFSERVE;
+        $realm = PasswordService::REALM_SELFSERVE;
 
         if ($user->getUserType() === User::USER_TYPE_INTERNAL) {
-            $realm = Client::REALM_INTERNAL;
+            $realm = PasswordService::REALM_INTERNAL;
         }
 
         try {
             $this->storeUserInAuthService($command, $password, $realm);
-        } catch (ClientException | FailedRequestException $e) {
+        } catch (ClientException $e) {
             $this->getRepo()->delete($user);
             throw new \Exception("Unable to store user in Auth Service", $e->getCode(), $e);
         }
@@ -183,33 +174,18 @@ final class CreateUser extends AbstractUserCommandHandler implements
      */
     private function generatePid(string $loginId)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            return null;
-        }
-        return $this->adapter->generatePid($loginId);
+        return null;
     }
 
     /**
-     * @throws FailedRequestException
      * @throws ClientException
      */
     private function storeUserInAuthService(CreateUserCommand $command, string &$password, string $realm)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            $this->adapter->register(
-                $command->getLoginId(),
-                $password,
-                $command->getContactDetails()['emailAddress']
-            );
-        } else {
-            $this->adapter->registerUser(
-                $command->getLoginId(),
-                $command->getContactDetails()['emailAddress'],
-                $realm,
-                function ($params) use (&$password) {
-                    $password = $params['password'];
-                }
-            );
-        }
+        $this->adapter->register(
+            $command->getLoginId(),
+            $password,
+            $command->getContactDetails()['emailAddress']
+        );
     }
 }

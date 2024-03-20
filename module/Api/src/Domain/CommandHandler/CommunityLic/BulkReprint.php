@@ -144,7 +144,7 @@ final class BulkReprint extends AbstractCommandHandler implements UploaderAwareI
             return;
         }
 
-        list($communityLicenceId, $communityLicenceIssueNo, $licenceId) = $row;
+        [$communityLicenceId, $communityLicenceIssueNo, $licenceId] = $row;
 
         if (!array_key_exists($licenceId, $this->licences)) {
             $this->licences[$licenceId] = [];

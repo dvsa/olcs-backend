@@ -25,7 +25,7 @@ class PreviousConvictionTest extends RepositoryTestCase
 
     public function testFetchByTransportManager()
     {
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $this->em->shouldReceive('getRepository->createQueryBuilder')->with('pc')->once()->andReturn($mockQb);
 
@@ -45,7 +45,7 @@ class PreviousConvictionTest extends RepositoryTestCase
     {
         $this->setUpSut(Repo::class, true);
 
-        $mockQb = m::mock('Doctrine\ORM\QueryBuilder');
+        $mockQb = m::mock(\Doctrine\ORM\QueryBuilder::class);
 
         $mockQ = m::mock(\Dvsa\Olcs\Transfer\Query\QueryInterface::class);
         $mockQ->shouldReceive('getTransportManager')->with()->twice()->andReturn(33);

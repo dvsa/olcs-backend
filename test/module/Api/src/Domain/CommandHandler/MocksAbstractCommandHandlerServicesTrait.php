@@ -36,7 +36,7 @@ trait MocksAbstractCommandHandlerServicesTrait
         $this->commandHandlerManager();
         $this->repositoryServiceManager();
         $this->queryHandlerManager();
-        $this->pidIdentityProvider();
+        $this->identityProvider();
         $this->transactionManager();
         $this->cacheEncryption();
         $this->translator();
@@ -60,9 +60,7 @@ trait MocksAbstractCommandHandlerServicesTrait
     protected function setUpCommandHandlerManager(): m\MockInterface
     {
         $instance = m::mock(CommandHandlerManager::class)->makePartial();
-        $instance->allows('handleCommand')->andReturnUsing(function () {
-            return new Result();
-        })->byDefault();
+        $instance->allows('handleCommand')->andReturnUsing(fn() => new Result())->byDefault();
         return $instance;
     }
 
@@ -83,7 +81,7 @@ trait MocksAbstractCommandHandlerServicesTrait
     /**
      * @return IdentityProviderInterface|MockInterface
      */
-    protected function pidIdentityProvider(): MockInterface
+    protected function identityProvider(): MockInterface
     {
         if (! $this->serviceManager()->has(IdentityProviderInterface::class)) {
             $this->serviceManager()->setService(

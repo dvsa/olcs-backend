@@ -29,9 +29,9 @@ class BusRegistrationInputFactoryTest extends TestCase
     {
         $mockMappings = m::mock(SpecificationInterface::class);
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
-        $mockValidator = m::mock('Laminas\Validator\AbstractValidator');
-        $mockBreakValidator = m::mock('Laminas\Validator\AbstractValidator');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
+        $mockValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
+        $mockBreakValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
 
         $mockMapFilter = m::mock(MapXmlFile::class);
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
@@ -90,7 +90,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         ];
         $mockMappings = m::mock(SpecificationInterface::class);
 
-        $mockFilter = m::mock('Laminas\Filter\AbstractFilter');
+        $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockMapFilter = m::mock(MapXmlFile::class);
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);

@@ -47,7 +47,7 @@ final class ComplianceComplaints extends AbstractSection
         $data = [];
         /** @var Complaint $entity */
         foreach ($complaints as $entity) {
-            $thisRow = array();
+            $thisRow = [];
             $thisRow['id'] = $entity->getId();
             $thisRow['version'] = $entity->getVersion();
             $personData = $this->extractPerson($entity->getComplainantContactDetails());

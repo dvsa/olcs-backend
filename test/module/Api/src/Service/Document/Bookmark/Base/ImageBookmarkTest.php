@@ -24,8 +24,7 @@ class ImageBookmarkTest extends MockeryTestCase
 
         //  expect
         static::expectException(
-            \RuntimeException::class,
-            'Image path /templates/Image/' . $name . '.jpg does not exist'
+            \RuntimeException::class
         );
 
         //  call

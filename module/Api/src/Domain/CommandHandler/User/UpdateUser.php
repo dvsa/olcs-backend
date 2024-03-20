@@ -21,8 +21,6 @@ use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistory;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType;
@@ -32,8 +30,6 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
-use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -41,7 +37,6 @@ use Dvsa\Olcs\Transfer\Command\User\UpdateUser as UpdateUserCommand;
 use Exception;
 use Psr\Container\ContainerInterface;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Update User
@@ -49,12 +44,10 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
 final class UpdateUser extends AbstractUserCommandHandler implements
     CacheAwareInterface,
     ConfigAwareInterface,
-    OpenAmUserAwareInterface,
     TransactionedInterface
 {
     use CacheAwareTrait;
     use ConfigAwareTrait;
-    use OpenAmUserAwareTrait;
 
     public const RESET_PASSWORD_BY_POST = 'post';
     public const RESET_PASSWORD_BY_EMAIL = 'email';
@@ -78,7 +71,6 @@ final class UpdateUser extends AbstractUserCommandHandler implements
      * @throws ForbiddenException
      * @throws ValidationException
      * @throws RuntimeException
-     * @throws FailedRequestException
      * @throws Exception
      */
     public function handleCommand(CommandInterface $command): Result
@@ -140,10 +132,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 
         $this->getRepo()->save($user);
 
-        // VOL-2661 Remove instance check
-        if ($this->provider === JWTIdentityProvider::class) {
-            $this->authAdapter->registerIfNotPresent($user->getLoginId(), $this->passwordService->generatePassword(), $user->getContactDetails()->getEmailAddress());
-        }
+        $this->authAdapter->registerIfNotPresent($user->getLoginId(), $this->passwordService->generatePassword(), $user->getContactDetails()->getEmailAddress());
 
         $this->updateAuthService(
             $user,
@@ -198,17 +187,7 @@ final class UpdateUser extends AbstractUserCommandHandler implements
 
         $password = $this->passwordService->generatePassword();
 
-        //VOL-2661 - Remove check and pull code out from `resetPasswordCognito`
-        if ($this->provider === JWTIdentityProvider::class) {
-            $this->authAdapter->resetPassword($user->getLoginId(), $password, false);
-        } else {
-            $this->getOpenAmUser()->resetPassword(
-                $user->getPid(),
-                function ($params) use (&$password) {
-                    $password = $params['password'];
-                }
-            );
-        }
+        $this->authAdapter->resetPassword($user->getLoginId(), $password, false);
 
         $result = new Result();
         $result->addMessage('Temporary password successfully generated and saved');
@@ -319,29 +298,17 @@ final class UpdateUser extends AbstractUserCommandHandler implements
      * @param bool $previouslyDisabled
      * @return void
      * @throws ClientException
-     * @throws FailedRequestException
      */
     private function updateAuthService(User $newUser, ?string $previousEmailAddress, bool $previouslyDisabled): void
     {
-        // VOL-2661 - Remove logic and OpenAM calls
-        $provider = $this->getConfig()['auth']['identity_provider'];
-        if ($provider === JWTIdentityProvider::class) {
-            if ($newUser->getContactDetails()->getEmailAddress() !== $previousEmailAddress) {
-                $this->authAdapter->changeAttribute($newUser->getLoginId(), 'email', $newUser->getContactDetails()->getEmailAddress());
-            }
+        if ($newUser->getContactDetails()->getEmailAddress() !== $previousEmailAddress) {
+            $this->authAdapter->changeAttribute($newUser->getLoginId(), 'email', $newUser->getContactDetails()->getEmailAddress());
+        }
 
-            if (!$previouslyDisabled && $newUser->isDisabled()) {
-                $this->authAdapter->disableUser($newUser->getLoginId());
-            } elseif ($previouslyDisabled && !$newUser->isDisabled()) {
-                $this->authAdapter->enableUser($newUser->getLoginId());
-            }
-        } else {
-            $this->getOpenAmUser()->updateUser(
-                $newUser->getPid(),
-                $newUser->getLoginId(),
-                $newUser->getContactDetails()->getEmailAddress(),
-                $newUser->isDisabled()
-            );
+        if (!$previouslyDisabled && $newUser->isDisabled()) {
+            $this->authAdapter->disableUser($newUser->getLoginId());
+        } elseif ($previouslyDisabled && !$newUser->isDisabled()) {
+            $this->authAdapter->enableUser($newUser->getLoginId());
         }
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)

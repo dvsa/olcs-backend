@@ -132,9 +132,7 @@ class Client
 
         return array_filter(
             $officers['items'],
-            function ($officer) {
-                return empty($officer['resigned_on']);
-            }
+            fn($officer) => empty($officer['resigned_on'])
         );
     }
 
@@ -183,7 +181,7 @@ class Client
         $exceptionClass = null;
 
         if (!$response->isOk()) {
-            $errors = (isset($body['errors']) ? $body['errors'] : []);
+            $errors = ($body['errors'] ?? []);
 
             if ($statusCode === \Laminas\Http\Response::STATUS_CODE_429) {
                 $reason = self::ERR_RATE_LIMIT_EXCEED;
@@ -197,9 +195,7 @@ class Client
                 if (! empty($errors)) {
                     $err = array_filter(
                         $errors,
-                        function ($item) {
-                            return ($item['error'] === self::ERR_KEY_COMPANY_PROFILE_NOT_FOUND);
-                        }
+                        fn($item) => $item['error'] === self::ERR_KEY_COMPANY_PROFILE_NOT_FOUND
                     );
 
                     if (count($err) !== 0) {

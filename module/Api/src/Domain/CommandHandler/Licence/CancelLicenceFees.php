@@ -32,9 +32,7 @@ final class CancelLicenceFees extends AbstractCommandHandler
         $licence = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
 
         $fees = $licence->getFees()->filter(
-            function ($element) {
-                return in_array($element->getFeeStatus(), [Fee::STATUS_OUTSTANDING]);
-            }
+            fn($element) => in_array($element->getFeeStatus(), [Fee::STATUS_OUTSTANDING])
         );
 
         if ($fees->isEmpty()) {

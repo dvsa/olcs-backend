@@ -427,7 +427,7 @@ class Generator extends AbstractGenerator
      *
      * @return array
      */
-    protected function getReviewDataBundleForVariation(array $sections = array())
+    protected function getReviewDataBundleForVariation(array $sections = [])
     {
         return $this->getReviewBundle($sections, 'variation');
     }

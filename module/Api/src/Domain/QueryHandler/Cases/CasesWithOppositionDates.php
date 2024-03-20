@@ -21,21 +21,19 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
         return $this->result(
             $case,
             [
-                'application' => array(
+                'application' => [
                     'operatingCentres',
-                    'publicationLinks' => array(
-                        'filter' => function ($element) {
-                            return in_array(
-                                (string)$element->getPublicationSection(),
-                                [
-                                    PublicationSectionEntity::APP_NEW_SECTION,
-                                    PublicationSectionEntity::VAR_NEW_SECTION,
-                                ]
-                            );
-                        },
+                    'publicationLinks' => [
+                        'filter' => fn($element) => in_array(
+                            (string)$element->getPublicationSection(),
+                            [
+                                PublicationSectionEntity::APP_NEW_SECTION,
+                                PublicationSectionEntity::VAR_NEW_SECTION,
+                            ]
+                        ),
                         'publication'
-                    )
-                ),
+                    ]
+                ],
                 'licence' => [
                     'goodsOrPsv'
                 ]

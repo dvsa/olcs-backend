@@ -77,9 +77,7 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
     {
         /** @var \Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees $command */
         $config = $this->getConfig();
-        $pendingPaymentsTimeout = isset($config['cpms']['pending_payments_timeout'])
-            ? $config['cpms']['pending_payments_timeout']
-            : self::DEFAULT_PENDING_PAYMENTS_TIMEOUT;
+        $pendingPaymentsTimeout = $config['cpms']['pending_payments_timeout'] ?? self::DEFAULT_PENDING_PAYMENTS_TIMEOUT;
 
         // if payment method in CARD_ONLINE (ie it came from external) and disable card payments is set
         if (

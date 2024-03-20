@@ -31,7 +31,7 @@ class TxcInboxListTest extends QueryHandlerTestCase
         $this->mockRepo('EbsrSubmission', EbsrSubmissionRepo::class);
 
         $this->mockedSmServices = [
-            'LmcRbacMvc\Service\AuthorizationService' => m::mock('LmcRbacMvc\Service\AuthorizationService')
+            \LmcRbacMvc\Service\AuthorizationService::class => m::mock(\LmcRbacMvc\Service\AuthorizationService::class)
         ];
 
         parent::setUp();
@@ -78,7 +78,7 @@ class TxcInboxListTest extends QueryHandlerTestCase
     {
         $query = Qry::create([]);
 
-        $this->mockedSmServices['LmcRbacMvc\Service\AuthorizationService']
+        $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('getIdentity->getUser')
             ->andReturn($this->getCurrentUser(5));
 

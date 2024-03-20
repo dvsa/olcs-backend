@@ -35,8 +35,7 @@ class AbstractBrRegOrVary extends \PHPUnit\Framework\TestCase
     public function testRenderWithEmptyData()
     {
         $this->expectException(
-            \Exception::class,
-            'Failed to generate bookmark ' . $this->bookmarkClass
+            \Exception::class
         );
 
         $bookmark = $this->getBookmark([]);

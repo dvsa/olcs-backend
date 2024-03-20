@@ -52,9 +52,7 @@ final class CreateOverpaymentFee extends AbstractCommandHandler implements
 
             // get IDs for description
             $feeIds = array_map(
-                function ($fee) {
-                    return $fee->getId();
-                },
+                fn($fee) => $fee->getId(),
                 $fees
             );
 

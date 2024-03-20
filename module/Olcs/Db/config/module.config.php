@@ -16,11 +16,11 @@ return [
     ],
     'service_manager' => [
         'abstract_factories' => [
-            'Laminas\Log\LoggerAbstractServiceFactory'
+            \Laminas\Log\LoggerAbstractServiceFactory::class
         ],
         'factories' => [
-            'Elasticsearch\Client' => '\Olcs\Db\Service\Search\ClientFactory',
-            'Elasticsearch\Search' => '\Olcs\Db\Service\Search\SearchFactory',
+            \Elasticsearch\Client::class => \Olcs\Db\Service\Search\ClientFactory::class,
+            'Elasticsearch\Search' => \Olcs\Db\Service\Search\SearchFactory::class,
         ],
     ],
     'controllers' => [

@@ -132,17 +132,15 @@ class GrantValidationService implements FactoryInterface
     {
         // Get outstanding fees
         $fees = $application->getFees()->filter(
-            function ($element) {
-                return in_array(
-                    $element->getFeeStatus(),
-                    [
-                        Fee::STATUS_OUTSTANDING,
-                    ]
-                ) && in_array(
-                    $element->getFeeType()->getFeeType()->getId(),
-                    [RefData::FEE_TYPE_VAR, RefData::FEE_TYPE_APP]
-                );
-            }
+            fn($element) => in_array(
+                $element->getFeeStatus(),
+                [
+                    Fee::STATUS_OUTSTANDING,
+                ]
+            ) && in_array(
+                $element->getFeeType()->getFeeType()->getId(),
+                [RefData::FEE_TYPE_VAR, RefData::FEE_TYPE_APP]
+            )
         );
 
         return $fees->count() < 1;

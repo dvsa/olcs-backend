@@ -32,8 +32,6 @@ class ApplicationVehicleLimit extends DynamicBookmark
      */
     public function render()
     {
-        return isset($this->data['application']['totAuthVehicles'])
-            ? $this->data['application']['totAuthVehicles']
-            : 0;
+        return $this->data['application']['totAuthVehicles'] ?? 0;
     }
 }

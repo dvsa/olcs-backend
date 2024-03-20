@@ -292,9 +292,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
             $rolesAvailable = array_intersect(
                 // user's roles selected
                 array_map(
-                    function ($role) {
-                        return $role->getRole();
-                    },
+                    fn($role) => $role->getRole(),
                     $roles
                 ),
                 // list of roles available for the user type
@@ -456,9 +454,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
         } else {
             // update isAdministrator flag only
             $orgs = array_map(
-                function ($organisationUser) {
-                    return $organisationUser->getOrganisation();
-                },
+                fn($organisationUser) => $organisationUser->getOrganisation(),
                 $this->getOrganisationUsers()->toArray()
             );
 
@@ -478,7 +474,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
      */
     private function populateOrganisationUsers(array $orgs = null)
     {
-        $orgs = isset($orgs) ? $orgs : [];
+        $orgs ??= [];
         $seen = [];
 
         $collection = $this->getOrganisationUsers()->toArray();
@@ -570,9 +566,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
                 $roles,
                 // user's roles
                 array_map(
-                    function ($role) {
-                        return $role->getRole();
-                    },
+                    fn($role) => $role->getRole(),
                     $this->roles->toArray()
                 )
             )

@@ -52,7 +52,7 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         if ($this->haveTradingNamesChanged($current, $command->getTradingNames())) {
             $this->result->setFlag('hasChanged', true);
 
-            list($newCount, $unchangedCount, $removedCount) = $this->updateTradingNames(
+            [$newCount, $unchangedCount, $removedCount] = $this->updateTradingNames(
                 $current,
                 $command->getTradingNames(),
                 $organisation,
@@ -87,7 +87,7 @@ final class UpdateTradingNames extends AbstractCommandHandler implements Transac
         Licence $licence = null
     ) {
         // Differentiate between trading names to keep and trading names to remove
-        list($maintain, $remove) = $current->partition(
+        [$maintain, $remove] = $current->partition(
             function ($key, $tradingName) use (&$new) {
                 $index = array_search($tradingName->getName(), $new);
 

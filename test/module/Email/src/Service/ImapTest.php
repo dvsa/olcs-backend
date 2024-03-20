@@ -52,7 +52,7 @@ class ImapTest extends TestCase
         $sl = new ServiceManager();
         $sl->setService('Config', []);
 
-        $this->expectException('Laminas\Mail\Exception\RuntimeException', 'No mailbox config found');
+        $this->expectException(\Laminas\Mail\Exception\RuntimeException::class);
 
         $this->imapService->__invoke($sl, ImapService::class);
     }
@@ -77,14 +77,14 @@ class ImapTest extends TestCase
 
         $this->imapService->__invoke($sl, ImapService::class);
 
-        $this->expectException('Laminas\Mail\Exception\RuntimeException', 'No config found for mailbox \'bar\'');
+        $this->expectException(\Laminas\Mail\Exception\RuntimeException::class);
 
         $this->imapService->connect('bar');
     }
 
     public function testGetSetStore()
     {
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
         $store->shouldReceive('close'); // called by destructor
 
         $this->imapService->setStore($store);
@@ -100,7 +100,7 @@ class ImapTest extends TestCase
         $id = 432432;
         $number = 99;
 
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
         $message = m::mock();
 
         $store
@@ -140,7 +140,7 @@ class ImapTest extends TestCase
     {
         $id = 99;
 
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
 
         $store
             ->shouldReceive('getNumberByUniqueId')
@@ -161,7 +161,7 @@ class ImapTest extends TestCase
 
     public function testGetMessages()
     {
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
 
         $store
             ->shouldReceive('countMessages')
@@ -189,7 +189,7 @@ class ImapTest extends TestCase
 
     public function testGetMessagesWithExceptionFromStore()
     {
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
 
         $store
             ->shouldReceive('countMessages')
@@ -212,7 +212,7 @@ class ImapTest extends TestCase
         $id = 432432;
         $number = 99;
 
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
 
         $store
             ->shouldReceive('getNumberByUniqueId')
@@ -233,7 +233,7 @@ class ImapTest extends TestCase
     {
         $id = 432432;
 
-        $store = m::mock('\Laminas\Mail\Storage\Imap');
+        $store = m::mock(\Laminas\Mail\Storage\Imap::class);
 
         $store
             ->shouldReceive('getNumberByUniqueId')

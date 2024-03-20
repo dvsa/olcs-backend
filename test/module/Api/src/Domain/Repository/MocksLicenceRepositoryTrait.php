@@ -39,12 +39,8 @@ trait MocksLicenceRepositoryTrait
                 /* @see \Dvsa\OlcsTest\MocksRepositoriesTrait::injectEntities() */
                 $this->licenceRepositoryStorage['id'][$entity->getId()] = $entity;
             });
-            $instance->allows('fetchUsingId')->andReturnUsing(function ($command) {
-                return $this->licenceRepositoryStorage['id'][$command->getId()] ?? null;
-            })->byDefault();
-            $instance->allows('fetchById')->andReturnUsing(function (int $id) {
-                return $this->licenceRepositoryStorage['id'][$id] ?? null;
-            })->byDefault();
+            $instance->allows('fetchUsingId')->andReturnUsing(fn($command) => $this->licenceRepositoryStorage['id'][$command->getId()] ?? null)->byDefault();
+            $instance->allows('fetchById')->andReturnUsing(fn(int $id) => $this->licenceRepositoryStorage['id'][$id] ?? null)->byDefault();
             $repositoryServiceManager->setService('Licence', $instance);
             $repositoryServiceManager->setService('RepositoryFor__' . Licence::class, $instance);
         }

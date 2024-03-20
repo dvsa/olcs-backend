@@ -75,7 +75,7 @@ class PolicePeople extends DynamicBookmark
                 $rows[] = [
                     'BOOKMARK1' => NameFormatter::format($police),
                     'BOOKMARK2' => $birthDate,
-                    'BOOKMARK3' => isset($pubLink['licence']['licNo']) ? $pubLink['licence']['licNo'] : null,
+                    'BOOKMARK3' => $pubLink['licence']['licNo'] ?? null,
                     'BOOKMARK4' => $pubLink['publicationSection'][$sectionKey]
                 ];
             }

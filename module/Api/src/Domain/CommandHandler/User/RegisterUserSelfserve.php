@@ -15,16 +15,12 @@ use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareInterface;
-use Dvsa\Olcs\Api\Domain\OpenAmUserAwareTrait;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\Olcs\Api\Service\OpenAm\Client;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
-use Dvsa\Olcs\Api\Service\OpenAm\FailedRequestException;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as RegisterUserSelfserveCommand;
@@ -34,17 +30,14 @@ use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
  * Register User Selfserve
  */
 final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
-    TransactionedInterface,
-    OpenAmUserAwareInterface
+    TransactionedInterface
 {
-    use OpenAmUserAwareTrait;
-
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails', 'Licence', 'Organisation'];
 
     /**
-     * @var ValidatableAdapterInterface | \Dvsa\Olcs\Api\Service\OpenAm\UserInterface
+     * @var ValidatableAdapterInterface
      */
     private $adapter;
 
@@ -67,10 +60,6 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
     public function handleCommand(CommandInterface $command)
     {
         assert($command instanceof RegisterUserSelfserveCommand);
-
-        if (is_null($this->adapter)) {
-            $this->adapter = $this->getOpenAmUser();
-        }
 
         $data = $command->getArrayCopy();
 
@@ -121,7 +110,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
 
         try {
             $this->storeUserInAuthService($command, $password);
-        } catch (ClientException | FailedRequestException $e) {
+        } catch (ClientException $e) {
             $this->getRepo()->delete($user);
             throw new \Exception("Unable to store user in Auth Service", $e->getCode(), $e);
         }
@@ -226,33 +215,18 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
      */
     private function generatePid(string $loginId)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            return null;
-        }
-        return $this->adapter->generatePid($loginId);
+        return null;
     }
 
     /**
-     * @throws FailedRequestException
      * @throws ClientException
      */
     private function storeUserInAuthService(RegisterUserSelfserveCommand $command, string &$password)
     {
-        if ($this->adapter instanceof ValidatableAdapterInterface) {
-            $this->adapter->register(
-                $command->getLoginId(),
-                $password,
-                $command->getContactDetails()['emailAddress']
-            );
-        } else {
-            $this->adapter->registerUser(
-                $command->getLoginId(),
-                $command->getContactDetails()['emailAddress'],
-                Client::REALM_SELFSERVE,
-                function ($params) use (&$password) {
-                    $password = $params['password'];
-                }
-            );
-        }
+        $this->adapter->register(
+            $command->getLoginId(),
+            $password,
+            $command->getContactDetails()['emailAddress']
+        );
     }
 }

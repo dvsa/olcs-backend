@@ -37,7 +37,7 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
      *
      * @return array
      */
-    public function getConfigFromData(array $data = array())
+    public function getConfigFromData(array $data = [])
     {
         $config = $this->psvOperatingCentreReviewService->getConfigFromData($data);
 

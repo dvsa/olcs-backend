@@ -32,9 +32,7 @@ class ContinuationNotSoughtCommandTest extends AbstractBatchCommandCases
     {
         parent::setUp();
         $this->mockQueryHandlerManager->method('handleQuery')
-            ->willReturnCallback(function ($query) {
-                return ['count' => 2, 'result' => ['licence1', 'licence2']];
-            });
+            ->willReturnCallback(fn($query) => ['count' => 2, 'result' => ['licence1', 'licence2']]);
     }
 
     public function testExecuteWithDryRun()

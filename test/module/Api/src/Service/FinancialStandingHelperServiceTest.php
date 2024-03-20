@@ -252,7 +252,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->getMock();
 
         $this->assertNull(
-            $this->createService($mockRatesRepo)->getAdditionalVehicleRate(null, null, null)
+            $this->createService()->getAdditionalVehicleRate(null, null, null)
         );
     }
 
@@ -264,7 +264,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
             ->getMock();
 
         $this->assertNull(
-            $this->createService($mockRatesRepo)->getFirstVehicleRate(null, null, null)
+            $this->createService()->getFirstVehicleRate(null, null, null)
         );
     }
 

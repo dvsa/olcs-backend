@@ -45,7 +45,7 @@ class HearingTest extends RepositoryTestCase
 
         $this->mockCreateQueryBuilder($qb);
 
-        $this->expectException(NotFoundException::class, 'Case id cannot be null');
+        $this->expectException(NotFoundException::class);
         $this->sut->fetchOneByCase(null);
     }
 }
