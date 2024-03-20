@@ -29,9 +29,10 @@ class ByCaseToLicence extends AbstractQueryHandler implements ToggleRequiredInte
         $case = $caseRepo->fetchById($query->getCase());
 
         $licenceQuery = [
-            'page'    => $query->getPage(),
-            'limit'   => $query->getLimit(),
-            'licence' => $case->getLicence()->getId(),
+            'page'     => $query->getPage(),
+            'limit'    => $query->getLimit(),
+            'licence'  => $case->getLicence()->getId(),
+            'statuses' => $query->getStatuses(),
         ];
         return $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
     }

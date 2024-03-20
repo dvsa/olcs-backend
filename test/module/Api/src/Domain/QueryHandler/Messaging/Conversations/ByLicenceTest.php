@@ -38,6 +38,7 @@ class ByLicenceTest extends QueryHandlerTestCase
         $this->repoMap['Conversation']->shouldReceive('getBaseConversationListQuery')->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('filterByLicenceId')->once()->with($mockQb, $query->getLicence())->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('applyOrderByOpen')->once()->with($mockQb)->andReturn($mockQb);
+        $this->repoMap['Conversation']->shouldReceive('filterByStatuses')->once()->with($mockQb, [])->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('fetchPaginatedList')->once()->andReturn($conversations);
         $this->repoMap['Conversation']->shouldReceive('fetchPaginatedCount')->once()->andReturn(10);
         $this->repoMap['Message']->shouldReceive('getUnreadMessagesByConversationIdAndUserId')->andReturn([]);
@@ -62,6 +63,7 @@ class ByLicenceTest extends QueryHandlerTestCase
         $this->repoMap['Conversation']->shouldReceive('getBaseConversationListQuery')->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('filterByLicenceId')->once()->with($mockQb, $query->getLicence())->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('applyOrderByOpen')->once()->with($mockQb)->andReturn($mockQb);
+        $this->repoMap['Conversation']->shouldReceive('filterByStatuses')->once()->with($mockQb, [])->andReturn($mockQb);
         $this->repoMap['Conversation']->shouldReceive('fetchPaginatedList')->once()->andReturn($conversations);
         $this->repoMap['Conversation']->shouldReceive('fetchPaginatedCount')->once()->andReturn(0);
         $this->repoMap['Message']->shouldReceive('getLastMessageByConversationId')->once()->with(1)->andReturn(['createdOn' => '2023-11-06T12:17:12+0000']);

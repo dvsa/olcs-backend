@@ -27,9 +27,10 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
         $application = $applicationRepository->fetchById($query->getApplication());
 
         $licenceQuery = [
-            'page'    => $query->getPage(),
-            'limit'   => $query->getLimit(),
-            'licence' => $application->getLicence()->getId(),
+            'page'     => $query->getPage(),
+            'limit'    => $query->getLimit(),
+            'licence'  => $application->getLicence()->getId(),
+            'statuses' => $query->getStatuses(),
         ];
         $byLicence = $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
         array_walk(
