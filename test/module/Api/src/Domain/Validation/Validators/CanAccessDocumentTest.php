@@ -2,10 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
-use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessDocument;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
 use Mockery as m;
 
 /**
