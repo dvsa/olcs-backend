@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences;
 
 /**
  * Can Access a Document
@@ -23,6 +24,21 @@ class CanAccessDocument extends AbstractCanAccessEntity
      */
     public function isValid($entityId)
     {
+        if ($this->isExternalUser() && !$this->isLocalAuthority()) {
+            $query = Correspondences::create([
+                'organisation' => $this->getCurrentOrganisation()->getId(),
+            ]);
+            $correspondences = $this->getRepo('Correspondence')->fetchList($query);
+            $correspondencesDocumentIds = array_map(function ($element) {
+                return $element['document'];
+            }, $correspondences);
+            if (!in_array($entityId, $correspondencesDocumentIds)) {
+                return false;
+            }
+        }
+
+
+
         // check if can validate through parent
         $valid = $this->callParentIsValid($entityId);
         if ($valid) {
