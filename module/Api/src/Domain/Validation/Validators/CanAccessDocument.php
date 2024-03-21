@@ -2,12 +2,9 @@
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Can Access a Document
@@ -51,16 +48,6 @@ class CanAccessDocument extends AbstractCanAccessEntity
                     return true;
                 }
             }
-        }
-
-        try {
-            $doc = $this->getRepo(Document::class)->fetchById((int)$entityId);
-        } catch (NotFoundException $ex) {
-            return false;
-        }
-
-        if ($doc->getCreatedBy()->getId() === $this->getUser()->getId()) {
-            return true;
         }
 
         return false;

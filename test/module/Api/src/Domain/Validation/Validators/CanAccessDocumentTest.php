@@ -2,8 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessDocument;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox;
@@ -53,21 +52,6 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $txcInboxRepo->shouldReceive('fetchLinkedToDocument')
             ->andReturn($linkedTxcInboxEntities);
 
-        $doc = m::mock(Entity\Doc\Document::class);
-        $doc->shouldReceive('getCreatedBy->getId')
-            ->once()
-            ->andReturn(1);
-
-        $this->auth->shouldReceive('getIdentity->getUser->getId')
-                   ->once()
-                   ->andReturn(2);
-
-        $docRepo = $this->mockRepo(Repository\Document::class);
-        $docRepo->shouldReceive('fetchById')
-                ->once()
-                ->with(47)
-                ->andReturn($doc);
-
         $this->assertFalse($this->sut->isValid($txcInboxId));
     }
 
@@ -102,21 +86,6 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $txcInboxRepo = $this->mockRepo('TxcInbox');
         $txcInboxRepo->shouldReceive('fetchLinkedToDocument')
             ->andReturn($linkedTxcInboxEntities);
-
-        $doc = m::mock(Entity\Doc\Document::class);
-        $doc->shouldReceive('getCreatedBy->getId')
-            ->once()
-            ->andReturn(1);
-
-        $this->auth->shouldReceive('getIdentity->getUser->getId')
-                   ->once()
-                   ->andReturn(2);
-
-        $docRepo = $this->mockRepo(Repository\Document::class);
-        $docRepo->shouldReceive('fetchById')
-                ->once()
-                ->with(47)
-                ->andReturn($doc);
 
         $this->assertFalse($this->sut->isValid($txcInboxId));
     }
