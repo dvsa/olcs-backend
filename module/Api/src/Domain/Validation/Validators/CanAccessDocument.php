@@ -5,15 +5,20 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\RequestAwareInterface;
+use Dvsa\Olcs\Api\Domain\RequestAwareTrait;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanAccessCorrelatedDocuments;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Transfer\Query\Correspondence\Correspondences;
+use Dvsa\Olcs\Transfer\Query\Messaging\Documents;
 
-class CanAccessDocument extends AbstractCanAccessEntity
+class CanAccessDocument extends AbstractCanAccessEntity implements RequestAwareInterface
 {
+    use RequestAwareTrait;
+
     protected $repo = 'Document';
 
     /**
@@ -109,12 +114,28 @@ class CanAccessDocument extends AbstractCanAccessEntity
 
     private function canAccessCorrelatedMessagingDocumentIds(int $documentId): bool
     {
+        $id = $this->getMessagingDocumentCorrelationIdFromRequest();
+        if ($id === '') {
+            return false;
+        }
+
         /** @var CanAccessCorrelatedDocuments $handler */
         $handler = $this->getValidatorManager()->get(CanAccessCorrelatedDocuments::class);
-        if ($handler->isValid(\Dvsa\Olcs\Transfer\Query\Messaging\Documents::create([
-            'correlationId' => ''
+        if ($handler->isValid(Documents::create([
+            'correlationId' => $id
         ]))) {
             return true;
+        };
+
+        return false;
+    }
+
+    private function getMessagingDocumentCorrelationIdFromRequest(): string
+    {
+        $id = $this->getRequest()->getPost('correlationId', '');
+        if ($id !== '' && !preg_match('/^[a-z0-9]{40}$/', $id)) {
+            throw new \Exception('Dodgy corre id');
         }
+        return $id;
     }
 }
