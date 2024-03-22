@@ -24,7 +24,30 @@ class CanAccessDocument extends AbstractCanAccessEntity
      */
     public function isValid($entityId)
     {
-        if ($this->isExternalUser() && !$this->isLocalAuthority()) {
+        // If local authority user, check if document linked through a txc_inbox
+        if ($this->isLocalAuthority()) {
+            /**
+             * @var TxcInboxRepo $txcInboxRepo
+             * @var TxcInboxEntity $txcEntity
+             */
+            $txcInboxRepo = $this->getRepo('TxcInbox');
+            $txcEntities = $txcInboxRepo->fetchLinkedToDocument($entityId);
+
+            if (!empty($txcEntities)) {
+                $localAuthorityUser = $this->getCurrentLocalAuthority();
+
+                foreach ($txcEntities as $txcEntity) {
+                    $txcLocalAuthority = $txcEntity->getLocalAuthority();
+
+                    if ($txcLocalAuthority instanceof LocalAuthority && $txcLocalAuthority == $localAuthorityUser) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // If external user, check to see if requested document is available in documents/correspondence tab on dashboard.
+        if ($this->isExternalUser()) {
             $query = Correspondences::create([
                 'organisation' => $this->getCurrentOrganisation()->getId(),
             ]);
@@ -37,48 +60,6 @@ class CanAccessDocument extends AbstractCanAccessEntity
             }
         }
 
-
-
-        // check if can validate through parent
-        $valid = $this->callParentIsValid($entityId);
-        if ($valid) {
-            // if passed validation then return
-            return true;
-        }
-
-        /**
-         * attempt to find if the document is linked through a txc_inbox
-         *
-         * @var TxcInboxRepo $txcInboxRepo
-         * @var TxcInboxEntity $txcEntity
-         */
-        $txcInboxRepo = $this->getRepo('TxcInbox');
-        $txcEntities = $txcInboxRepo->fetchLinkedToDocument($entityId);
-
-        if (!empty($txcEntities)) {
-            $localAuthorityUser = $this->getCurrentLocalAuthority();
-
-            foreach ($txcEntities as $txcEntity) {
-                $txcLocalAuthority = $txcEntity->getLocalAuthority();
-
-                if ($txcLocalAuthority instanceof LocalAuthority && $txcLocalAuthority == $localAuthorityUser) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Call parent isValid method (to facilitate unit testing)
-     *
-     * @param int $entityId Document ID
-     *
-     * @return bool
-     */
-    protected function callParentIsValid($entityId)
-    {
         return parent::isValid($entityId);
     }
 }
