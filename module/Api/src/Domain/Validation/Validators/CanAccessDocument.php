@@ -46,7 +46,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
             }
         }
 
-        // If external user, check to see if requested document is available in documents/correspondence tab on dashboard.
+        // If external user, check if requested document is available in documents/correspondence tab on dashboard.
         if ($this->isExternalUser()) {
             $query = Correspondences::create([
                 'organisation' => $this->getCurrentOrganisation()->getId(),
@@ -60,6 +60,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
             }
         }
 
+        // Defer to default checks...
         return parent::isValid($entityId);
     }
 }
