@@ -74,6 +74,10 @@ class CanAccessDocument extends AbstractCanAccessEntity
             return true;
         }
 
+        if ($this->canAccessCorrelatedMessagingDocumentIds($documentId)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -100,6 +104,11 @@ class CanAccessDocument extends AbstractCanAccessEntity
             return true;
         }
 
+        return false;
+    }
+
+    private function canAccessCorrelatedMessagingDocumentIds(int $documentId): bool
+    {
         /** @var CanAccessCorrelatedDocuments $handler */
         $handler = $this->getValidatorManager()->get(CanAccessCorrelatedDocuments::class);
         if ($handler->isValid(\Dvsa\Olcs\Transfer\Query\Messaging\Documents::create([
@@ -107,7 +116,5 @@ class CanAccessDocument extends AbstractCanAccessEntity
         ]))) {
             return true;
         }
-
-        return false;
     }
 }
