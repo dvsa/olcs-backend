@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanAccessCorrelatedDocuments;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
@@ -24,12 +25,12 @@ class CanAccessDocument extends AbstractCanAccessEntity
      */
     public function isValid($entityId): bool
     {
-        if ($this->isLocalAuthority() && $this->canLocalAuthorityAccessDocument($entityId)) {
+        if ($this->isLocalAuthority() && $this->canLocalAuthorityAccessDocument((int)$entityId)) {
             return true;
         }
 
         // TODO: Verify local authorities dont have correspondence/docs or messaging access (no point checking [& wasting compute] if assumed correctly)
-        if (!$this->isLocalAuthority() && $this->isExternalUser() && !$this->canExternalUserAccessDocument($entityId)) {
+        if (!$this->isLocalAuthority() && $this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId)) {
             return false;
         }
 
@@ -85,7 +86,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
         $correspondences = $this->getRepo('Correspondence')->fetchList($query);
         $correspondencesDocumentIds = array_map(function ($element) {
             return $element['document'];
-        }, $correspondences);
+        }, iterator_to_array($correspondences));
 
         return in_array($documentId, $correspondencesDocumentIds);
     }
@@ -96,6 +97,14 @@ class CanAccessDocument extends AbstractCanAccessEntity
         $messagingDocument = $this->getRepo(Repository\Document::class)->fetchById($documentId);
         if ($messagingDocument->getMessagingConversation() && $messagingDocument->getRelatedOrganisation()->getId() === $organisationId)
         {
+            return true;
+        }
+
+        /** @var CanAccessCorrelatedDocuments $handler */
+        $handler = $this->getValidatorManager()->get(CanAccessCorrelatedDocuments::class);
+        if ($handler->isValid(\Dvsa\Olcs\Transfer\Query\Messaging\Documents::create([
+            'correlationId' => ''
+        ]))) {
             return true;
         }
 
