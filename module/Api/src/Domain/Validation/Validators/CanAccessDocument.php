@@ -60,7 +60,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
             }
         }
 
-        // Defer to default checks...
+        // Defer to default canAccessEntity checks...
         return parent::isValid($entityId);
     }
 }
