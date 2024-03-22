@@ -212,6 +212,10 @@ class Document extends AbstractDocument implements OrganisationProviderInterface
             return $this->getMessagingConversation()->getRelatedOrganisation();
         }
 
+        if ($this->getCreatedBy()) {
+            return $this->getCreatedBy()->getRelatedOrganisation();
+        }
+
         return null;
     }
 
