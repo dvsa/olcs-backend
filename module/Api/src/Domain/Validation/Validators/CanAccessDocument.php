@@ -5,7 +5,6 @@ namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 
 /**
  * Can Access a Document
