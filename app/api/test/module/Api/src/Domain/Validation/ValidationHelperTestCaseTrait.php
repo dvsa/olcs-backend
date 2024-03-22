@@ -11,6 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\ValidatorInterface;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Laminas\ServiceManager\ServiceManager;
@@ -44,12 +45,14 @@ trait ValidationHelperTestCaseTrait
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
         $this->auth = m::mock(AuthorizationService::class);
+        $this->cache = m::mock(CacheEncryption::class);
         $this->validatorManager = m::mock(ValidatorManager::class)->makePartial();
 
         $sm = m::mock(ServiceManager::class)->makePartial();
         $sm->setService('RepositoryServiceManager', $this->repoManager);
         $sm->setService(AuthorizationService::class, $this->auth);
         $sm->setService('DomainValidatorManager', $this->validatorManager);
+        $sm->setService(CacheEncryption::class, $this->cache);
         $sm->setService('config', ['config']);
 
         $this->sut->__invoke($sm, null);
