@@ -49,7 +49,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
         $messages = $messageRepository->fetchPaginatedList($messagesQuery, Query::HYDRATE_ARRAY, $query);
         $messages = $messages->getArrayCopy();
 
-        if ($query->getIncludeReadRoles() && count($query->getIncludeReadRoles()) > 0) {
+        if ($query->getIncludeReadRoles() && count($query->getReadRoles()) > 0) {
             $messages = $this->filterReadHistory($messages, $query->getReadRoles());
         }
 
