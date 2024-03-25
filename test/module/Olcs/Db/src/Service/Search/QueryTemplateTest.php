@@ -21,9 +21,9 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
     /**
      * @dataProvider queryTemplateDataProvider
      */
-    public function testQueryTemplate($query, $filters, $dates, $expected)
+    public function testQueryTemplate($query, $filters, $filterTypes, $dates, $expected)
     {
-        $sut = new QueryTemplate(__DIR__ . '/mock-query-template.json', $query, $filters, $dates);
+        $sut = new QueryTemplate(__DIR__ . '/mock-query-template.json', $query, $filters, $filterTypes, $dates);
         $this->assertEquals($expected, $sut->getParam('query'));
     }
 
@@ -33,7 +33,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // simple query
             [
                 'SMITH',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -54,7 +55,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query with special chars
             [
                 'SM"\das\'[]{}ITH',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -75,7 +77,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query empty
             [
                 '',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -96,7 +99,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query single " (double quote)
             [
                 '"',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -117,7 +121,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query double " (double quote)
             [
                 '""',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -138,7 +143,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query ending with " (double quote)
             [
                 '"SMITH"',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -159,7 +165,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query json
             [
                 '{"key":"value"}',
-                null,
+                [],
+                [],
                 null,
                 [
                     'bool' => [
@@ -181,9 +188,12 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             [
                 'SMITH',
                 [
-                    'field_1' => 'value1'
+                    'field_1' => 'value1',
                 ],
-                null,
+                [
+                    'field_1' => 'DYNAMIC',
+                ],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -213,9 +223,14 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'field_1' => 'value1',
                     'field_2' => 'value2',
-                    'field_3' => 'value3',
+                    'field_3' => '0',
                 ],
-                null,
+                [
+                    'field_1' => 'DYNAMIC',
+                    'field_2' => 'DYNAMIC',
+                    'field_3' => 'BOOLEAN',
+                ],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -240,19 +255,22 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                                     'field_2' => 'value2'
                                 ]
                             ],
-                            [
-                                'term' => [
-                                    'field_3' => 'value3'
+                        ],
+                        'must_not' => [
+                            0 => [
+                                'exists' => [
+                                    'field' => 'field_3',
                                 ]
-                            ]
-                        ]
+                            ],
+                        ],
                     ]
                 ]
             ],
             // query with from_and_to date range
             [
                 'SMITH',
-                null,
+                [],
+                [],
                 [
                     'field_1_from_and_to' => '2010-09-30'
                 ],
@@ -282,7 +300,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query with from only date range
             [
                 'SMITH',
-                null,
+                [],
+                [],
                 [
                     'field_1_from' => '2010-09-30'
                 ],
@@ -312,7 +331,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
             // query with from and to date range
             [
                 'SMITH',
-                null,
+                [],
+                [],
                 [
                     'field_1_from' => '2010-09-30',
                     'field_1_to' => '2010-10-30'
@@ -347,6 +367,11 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     'field_1' => 'value1',
                     'field_2' => 'value2',
                     'field_3' => 'value3',
+                ],
+                [
+                    'field_1' => 'DYNAMIC',
+                    'field_2' => 'DYNAMIC',
+                    'field_3' => 'DYNAMIC',
                 ],
                 [
                     'field_1_from_and_to' => '2010-09-30',
