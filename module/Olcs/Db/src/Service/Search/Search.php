@@ -39,10 +39,9 @@ class Search implements AuthAwareInterface
      */
     protected $sysParamRepo;
 
-    /**
-     * @var array
-     */
-    protected $filters = [];
+    protected array $filters = [];
+
+    protected array $filterTypes = [];
 
     /**
      * @var array
@@ -143,7 +142,7 @@ class Search implements AuthAwareInterface
         if ($queryTemplate === false) {
             throw new \RuntimeException('Cannot generate an elasticsearch query, is the template missing');
         }
-        $elasticaQuery = new QueryTemplate($queryTemplate, $query, $this->getFilters(), $this->getDateRanges());
+        $elasticaQuery = new QueryTemplate($queryTemplate, $query, $this->getFilters(), $this->getFilterTypes(), $this->getDateRanges());
 
         if (!empty($this->getSort()) && !empty($this->getOrder())) {
             $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
@@ -274,19 +273,18 @@ class Search implements AuthAwareInterface
         return $this->filters;
     }
 
-    /**
-     * Sets the filters.
-     *
-     * @param array $filters Filters
-     *
-     * @return $this
-     */
-    public function setFilters(array $filters)
+    public function getFilterTypes(): array
+    {
+        return $this->filterTypes;
+    }
+
+    public function setFilters(array $filters, array $filterTypes = []): self
     {
         $f = new CamelCaseToUnderscore();
 
         foreach ($filters as $filterName => $value) {
             $this->filters[strtolower($f->filter($filterName))] = $value;
+            $this->filterTypes[strtolower($f->filter($filterName))] = $filterTypes[$filterName] ?? QueryTemplate::FILTER_TYPE_DYNAMIC;
         }
 
         return $this;

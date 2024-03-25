@@ -35,7 +35,7 @@ class SearchController extends AbstractController
         $indices = explode('|', $params['index']);
 
         if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
-            $this->elasticSearchService->setFilters($params['filters']);
+            $this->elasticSearchService->setFilters($params['filters'], $params['filterTypes'] ?? []);
         }
         if (!empty($params['dateRanges']) && is_array($params['dateRanges'])) {
             try {

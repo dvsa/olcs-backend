@@ -2,7 +2,9 @@
 
 namespace Olcs\Db\Service\Search;
 
+use DomainException;
 use Elastica\Query;
+use RuntimeException;
 
 /**
  * Class QueryTemplate
@@ -11,26 +13,24 @@ use Elastica\Query;
  */
 class QueryTemplate extends Query
 {
-    /**
-     * QueryTemplate constructor.
-     *
-     * @param string $filename   Filename
-     * @param string $searchTerm Search term
-     * @param array  $filters    Filters
-     * @param array  $dateRanges Date ranges
-     *
-     * @return void
-     */
-    public function __construct($filename, $searchTerm, $filters = [], $dateRanges = [])
-    {
+    public const FILTER_TYPE_DYNAMIC = 'DYNAMIC';
+    public const FILTER_TYPE_BOOLEAN = 'BOOLEAN';
+
+    public function __construct(
+        string $filename,
+        string $searchTerm,
+        array $filters = [],
+        array $filterTypes = [],
+        $dateRanges = []
+    ) {
         if (!file_exists($filename)) {
-            throw new \RuntimeException("Query template file '" . $filename . "' is missing");
+            throw new RuntimeException("Query template file '" . $filename . "' is missing");
         }
 
         $searchTermReplace = json_encode($searchTerm);
 
         if ($searchTermReplace === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "Search term '" . $searchTerm . "' gives invalid json. Error: " . json_last_error_msg()
             );
         }
@@ -45,38 +45,54 @@ class QueryTemplate extends Query
         $this->_params = json_decode($template, true);
 
         if (empty($this->_params)) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 "Empty params for query template file '" . $filename . "' and search term '" . $searchTerm . "'"
             );
         }
 
         // apply filters
-        $this->applyFilters($filters);
+        $this->applyFilters($filters, $filterTypes);
 
         // apply date ranges
         $this->applyDateRanges($dateRanges);
     }
 
-    /**
-     * Apply filters
-     *
-     * @param array $filters Filters
-     *
-     * @return $this
-     */
-    private function applyFilters($filters)
+    private function applyFilters(array $filters, array $filterTypes): self
     {
         if (empty($filters)) {
             return $this;
         }
 
         foreach ($filters as $field => $value) {
-            if (!empty($field) && !empty($value)) {
-                $this->_params['query']['bool']['filter'][] = [
-                    'term' => [
-                        $field => $value
-                    ]
-                ];
+            if (empty($field) || $value === '') {
+                continue;
+            }
+
+            switch ($filterTypes[$field]) {
+                case self::FILTER_TYPE_DYNAMIC:
+                    $this->_params['query']['bool']['filter'][] = [
+                        'term' => [
+                            $field => $value,
+                        ],
+                    ];
+                    break;
+                case self::FILTER_TYPE_BOOLEAN:
+                    if ((int)$value === 1) {
+                        $this->_params['query']['bool']['must']['bool']['must'][] = [
+                            'exists' => [
+                                'field' => $field,
+                            ],
+                        ];
+                    } else {
+                        $this->_params['query']['bool']['must_not'][] = [
+                            'exists' => [
+                                'field' => $field,
+                            ],
+                        ];
+                    }
+                    break;
+                default:
+                    throw new DomainException('Invalid filter type: ' . $filterTypes[$field]);
             }
         }
 
