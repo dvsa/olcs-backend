@@ -31,7 +31,7 @@ class CanCreateMessageWithConversationTest extends AbstractHandlerTestCase
     {
         /** @var CommandInterface $dto */
         $conversationId = 1;
-        $permission = Permission::CAN_REPLY_TO_CONVERSATIONS;
+        $permission = Permission::CAN_REPLY_TO_CONVERSATION;
         $dto = m::mock(CommandInterface::class);
 
         $this->setIsGranted($permission, $hasPermission);

@@ -41,7 +41,7 @@ class Permission extends AbstractPermission
 
     public const CAN_LIST_CONVERSATIONS = 'can-list-conversations';
     public const CAN_LIST_MESSAGES = 'can-list-messages';
-    public const CAN_REPLY_TO_CONVERSATIONS = 'can-reply-to-conversation';
+    public const CAN_REPLY_TO_CONVERSATION = 'can-reply-to-conversation';
     public const CAN_CREATE_CONVERSATION = 'can-create-conversation';
     public const CAN_DISABLE_MESSAGING = 'can-disable-messaging';
     public const CAN_ENABLE_MESSAGING = 'can-enable-messaging';
