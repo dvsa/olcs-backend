@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Messaging\Conversation;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
+use Dvsa\Olcs\Api\Domain\Command\Messaging\Conversation\StoreEnhancedSnapshot;
 use Dvsa\Olcs\Api\Domain\Command\Messaging\Conversation\StoreSnapshot;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation\Close as CloseConversationHandler;
-use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Close as CloseConversationCommand;
@@ -29,24 +28,46 @@ class Close extends CommandHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class),
         ];
 
-        $defaultMockTask = m::mock(Entity\Task\Task::class)->makePartial()->allows('getId')->getMock();
-        $defaultMockConversation = m::mock(Entity\Messaging\MessagingConversation::class)->makePartial()->allows('getTask')->andReturn($defaultMockTask)->getMock()->allows('getRelatedLicence')->getMock();
-        $this->repoMap[Repository\Conversation::class]->allows('fetchUsingId')->andReturn($defaultMockConversation)->byDefault();
-        $this->repoMap[Repository\Conversation::class]->allows('save')->byDefault();
+        $defaultMockTask = m::mock(Entity\Task\Task::class)
+                            ->makePartial()
+                            ->allows('getId')
+                            ->getMock();
+        $defaultMockConversation = m::mock(Entity\Messaging\MessagingConversation::class)
+                                    ->makePartial()
+                                    ->allows('getTask')
+                                    ->andReturn($defaultMockTask)
+                                    ->getMock()
+                                    ->allows('getRelatedLicence')
+                                    ->getMock();
+        $this->repoMap[Repository\Conversation::class]
+            ->allows('fetchUsingId')
+            ->andReturn($defaultMockConversation)
+            ->byDefault();
+        $this->repoMap[Repository\Conversation::class]
+            ->allows('save')
+            ->byDefault();
 
         parent::setUp();
 
-        $this->commandHandler->allows('handleCommand')->andReturn(new Result())->byDefault();
+        $this->commandHandler->allows('handleCommand')
+                             ->andReturn(new Result())
+                             ->byDefault();
     }
 
     public function testHandleMarksConversationAsClosed()
     {
-        $command = CloseConversationCommand::create($commandParameters = ['id' => 1]);
+        $command = CloseConversationCommand::create(['id' => 1]);
 
-        $this->repoMap[Repository\Conversation::class]->expects('save')->with(m::on(function ($conversation) {
-            $this->assertTrue($conversation->getIsClosed());
-            return true;
-        }));
+        $this->repoMap[Repository\Conversation::class]
+            ->expects('save')
+            ->with(
+                m::on(
+                    function ($conversation) {
+                        $this->assertTrue($conversation->getIsClosed());
+                        return true;
+                    },
+                ),
+            );
 
         $this->sut->handleCommand($command);
     }
@@ -62,16 +83,25 @@ class Close extends CommandHandlerTestCase
 
     public function testHandleGeneratesAndStoresSnapshot()
     {
-        $command = CloseConversationCommand::create($commandParameters = ['id' => 1]);
+        $command = CloseConversationCommand::create(['id' => 1]);
 
         $this->expectedSideEffect(StoreSnapshot::class, [], new Result(), 1);
 
         $this->sut->handleCommand($command);
     }
 
+    public function testHandleGeneratesAndStoresEnhancedSnapshot()
+    {
+        $command = CloseConversationCommand::create(['id' => 1]);
+
+        $this->expectedSideEffect(StoreEnhancedSnapshot::class, [], new Result(), 1);
+
+        $this->sut->handleCommand($command);
+    }
+
     public function testHandleCreatesCorrespondenceRecord()
     {
-        $command = CloseConversationCommand::create($commandParameters = ['id' => 1]);
+        $command = CloseConversationCommand::create(['id' => 1]);
 
         $this->expectedSideEffect(CreateCorrespondenceRecord::class, [], new Result(), 1);
 
