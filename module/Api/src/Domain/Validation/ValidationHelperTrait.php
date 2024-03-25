@@ -9,7 +9,9 @@
 namespace Dvsa\Olcs\Api\Domain\Validation;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Psr\Container\ContainerInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\ValidatorManager;
@@ -122,6 +124,10 @@ trait ValidationHelperTrait
     {
         if ($this instanceof AuthAwareInterface) {
             $this->setAuthService($container->get(AuthorizationService::class));
+        }
+
+        if ($this instanceof CacheAwareInterface) {
+            $this->setCache($container->get(CacheEncryption::class));
         }
 
         if ($this instanceof RepositoryManagerAwareInterface) {
