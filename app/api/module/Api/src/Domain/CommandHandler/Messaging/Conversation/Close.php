@@ -6,6 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord;
 use Dvsa\Olcs\Api\Domain\Command\Messaging\Conversation\StoreSnapshot;
+use Dvsa\Olcs\Api\Domain\Command\Messaging\Conversation\StoreEnhancedSnapshot;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractUserCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
@@ -45,6 +46,8 @@ final class Close extends AbstractUserCommandHandler implements ToggleRequiredIn
 
         $documentResult = $this->handleSideEffect(StoreSnapshot::create(['id' => $conversation->getId()]));
         $result->merge($documentResult);
+        $enhancedDocumentResult = $this->handleSideEffect(StoreEnhancedSnapshot::create(['id' => $conversation->getId()]));
+        $result->merge($enhancedDocumentResult);
 
         $taskResult = $this->handleSideEffect(CloseTasks::create(['ids' => [$conversation->getTask()->getId()]]));
         $result->merge($taskResult);

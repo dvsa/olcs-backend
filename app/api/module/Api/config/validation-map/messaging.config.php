@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessOrganisationAuthAware
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NotIsAnonymousUser;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanAccessConversationMessagesWithConversationId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanListConversationsByOrganisation;
 
@@ -33,6 +32,7 @@ return [
     CommandHandler\Messaging\DisableFileUpload::class                                => IsInternalUser::class,
     CommandHandler\Messaging\Message\Create::class                                   => CanCreateMessageWithConversation::class,
     CommandHandler\Messaging\Conversation\StoreSnapshot::class                       => IsSideEffect::class,
+    CommandHandler\Messaging\Conversation\StoreEnhancedSnapshot::class               => IsSideEffect::class,
     QueryHandler\Messaging\Conversations\ByOrganisation::class                       => CanListConversationsByOrganisation::class,
     QueryHandler\Messaging\Subjects\All::class                                       => NotIsAnonymousUser::class,
     CommandHandler\Messaging\Conversation\Create::class                              => CanCreateConversationForOrganisation::class,
