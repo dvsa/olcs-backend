@@ -1,6 +1,7 @@
 <?php
 /** @global \Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage[] $messages */
 /** @global \Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation $conversation */
+/** @global bool $enhanced */
 ?><!DOCTYPE html>
 <html lang="en">
 <?php echo $this->partial('partials/review-header', ['pageTitle' => 'Conversation Archive']); ?>
@@ -16,7 +17,7 @@
   </caption>
 
   <?php foreach ($messages as $message): ?>
-    <?php echo $this->partial('partials/read-only/printable-message', ['message' => $message]); ?>
+    <?php echo $this->partial('partials/read-only/printable-message', ['message' => $message, 'enhanced' => $enhanced]); ?>
   <?php endforeach; ?>
 </div>
 </body>
