@@ -6198,16 +6198,16 @@
         },
         {
             "name": "olcs/olcs-utils",
-            "version": "v6.1.0",
+            "version": "v6.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-utils.git",
-                "reference": "81f54b9e367400e4478364e8c2622fbce3f65f61"
+                "reference": "a77275adfc582aceec7bb6798dc168ac99962c54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/81f54b9e367400e4478364e8c2622fbce3f65f61",
-                "reference": "81f54b9e367400e4478364e8c2622fbce3f65f61",
+                "url": "https://api.github.com/repos/dvsa/olcs-utils/zipball/a77275adfc582aceec7bb6798dc168ac99962c54",
+                "reference": "a77275adfc582aceec7bb6798dc168ac99962c54",
                 "shasum": ""
             },
             "require": {
@@ -6218,13 +6218,13 @@
                 "laminas/laminas-mvc-i18n": "^1.4",
                 "laminas/laminas-servicemanager": "^3.3",
                 "laminas/laminas-view": "^2.11",
-                "php": "^7.4",
+                "php": "^7.4 || ^8.0",
                 "psr/container": "^1.1|^2.0"
             },
             "require-dev": {
                 "bamarni/composer-bin-plugin": "^1.8",
                 "johnkary/phpunit-speedtrap": "^4.0",
-                "olcs/olcs-logging": "^6.0",
+                "olcs/olcs-logging": "^7.1.0",
                 "phpunit/phpunit": "^9.6"
             },
             "type": "library",
@@ -6242,9 +6242,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Utils",
             "support": {
-                "source": "https://github.com/dvsa/olcs-utils/tree/v6.1.0"
+                "source": "https://github.com/dvsa/olcs-utils/tree/v6.2.0"
             },
-            "time": "2024-03-07T14:35:46+00:00"
+            "time": "2024-03-26T17:03:56+00:00"
         },
         {
             "name": "olcs/olcs-xmltools",
