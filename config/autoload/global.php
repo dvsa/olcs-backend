@@ -23,7 +23,7 @@ return [
                 // If running as CLI then use different directory to avoid permissions problems
                 'proxy_dir'         => 'data/cache/DoctrineORMModule',
                 'proxy_namespace'   => 'Dvsa\Olcs\Api\Entity\Proxy',
-                'auto_generate_proxy_classes' => \Doctrine\Common\Proxy\AbstractProxyFactory::AUTOGENERATE_NEVER,
+                'auto_generate_proxy_classes' => 0,
                 'datetime_functions' => [
                     'date'          => \Oro\ORM\Query\AST\Functions\SimpleFunction::class,
                     'time'          => \Oro\ORM\Query\AST\Functions\SimpleFunction::class,
