@@ -5,15 +5,11 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\RequestAwareInterface;
-use Dvsa\Olcs\Api\Domain\RequestAwareTrait;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query;
 
-class CanAccessDocument extends AbstractCanAccessEntity implements RequestAwareInterface
+class CanAccessDocument extends AbstractCanAccessEntity
 {
-    use RequestAwareTrait;
-
     protected $repo = Repository\Document::class;
 
     public function isValid($entityId, ?string $correlationId = null): bool
