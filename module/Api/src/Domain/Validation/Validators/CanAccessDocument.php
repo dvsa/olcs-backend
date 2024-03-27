@@ -12,7 +12,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
 {
     protected $repo = Repository\Document::class;
 
-    public function isValid($entityId, ?string $correlationId = null): bool
+    public function isValid($entityId): bool
     {
         if ($this->isLocalAuthority() && $this->canLocalAuthorityAccessDocument((int)$entityId)) {
             return true;
