@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
+use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\RequestAwareInterface;
 use Dvsa\Olcs\Api\Domain\RequestAwareTrait;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanAccessCorrelatedDocuments;
+use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessCorrelatedDocument;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
@@ -25,17 +26,16 @@ class CanAccessDocument extends AbstractCanAccessEntity implements RequestAwareI
      * Is Valid
      *
      * @param int $entityId Document ID
-     *
+     * @param string|null $correlationId
      * @return bool
      */
-    public function isValid($entityId): bool
+    public function isValid($entityId, string $correlationId = null): bool
     {
         if ($this->isLocalAuthority() && $this->canLocalAuthorityAccessDocument((int)$entityId)) {
             return true;
         }
 
-        // TODO: Verify local authorities dont have correspondence/docs or messaging access (no point checking [& wasting compute] if assumed correctly)
-        if (!$this->isLocalAuthority() && $this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId)) {
+        if (!$this->isLocalAuthority() && $this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId, $correlationId)) {
             return false;
         }
 
@@ -58,7 +58,7 @@ class CanAccessDocument extends AbstractCanAccessEntity implements RequestAwareI
             foreach ($txcEntities as $txcEntity) {
                 $txcLocalAuthority = $txcEntity->getLocalAuthority();
 
-                if ($txcLocalAuthority instanceof LocalAuthority && $txcLocalAuthority == $localAuthorityUser) {
+                if ($txcLocalAuthority instanceof LocalAuthority && $txcLocalAuthority->getId() === $localAuthorityUser->getId()) {
                     return true;
                 }
             }
@@ -67,26 +67,16 @@ class CanAccessDocument extends AbstractCanAccessEntity implements RequestAwareI
         return false;
     }
 
-    private function canExternalUserAccessDocument(int $documentId): bool
+    private function canExternalUserAccessDocument(int $documentId, string $correlationId = null): bool
     {
         $currentUserOrganisationId = $this->getCurrentOrganisation()->getId();
 
-        if ($this->existsDocumentIdsInCorrespondenceForOrganisation($documentId, $currentUserOrganisationId)) {
-            return true;
-        }
-
-        if ($this->existsMessagingDocumentIdsForOrganisation($documentId, $currentUserOrganisationId)) {
-            return true;
-        }
-
-        if ($this->canAccessCorrelatedMessagingDocumentIds($documentId)) {
-            return true;
-        }
-
-        return false;
+        return $this->checkDocumentWasExternallyUploaded($documentId)
+            || $this->checkDocumentInCorrespondence($documentId, $currentUserOrganisationId)
+            || $this->checkIsTxcDocument($documentId);
     }
 
-    private function existsDocumentIdsInCorrespondenceForOrganisation(int $documentId, int $organisationId): bool
+    private function checkDocumentInCorrespondence(int $documentId, int $organisationId): bool
     {
         $query = Correspondences::create([
             'organisation' => $organisationId,
@@ -100,42 +90,22 @@ class CanAccessDocument extends AbstractCanAccessEntity implements RequestAwareI
         return in_array($documentId, $correspondencesDocumentIds);
     }
 
-    private function existsMessagingDocumentIdsForOrganisation(int $documentId, int $organisationId): bool
+    private function checkDocumentWasExternallyUploaded(int $documentId): bool
     {
-        /** @var Entity\Doc\Document $messagingDocument */
-        $messagingDocument = $this->getRepo(Repository\Document::class)->fetchById($documentId);
-        if ($messagingDocument->getMessagingConversation() && $messagingDocument->getRelatedOrganisation()->getId() === $organisationId)
-        {
-            return true;
-        }
-
-        return false;
+        /** @var Entity\Doc\Document $document */
+        $document = $this->getRepo('Document')->fetchById($documentId);
+        return $document->getIsExternal();
     }
 
-    private function canAccessCorrelatedMessagingDocumentIds(int $documentId): bool
+    private function checkIsTxcDocument(int $documentId): bool
     {
-        $id = $this->getMessagingDocumentCorrelationIdFromRequest();
-        if ($id === '') {
-            return false;
-        }
+        /**
+         * @var TxcInboxRepo $txcInboxRepo
+         * @var TxcInboxEntity $txcEntity
+         */
+        $txcInboxRepo = $this->getRepo('TxcInbox');
+        $txcEntities = $txcInboxRepo->fetchLinkedToDocument($documentId);
 
-        /** @var CanAccessCorrelatedDocuments $handler */
-        $handler = $this->getValidatorManager()->get(CanAccessCorrelatedDocuments::class);
-        if ($handler->isValid(Documents::create([
-            'correlationId' => $id
-        ]))) {
-            return true;
-        };
-
-        return false;
-    }
-
-    private function getMessagingDocumentCorrelationIdFromRequest(): string
-    {
-        $id = $this->getRequest()->getPost('correlationId', '');
-        if ($id !== '' && !preg_match('/^[a-z0-9]{40}$/', $id)) {
-            throw new \Exception('Dodgy corre id');
-        }
-        return $id;
+        return is_array($txcEntities) && count($txcEntities) > 0;
     }
 }
