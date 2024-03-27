@@ -11,7 +11,6 @@ namespace Dvsa\Olcs\Api\Domain\Validation;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryManagerAwareInterface;
-use Dvsa\Olcs\Api\Domain\RequestAwareInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Psr\Container\ContainerInterface;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -133,10 +132,6 @@ trait ValidationHelperTrait
 
         if ($this instanceof RepositoryManagerAwareInterface) {
             $this->setRepoManager($container->get('RepositoryServiceManager'));
-        }
-
-        if ($this instanceof RequestAwareInterface) {
-            $this->setRequest($container->get('Request'));
         }
 
         $this->setValidatorManager($container->get('DomainValidatorManager'));
