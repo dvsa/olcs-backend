@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Auth\Service;
 
-use Faker\Generator;
-
 class PasswordService
 {
     public const REALM_INTERNAL = 'internal';
