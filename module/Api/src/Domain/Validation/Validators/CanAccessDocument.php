@@ -14,11 +14,17 @@ class CanAccessDocument extends AbstractCanAccessEntity
 
     public function isValid($entityId): bool
     {
-        if ($this->isLocalAuthority() && $this->canLocalAuthorityAccessDocument((int)$entityId)) {
-            return true;
+        if ($this->isTransportManager()) {
+            return $this->canTransportManagerAccessDocument((int)$entityId);
         }
 
-        if (!$this->isLocalAuthority() && $this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId)) {
+        // @Saul updated this. If we are local authority, then we just do the check and then return straight away :)
+        if ($this->isLocalAuthority()) {
+            return $this->canLocalAuthorityAccessDocument((int)$entityId);
+        }
+
+        // @Saul removed: !$this->isLocalAuthority() as not needed if we return above...
+        if ($this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId)) {
             return false;
         }
 
@@ -49,17 +55,20 @@ class CanAccessDocument extends AbstractCanAccessEntity
 
     private function canExternalUserAccessDocument(int $documentId): bool
     {
-        $currentUserOrganisationId = $this->getCurrentOrganisation()->getId();
-
         return $this->checkDocumentWasExternallyUploaded($documentId)
-            || $this->checkDocumentInCorrespondence($documentId, $currentUserOrganisationId)
+            || $this->checkDocumentInCorrespondence($documentId)
             || $this->checkIsTxcDocument($documentId);
     }
 
-    private function checkDocumentInCorrespondence(int $documentId, int $organisationId): bool
+    private function checkDocumentInCorrespondence(int $documentId): bool
     {
+        $currentUserOrganisationId = $this->getCurrentOrganisation() ? $this->getCurrentOrganisation()->getId() : null;
+        if ($currentUserOrganisationId === null) {
+            return false;
+        }
+
         $query = Query\Correspondence\Correspondences::create([
-            'organisation' => $organisationId,
+            'organisation' => $currentUserOrganisationId,
         ]);
 
         $correspondences = $this->getRepo(Repository\Correspondence::class)->fetchList($query);
@@ -82,5 +91,11 @@ class CanAccessDocument extends AbstractCanAccessEntity
         $txcEntities = $txcInboxRepo->fetchLinkedToDocument($documentId);
 
         return is_array($txcEntities) && count($txcEntities) > 0;
+    }
+
+    private function canTransportManagerAccessDocument(int $documentId): bool
+    {
+        $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
+        return $document->getCreatedBy()->getId() === $this->getCurrentUser()->getId();
     }
 }
