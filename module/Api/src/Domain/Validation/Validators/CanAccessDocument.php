@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Query;
@@ -12,18 +13,19 @@ class CanAccessDocument extends AbstractCanAccessEntity
 {
     protected $repo = Repository\Document::class;
 
+    /**
+     * @throws NotFoundException
+     */
     public function isValid($entityId): bool
     {
         if ($this->isTransportManager()) {
             return $this->canTransportManagerAccessDocument((int)$entityId);
         }
 
-        // @Saul updated this. If we are local authority, then we just do the check and then return straight away :)
         if ($this->isLocalAuthority()) {
             return $this->canLocalAuthorityAccessDocument((int)$entityId);
         }
 
-        // @Saul removed: !$this->isLocalAuthority() as not needed if we return above...
         if ($this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId)) {
             return false;
         }
@@ -53,6 +55,9 @@ class CanAccessDocument extends AbstractCanAccessEntity
         return false;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function canExternalUserAccessDocument(int $documentId): bool
     {
         return $this->checkDocumentWasExternallyUploaded($documentId)
@@ -79,6 +84,9 @@ class CanAccessDocument extends AbstractCanAccessEntity
         return in_array($documentId, $correspondencesDocumentIds, true);
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function checkDocumentWasExternallyUploaded(int $documentId): bool
     {
         $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
@@ -93,6 +101,9 @@ class CanAccessDocument extends AbstractCanAccessEntity
         return is_array($txcEntities) && count($txcEntities) > 0;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     private function canTransportManagerAccessDocument(int $documentId): bool
     {
         $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
