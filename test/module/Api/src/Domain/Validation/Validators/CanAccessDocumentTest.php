@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessDocument;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
@@ -16,9 +17,6 @@ use LmcRbacMvc\Identity\IdentityInterface;
 use Mockery as m;
 use Mockery\MockInterface;
 
-/**
- * Can Access Document Test
- */
 class CanAccessDocumentTest extends AbstractValidatorsTestCase
 {
     /**
@@ -43,6 +41,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         parent::setUp();
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testSystemUserCanAccessDocument(): void
     {
         $this->setupMockIdentity(static::IS_SYSTEM_USER);
@@ -50,6 +52,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testInternalUserCanAccessDocument(): void
     {
         $this->setupMockIdentity(static::IS_INTERNAL_USER);
@@ -57,6 +63,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testExternalUserCanAccessDocumentIsExternalDocument(): void
     {
         $this->setupMockIdentity(static::IS_EXTERNAL_USER);
@@ -70,6 +80,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testExternalUserCanAccessDocumentNotExternalDocumentIsCorrespondence(): void
     {
         $this->setupMockIdentity(static::IS_EXTERNAL_USER, $org = $this->getMockOrganisation());
@@ -94,6 +108,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testExternalUserCanAccessDocumentNotExternalDocumentNotCorrespondenceIsTxcDocument(): void
     {
         $this->setupMockIdentity(static::IS_EXTERNAL_USER, $org = $this->getMockOrganisation());
@@ -122,13 +140,17 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testExternalUserCannotAccessDocumentNotExternalDocumentNotCorrespondenceNotTxcDocument(): void
     {
         $this->setupMockIdentity(static::IS_EXTERNAL_USER, $org = $this->getMockOrganisation());
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
-            ->andReturn($document = $this->getMockDocument(false));
+            ->andReturn($this->getMockDocument(false));
         $this->mockRepo(Repository\Correspondence::class)
             ->shouldReceive('fetchList')
             ->withArgs(function ($query) use ($org) {
@@ -146,6 +168,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testExternalUserWithNoOrgCannotAccessDocumentNotExternalDocumentNotCorrespondenceAsNoOrg(): void
     {
         $this->setupMockIdentity(static::IS_EXTERNAL_USER);
@@ -165,6 +191,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testTransportManagerCanAccessDocument(): void
     {
         $this->setupMockIdentity(static::IS_TRANSPORT_MANAGER_USER, null, $userId = 437924);
@@ -176,6 +206,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testTransportManagerCannotAccessDocumentIfNotCreatedBySameUser(): void
     {
         $this->setupMockIdentity(static::IS_TRANSPORT_MANAGER_USER, null, 9000);
@@ -187,6 +221,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthority(): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
@@ -212,6 +250,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsMatchingCurrentAuthority(): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
@@ -241,6 +283,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsOneMatchingCurrentAuthorityAnotherNoAuthority(): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
@@ -270,6 +316,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testLocalAuthorityUserCannotAccessTxcDocumentForDifferentAuthority(): void
     {
         $mockLocalAuthorityA = m::mock(LocalAuthority::class);
@@ -300,6 +350,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testLocalAuthorityUserCannotAccessTxcDocumentForDocumentWithNoAuthority(): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
@@ -325,6 +379,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     public function testLocalAuthorityUserCannotAccessDocumentIfNoTxcInboxRecordsFoundForDocumentId(): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
@@ -345,6 +403,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     private function getMockDocument(bool $isExternal, int $createdById = 123456, m\MockInterface $relatedOrganisation = null): m\MockInterface
     {
         if ($relatedOrganisation === null) {
@@ -362,6 +424,10 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         return $mockDoc;
     }
 
+    /**
+     * @throws NotFoundException
+     * @throws Exception
+     */
     private function setupMockIdentity(int $userType, m\MockInterface $organisation = null, int $userId = 123456, m\MockInterface $localAuthority = null): void
     {
         $mockIdentity = m::mock(IdentityInterface::class);
@@ -382,10 +448,9 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
             $mockIdentity->allows('getUser->getLocalAuthority')->andReturn(null);
         }
 
-
         $this->auth->allows('getIdentity')->andReturn($mockIdentity);
 
-        switch($userType) {
+        switch ($userType) {
             case static::IS_SYSTEM_USER:
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
