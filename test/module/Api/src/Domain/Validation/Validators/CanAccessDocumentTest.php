@@ -222,17 +222,19 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
+     * @dataProvider localAuthorityTypeProvider
+     *
      * @throws NotFoundException
      * @throws Exception
      */
-    public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthority(): void
+    public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthority(int $localAuthorityUserType): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
 
-        $this->setupMockIdentity(static::IS_LOCAL_AUTHORITY_USER, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
+        $this->setupMockIdentity($localAuthorityUserType, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
@@ -251,17 +253,19 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
+     * @dataProvider localAuthorityTypeProvider
+     *
      * @throws NotFoundException
      * @throws Exception
      */
-    public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsMatchingCurrentAuthority(): void
+    public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsMatchingCurrentAuthority(int $localAuthorityUserType): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
 
-        $this->setupMockIdentity(static::IS_LOCAL_AUTHORITY_USER, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
+        $this->setupMockIdentity($localAuthorityUserType, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
@@ -284,17 +288,19 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
+     * @dataProvider localAuthorityTypeProvider
+     *
      * @throws NotFoundException
      * @throws Exception
      */
-    public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsOneMatchingCurrentAuthorityAnotherNoAuthority(): void
+    public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsOneMatchingCurrentAuthorityAnotherNoAuthority(int $localAuthorityUserType): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
 
-        $this->setupMockIdentity(static::IS_LOCAL_AUTHORITY_USER, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
+        $this->setupMockIdentity($localAuthorityUserType, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
@@ -317,10 +323,12 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
+     * @dataProvider localAuthorityTypeProvider
+     *
      * @throws NotFoundException
      * @throws Exception
      */
-    public function testLocalAuthorityUserCannotAccessTxcDocumentForDifferentAuthority(): void
+    public function testLocalAuthorityUserCannotAccessTxcDocumentForDifferentAuthority(int $localAuthorityUserType): void
     {
         $mockLocalAuthorityA = m::mock(LocalAuthority::class);
         $mockLocalAuthorityA
@@ -332,7 +340,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
             ->allows('getId')
             ->andReturn(824578);
 
-        $this->setupMockIdentity(static::IS_LOCAL_AUTHORITY_USER, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthorityA);
+        $this->setupMockIdentity($localAuthorityUserType, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthorityA);
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
@@ -351,17 +359,19 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
+     * @dataProvider localAuthorityTypeProvider
+     *
      * @throws NotFoundException
      * @throws Exception
      */
-    public function testLocalAuthorityUserCannotAccessTxcDocumentForDocumentWithNoAuthority(): void
+    public function testLocalAuthorityUserCannotAccessTxcDocumentForDocumentWithNoAuthority(int $localAuthorityUserType): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
 
-        $this->setupMockIdentity(static::IS_LOCAL_AUTHORITY_USER, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
+        $this->setupMockIdentity($localAuthorityUserType, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
@@ -380,17 +390,19 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
+     * @dataProvider localAuthorityTypeProvider
+     *
      * @throws NotFoundException
      * @throws Exception
      */
-    public function testLocalAuthorityUserCannotAccessDocumentIfNoTxcInboxRecordsFoundForDocumentId(): void
+    public function testLocalAuthorityUserCannotAccessDocumentIfNoTxcInboxRecordsFoundForDocumentId(int $localAuthorityUserType): void
     {
         $mockLocalAuthority = m::mock(LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
 
-        $this->setupMockIdentity(static::IS_LOCAL_AUTHORITY_USER, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
+        $this->setupMockIdentity($localAuthorityUserType, $org = $this->getMockOrganisation(), 123456, $mockLocalAuthority);
 
         $this->mockRepo(Repository\Document::class)
             ->shouldReceive('fetchById')
@@ -508,5 +520,13 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
         $mockOrganisation->allows('getId')->andReturn(567890);
 
         return $mockOrganisation;
+    }
+
+    public function localAuthorityTypeProvider(): array
+    {
+        return [
+            'LOCAL AUTHORITY USER' => [static::IS_LOCAL_AUTHORITY_USER],
+            'LOCAL AUTHORITY ADMIN' => [static::IS_LOCAL_AUTHORITY_ADMIN],
+        ];
     }
 }
