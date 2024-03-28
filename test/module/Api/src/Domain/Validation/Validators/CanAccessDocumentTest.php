@@ -5,9 +5,6 @@ namespace Dvsa\OlcsTest\Api\Domain\Validation\Validators;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Validation\Validators\CanAccessDocument;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
-use Dvsa\Olcs\Api\Entity\Doc\Document;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -229,7 +226,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
      */
     public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthority(int $localAuthorityUserType): void
     {
-        $mockLocalAuthority = m::mock(LocalAuthority::class);
+        $mockLocalAuthority = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
@@ -260,7 +257,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
      */
     public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsMatchingCurrentAuthority(int $localAuthorityUserType): void
     {
-        $mockLocalAuthority = m::mock(LocalAuthority::class);
+        $mockLocalAuthority = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
@@ -295,7 +292,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
      */
     public function testLocalAuthorityUserCanAccessTxcDocumentForTheirAuthorityMultipleTxcRecordsOneMatchingCurrentAuthorityAnotherNoAuthority(int $localAuthorityUserType): void
     {
-        $mockLocalAuthority = m::mock(LocalAuthority::class);
+        $mockLocalAuthority = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
@@ -330,12 +327,12 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
      */
     public function testLocalAuthorityUserCannotAccessTxcDocumentForDifferentAuthority(int $localAuthorityUserType): void
     {
-        $mockLocalAuthorityA = m::mock(LocalAuthority::class);
+        $mockLocalAuthorityA = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthorityA
             ->allows('getId')
             ->andReturn(780245);
 
-        $mockLocalAuthorityB = m::mock(LocalAuthority::class);
+        $mockLocalAuthorityB = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthorityB
             ->allows('getId')
             ->andReturn(824578);
@@ -366,7 +363,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
      */
     public function testLocalAuthorityUserCannotAccessTxcDocumentForDocumentWithNoAuthority(int $localAuthorityUserType): void
     {
-        $mockLocalAuthority = m::mock(LocalAuthority::class);
+        $mockLocalAuthority = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
@@ -397,7 +394,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
      */
     public function testLocalAuthorityUserCannotAccessDocumentIfNoTxcInboxRecordsFoundForDocumentId(int $localAuthorityUserType): void
     {
-        $mockLocalAuthority = m::mock(LocalAuthority::class);
+        $mockLocalAuthority = m::mock(Entity\Bus\LocalAuthority::class);
         $mockLocalAuthority
             ->allows('getId')
             ->andReturn(780245);
@@ -422,11 +419,11 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     private function getMockDocument(bool $isExternal, int $createdById = 123456, m\MockInterface $relatedOrganisation = null): m\MockInterface
     {
         if ($relatedOrganisation === null) {
-            $relatedOrganisation = m::mock(Organisation::class);
+            $relatedOrganisation = m::mock(Entity\Organisation\Organisation::class);
             $relatedOrganisation->allows('getId')->andReturn(567890);
         }
 
-        $mockDoc = m::mock(Document::class);
+        $mockDoc = m::mock(Entity\Doc\Document::class);
 
         $mockDoc->allows('getIsExternal')->andReturn($isExternal);
         $mockDoc->allows('getId')->andReturn(static::DOCUMENT_ID);
@@ -512,11 +509,11 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
-     * @return MockInterface|Organisation
+     * @return MockInterface|Entity\Organisation\Organisation
      */
     private function getMockOrganisation(): m\MockInterface
     {
-        $mockOrganisation = m::mock(Organisation::class);
+        $mockOrganisation = m::mock(Entity\Organisation\Organisation::class);
         $mockOrganisation->allows('getId')->andReturn(567890);
 
         return $mockOrganisation;
