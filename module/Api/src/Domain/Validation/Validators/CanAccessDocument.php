@@ -19,14 +19,14 @@ class CanAccessDocument extends AbstractCanAccessEntity
     public function isValid($entityId): bool
     {
         if ($this->isTransportManager()) {
-            return $this->canTransportManagerAccessDocument($entityId);
+            return $this->canTransportManagerAccessDocument((int)$entityId);
         }
 
         if ($this->isLocalAuthority()) {
-            return $this->canLocalAuthorityAccessDocument($entityId);
+            return $this->canLocalAuthorityAccessDocument((int)$entityId);
         }
 
-        if ($this->isExternalUser() && !$this->canExternalUserAccessDocument($entityId)) {
+        if ($this->isExternalUser() && !$this->canExternalUserAccessDocument((int)$entityId)) {
             return false;
         }
 

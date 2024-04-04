@@ -57,6 +57,15 @@
       <directory>./test/module/Queue</directory>
     </testsuite>
   </testsuites>
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">./module</directory>
+    </include>
+    <report>
+      <html outputDirectory="./coverage-report"/>
+      <clover outputFile="./coverage-report/clover.xml"/>
+    </report>
+  </coverage>
   <logging/>
   <listeners>
     <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener"/>
