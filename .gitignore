@@ -27,4 +27,3 @@ phpstan.neon
 phpunit.xml
 psalm.xml
 
-/coverage-report/
