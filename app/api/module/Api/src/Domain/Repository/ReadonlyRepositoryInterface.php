@@ -34,7 +34,7 @@ interface ReadonlyRepositoryInterface
     /**
      * @param QueryInterface $query
      * @param int $hydrateMode
-     * @return array
+     * @return array|\ArrayIterator|\Traversable
      */
     public function fetchList(QueryInterface $query, $hydrateMode = Query::HYDRATE_ARRAY);
 
