@@ -1,52 +1,54 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\Olcs\Api\Domain\Validation\Validators;
 
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority;
-use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Transfer\Query;
 
-/**
- * Can Access a Document
- */
 class CanAccessDocument extends AbstractCanAccessEntity
 {
-    protected $repo = 'Document';
+    protected $repo = Repository\Document::class;
 
     /**
-     * Is Valid
-     *
-     * @param int $entityId Document ID
-     *
-     * @return bool
+     * @throws NotFoundException
      */
-    public function isValid($entityId)
+    public function isValid($entityId): bool
     {
-        // check if can validate through parent
-        $valid = $this->callParentIsValid($entityId);
-        if ($valid) {
-            // if passed validation then return
-            return true;
+        if ($this->isTransportManager()) {
+            return $this->canTransportManagerAccessDocument($entityId);
         }
 
-        /**
-         * attempt to find if the document is linked through a txc_inbox
-         *
-         * @var TxcInboxRepo $txcInboxRepo
-         * @var TxcInboxEntity $txcEntity
-         */
-        $txcInboxRepo = $this->getRepo('TxcInbox');
-        $txcEntities = $txcInboxRepo->fetchLinkedToDocument($entityId);
+        if ($this->isLocalAuthority()) {
+            return $this->canLocalAuthorityAccessDocument($entityId);
+        }
 
-        if (!empty($txcEntities)) {
-            $localAuthorityUser = $this->getCurrentLocalAuthority();
+        if ($this->isExternalUser() && !$this->canExternalUserAccessDocument($entityId)) {
+            return false;
+        }
 
-            foreach ($txcEntities as $txcEntity) {
-                $txcLocalAuthority = $txcEntity->getLocalAuthority();
+        return parent::isValid($entityId);
+    }
 
-                if ($txcLocalAuthority instanceof LocalAuthority && $txcLocalAuthority == $localAuthorityUser) {
-                    return true;
-                }
+    private function canLocalAuthorityAccessDocument(int $documentId): bool
+    {
+        $txcInboxRepo = $this->getRepo(Repository\TxcInbox::class);
+        $txcEntities = $txcInboxRepo->fetchLinkedToDocument($documentId);
+
+        if (!is_array($txcEntities) || count($txcEntities) === 0) {
+            return false;
+        }
+
+        $localAuthorityUser = $this->getCurrentLocalAuthority();
+
+        foreach ($txcEntities as $txcEntity) {
+            $txcLocalAuthority = $txcEntity->getLocalAuthority();
+
+            if ($txcLocalAuthority instanceof Entity\Bus\LocalAuthority && $txcLocalAuthority->getId() === $localAuthorityUser->getId()) {
+                return true;
             }
         }
 
@@ -54,14 +56,57 @@ class CanAccessDocument extends AbstractCanAccessEntity
     }
 
     /**
-     * Call parent isValid method (to facilitate unit testing)
-     *
-     * @param int $entityId Document ID
-     *
-     * @return bool
+     * @throws NotFoundException
      */
-    protected function callParentIsValid($entityId)
+    private function canExternalUserAccessDocument(int $documentId): bool
     {
-        return parent::isValid($entityId);
+        return $this->checkDocumentWasExternallyUploaded($documentId)
+            || $this->checkDocumentInCorrespondence($documentId)
+            || $this->checkIsTxcDocument($documentId);
+    }
+
+    private function checkDocumentInCorrespondence(int $documentId): bool
+    {
+        $currentUserOrganisationId = $this->getCurrentOrganisation() ? $this->getCurrentOrganisation()->getId() : null;
+        if ($currentUserOrganisationId === null) {
+            return false;
+        }
+
+        $query = Query\Correspondence\Correspondences::create([
+            'organisation' => $currentUserOrganisationId,
+        ]);
+
+        $correspondences = $this->getRepo(Repository\Correspondence::class)->fetchList($query);
+        $correspondencesDocumentIds = array_map(function ($element) {
+            return $element['document'];
+        }, iterator_to_array($correspondences));
+
+        return in_array($documentId, $correspondencesDocumentIds, true);
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    private function checkDocumentWasExternallyUploaded(int $documentId): bool
+    {
+        $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
+        return $document->getIsExternal();
+    }
+
+    private function checkIsTxcDocument(int $documentId): bool
+    {
+        $txcInboxRepo = $this->getRepo(Repository\TxcInbox::class);
+        $txcEntities = $txcInboxRepo->fetchLinkedToDocument($documentId);
+
+        return is_array($txcEntities) && count($txcEntities) > 0;
+    }
+
+    /**
+     * @throws NotFoundException
+     */
+    private function canTransportManagerAccessDocument(int $documentId): bool
+    {
+        $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
+        return $document->getCreatedBy()->getId() === $this->getCurrentUser()->getId();
     }
 }
