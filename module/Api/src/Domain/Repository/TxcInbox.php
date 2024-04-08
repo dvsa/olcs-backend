@@ -169,7 +169,7 @@ class TxcInbox extends AbstractRepository
     /**
      * Get a list of TxcInbox entities that are linked to a document
      *
-     * @param int $documentId Document ID
+     * @param mixed $documentId Document ID
      *
      * @return array
      */
