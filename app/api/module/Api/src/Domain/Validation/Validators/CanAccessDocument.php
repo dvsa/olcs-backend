@@ -18,11 +18,11 @@ class CanAccessDocument extends AbstractCanAccessEntity
      */
     public function isValid($entityId): bool
     {
-        if ($this->isTransportManager()) {
+        if ($this->getUser()->hasRoles([Entity\User\Role::ROLE_OPERATOR_TM])) {
             return $this->canTransportManagerAccessDocument($entityId);
         }
 
-        if ($this->isLocalAuthority()) {
+        if ($this->getUser()->hasRoles([Entity\User\Role::ROLE_LOCAL_AUTHORITY_USER, Entity\User\Role::ROLE_LOCAL_AUTHORITY_ADMIN])) {
             return $this->canLocalAuthorityAccessDocument($entityId);
         }
 
@@ -78,10 +78,10 @@ class CanAccessDocument extends AbstractCanAccessEntity
 
         $correspondences = $this->getRepo(Repository\Correspondence::class)->fetchList($query);
         $correspondencesDocumentIds = array_map(function ($element) {
-            return $element['document'];
+            return $element['document']['id'] ?? null;
         }, iterator_to_array($correspondences));
 
-        return in_array($documentId, $correspondencesDocumentIds, true);
+        return in_array($documentId, $correspondencesDocumentIds);
     }
 
     /**
