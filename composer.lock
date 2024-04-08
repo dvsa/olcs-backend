@@ -6033,16 +6033,16 @@
         },
         {
             "name": "olcs/olcs-logging",
-            "version": "v7.0.0",
+            "version": "v7.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-logging.git",
-                "reference": "7acff4c1353ac162cb2fdd568ff27908885ef88e"
+                "reference": "b7a4c1672ce4ad34d16e58b74abfae461405b55d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-logging/zipball/7acff4c1353ac162cb2fdd568ff27908885ef88e",
-                "reference": "7acff4c1353ac162cb2fdd568ff27908885ef88e",
+                "url": "https://api.github.com/repos/dvsa/olcs-logging/zipball/b7a4c1672ce4ad34d16e58b74abfae461405b55d",
+                "reference": "b7a4c1672ce4ad34d16e58b74abfae461405b55d",
                 "shasum": ""
             },
             "require": {
@@ -6052,7 +6052,7 @@
                 "laminas/laminas-mvc": "^3.3",
                 "laminas/laminas-session": "^2.8.7",
                 "laminas/laminas-stdlib": "^3.0",
-                "php": "^7.4",
+                "php": "^7.4|^8.0",
                 "psr/container": "^1.1|^2",
                 "psr/log": "^1.0"
             },
@@ -6081,9 +6081,9 @@
             ],
             "description": "Logging Module for OLCS",
             "support": {
-                "source": "https://github.com/dvsa/olcs-logging/tree/v7.0.0"
+                "source": "https://github.com/dvsa/olcs-logging/tree/v7.2.0"
             },
-            "time": "2024-03-18T14:23:57+00:00"
+            "time": "2024-04-08T11:11:14+00:00"
         },
         {
             "name": "olcs/olcs-transfer",
