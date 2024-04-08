@@ -27,7 +27,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     private const IS_LOCAL_AUTHORITY_USER = 3;
     private const IS_LOCAL_AUTHORITY_ADMIN = 4;
     private const IS_TRANSPORT_MANAGER_USER = 5;
-    private const DOCUMENT_ID = 123;
+    private const DOCUMENT_ID = "123";
 
     public function setUp(): void
     {

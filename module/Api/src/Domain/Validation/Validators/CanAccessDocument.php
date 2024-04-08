@@ -33,7 +33,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
         return parent::isValid($entityId);
     }
 
-    private function canLocalAuthorityAccessDocument(int $documentId): bool
+    private function canLocalAuthorityAccessDocument(string $documentId): bool
     {
         $txcInboxRepo = $this->getRepo(Repository\TxcInbox::class);
         $txcEntities = $txcInboxRepo->fetchLinkedToDocument($documentId);
@@ -58,14 +58,14 @@ class CanAccessDocument extends AbstractCanAccessEntity
     /**
      * @throws NotFoundException
      */
-    private function canExternalUserAccessDocument(int $documentId): bool
+    private function canExternalUserAccessDocument(string $documentId): bool
     {
         return $this->checkDocumentWasExternallyUploaded($documentId)
             || $this->checkDocumentInCorrespondence($documentId)
             || $this->checkIsTxcDocument($documentId);
     }
 
-    private function checkDocumentInCorrespondence(int $documentId): bool
+    private function checkDocumentInCorrespondence(string $documentId): bool
     {
         $currentUserOrganisationId = $this->getCurrentOrganisation() ? $this->getCurrentOrganisation()->getId() : null;
         if ($currentUserOrganisationId === null) {
@@ -87,13 +87,13 @@ class CanAccessDocument extends AbstractCanAccessEntity
     /**
      * @throws NotFoundException
      */
-    private function checkDocumentWasExternallyUploaded(int $documentId): bool
+    private function checkDocumentWasExternallyUploaded(string $documentId): bool
     {
         $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
         return $document->getIsExternal();
     }
 
-    private function checkIsTxcDocument(int $documentId): bool
+    private function checkIsTxcDocument(string $documentId): bool
     {
         $txcInboxRepo = $this->getRepo(Repository\TxcInbox::class);
         $txcEntities = $txcInboxRepo->fetchLinkedToDocument($documentId);
@@ -104,7 +104,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
     /**
      * @throws NotFoundException
      */
-    private function canTransportManagerAccessDocument(int $documentId): bool
+    private function canTransportManagerAccessDocument(string $documentId): bool
     {
         $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
         return $document->getCreatedBy()->getId() === $this->getCurrentUser()->getId();
