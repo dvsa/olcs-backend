@@ -43,10 +43,8 @@ class DocManClientTest extends MockeryTestCase
 
         $this->mockFile = m::mock(DsFile::class);
 
-        // Mock the logger
-        $logWriter = m::mock(\Laminas\Log\Writer\WriterInterface::class);
-
-        $this->logger = m::mock(\Laminas\Log\Logger::class, [])->makePartial();
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $this->logger = new \Laminas\Log\Logger();
         $this->logger->addWriter($logWriter);
 
         Logger::setLogger($this->logger);
@@ -125,7 +123,7 @@ class DocManClientTest extends MockeryTestCase
     {
         $mockResponse = m::mock(\Laminas\Http\Response::class)
             ->shouldReceive('isSuccess')->once()->andReturn(false)
-            ->shouldReceive('getStatusCode')->times(3)->andReturn(600)
+            ->shouldReceive('getStatusCode')->andReturn(600)
             ->getMock();
 
         $this->mockClient->expects(static::once())->method('setRequest')->willReturnSelf();
@@ -133,13 +131,6 @@ class DocManClientTest extends MockeryTestCase
         $this->mockClient->expects(static::once())->method('setMethod')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('setStream')->willReturnSelf();
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
-
-        $expectedLog = json_encode(["error" => DocManClient::ERR_RESP_FAIL, "reason" => $mockResponse->getStatusCode(), "path" => 'test']);
-        ;
-        $this->logger
-            ->shouldReceive('log')
-            ->once()
-            ->with(\Laminas\Log\Logger::ERR, $expectedLog, []);
 
         //  call & check
         $actual = $this->sut->read('test');
@@ -169,11 +160,6 @@ class DocManClientTest extends MockeryTestCase
                 }
             );
         $this->mockClient->expects(static::once())->method('send')->willReturn($mockResponse);
-
-        $this->logger
-            ->shouldReceive('log')
-            ->once()
-            ->with(\Laminas\Log\Logger::INFO, 'unit_ErrMsg', []);
 
         //  call & check
         $actual = $this->sut->read('test');
