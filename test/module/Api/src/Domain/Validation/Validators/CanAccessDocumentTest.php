@@ -97,7 +97,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 return $query->getOrganisation() === $org->getId();
             })
             ->andReturn(new ArrayCollection([
-                ['document' => static::DOCUMENT_ID],
+                ['document' => ['id' => static::DOCUMENT_ID]],
             ]));
 
         $this->setIsValid('isOwner', [$document], true);
@@ -457,10 +457,9 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
             $mockIdentity->allows('getUser->getLocalAuthority')->andReturn(null);
         }
 
-        $this->auth->allows('getIdentity')->andReturn($mockIdentity);
-
         switch ($userType) {
             case static::IS_SYSTEM_USER:
+                $mockIdentity->allows('getUser->hasRoles')->andReturn(false)->byDefault();
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(false);
@@ -468,6 +467,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 $this->auth->allows('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(false);
                 break;
             case static::IS_INTERNAL_USER:
+                $mockIdentity->allows('getUser->hasRoles')->andReturn(false)->byDefault();
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(true);
                 $this->auth->allows('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(false);
@@ -475,6 +475,7 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 $this->auth->allows('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(false);
                 break;
             case static::IS_EXTERNAL_USER:
+                $mockIdentity->allows('getUser->hasRoles')->andReturn(false)->byDefault();
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
@@ -482,6 +483,8 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 $this->auth->allows('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(false);
                 break;
             case static::IS_LOCAL_AUTHORITY_USER:
+                $mockIdentity->allows('getUser->hasRoles')->andReturn(false)->byDefault();
+                $mockIdentity->allows('getUser->hasRoles')->with([Entity\User\Role::ROLE_LOCAL_AUTHORITY_USER, Entity\User\Role::ROLE_LOCAL_AUTHORITY_ADMIN])->andReturn(true);
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
@@ -489,6 +492,8 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 $this->auth->allows('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(false);
                 break;
             case static::IS_LOCAL_AUTHORITY_ADMIN:
+                $mockIdentity->allows('getUser->hasRoles')->andReturn(false)->byDefault();
+                $mockIdentity->allows('getUser->hasRoles')->with([Entity\User\Role::ROLE_LOCAL_AUTHORITY_USER, Entity\User\Role::ROLE_LOCAL_AUTHORITY_ADMIN])->andReturn(true);
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
@@ -496,6 +501,8 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 $this->auth->allows('isGranted')->with(Permission::LOCAL_AUTHORITY_ADMIN, null)->andReturn(true);
                 break;
             case static::IS_TRANSPORT_MANAGER_USER:
+                $mockIdentity->allows('getUser->hasRoles')->andReturn(false)->byDefault();
+                $mockIdentity->allows('getUser->hasRoles')->with([Entity\User\Role::ROLE_OPERATOR_TM])->andReturn(true);
                 $this->auth->allows('isGranted')->with(Permission::TRANSPORT_MANAGER, null)->andReturn(true);
                 $this->auth->allows('isGranted')->with(Permission::INTERNAL_USER, null)->andReturn(false);
                 $this->auth->allows('isGranted')->with(Permission::SELFSERVE_USER, null)->andReturn(true);
@@ -506,6 +513,8 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
                 /** @noinspection PhpUnhandledExceptionInspection */
                 throw new Exception("Unexpected user type provided");
         }
+
+        $this->auth->allows('getIdentity')->andReturn($mockIdentity);
     }
 
     /**
