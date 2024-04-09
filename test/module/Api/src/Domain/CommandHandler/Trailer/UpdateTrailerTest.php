@@ -51,6 +51,11 @@ class UpdateTrailerTest extends CommandHandlerTestCase
 
         $command = Cmd::create($data);
 
+        // Use reflection to set the value of trailerNo property
+        $reflectionProperty = new \ReflectionProperty(Cmd::class, 'trailerNo');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($command, $trailerNo);
+
         $trailer = m::mock(Trailer::class);
         $trailer->shouldReceive('getId')
             ->withNoArgs()
