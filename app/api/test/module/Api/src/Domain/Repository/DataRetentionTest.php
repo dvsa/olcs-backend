@@ -42,16 +42,22 @@ class DataRetentionTest extends RepositoryTestCase
     public function testApplyListFiltersRecordsQry()
     {
         $query = RecordsQry::create(
-            ['dataRetentionRuleId' => 13, 'sort' => 'id', 'order' => 'DESC']
+            [
+                'dataRetentionRuleId' => 13, 'sort' => 'id', 'order' => 'DESC',
+                'assignedToUser' => 1
+            ]
         );
 
         /** @var QueryBuilder|m::mock $qb */
         $qb = m::mock(QueryBuilder::class);
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
-        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.assignedTo', ':assignedToUser')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
         $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+        $qb->shouldReceive('setParameter')->with('assignedToUser', 1)->once();
 
         $this->sut->applyListFilters($qb, $query);
     }
@@ -62,7 +68,8 @@ class DataRetentionTest extends RepositoryTestCase
             ['dataRetentionRuleId' => 13,
                 'sort' => 'id',
                 'order' => 'DESC',
-                'markedForDeletion' => 'Y'
+                'markedForDeletion' => 'Y',
+                'assignedToUser' => 1
             ]
         );
 
@@ -71,11 +78,14 @@ class DataRetentionTest extends RepositoryTestCase
         $qb->shouldReceive('expr->eq')->with('m.actionConfirmation', ':actionConfirmation')->once()->andReturn('expr0');
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
         $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.assignedTo', ':assignedToUser')->once()->andReturn('expr3');
         $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('actionConfirmation', 1)->once();
         $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+        $qb->shouldReceive('setParameter')->with('assignedToUser', 1)->once();
 
         $this->sut->applyListFilters($qb, $query);
     }
@@ -86,7 +96,8 @@ class DataRetentionTest extends RepositoryTestCase
             ['dataRetentionRuleId' => 13,
                 'sort' => 'id',
                 'order' => 'DESC',
-                'markedForDeletion' => 'N'
+                'markedForDeletion' => 'N',
+                'assignedToUser' => 1
             ]
         );
 
@@ -95,11 +106,14 @@ class DataRetentionTest extends RepositoryTestCase
         $qb->shouldReceive('expr->eq')->with('m.actionConfirmation', ':actionConfirmation')->once()->andReturn('expr0');
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr1');
         $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr2');
+        $qb->shouldReceive('expr->eq')->with('m.assignedTo', ':assignedToUser')->once()->andReturn('expr3');
         $qb->shouldReceive('andWhere')->once()->with('expr0')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('actionConfirmation', 0)->once();
         $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
+        $qb->shouldReceive('setParameter')->with('assignedToUser', 1)->once();
 
         $this->sut->applyListFilters($qb, $query);
     }
@@ -110,7 +124,8 @@ class DataRetentionTest extends RepositoryTestCase
             ['dataRetentionRuleId' => 13,
                 'sort' => 'id',
                 'order' => 'DESC',
-                'nextReview' => 'deferred'
+                'nextReview' => 'deferred',
+                'assignedToUser' => 1
             ]
         );
 
@@ -122,6 +137,7 @@ class DataRetentionTest extends RepositoryTestCase
 
         $expectedQuery = 'BLAH '
             . 'AND m.nextReviewDate > [[' . $today . ']] '
+            . 'AND m.assignedTo = [[1]] '
             . 'AND drr.isEnabled = 1 '
             . 'AND m.dataRetentionRule = [[13]]';
 
@@ -134,7 +150,8 @@ class DataRetentionTest extends RepositoryTestCase
             ['dataRetentionRuleId' => 13,
                 'sort' => 'id',
                 'order' => 'DESC',
-                'nextReview' => 'pending'
+                'nextReview' => 'pending',
+                'assignedToUser' => 1
             ]
         );
 
@@ -145,7 +162,7 @@ class DataRetentionTest extends RepositoryTestCase
         $this->sut->applyListFilters($qb, $query);
 
         $expectedQuery = 'BLAH '
-            . 'AND (m.nextReviewDate IS NULL OR m.nextReviewDate <= [[' . $today . ']]) '
+            . 'AND (m.nextReviewDate IS NULL OR m.nextReviewDate <= [[' . $today . ']]) AND m.assignedTo = [[1]] '
             . 'AND drr.isEnabled = 1 '
             . 'AND m.dataRetentionRule = [[13]]';
 
@@ -225,7 +242,8 @@ class DataRetentionTest extends RepositoryTestCase
         $query = RecordsQry::create(
             [
                 'dataRetentionRuleId' => 13,
-                'goodsOrPsv' => 'lcat_gv'
+                'goodsOrPsv' => 'lcat_gv',
+                'assignedToUser' => 1
             ]
         );
 
@@ -234,11 +252,14 @@ class DataRetentionTest extends RepositoryTestCase
         $qb->shouldReceive('expr->eq')->with('m.goodsOrPsv', ':goodsOrPsv')->once()->andReturn('expr1');
         $qb->shouldReceive('expr->eq')->with('drr.isEnabled', 1)->once()->andReturn('expr2');
         $qb->shouldReceive('expr->eq')->with('m.dataRetentionRule', ':dataRetentionRuleId')->once()->andReturn('expr3');
+        $qb->shouldReceive('expr->eq')->with('m.assignedTo', ':assignedToUser')->once()->andReturn('expr4');
         $qb->shouldReceive('andWhere')->once()->with('expr1')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr2')->andReturnSelf();
         $qb->shouldReceive('andWhere')->once()->with('expr3')->andReturnSelf();
+        $qb->shouldReceive('andWhere')->once()->with('expr4')->andReturnSelf();
         $qb->shouldReceive('setParameter')->with('dataRetentionRuleId', 13)->once();
         $qb->shouldReceive('setParameter')->with('goodsOrPsv', 'lcat_gv')->once();
+        $qb->shouldReceive('setParameter')->with('assignedToUser', 1)->once();
 
         $this->sut->applyListFilters($qb, $query);
     }
