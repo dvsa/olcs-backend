@@ -31,7 +31,7 @@ class BusRegBrowseContextListTest extends QueryHandlerTestCase
             ]
         );
 
-        // Use reflection to set the value of trailerNo property
+        // Use reflection to set the value of context property
         $reflectionProperty = new \ReflectionProperty(Qry::class, 'context');
         $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue($query, $context);
