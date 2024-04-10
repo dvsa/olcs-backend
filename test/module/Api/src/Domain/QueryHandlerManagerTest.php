@@ -29,7 +29,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $logger = new \Laminas\Log\Logger();
         $logger->addWriter($logWriter);
         Logger::setLogger($logger);
-        
+
         $this->vhm = m::mock(ValidationHandlerManager::class)->makePartial();
 
         $container = m::mock(ContainerInterface::class);

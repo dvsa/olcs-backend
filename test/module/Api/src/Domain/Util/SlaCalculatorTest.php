@@ -30,7 +30,7 @@ class SlaCalculatorTest extends MockeryTestCase
         $logger = new \Laminas\Log\Logger();
         $logger->addWriter($logWriter);
         Logger::setLogger($logger);
-        
+
         $this->publicHolidayRepo = m::mock(PublicHolidayRepo::class);
 
         $this->dateTimeProcessor = new TimeProcessorBuilder($this->publicHolidayRepo);
