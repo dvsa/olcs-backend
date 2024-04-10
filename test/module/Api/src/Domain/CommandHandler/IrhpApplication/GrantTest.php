@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Service\Permits\GrantabilityChecker;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-class GrantTest extends CommandHandlerTestCase
+class GrantTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

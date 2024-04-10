@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\PrepareContinuations as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\PrepareContinuations as Command;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
@@ -18,7 +18,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PrepareContinuationsTest extends CommandHandlerTestCase
+class PrepareContinuationsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

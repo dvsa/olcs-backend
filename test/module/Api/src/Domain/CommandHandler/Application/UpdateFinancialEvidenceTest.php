@@ -14,7 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateFinancialEvidence;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateFinancialEvidence as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class UpdateFinancialEvidenceTest extends CommandHandlerTestCase
+class UpdateFinancialEvidenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

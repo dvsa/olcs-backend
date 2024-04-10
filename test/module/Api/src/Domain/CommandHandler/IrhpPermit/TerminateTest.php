@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit\Terminate as CmdHandler;
 use Dvsa\Olcs\Transfer\Command\IrhpPermit\Terminate;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *
  * @author Tonci Vidovic <Tonci.vidovic@capgemini.com>
  */
-class TerminateTest extends CommandHandlerTestCase
+class TerminateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

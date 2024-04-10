@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateLetter;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\CreateLetter as Cmd;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -21,7 +21,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateLetterTest extends CommandHandlerTestCase
+class CreateLetterTest extends AbstractCommandHandlerTestCase
 {
     protected const LICENCE_ID = 2;
     protected const APPLICATION_ID = 4;

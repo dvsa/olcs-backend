@@ -8,7 +8,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ResetToValid as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,7 +22,7 @@ use Mockery as m;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class ResetToValidTest extends CommandHandlerTestCase
+class ResetToValidTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

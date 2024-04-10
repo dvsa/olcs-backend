@@ -6,13 +6,13 @@ use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateBusinessDetails;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers  Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateBusinessDetails
  */
-class UpdateBusinessDetailsTest extends CommandHandlerTestCase
+class UpdateBusinessDetailsTest extends AbstractCommandHandlerTestCase
 {
     public const ID = 111;
     public const LIC_ID = 2222;

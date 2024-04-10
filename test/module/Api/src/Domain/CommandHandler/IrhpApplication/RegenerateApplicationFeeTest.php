@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CreateFee;
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-class RegenerateApplicationFeeTest extends CommandHandlerTestCase
+class RegenerateApplicationFeeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

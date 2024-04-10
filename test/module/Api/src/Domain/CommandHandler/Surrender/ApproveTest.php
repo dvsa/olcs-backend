@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Approve as ApproveHandler;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Command\Surrender\Approve as ApproveCommand;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as UpdateCommand;
 use Mockery as m;
 
-class ApproveTest extends CommandHandlerTestCase
+class ApproveTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var ApproveHandler

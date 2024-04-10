@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJurisdictionQuotaRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuotaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Delete as DeleteCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as PermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota as JurisdictionEntity;
@@ -21,7 +21,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

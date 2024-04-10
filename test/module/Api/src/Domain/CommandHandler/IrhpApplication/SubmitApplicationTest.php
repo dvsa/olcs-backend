@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\SubmitApplication;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-class SubmitApplicationTest extends CommandHandlerTestCase
+class SubmitApplicationTest extends AbstractCommandHandlerTestCase
 {
     public const TASK_CREATION_MESSAGE = 'Task created';
     public const SUBMISSION_TASK_DESCRIPTION = 'Submission task description';

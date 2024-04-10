@@ -12,7 +12,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding\UpdateImpounding;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\UpdateImpounding as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases;
@@ -24,7 +24,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateImpoundingTest extends CommandHandlerTestCase
+class UpdateImpoundingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

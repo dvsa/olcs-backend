@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Document\Upload
  */
-class UploadTest extends CommandHandlerTestCase
+class UploadTest extends AbstractCommandHandlerTestCase
 {
     public const BODY = 'expect_body';
     public const IDENTIFIER = '/some/identifier.pdf';

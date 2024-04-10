@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\UpdateSla;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\System\Sla as SlaEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateSla as Cmd;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTarg
 /**
  * Update Sla Test
  */
-class UpdateSlaTest extends CommandHandlerTestCase
+class UpdateSlaTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

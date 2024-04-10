@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\CreateApplicationOperatingCentre as CreateAocCmd;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as ApplicationOperatingCentreRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Dvsa\Olcs\Api\Entity\Application\S4 as S4Entity;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre\CreateApplica
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateApplicationOperatingCentreTest extends CommandHandlerTestCase
+class CreateApplicationOperatingCentreTest extends AbstractCommandHandlerTestCase
 {
     protected $s4;
 

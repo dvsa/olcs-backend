@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\PrintLicence;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CopyApplicationDataToLicence as CopyApplicationDataToLicenceCmd;
 
 /**
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CopyApplicationDataToLicence 
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CopyApplicationDataToLicenceTest extends CommandHandlerTestCase
+class CopyApplicationDataToLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

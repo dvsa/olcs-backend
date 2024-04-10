@@ -14,7 +14,7 @@ use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest;
 use Dvsa\Olcs\Email\Service\Imap;
 use Mockery as m;
 use Dvsa\Olcs\Email\Domain\CommandHandler\ProcessInspectionRequestEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Domain\Command\ProcessInspectionRequestEmail as Cmd;
 use Olcs\Logging\Log\Logger;
 
@@ -23,7 +23,7 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ProcessInspectionRequestEmailTest extends CommandHandlerTestCase
+class ProcessInspectionRequestEmailTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var ProcessInspectionRequestEmail

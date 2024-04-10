@@ -15,10 +15,10 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class PrintJobTest extends CommandHandlerTestCase
+class PrintJobTest extends AbstractCommandHandlerTestCase
 {
     /** @var  CommandHandler | m\MockInterface */
     protected $sut;

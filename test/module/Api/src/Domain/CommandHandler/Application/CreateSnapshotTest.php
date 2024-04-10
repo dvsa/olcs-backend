@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateSnapshot;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -26,7 +26,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateSnapshotTest extends CommandHandlerTestCase
+class CreateSnapshotTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

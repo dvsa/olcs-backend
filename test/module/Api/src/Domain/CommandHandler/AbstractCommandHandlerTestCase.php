@@ -39,7 +39,7 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-abstract class CommandHandlerTestCase extends MockeryTestCase
+abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
 {
     use ValidateMockRepoTypeTrait;
 

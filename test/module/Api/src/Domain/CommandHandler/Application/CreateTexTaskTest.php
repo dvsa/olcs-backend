@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateTexTask;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateTexTaskTest extends CommandHandlerTestCase
+class CreateTexTaskTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

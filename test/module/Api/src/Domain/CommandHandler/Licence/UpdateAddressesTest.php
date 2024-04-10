@@ -8,7 +8,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Licence\SaveAddresses;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -27,7 +27,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class UpdateAddressesTest extends CommandHandlerTestCase
+class UpdateAddressesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

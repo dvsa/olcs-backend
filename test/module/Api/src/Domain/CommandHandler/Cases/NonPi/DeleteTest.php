@@ -13,13 +13,13 @@ use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
 use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create NonPi Test
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

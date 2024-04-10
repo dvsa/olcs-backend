@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Create as Sut;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
 use Dvsa\Olcs\Transfer\Command\Surrender\Create as Cmd;
 use Mockery as m;
 
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public const LIC_ID = 111;
 

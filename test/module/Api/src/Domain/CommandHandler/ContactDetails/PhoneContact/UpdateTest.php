@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\ContactDetails\PhoneContact\Update as Ha
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\ContactDetail\PhoneContact\Update as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\ContactDetails\PhoneContact\Update
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

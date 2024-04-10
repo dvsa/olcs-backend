@@ -14,7 +14,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-abstract class AbstractCreateSnapshotHandlerTest extends CommandHandlerTestCase
+abstract class AbstractCreateSnapshotHandlerTest extends AbstractCommandHandlerTestCase
 {
     protected $cmdClass = 'changeMe';
     protected $sutClass = 'changeMe';

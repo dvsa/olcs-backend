@@ -18,12 +18,12 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\PrintIrfoPsvAuthChecklist as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Print IRFO PSV Auth Checklist Test
  */
-class PrintIrfoPsvAuthChecklistTest extends CommandHandlerTestCase
+class PrintIrfoPsvAuthChecklistTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -24,13 +24,13 @@ use Dvsa\Olcs\Api\Entity\Task\TaskAlphaSplit;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Task\CreateTask
  */
-class CreateTaskTest extends CommandHandlerTestCase
+class CreateTaskTest extends AbstractCommandHandlerTestCase
 {
     /** @var  CreateTask */
     protected $sut;

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
 
 /**
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Transfer\Command\Application\RefuseInterim as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class RefuseInterimTest extends CommandHandlerTestCase
+class RefuseInterimTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

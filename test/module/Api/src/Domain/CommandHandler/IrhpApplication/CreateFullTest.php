@@ -20,14 +20,14 @@ use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationUpdater;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CreateFull as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateMultipleNoOfPermits;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Create Irhp Application test
  */
-class CreateFullTest extends CommandHandlerTestCase
+class CreateFullTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

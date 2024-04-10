@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\RemoveReadAudit;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class RemoveReadAuditTest extends CommandHandlerTestCase
+class RemoveReadAuditTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

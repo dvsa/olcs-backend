@@ -6,7 +6,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Publication\Application as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 /**
  * LicenceTest
  */
-class LicenceTest extends CommandHandlerTestCase
+class LicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

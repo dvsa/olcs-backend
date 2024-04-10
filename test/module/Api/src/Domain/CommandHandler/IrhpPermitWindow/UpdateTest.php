@@ -7,7 +7,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitWindow\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as PermitWindowRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitWindow\Update as UpdateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as PermitStockEntity;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Traits\ProcessDateTrait;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     use ProcessDateTrait;
 

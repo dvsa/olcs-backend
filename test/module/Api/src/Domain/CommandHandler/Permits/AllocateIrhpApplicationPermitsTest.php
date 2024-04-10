@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateIrhpApplicationPermits;
 use Dvsa\Olcs\Api\Domain\Command\Permits\AllocateCandidatePermits;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Service\Permits\Allocate\IrhpPermitAllocator;
 use Mockery as m;
 use RuntimeException;
 
-class AllocateIrhpApplicationPermitsTest extends CommandHandlerTestCase
+class AllocateIrhpApplicationPermitsTest extends AbstractCommandHandlerTestCase
 {
     private $irhpApplicationId;
 

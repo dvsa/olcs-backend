@@ -27,13 +27,13 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\User\RegisterUserSelfserve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Register User Selfserve Test
  */
-class RegisterUserSelfserveTest extends CommandHandlerTestCase
+class RegisterUserSelfserveTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var ValidatableAdapterInterface|m\LegacyMockInterface|m\MockInterface

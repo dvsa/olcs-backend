@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateVehicles;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateVehicles as Cmd;
 
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateVehicles as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateVehiclesTest extends CommandHandlerTestCase
+class UpdateVehiclesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

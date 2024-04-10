@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\DeleteDocuments;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments as Cmd;
 
 /**
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteDocumentsTest extends CommandHandlerTestCase
+class DeleteDocumentsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

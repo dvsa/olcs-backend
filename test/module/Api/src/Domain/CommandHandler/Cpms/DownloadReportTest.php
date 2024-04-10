@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Cpms\DownloadReport as Cmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class DownloadReportTest extends CommandHandlerTestCase
+class DownloadReportTest extends AbstractCommandHandlerTestCase
 {
     protected $mockApi;
 

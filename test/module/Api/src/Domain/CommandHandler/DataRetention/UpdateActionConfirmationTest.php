@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention;
 use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForDelete;
 use Dvsa\Olcs\Transfer\Command\DataRetention\MarkForReview;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Class UpdateActionConfirmationTest
  */
-class UpdateActionConfirmationTest extends CommandHandlerTestCase
+class UpdateActionConfirmationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

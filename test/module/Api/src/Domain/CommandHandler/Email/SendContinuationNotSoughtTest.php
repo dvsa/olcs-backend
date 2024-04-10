@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as Repo;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Email\Data\Message;
 
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Email\Data\Message;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class SendContinuationNotSoughtTest extends CommandHandlerTestCase
+class SendContinuationNotSoughtTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,10 +13,10 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class StoreSubmissionSnapshotTest extends CommandHandlerTestCase
+class StoreSubmissionSnapshotTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

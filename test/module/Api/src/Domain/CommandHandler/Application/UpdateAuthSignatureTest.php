@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateAuthSignature as Cmd;
 
 /**
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Transfer\Command\Application\UpdateAuthSignature as Cmd;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateAuthSignatureTest extends CommandHandlerTestCase
+class UpdateAuthSignatureTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

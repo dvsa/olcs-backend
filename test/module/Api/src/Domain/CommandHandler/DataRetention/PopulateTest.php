@@ -8,14 +8,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Populate;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\Populate as Cmd;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class PopulateTest
  */
-class PopulateTest extends CommandHandlerTestCase
+class PopulateTest extends AbstractCommandHandlerTestCase
 {
     private $mockedConnection;
 

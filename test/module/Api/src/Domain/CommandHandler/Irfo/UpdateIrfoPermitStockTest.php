@@ -13,12 +13,12 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPermitStock as IrfoPermitStockEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoPermitStock as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update IrfoPermitStock Test
  */
-class UpdateIrfoPermitStockTest extends CommandHandlerTestCase
+class UpdateIrfoPermitStockTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

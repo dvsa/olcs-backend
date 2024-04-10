@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cache\ClearForOrganisation as Handler;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -15,7 +15,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ClearForOrganisationTest extends CommandHandlerTestCase
+class ClearForOrganisationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

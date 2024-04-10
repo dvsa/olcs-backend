@@ -20,7 +20,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\TransferVehicles as Cmd;
 use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 
 /**
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class TransferVehiclesTest extends CommandHandlerTestCase
+class TransferVehiclesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

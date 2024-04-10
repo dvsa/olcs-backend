@@ -18,13 +18,13 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * GeneratePermitDocumentTest
  */
-class GeneratePermitDocumentTest extends CommandHandlerTestCase
+class GeneratePermitDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

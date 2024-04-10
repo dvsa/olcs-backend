@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspensionReason as CommunityL
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawal as CommunityLicWithdrawalEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicWithdrawalReason as CommunityLicWithdrawalReasonEntity;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Stop as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -32,7 +32,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class StopTest extends CommandHandlerTestCase
+class StopTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

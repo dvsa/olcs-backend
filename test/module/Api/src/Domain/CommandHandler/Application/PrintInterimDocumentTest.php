@@ -17,14 +17,14 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument as Cmd;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Print Interim Document Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PrintInterimDocumentTest extends CommandHandlerTestCase
+class PrintInterimDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

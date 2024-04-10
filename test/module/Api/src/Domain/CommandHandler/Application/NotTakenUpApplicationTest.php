@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\NotTakenUpApplication as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Licence\NotTakenUp as Command;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\EndInterim as EndInterimCmd;
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class NotTakenUpApplicationTest extends CommandHandlerTestCase
+class NotTakenUpApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

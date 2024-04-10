@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Application\Create as Creat
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Application\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCmd;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Application\CreateOfficeCopy as CreateOfficeCopyCmd;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateCommunityLicenceTest extends CommandHandlerTestCase
+class CreateCommunityLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

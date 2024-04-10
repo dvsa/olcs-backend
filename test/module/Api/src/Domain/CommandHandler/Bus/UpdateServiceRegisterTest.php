@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateServiceRegister;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceRegister as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Update Service Register Test
  */
-class UpdateServiceRegisterTest extends CommandHandlerTestCase
+class UpdateServiceRegisterTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

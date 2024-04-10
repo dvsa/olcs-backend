@@ -8,13 +8,13 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Task\ReassignTasks as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Task\ReassignTasks
  */
-class ReassignTasksTest extends CommandHandlerTestCase
+class ReassignTasksTest extends AbstractCommandHandlerTestCase
 {
     public const TASK_ID_1 = 9990;
     public const TASK_ID_2 = 9991;

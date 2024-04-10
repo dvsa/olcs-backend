@@ -11,10 +11,10 @@ use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class SendPtrNotificationForUnregisteredUserTest extends CommandHandlerTestCase
+class SendPtrNotificationForUnregisteredUserTest extends AbstractCommandHandlerTestCase
 {
     /** @var CommandInterface|SendPtrNotificationForUnregisteredUser */
     protected $sut;

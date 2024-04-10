@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as Repo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\ServiceException;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class InitialLoadTest extends CommandHandlerTestCase
+class InitialLoadTest extends AbstractCommandHandlerTestCase
 {
     protected $mockApi;
 

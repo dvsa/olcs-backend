@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\AssignSubmission as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -38,7 +38,7 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 /**
  * Assign Submission Test
  */
-class AssignSubmissionTest extends CommandHandlerTestCase
+class AssignSubmissionTest extends AbstractCommandHandlerTestCase
 {
     protected $submissionConfig = [
         'submissions' => [

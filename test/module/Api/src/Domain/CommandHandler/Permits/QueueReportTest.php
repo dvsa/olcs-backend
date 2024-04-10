@@ -8,12 +8,12 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\QueueReport as QueueReportHandler;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Permits\QueueReport as QueueReportCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @see QueueReportHandler
  */
-class QueueReportTest extends CommandHandlerTestCase
+class QueueReportTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

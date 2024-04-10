@@ -21,7 +21,7 @@ use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as SubmitApplicatio
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits as AcceptIrhpPermitsCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplication as SubmitIrhpApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\Transaction\CompleteTransaction as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -30,7 +30,7 @@ use Mockery as m;
  * @author Dan Eggleston <dan@stolenegg.com>
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class CompleteTransactionTest extends CommandHandlerTestCase
+class CompleteTransactionTest extends AbstractCommandHandlerTestCase
 {
     protected $mockCpmsService;
 

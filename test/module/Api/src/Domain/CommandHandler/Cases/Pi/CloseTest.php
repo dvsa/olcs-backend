@@ -11,14 +11,14 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\Close;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\Close as CloseCmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 
 /**
  * Close
  */
-class CloseTest extends CommandHandlerTestCase
+class CloseTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

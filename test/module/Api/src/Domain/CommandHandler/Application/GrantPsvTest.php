@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantPsv as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleCondition as CreateSvConditionUndertakingCmd;
 
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateSmallVehicleConditio
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantPsvTest extends CommandHandlerTestCase
+class GrantPsvTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -21,14 +21,14 @@ use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Update User Selfserve Test
  */
-class UpdateUserSelfserveTest extends CommandHandlerTestCase
+class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var m\LegacyMockInterface|m\MockInterface|null

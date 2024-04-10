@@ -13,7 +13,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Licence\CreateOfficeCopy;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\Licence\CreateOfficeCopy as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as GenerateBatchCmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateOfficeCopyTest extends CommandHandlerTestCase
+class CreateOfficeCopyTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

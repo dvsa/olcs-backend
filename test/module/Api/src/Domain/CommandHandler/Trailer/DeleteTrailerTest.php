@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Trailer\DeleteTrailer;
 use Dvsa\Olcs\Api\Entity\Licence\Trailer;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Trailer\DeleteTrailer as Cmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class DeleteTrailerTest extends CommandHandlerTestCase
+class DeleteTrailerTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

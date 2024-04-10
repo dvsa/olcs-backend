@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue\Complete;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Delete as DeleteQueueCmd;
 
 /**
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Delete as DeleteQueueCmd;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CompleteTest extends CommandHandlerTestCase
+class CompleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

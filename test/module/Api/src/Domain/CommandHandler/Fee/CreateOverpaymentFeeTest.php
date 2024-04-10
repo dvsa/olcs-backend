@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -27,7 +27,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CreateOverpaymentFeeTest extends CommandHandlerTestCase
+class CreateOverpaymentFeeTest extends AbstractCommandHandlerTestCase
 {
     protected $mockFeesHelperService;
 

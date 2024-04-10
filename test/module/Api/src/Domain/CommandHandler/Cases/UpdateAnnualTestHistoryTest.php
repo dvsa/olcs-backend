@@ -10,14 +10,14 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\UpdateAnnualTestHistory;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\UpdateAnnualTestHistory as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
  * Update AnnualTestHistory Test
  */
-class UpdateAnnualTestHistoryTest extends CommandHandlerTestCase
+class UpdateAnnualTestHistoryTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -7,7 +7,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\Submit as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Submit as UpdateCommand;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
@@ -17,7 +17,7 @@ use Mockery as m;
 /**
  * SubmitTest
  */
-class SubmitTest extends CommandHandlerTestCase
+class SubmitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

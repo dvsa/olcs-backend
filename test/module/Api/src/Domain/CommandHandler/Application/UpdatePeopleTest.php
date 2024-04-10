@@ -15,14 +15,14 @@ use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrgPersonRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePeople as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\UpdatePeople as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * UpdatePeopleTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdatePeopleTest extends CommandHandlerTestCase
+class UpdatePeopleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

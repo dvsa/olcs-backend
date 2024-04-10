@@ -7,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\Generate;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Class GenerateTest
  */
-class GenerateTest extends CommandHandlerTestCase
+class GenerateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

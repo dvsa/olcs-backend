@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateDeclaration;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateDeclaration as UpdateDeclarationCmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateDeclarationTest extends CommandHandlerTestCase
+class UpdateDeclarationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

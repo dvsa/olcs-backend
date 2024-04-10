@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as Entity;
 use Dvsa\Olcs\Transfer\Command\System\CreateSlaTargetDate as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -20,7 +20,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateSlaTargetDateTest extends CommandHandlerTestCase
+class CreateSlaTargetDateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Vehicle as VehicleRepo;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle as VehicleEntity;
 use Dvsa\Olcs\Transfer\Command\LicenceVehicle\DeleteUnlicensedOperatorLicenceVehicle as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -24,7 +24,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class DeleteUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
+class DeleteUnlicensedOperatorLicenceVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

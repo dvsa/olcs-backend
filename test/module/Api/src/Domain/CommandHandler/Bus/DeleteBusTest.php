@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\DeleteBus;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\DeleteBus as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Delete Bus Test
  */
-class DeleteBusTest extends CommandHandlerTestCase
+class DeleteBusTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

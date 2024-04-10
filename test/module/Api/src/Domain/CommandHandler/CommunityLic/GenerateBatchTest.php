@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\GenerateBatch;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\GenerateBatch as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCmd;
 use Olcs\Logging\Log\Logger;
@@ -27,7 +27,7 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class GenerateBatchTest extends CommandHandlerTestCase
+class GenerateBatchTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Transfer\Command\Document\CreateDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CreateDocument as CommandHandler;
 use LmcRbacMvc\Service\AuthorizationService;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -13,7 +13,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateDocumentTest extends CommandHandlerTestCase
+class CreateDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

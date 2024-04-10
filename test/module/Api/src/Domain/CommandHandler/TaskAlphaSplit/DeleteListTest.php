@@ -4,14 +4,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TaskAlphaSplit;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TaskAlphaSplit\DeleteList as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\TaskAlphaSplit\DeleteList as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * TaskAlphaSplit DeleteListTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteListTest extends CommandHandlerTestCase
+class DeleteListTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

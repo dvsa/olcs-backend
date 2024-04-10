@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as UpdateTxcInboxPdfCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
@@ -34,7 +34,7 @@ use org\bovigo\vfs\vfsStream;
  * ProcessRequestMap Test
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ProcessRequestMapTest extends CommandHandlerTestCase
+class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 {
     protected $templatePath;
     protected $templatePaths;

@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Printer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Printer\CreatePrinter as CreatePrinter;
 use Dvsa\Olcs\Api\Domain\Repository\Printer as PrinterRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Printer\CreatePrinter as Cmd;
 use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
 
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreatePrinterTest extends CommandHandlerTestCase
+class CreatePrinterTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

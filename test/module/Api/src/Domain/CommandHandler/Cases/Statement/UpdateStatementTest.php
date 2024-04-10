@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\UpdateStatement;
 use Dvsa\Olcs\Api\Domain\Repository\Statement as StatementRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Statement\UpdateStatement as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateStatementTest extends CommandHandlerTestCase
+class UpdateStatementTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

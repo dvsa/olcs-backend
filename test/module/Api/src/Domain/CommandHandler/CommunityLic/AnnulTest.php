@@ -10,13 +10,13 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Annul as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\Annul
  */
-class AnnulTest extends CommandHandlerTestCase
+class AnnulTest extends AbstractCommandHandlerTestCase
 {
     /** @var  CommandHandler\CommunityLic\Annul */
     protected $sut;

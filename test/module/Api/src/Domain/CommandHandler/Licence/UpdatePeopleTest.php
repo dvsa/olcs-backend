@@ -6,13 +6,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdatePeople;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdatePeople
  */
-class UpdatePeopleTest extends CommandHandlerTestCase
+class UpdatePeopleTest extends AbstractCommandHandlerTestCase
 {
     public const PERSON_ID = 7001;
     public const VERSION = 666;

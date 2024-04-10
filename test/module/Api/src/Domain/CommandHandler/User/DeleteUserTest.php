@@ -12,7 +12,7 @@ use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationUser as OrganisationUserRepo;
@@ -25,7 +25,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * Class Delete User Test
  */
-class DeleteUserTest extends CommandHandlerTestCase
+class DeleteUserTest extends AbstractCommandHandlerTestCase
 {
     /** @var UserEntity|m\Mock */
     private $userEntity;

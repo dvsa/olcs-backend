@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Domain\Repository\Person as  PersonRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeletePeople as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\DeletePeople as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * DeletePeopleTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeletePeopleTest extends CommandHandlerTestCase
+class DeletePeopleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

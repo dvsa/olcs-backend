@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as SendInternationalGoodsCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataGovUkExport
  */
-class DataGovUkExportTest extends CommandHandlerTestCase
+class DataGovUkExportTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DataGovUkExport

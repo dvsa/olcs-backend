@@ -11,12 +11,12 @@ use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\DeleteOperatingCentres
  */
-class DeleteOperatingCentresTest extends CommandHandlerTestCase
+class DeleteOperatingCentresTest extends AbstractCommandHandlerTestCase
 {
     /** @var CommandHandler\Application\DeleteOperatingCentres  */
     protected $sut;

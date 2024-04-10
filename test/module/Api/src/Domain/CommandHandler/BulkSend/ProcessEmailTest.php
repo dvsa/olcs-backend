@@ -14,13 +14,13 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Test Bulk Send email
  */
-class ProcessEmailTest extends CommandHandlerTestCase
+class ProcessEmailTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

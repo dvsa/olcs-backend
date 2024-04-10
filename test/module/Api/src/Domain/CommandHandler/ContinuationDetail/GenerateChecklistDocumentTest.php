@@ -13,14 +13,14 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 
 /**
  * GenerateChecklistDocumentTest
  */
-class GenerateChecklistDocumentTest extends CommandHandlerTestCase
+class GenerateChecklistDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

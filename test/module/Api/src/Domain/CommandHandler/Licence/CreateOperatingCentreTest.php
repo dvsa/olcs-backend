@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateOperatingCentre as Command
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateOperatingCentre as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Repository;
 
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateOperatingCentreTest extends CommandHandlerTestCase
+class CreateOperatingCentreTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

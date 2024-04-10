@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Snapshot;
 use Dvsa\Olcs\Api\Entity\Surrender;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Snapshot as Command;
@@ -15,7 +15,7 @@ use Mockery as m;
 use Doctrine\ORM\Query;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
-class SnapshotTest extends CommandHandlerTestCase
+class SnapshotTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

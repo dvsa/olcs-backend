@@ -29,13 +29,13 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\User\CreateUser as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create User Test
  */
-class CreateUserTest extends CommandHandlerTestCase
+class CreateUserTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var ValidatableAdapterInterface|m\LegacyMockInterface|m\MockInterface

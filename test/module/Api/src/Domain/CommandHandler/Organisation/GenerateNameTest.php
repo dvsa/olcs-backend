@@ -10,13 +10,13 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\GenerateName
  */
-class GenerateNameTest extends CommandHandlerTestCase
+class GenerateNameTest extends AbstractCommandHandlerTestCase
 {
     public const PERSON_ID = 8001;
     public const APP_ID = 9001;

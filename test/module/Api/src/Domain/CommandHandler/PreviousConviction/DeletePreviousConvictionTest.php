@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\PreviousConviction\DeletePreviousConvict
 use Dvsa\Olcs\Transfer\Command\PreviousConviction\DeletePreviousConviction as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\PreviousConviction;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as PrevConvictionEntity;
 
 /**
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as PrevConvictionEntity;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class DeletePreviousConvictionTest extends CommandHandlerTestCase
+class DeletePreviousConvictionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

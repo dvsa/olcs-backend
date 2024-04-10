@@ -14,13 +14,13 @@ use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction as ConvictionEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Conviction\Update as UpdateCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Update Conviction Test
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var UpdateCommandHandler

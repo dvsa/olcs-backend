@@ -8,13 +8,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\DeleteEntities;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\DataRetention\DeleteEntities as Cmd;
 
 /**
  * Class DeleteEntitiesTest
  */
-class DeleteEntitiesTest extends CommandHandlerTestCase
+class DeleteEntitiesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

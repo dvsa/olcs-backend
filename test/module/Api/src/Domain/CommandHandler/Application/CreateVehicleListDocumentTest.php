@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateVehicleListDocument;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Transfer\Command\Application\CreateVehicleListDocument as Cmd;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as LicenceCmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateVehicleListDocumentTest extends CommandHandlerTestCase
+class CreateVehicleListDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

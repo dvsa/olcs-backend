@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence\CreateOtherLicence;
 use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreateOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateOtherLicenceTest extends CommandHandlerTestCase
+class CreateOtherLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

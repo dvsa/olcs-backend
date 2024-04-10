@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Create as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerApplicationEntity;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     protected $loggedInUser;
 

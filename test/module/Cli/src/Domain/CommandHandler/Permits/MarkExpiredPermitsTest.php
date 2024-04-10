@@ -9,13 +9,13 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits as MarkExpiredPermit
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkExpiredPermits;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * MarkExpiredPermits test
  */
-class MarkExpiredPermitsTest extends CommandHandlerTestCase
+class MarkExpiredPermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

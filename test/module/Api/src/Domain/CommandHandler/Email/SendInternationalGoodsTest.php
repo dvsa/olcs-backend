@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendInternationalGoods as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendInternationalGoods;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 /**
  * Send Psv Operator List Report Test
  */
-class SendInternationalGoodsTest extends CommandHandlerTestCase
+class SendInternationalGoodsTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var CommandInterface|SendInternationalGoods

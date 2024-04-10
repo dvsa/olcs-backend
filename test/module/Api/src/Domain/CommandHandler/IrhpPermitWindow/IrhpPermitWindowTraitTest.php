@@ -5,10 +5,10 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationPathGroup;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class IrhpPermitWindowTraitTest extends CommandHandlerTestCase
+class IrhpPermitWindowTraitTest extends AbstractCommandHandlerTestCase
 {
     /** @var IrhpPermitWindowTraitStub $sut */
     protected $sut;

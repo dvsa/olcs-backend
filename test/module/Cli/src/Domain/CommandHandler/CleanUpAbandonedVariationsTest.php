@@ -8,7 +8,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CleanUpAbandonedVariations as CommandHandler;
 use Dvsa\Olcs\Cli\Domain\Command\CleanUpAbandonedVariations as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation;
@@ -18,7 +18,7 @@ use Mockery as m;
 /**
  * Clean up abandoned variations
  */
-class CleanUpAbandonedVariationsTest extends CommandHandlerTestCase
+class CleanUpAbandonedVariationsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

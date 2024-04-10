@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\GrantInterim as Cmd;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateApplicationFeeCmd;
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CreateApplicationFee as CreateAppli
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantInterimTest extends CommandHandlerTestCase
+class GrantInterimTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

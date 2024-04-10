@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\FeeType\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\FeeType\Update as UpdateCmd;
 
 /**
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\FeeType\Update as UpdateCmd;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

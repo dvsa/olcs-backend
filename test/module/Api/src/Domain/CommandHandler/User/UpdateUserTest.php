@@ -41,7 +41,7 @@ use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUser as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 use Mockery\Mock;
@@ -50,7 +50,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * Update User Test
  */
-class UpdateUserTest extends CommandHandlerTestCase
+class UpdateUserTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

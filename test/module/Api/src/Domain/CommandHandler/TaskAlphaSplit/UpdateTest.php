@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TaskAlphaSplit;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TaskAlphaSplit\Update as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\TaskAlphaSplit\Update as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 
 /**
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

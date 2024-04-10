@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\FinancialStandingRate as Repo;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\System\UpdateFinancialStandingRate as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -16,7 +16,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class UpdateFinancialStandingRateTest extends CommandHandlerTestCase
+class UpdateFinancialStandingRateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

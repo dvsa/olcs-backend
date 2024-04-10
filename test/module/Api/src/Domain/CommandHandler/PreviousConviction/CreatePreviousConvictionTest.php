@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as PrevConvictionEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
 
 /**
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class CreatePreviousConvictionTest extends CommandHandlerTestCase
+class CreatePreviousConvictionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

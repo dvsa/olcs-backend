@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\TradingName;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateTradingNames;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\UpdateTradingNames as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateTradingNamesTest extends CommandHandlerTestCase
+class UpdateTradingNamesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

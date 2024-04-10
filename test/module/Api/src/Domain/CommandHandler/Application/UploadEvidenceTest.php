@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre as ApplicationOperatingCentreRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UploadEvidence as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * UploadEvidenceTest
  */
-class UploadEvidenceTest extends CommandHandlerTestCase
+class UploadEvidenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

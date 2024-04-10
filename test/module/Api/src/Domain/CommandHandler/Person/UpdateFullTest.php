@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Person\UpdateFull as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Person;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdateFullCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update Person test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateFullTest extends CommandHandlerTestCase
+class UpdateFullTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

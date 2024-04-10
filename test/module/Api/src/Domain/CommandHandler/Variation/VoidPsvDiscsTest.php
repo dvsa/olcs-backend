@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\VoidPsvDiscs;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Variation\VoidPsvDiscs as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs as LicenceVoidPsvDiscs;
 
 /**
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs as LicenceVoidPsvDiscs;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class VoidPsvDiscsTest extends CommandHandlerTestCase
+class VoidPsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

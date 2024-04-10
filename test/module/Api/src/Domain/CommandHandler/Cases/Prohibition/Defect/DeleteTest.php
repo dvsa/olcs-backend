@@ -13,13 +13,13 @@ use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\ProhibitionDefect;
 use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as ProhibitionDefectEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create Prohibition Defect Delete Test
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

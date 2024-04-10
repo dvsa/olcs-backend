@@ -11,14 +11,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmEmployment;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TmEmployment\DeleteList as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TmEmployment;
 use Dvsa\Olcs\Transfer\Command\TmEmployment\DeleteList as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * DeleteListTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteListTest extends CommandHandlerTestCase
+class DeleteListTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

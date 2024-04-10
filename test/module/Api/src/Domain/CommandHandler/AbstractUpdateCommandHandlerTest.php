@@ -3,11 +3,11 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-abstract class AbstractUpdateCommandHandlerTest extends CommandHandlerTestCase
+abstract class AbstractUpdateCommandHandlerTest extends AbstractCommandHandlerTestCase
 {
     protected $repoServiceName = 'changeMe';
     protected $commandMethodName = 'changeMe';

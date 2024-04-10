@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\UpdateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Opposition\UpdateOpposition as Cmd;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposer as OpposerEntity;
@@ -34,7 +34,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateOppositionTest extends CommandHandlerTestCase
+class UpdateOppositionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

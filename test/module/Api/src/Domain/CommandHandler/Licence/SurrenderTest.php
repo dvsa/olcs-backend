@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Surrender as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
@@ -35,7 +35,7 @@ use Mockery as m;
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class SurrenderTest extends CommandHandlerTestCase
+class SurrenderTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity;
 
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GenerateAndStoreTest extends CommandHandlerTestCase
+class GenerateAndStoreTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

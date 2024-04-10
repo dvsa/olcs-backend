@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Traits;
 
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Address as AddressRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Mockery as m;
@@ -15,7 +15,7 @@ use Mockery as m;
  * to ensure changes in the trait are highlighted early
  * as potential impact could be high
  */
-class DeleteContactDetailsAndAddressTraitTest extends CommandHandlerTestCase
+class DeleteContactDetailsAndAddressTraitTest extends AbstractCommandHandlerTestCase
 {
     /** @var DeleteContactDetailsAndAddressTraitStub $sut */
     protected $sut;

@@ -16,13 +16,13 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationE
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType as IrhpPermitTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * GenerateCoverLetterDocumentTest
  */
-class GenerateCoverLetterDocumentTest extends CommandHandlerTestCase
+class GenerateCoverLetterDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

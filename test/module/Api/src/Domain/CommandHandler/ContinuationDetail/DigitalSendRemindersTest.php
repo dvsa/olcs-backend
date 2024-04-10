@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\DigitalSendReminders as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\DigitalSendReminders as Command;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 /**
  * Class DigitalSendRemindersTest
  */
-class DigitalSendRemindersTest extends CommandHandlerTestCase
+class DigitalSendRemindersTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

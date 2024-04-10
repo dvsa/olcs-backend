@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface;
 use Dvsa\Olcs\Api\Domain\ValidationHandlerManager;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Olcs\Logging\Log\Logger;
 use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -24,6 +25,11 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
     public function setUp(): void
     {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+        
         $this->vhm = m::mock(ValidationHandlerManager::class)->makePartial();
 
         $container = m::mock(ContainerInterface::class);

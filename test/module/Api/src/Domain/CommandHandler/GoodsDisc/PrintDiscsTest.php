@@ -14,7 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GoodsDisc\PrintDiscs;
 use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GoodsDisc\PrintDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as CreateVehicleListDocumentCommand;
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PrintDiscsTest extends CommandHandlerTestCase
+class PrintDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

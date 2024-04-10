@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendPsvOperatorListReport;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepo;
 /**
  * Send Psv Operator List Report Test
  */
-class SendPsvOperatorListReportTest extends CommandHandlerTestCase
+class SendPsvOperatorListReportTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var CommandInterface|SendPsvOperatorListReport

@@ -16,14 +16,14 @@ use Dvsa\Olcs\Api\Domain\Repository\Person as PersonRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreatePeople as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * CreatePeopleTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreatePeopleTest extends CommandHandlerTestCase
+class CreatePeopleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

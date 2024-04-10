@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Address\Service\AddressInterface;
 
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Address\Service\AddressInterface;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class SetDefaultTrafficAreaAndEnforcementAreaTest extends CommandHandlerTestCase
+class SetDefaultTrafficAreaAndEnforcementAreaTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

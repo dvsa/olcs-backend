@@ -16,7 +16,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest\CreateFromGrant;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -32,7 +32,7 @@ use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\SendInspectionRequest as Send
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateFromGrantTest extends CommandHandlerTestCase
+class CreateFromGrantTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

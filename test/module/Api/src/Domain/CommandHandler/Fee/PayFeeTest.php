@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\Permits\AcceptIrhpPermits;
 use Dvsa\Olcs\Transfer\Command\Permits\CompleteIssuePayment;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -28,7 +28,7 @@ use Mockery as m;
  * @author Dan Eggleston <dan@stolenegg.com>
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class PayFeeTest extends CommandHandlerTestCase
+class PayFeeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

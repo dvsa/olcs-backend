@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantCommunityLicence as GrantCommunityLicenceCmd;
 
 /**
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantCommunityLicence as Gran
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantCommunityLicenceTest extends CommandHandlerTestCase
+class GrantCommunityLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

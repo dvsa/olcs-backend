@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class SubmitTest extends CommandHandlerTestCase
+class SubmitTest extends AbstractCommandHandlerTestCase
 {
     protected $loggedInUser;
 

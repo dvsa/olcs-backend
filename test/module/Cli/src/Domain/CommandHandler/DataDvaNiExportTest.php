@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Doctrine\DBAL\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Cli\Domain\Command\DataDvaNiExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 /**
  * @covers \Dvsa\Olcs\Cli\Domain\CommandHandler\DataDvaNiExport
  */
-class DataDvaNiExportTest extends CommandHandlerTestCase
+class DataDvaNiExportTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DataDvaNiExport

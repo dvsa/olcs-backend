@@ -11,13 +11,13 @@ use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
 use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create NonPi Test
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var CreateCommandHandler

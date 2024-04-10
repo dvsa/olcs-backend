@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeTransaction as FeePaymentEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ResolvePaymentTest extends CommandHandlerTestCase
+class ResolvePaymentTest extends AbstractCommandHandlerTestCase
 {
     protected $mockCpmsService;
 

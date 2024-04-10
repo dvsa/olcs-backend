@@ -21,14 +21,14 @@ use Dvsa\Olcs\Api\Domain\Repository\BusRegOtherService as BusRegOtherServiceRepo
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LocalAuthority as LocalAuthorityRepo;
 use Dvsa\Olcs\Api\Domain\Repository\BusServiceType as BusServiceTypeRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Laminas\Filter\FilterPluginManager;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult as SubmissionResultFilter;
 use Laminas\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 
-class ProcessPackTestCase extends CommandHandlerTestCase
+class ProcessPackTestCase extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

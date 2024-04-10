@@ -7,12 +7,12 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePeople as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreatePeople
  */
-class CreatePeopleTest extends CommandHandlerTestCase
+class CreatePeopleTest extends AbstractCommandHandlerTestCase
 {
     public const ORG_PERSON_ID = 9001;
     public const PERSON_ID = 8001;

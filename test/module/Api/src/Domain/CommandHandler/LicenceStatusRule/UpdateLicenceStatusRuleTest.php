@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as StatusRuleRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\UpdateLicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class UpdateLicenceStatusRuleTest extends CommandHandlerTestCase
+class UpdateLicenceStatusRuleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

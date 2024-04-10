@@ -19,7 +19,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\ApplicationOperatingCentre\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre\Update as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

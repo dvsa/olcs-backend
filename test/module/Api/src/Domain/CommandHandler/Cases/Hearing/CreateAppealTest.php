@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\CreateAppeal;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
 use Dvsa\Olcs\Transfer\Command\Cases\Hearing\CreateAppeal as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -24,7 +24,7 @@ use Mockery as m;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateAppealTest extends CommandHandlerTestCase
+class CreateAppealTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

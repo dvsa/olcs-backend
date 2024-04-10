@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Si\ErruRequestFailure;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\ComplianceEpisode;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
@@ -44,7 +44,7 @@ use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml as ComplianceEpisodeXm
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ComplianceEpisodeTest extends CommandHandlerTestCase
+class ComplianceEpisodeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

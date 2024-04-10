@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GracePeriod;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\GracePeriod as CorrespondenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\AccessCorrespondence;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Correspondence\AccessCorrespondence as Cmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class AccessCorrespondenceTest extends CommandHandlerTestCase
+class AccessCorrespondenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

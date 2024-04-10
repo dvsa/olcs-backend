@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\CommunityLic\BulkReprint as BulkReprintCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class ReportingBulkReprintTest extends CommandHandlerTestCase
+class ReportingBulkReprintTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

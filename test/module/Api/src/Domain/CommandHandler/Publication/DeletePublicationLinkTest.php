@@ -7,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\DeletePublicationLink;
 use Dvsa\Olcs\Transfer\Command\Publication\DeletePublicationLink as Cmd;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 /**
  * Class DeletePublicationLinkTest
  */
-class DeletePublicationLinkTest extends CommandHandlerTestCase
+class DeletePublicationLinkTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

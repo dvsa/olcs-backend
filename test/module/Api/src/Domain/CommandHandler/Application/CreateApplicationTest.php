@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateApplication;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -36,7 +36,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateApplicationTest extends CommandHandlerTestCase
+class CreateApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

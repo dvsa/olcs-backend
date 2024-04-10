@@ -6,13 +6,13 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\SetViFlags;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Create VI Extract Files Test
  */
-class SetViFlagsTest extends CommandHandlerTestCase
+class SetViFlagsTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var m\Mock;

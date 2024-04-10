@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as TranslationKeyTextRepo
 use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as TranslationKeyTextEntity;
 use Dvsa\Olcs\Transfer\Command\TranslationKeyText\Delete as DeleteCmd;
 use Dvsa\Olcs\Transfer\Command\TranslationKey\GenerateCache;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -17,7 +17,7 @@ use Mockery as m;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

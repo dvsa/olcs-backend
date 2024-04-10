@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle\RemoveLicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\LicenceVehicle\RemoveLicenceVehicle as Cmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class RemoveLicenceVehicleTest extends CommandHandlerTestCase
+class RemoveLicenceVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

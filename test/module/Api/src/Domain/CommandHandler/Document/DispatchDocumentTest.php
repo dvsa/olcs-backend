@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -25,7 +25,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Document\DispatchDocument
  */
-class DispatchDocumentTest extends CommandHandlerTestCase
+class DispatchDocumentTest extends AbstractCommandHandlerTestCase
 {
     public const DOC_ID = 9001;
     public const LIC_ID = 8001;

@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as  LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateTrafficArea as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateTrafficAreaTest extends CommandHandlerTestCase
+class UpdateTrafficAreaTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

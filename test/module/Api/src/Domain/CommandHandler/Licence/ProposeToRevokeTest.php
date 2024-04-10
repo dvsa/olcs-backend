@@ -24,12 +24,12 @@ use Dvsa\Olcs\Transfer\Command\Document\PrintLetters;
 use Dvsa\Olcs\Transfer\Command\Licence\ProposeToRevoke as ProposeToRevokeCmd;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Identity\IdentityInterface;
 use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 
-class ProposeToRevokeTest extends CommandHandlerTestCase
+class ProposeToRevokeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

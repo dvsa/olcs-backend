@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\BulkSend\Email;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class EmailTest extends CommandHandlerTestCase
+class EmailTest extends AbstractCommandHandlerTestCase
 {
     private $mockFileUploader;
 

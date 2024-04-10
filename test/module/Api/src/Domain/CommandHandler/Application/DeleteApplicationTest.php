@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\DeleteApplication as Command;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteApplication as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -14,7 +14,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteApplicationTest extends CommandHandlerTestCase
+class DeleteApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

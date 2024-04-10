@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\DeleteSi as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
 use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\DeleteSi as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * DeleteSi Test
  */
-class DeleteSiTest extends CommandHandlerTestCase
+class DeleteSiTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

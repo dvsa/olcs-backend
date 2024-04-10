@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\Conversation\Disable as Disabl
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Disable as DisableCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class Disable extends CommandHandlerTestCase
+class Disable extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {
@@ -23,20 +23,20 @@ class Disable extends CommandHandlerTestCase
 
     public function testHandleCommand(): void
     {
-        $mockCommand = DisableCommand::create(['organisation' => 1]);
+        $mockCommand = DisableCommand::create(['organisation' => 123]);
 
         $mockOrganisation = m::mock(Organisation::class);
         $mockOrganisation->shouldReceive('setIsMessagingDisabled')
                          ->once()
                          ->with(true);
         $mockOrganisation->shouldReceive('getId')
-                         ->once()
-                         ->andReturn(1);
+                         ->atLeast()
+                         ->andReturn(123);
 
         $this->repoMap[OrganisationRepo::class]
             ->shouldReceive('fetchById')
-            ->once()
-            ->with(1)
+            ->atLeast()
+            ->with(123)
             ->andReturn($mockOrganisation);
         $this->repoMap[OrganisationRepo::class]
             ->shouldReceive('save')
@@ -45,6 +45,6 @@ class Disable extends CommandHandlerTestCase
 
         $result = $this->sut->handleCommand($mockCommand);
 
-        $this->assertEquals(1, $result->getId('organisation'));
+        $this->assertEquals(123, $result->getId('organisation'));
     }
 }

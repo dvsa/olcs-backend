@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\CompanySubsidiary;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as Cmd;
 
 /**
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Organisation\ChangeBusinessType as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ChangeBusinessTypeTest extends CommandHandlerTestCase
+class ChangeBusinessTypeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

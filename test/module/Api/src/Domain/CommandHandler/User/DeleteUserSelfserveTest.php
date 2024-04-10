@@ -14,14 +14,14 @@ use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve as Cmd;
 use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class Delete User Selfserve Test
  */
-class DeleteUserSelfserveTest extends CommandHandlerTestCase
+class DeleteUserSelfserveTest extends AbstractCommandHandlerTestCase
 {
     public const USER_ID = 8888;
     public const LOGIN_ID = 'usr8888';

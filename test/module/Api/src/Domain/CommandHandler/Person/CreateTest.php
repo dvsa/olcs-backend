@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Person;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Person\Create as CreatePerson;
 use Dvsa\Olcs\Api\Domain\Repository\Person as PersonRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Person\Create as Cmd;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as Cmd;
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  * @group ebsrEmails
  */
-class SendEbsrErrorsTest extends CommandHandlerTestCase
+class SendEbsrErrorsTest extends AbstractCommandHandlerTestCase
 {
     protected $template = ['ebsr-data-error-start', 'ebsr-data-error-list', 'ebsr-data-error-end'];
 

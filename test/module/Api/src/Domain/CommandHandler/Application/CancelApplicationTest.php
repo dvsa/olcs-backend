@@ -16,14 +16,14 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Cancel Application Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CancelApplicationTest extends CommandHandlerTestCase
+class CancelApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

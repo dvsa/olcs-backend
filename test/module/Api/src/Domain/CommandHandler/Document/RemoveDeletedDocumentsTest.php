@@ -10,14 +10,14 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\RemoveDeletedDocuments;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\RemoveDeletedDocuments as Cmd;
 use Laminas\Http\Response;
 
 /**
  * RemoveDeletedDocumentsTest
  */
-class RemoveDeletedDocumentsTest extends CommandHandlerTestCase
+class RemoveDeletedDocumentsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

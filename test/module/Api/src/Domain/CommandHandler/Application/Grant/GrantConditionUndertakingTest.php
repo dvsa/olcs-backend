@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantConditionUndertaking as GrantConditionUndertakingCmd;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -25,7 +25,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantConditionUndertakingTest extends CommandHandlerTestCase
+class GrantConditionUndertakingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

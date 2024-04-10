@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\CreateStatement;
 use Dvsa\Olcs\Api\Domain\Repository\Statement as StatementRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Statement\CreateStatement as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateStatementTest extends CommandHandlerTestCase
+class CreateStatementTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

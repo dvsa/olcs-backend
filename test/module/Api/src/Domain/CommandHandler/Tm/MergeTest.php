@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Merge as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class MergeTest extends CommandHandlerTestCase
+class MergeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Query\LicenceOperatingCentre\LicenceOperatingCentre;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\ConditionUndertaking\DeleteConditionUndertakingS4;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\DeleteConditionUndertakingS4 as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntit
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class DeleteConditionUndertakingS4Test extends CommandHandlerTestCase
+class DeleteConditionUndertakingS4Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -9,14 +9,14 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplicationReadAudit;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Audit\ReadIrhpApplication as ReadIrhpApplicationCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Read Irhp Application Test
  */
-class ReadIrhpApplicationTest extends CommandHandlerTestCase
+class ReadIrhpApplicationTest extends AbstractCommandHandlerTestCase
 {
     public const USER_ID = 9999;
 

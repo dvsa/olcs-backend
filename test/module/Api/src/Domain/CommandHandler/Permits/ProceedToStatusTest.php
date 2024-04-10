@@ -6,13 +6,13 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\ProceedToStatus as ProceedToStatusCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\ProceedToStatus as ProceedToStatusHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Proceed to status test
  */
-class ProceedToStatusTest extends CommandHandlerTestCase
+class ProceedToStatusTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

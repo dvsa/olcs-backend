@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Task\CloseTasks;
 use Dvsa\Olcs\Api\Domain\Repository\Task;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -19,7 +19,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CloseTasksTest extends CommandHandlerTestCase
+class CloseTasksTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -10,13 +10,13 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Bus\PrintLetter
  */
-class PrintLetterTest extends CommandHandlerTestCase
+class PrintLetterTest extends AbstractCommandHandlerTestCase
 {
     public const LIC_ID = 9999;
     public const BUS_REG_ID = 7777;

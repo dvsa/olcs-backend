@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\EndIrhpPermits as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\Expire;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -32,7 +32,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class EndIrhpPermitsTest extends CommandHandlerTestCase
+class EndIrhpPermitsTest extends AbstractCommandHandlerTestCase
 {
     public const LICENCE_ID = 52;
 

@@ -14,7 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PsvDisc\PrintDiscs;
 use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\PsvDisc\PrintDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PrintDiscsTest extends CommandHandlerTestCase
+class PrintDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

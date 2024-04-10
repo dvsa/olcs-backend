@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Remove;
 use Dvsa\Olcs\Transfer\Command\Tm\Remove as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager
  * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
-class RemoveTest extends CommandHandlerTestCase
+class RemoveTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

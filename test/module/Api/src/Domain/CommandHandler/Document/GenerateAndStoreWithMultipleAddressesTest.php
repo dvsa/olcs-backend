@@ -18,13 +18,13 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStoreWithMultipleAddresses as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\GenerateAndStoreWithMultipleAddresses as CommandHandler;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-class GenerateAndStoreWithMultipleAddressesTest extends CommandHandlerTestCase
+class GenerateAndStoreWithMultipleAddressesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,12 +13,12 @@ use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Pi\Reason;
 use Dvsa\Olcs\Api\Entity\Submission\SubmissionAction as SubmissionActionEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionAction as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Create SubmissionAction Test
  */
-class CreateSubmissionActionTest extends CommandHandlerTestCase
+class CreateSubmissionActionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

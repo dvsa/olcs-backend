@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\DisableFileUpload as DisableCo
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Messaging\DisableFileUpload as DisableCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class DisableFileUpload extends CommandHandlerTestCase
+class DisableFileUpload extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

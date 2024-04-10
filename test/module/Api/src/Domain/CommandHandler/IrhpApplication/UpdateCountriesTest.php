@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\UpdateCountries;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries as UpdateCountriesCmd;
 use Mockery as m;
 
-class UpdateCountriesTest extends CommandHandlerTestCase
+class UpdateCountriesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

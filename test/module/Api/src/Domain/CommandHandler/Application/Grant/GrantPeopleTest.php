@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd;
 
 /**
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantPeopleTest extends CommandHandlerTestCase
+class GrantPeopleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

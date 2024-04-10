@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Hearing;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateStay;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
@@ -27,7 +27,7 @@ use Mockery as m;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateStayTest extends CommandHandlerTestCase
+class UpdateStayTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -7,7 +7,7 @@ use Doctrine\Common\Collections\Criteria;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\TransferTo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Organisation\TransferTo as Cmd;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class TransferToTest extends CommandHandlerTestCase
+class TransferToTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

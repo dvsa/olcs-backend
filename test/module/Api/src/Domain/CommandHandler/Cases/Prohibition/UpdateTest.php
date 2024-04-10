@@ -13,13 +13,13 @@ use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Prohibition;
 use Dvsa\Olcs\Api\Entity\Prohibition\Prohibition as ProhibitionEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Update Prohibition Test
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var UpdateCommandHandler
