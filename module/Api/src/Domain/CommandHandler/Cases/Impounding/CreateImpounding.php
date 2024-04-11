@@ -49,7 +49,6 @@ class CreateImpounding extends AbstractImpounding implements TransactionedInterf
     }
 
     /**
-     * @param Cmd $command
      * @return Impounding
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

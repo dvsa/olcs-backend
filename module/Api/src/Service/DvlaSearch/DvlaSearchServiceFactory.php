@@ -49,12 +49,10 @@ class DvlaSearchServiceFactory implements FactoryInterface
     /**
      * Gets options from configuration based on name.
      *
-     * @param string $key
      *
-     * @param mixed $default
      * @return mixed
      */
-    public function getOptions(string $key, $default = null)
+    public function getOptions(string $key, mixed $default = null)
     {
         $options = $this->options[$key] ?? $default;
 

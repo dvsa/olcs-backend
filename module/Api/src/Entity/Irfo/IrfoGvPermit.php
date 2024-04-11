@@ -43,10 +43,7 @@ class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderI
     /**
      * Update
      *
-     * @param IrfoGvPermitType $irfoGvPermitType
      * @param int $yearRequired
-     * @param \DateTime $inForceDate
-     * @param \DateTime $expiryDate
      * @param int $noOfCopies
      * @param string $isFeeExempt
      * @param string $exemptionDetails
@@ -93,7 +90,6 @@ class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderI
     /**
      * Reset
      *
-     * @param RefData $status
      * @return IrfoGvPermit
      */
     public function reset(RefData $status)
@@ -110,7 +106,6 @@ class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderI
     /**
      * Withdraw
      *
-     * @param RefData $status
      * @return IrfoGvPermit
      */
     public function withdraw(RefData $status)
@@ -127,7 +122,6 @@ class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderI
     /**
      * Refuse
      *
-     * @param RefData $status
      * @return IrfoGvPermit
      */
     public function refuse(RefData $status)
@@ -144,8 +138,6 @@ class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderI
     /**
      * Approve
      *
-     * @param RefData $status
-     * @param array $fees
      * @return IrfoGvPermit
      */
     public function approve(RefData $status, array $fees)
@@ -187,7 +179,6 @@ class IrfoGvPermit extends AbstractIrfoGvPermit implements OrganisationProviderI
     /**
      * Returns whether a record has a fees which makes it approvable
      *
-     * @param array $fees
      * @return bool
      */
     private function isApprovableBasedOnFees(array $fees)

@@ -8,11 +8,8 @@ use Olcs\Logging\Log\Logger;
 
 class AddWorkingDays implements DateTimeCalculatorInterface
 {
-    private DateTimeCalculatorInterface $wrapped;
-
-    public function __construct(DateTimeCalculatorInterface $wrapped)
+    public function __construct(private DateTimeCalculatorInterface $wrapped)
     {
-        $this->wrapped = $wrapped;
     }
 
     public function calculateDate(\DateTime $date, int $days): \DateTime

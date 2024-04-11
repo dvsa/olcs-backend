@@ -29,9 +29,6 @@ class Police implements \Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterf
 
     /**
      * Add all People from context into the police data
-     *
-     * @param PublicationLink $publicationLink
-     * @param ImmutableArrayObject $context
      */
     private function addPeople(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {
@@ -48,9 +45,6 @@ class Police implements \Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterf
 
     /**
      * Add all Transport Manager from context into the police data
-     *
-     * @param PublicationLink $publicationLink
-     * @param ImmutableArrayObject $context
      */
     private function addTransportManagers(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {

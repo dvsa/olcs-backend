@@ -12,38 +12,14 @@ class BilateralIpaAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
 {
     public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
-    /** @var AnswersSummaryRowFactory */
-    private $answersSummaryRowFactory;
-
-    /** @var RendererInterface */
-    private $viewRenderer;
-
-    /** @var AnswersSummaryRowsAdderInterface */
-    private $qaAnswersSummaryRowsAdder;
-
-    /** @var IrhpPermitStockRepository */
-    private $irhpPermitStockRepo;
-
     /**
      * Create service instance
      *
-     * @param AnswersSummaryRowFactory $answersSummaryRowFactory
-     * @param RendererInterface $viewRenderer
-     * @param AnswersSummaryRowsAdderInterface $qaAnswersSummaryRowsAdder
-     * @param IrhpPermitStockRepository $irhpPermitStockRepo
      *
      * @return BilateralIpaAnswersSummaryRowsAdder
      */
-    public function __construct(
-        AnswersSummaryRowFactory $answersSummaryRowFactory,
-        RendererInterface $viewRenderer,
-        AnswersSummaryRowsAdderInterface $qaAnswersSummaryRowsAdder,
-        IrhpPermitStockRepository $irhpPermitStockRepo
-    ) {
-        $this->answersSummaryRowFactory = $answersSummaryRowFactory;
-        $this->viewRenderer = $viewRenderer;
-        $this->qaAnswersSummaryRowsAdder = $qaAnswersSummaryRowsAdder;
-        $this->irhpPermitStockRepo = $irhpPermitStockRepo;
+    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer, private AnswersSummaryRowsAdderInterface $qaAnswersSummaryRowsAdder, private IrhpPermitStockRepository $irhpPermitStockRepo)
+    {
     }
 
     /**
@@ -61,9 +37,7 @@ class BilateralIpaAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
     /**
      * Get a row representing the period required for a bilateral application
      *
-     * @param IrhpPermitApplicationEntity $irhpPermitApplication
      * @param bool $isSnapshot
-     *
      * @return AnswersSummaryRow
      */
     private function getPeriodRequiredRow(IrhpPermitApplicationEntity $irhpPermitApplication, $isSnapshot)

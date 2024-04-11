@@ -31,9 +31,7 @@ class FeeTransactionEntityTest extends EntityTester
     }
 
     /**
-     * @param array $feeTransactions
      * @param boolean $expected
-     *
      * @dataProvider isRefundedProvider
      */
     public function testIsRefundedOrReversed(array $feeTransactions, $expected)

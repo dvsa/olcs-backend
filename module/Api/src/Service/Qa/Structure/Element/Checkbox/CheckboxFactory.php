@@ -9,8 +9,6 @@ class CheckboxFactory
     /**
      * Create and return a Checkbox instance
      *
-     * @param TranslateableText $label
-     * @param TranslateableText $notCheckedMessage
      * @param bool $checked
      *
      * @return Checkbox

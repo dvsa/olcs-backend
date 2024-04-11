@@ -50,9 +50,9 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($command)->andReturn(true);
-        $this->vhm->setService(get_class($mockService), $mockValidator);
+        $this->vhm->setService($mockService::class, $mockValidator);
 
-        $this->sut->setService(get_class($command), $mockService);
+        $this->sut->setService($command::class, $mockService);
 
         $this->assertEquals(['response'], $this->sut->handleCommand($command));
     }
@@ -71,9 +71,9 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($command)->andReturn(true);
-        $this->vhm->setService(get_class($wrapped), $mockValidator);
+        $this->vhm->setService($wrapped::class, $mockValidator);
 
-        $this->sut->setService(get_class($command), $mockService);
+        $this->sut->setService($command::class, $mockService);
 
         $this->assertEquals(['response'], $this->sut->handleCommand($command));
     }
@@ -91,9 +91,9 @@ class CommandHandlerManagerTest extends MockeryTestCase
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($command)->andReturn(false);
-        $this->vhm->setService(get_class($mockService), $mockValidator);
+        $this->vhm->setService($mockService::class, $mockValidator);
 
-        $this->sut->setService(get_class($command), $mockService);
+        $this->sut->setService($command::class, $mockService);
 
         $this->sut->handleCommand($command);
     }
@@ -107,7 +107,7 @@ class CommandHandlerManagerTest extends MockeryTestCase
         $mockService = m::mock();
         $mockService->shouldReceive('handleCommand')->with($command)->andReturn(['response']);
 
-        $this->sut->setService(get_class($command), $mockService);
+        $this->sut->setService($command::class, $mockService);
 
         $this->sut->handleCommand($command);
     }

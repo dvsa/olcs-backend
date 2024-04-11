@@ -18,7 +18,6 @@ class PublishValidationService
     /**
      * Validate the variation for publishing
      *
-     * @param ApplicationEntity $application
      *
      * @return array of validation error messages
      */

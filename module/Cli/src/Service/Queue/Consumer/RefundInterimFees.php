@@ -52,7 +52,7 @@ class RefundInterimFees extends AbstractCommandConsumer
             throw $exception;
         }
 
-        if (substr($result, 0, 12) === 'Successfully') {
+        if (str_starts_with($result, 'Successfully')) {
             $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUNDED);
         } else {
             $this->updateRefundStatus($item->getEntityId(), FeeEntity::STATUS_REFUND_FAILED);

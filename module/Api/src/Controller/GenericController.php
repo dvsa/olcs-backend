@@ -17,26 +17,8 @@ use Laminas\Mvc\Controller\AbstractRestfulController;
  */
 class GenericController extends AbstractRestfulController
 {
-    /**
-     * @var QueryHandlerManager
-     */
-    private QueryHandlerManager $queryHandlerManager;
-
-    /**
-     * @var CommandHandlerManager
-     */
-    private CommandHandlerManager $commandHandlerManager;
-
-    /**
-     * @param QueryHandlerManager $queryHandlerManager
-     * @param CommandHandlerManager $commandHandlerManager
-     */
-    public function __construct(
-        QueryHandlerManager $queryHandlerManager,
-        CommandHandlerManager $commandHandlerManager
-    ) {
-        $this->queryHandlerManager = $queryHandlerManager;
-        $this->commandHandlerManager = $commandHandlerManager;
+    public function __construct(private QueryHandlerManager $queryHandlerManager, private CommandHandlerManager $commandHandlerManager)
+    {
     }
 
     /**
@@ -53,7 +35,7 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleQuery($dto);
             return $this->response()->singleResult($result);
-        } catch (Exception\NotFoundException $ex) {
+        } catch (Exception\NotFoundException) {
             return $this->response()->notFound();
         } catch (Exception\NotReadyException $ex) {
             return $this->response()->notReady($ex->getRetryAfter());
@@ -94,7 +76,7 @@ class GenericController extends AbstractRestfulController
             unset($result['count'], $result['result'], $result['count-unfiltered']);
 
             return $this->response()->multipleResults($count, $results, $countUnfiltered, $result);
-        } catch (Exception\NotFoundException $ex) {
+        } catch (Exception\NotFoundException) {
             return $this->response()->notFound();
         } catch (Exception\NotReadyException $ex) {
             return $this->response()->notReady($ex->getRetryAfter());
@@ -128,7 +110,7 @@ class GenericController extends AbstractRestfulController
             return $this->response()->error(409, [$ex->getMessage()]);
         } catch (Exception\VersionConflictException $ex) {
             return $this->response()->error(409, $ex->getMessages());
-        } catch (Exception\NotFoundException $ex) {
+        } catch (Exception\NotFoundException) {
             return $this->response()->notFound();
         } catch (Exception\RestResponseException $ex) {
             return $this->response()->error($ex->getCode(), $ex->getMessages());
@@ -158,7 +140,7 @@ class GenericController extends AbstractRestfulController
             return $this->response()->successfulUpdate($result);
         } catch (Exception\VersionConflictException  $ex) {
             return $this->response()->error(409, $ex->getMessages());
-        } catch (Exception\NotFoundException $ex) {
+        } catch (Exception\NotFoundException) {
             return $this->response()->notFound();
         } catch (Exception\Exception $ex) {
             return $this->response()->error(400, $ex->getMessages());
@@ -208,7 +190,7 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleCommand($dto);
             return $this->response()->successfulUpdate($result);
-        } catch (Exception\NotFoundException $ex) {
+        } catch (Exception\NotFoundException) {
             return $this->response()->notFound();
         } catch (Exception\ForbiddenException $ex) {
             return $this->response()->error(403, $ex->getMessages());
@@ -234,7 +216,7 @@ class GenericController extends AbstractRestfulController
         try {
             $result = $this->handleCommand($dto);
             return $this->response()->successfulUpdate($result);
-        } catch (Exception\NotFoundException $ex) {
+        } catch (Exception\NotFoundException) {
             return $this->response()->notFound();
         } catch (Exception\ForbiddenException $ex) {
             return $this->response()->error(403, $ex->getMessages());

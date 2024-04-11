@@ -59,7 +59,6 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
     /**
      * Determine if Annual Fee should be exempt or not
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      */
     protected function generateAnnualFee(IrfoPsvAuth $irfoPsvAuth)
@@ -74,7 +73,6 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
     /**
      * Creates Annual fee
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -103,7 +101,6 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
     /**
      * Creates Annual exempt fee
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\NotFoundException
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -130,7 +127,6 @@ final class GrantIrfoPsvAuth extends AbstractCommandHandler implements Transacti
     /**
      * Create the copies fee, based on copies requrired
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      */
     private function createCopiesFee(IrfoPsvAuth $irfoPsvAuth)

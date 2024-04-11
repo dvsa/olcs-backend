@@ -86,8 +86,6 @@ final class Update extends AbstractSurrenderCommandHandler
     }
 
     /**
-     * @param CommandInterface $command
-     * @param SurrenderEntity $surrender
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

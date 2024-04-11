@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class Date implements ElementInterface
 {
-    /** @var string|null $value */
-    private $value;
-
     /**
      * Create instance
      *
@@ -16,9 +13,8 @@ class Date implements ElementInterface
      *
      * @return Date
      */
-    public function __construct($value = null)
+    public function __construct(private $value = null)
     {
-        $this->value = $value;
     }
 
     /**

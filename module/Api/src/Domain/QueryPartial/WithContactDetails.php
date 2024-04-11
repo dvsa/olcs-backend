@@ -17,26 +17,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
  */
 final class WithContactDetails implements QueryPartialInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var With
-     */
-    private $with;
-
-    /**
-     * @var WithRefdata
-     */
-    private $withRefdata;
-
-    public function __construct(EntityManagerInterface $em, With $with, WithRefdata $withRefdata)
+    public function __construct(private EntityManagerInterface $em, private With $with, private WithRefdata $withRefdata)
     {
-        $this->em = $em;
-        $this->with = $with;
-        $this->withRefdata = $withRefdata;
     }
 
     /**

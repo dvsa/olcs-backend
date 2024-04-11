@@ -74,7 +74,6 @@ final class UpdateConditionUndertaking extends AbstractCommandHandler implements
     /**
      * Vaidate the command params
      *
-     * @param Command $command
      * @throws ValidationException
      */
     protected function validate(Command $command)

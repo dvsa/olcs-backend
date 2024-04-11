@@ -103,29 +103,19 @@ class VariationOperatingCentreHelper implements FactoryInterface
      */
     private function addCustomSort($oc, $sort)
     {
-        switch ($sort) {
-            case 'noOfVehiclesRequired':
-            case 'noOfTrailersRequired':
-                $value = (int) $oc[$sort];
-                break;
-            case 'createdOn':
-                $value = $oc[$sort];
-                break;
-            case 'adr':
-                $value = strtolower(
-                    $oc['operatingCentre']['address']['addressLine1'] .
-                    $oc['operatingCentre']['address']['addressLine2'] .
-                    $oc['operatingCentre']['address']['addressLine3'] .
-                    $oc['operatingCentre']['address']['addressLine4'] .
-                    $oc['operatingCentre']['address']['town']
-                );
-                break;
-            case 'lastModifiedOn':
-                $value = is_null($oc['lastModifiedOn']) ? $oc['createdOn'] : $oc['lastModifiedOn'];
-                break;
-            default:
-                $value = $oc['operatingCentre']['id'];
-        }
+        $value = match ($sort) {
+            'noOfVehiclesRequired', 'noOfTrailersRequired' => (int) $oc[$sort],
+            'createdOn' => $oc[$sort],
+            'adr' => strtolower(
+                $oc['operatingCentre']['address']['addressLine1'] .
+                $oc['operatingCentre']['address']['addressLine2'] .
+                $oc['operatingCentre']['address']['addressLine3'] .
+                $oc['operatingCentre']['address']['addressLine4'] .
+                $oc['operatingCentre']['address']['town']
+            ),
+            'lastModifiedOn' => is_null($oc['lastModifiedOn']) ? $oc['createdOn'] : $oc['lastModifiedOn'],
+            default => $oc['operatingCentre']['id'],
+        };
         return $value;
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)

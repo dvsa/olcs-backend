@@ -10,7 +10,6 @@ interface QuestionTextGeneratorInterface
     /**
      * Build and return an QuestionText instance using the appropriate data sources
      *
-     * @param QaContext $qaContext
      *
      * @return QuestionText
      */
@@ -19,7 +18,6 @@ interface QuestionTextGeneratorInterface
     /**
      * Whether this question text generator supports the specified entity
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

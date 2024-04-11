@@ -139,7 +139,6 @@ class ApplicationUndertakingsReviewService extends AbstractReviewService
     /**
      * Get the translation key corresponding to the auth bullet points within the declaration
      *
-     * @param array $data
      *
      * @return string
      */

@@ -83,9 +83,6 @@ class ClientOptions
         return $this->headers;
     }
 
-    /**
-     * @param int|null $version
-     */
     public function setVersion(?int $version): void
     {
         $this->version = $version;

@@ -8,6 +8,7 @@ use Laminas\Filter\Exception;
 /**
  * Class InjectNaptanCodes
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter
+ * @template-extends AbstractFilter<array>
  */
 class InjectNaptanCodes extends AbstractFilter
 {

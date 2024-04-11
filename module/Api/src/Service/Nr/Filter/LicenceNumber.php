@@ -2,14 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 
 /**
  * Class LicenceNumber
  * @package Dvsa\Olcs\Api\Service\Nr\Filter
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ * @template-extends AbstractFilter<array>
  */
-class LicenceNumber extends LaminasAbstractFilter
+class LicenceNumber extends AbstractFilter
 {
     /**
      * Returns the result of filtering $value

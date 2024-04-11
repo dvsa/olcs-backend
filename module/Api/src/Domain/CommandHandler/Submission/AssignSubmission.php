@@ -64,7 +64,6 @@ final class AssignSubmission extends AbstractCommandHandler implements
     }
 
     /**
-     * @param Cmd $command
      *
      * @return Submission
      * @throws ValidationException
@@ -115,7 +114,6 @@ final class AssignSubmission extends AbstractCommandHandler implements
     /**
      * This method fetches an existing task for the submission, if it exists, close it and create a new one.
      *
-     * @param Cmd $command
      *
      * @return static
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException

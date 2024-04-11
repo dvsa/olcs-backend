@@ -24,6 +24,7 @@ use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
+use ReflectionClass;
 
 /**
  * Update MyAccount Test
@@ -124,6 +125,11 @@ class UpdateMyAccountTest extends AbstractCommandHandlerTestCase
         $user->setLoginId('login_id');
         $user->setTeam($team);
         $user->setPid('some-pid');
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_LOCAL_AUTHORITY);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($user);
@@ -291,6 +297,11 @@ class UpdateMyAccountTest extends AbstractCommandHandlerTestCase
         $user->setContactDetails($contactDetails);
         $user->setPid('some-pid');
 
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_LOCAL_AUTHORITY);
+
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()
             ->with($userId, Query::HYDRATE_OBJECT, 1)
@@ -448,6 +459,11 @@ class UpdateMyAccountTest extends AbstractCommandHandlerTestCase
         $user->setLoginId('login_id');
         $user->setTeam($team);
         $user->setPid('some-pid');
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_LOCAL_AUTHORITY);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($user);

@@ -56,7 +56,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Vaidate the command params
      *
-     * @param Command $command
      * @throws ValidationException
      */
     protected function validate(Command $command)

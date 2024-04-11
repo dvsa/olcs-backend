@@ -34,25 +34,10 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     protected $repoServiceName = 'User';
 
     protected $extraRepos = ['ContactDetails'];
-    /**
-     * @var ValidatableAdapterInterface|null
-     */
-    private $adapter;
 
-    /**
-     * @var PasswordService
-     */
-    private $passwordService;
 
-    /**
-     *
-     * @param ValidatableAdapterInterface|null $adapter
-     * @param PasswordService $passwordService
-     */
-    public function __construct(PasswordService $passwordService, ?ValidatableAdapterInterface $adapter)
+    public function __construct(private PasswordService $passwordService, private ?ValidatableAdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
-        $this->passwordService = $passwordService;
     }
 
     /**
@@ -142,7 +127,7 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
                     ]
                 )
             );
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // swallow any exception
         }
 
@@ -154,7 +139,6 @@ final class CreateUserSelfserve extends AbstractUserCommandHandler implements
     }
 
     /**
-     * @param string $loginId
      * @return string
      *
      */

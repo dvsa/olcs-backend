@@ -39,7 +39,7 @@ class ClientFactoryTest extends MockeryTestCase
             try {
                 $sut->getOptions($mockSl, 'testkey');
             } catch (\Exception $e) {
-                if ($e->getMessage() == $expected->getMessage() && get_class($e) == get_class($expected)) {
+                if ($e->getMessage() == $expected->getMessage() && $e::class == $expected::class) {
                     $passed = true;
                 }
             }
@@ -154,7 +154,7 @@ class ClientFactoryTest extends MockeryTestCase
             try {
                 $sut->__invoke($mockSl, null);
             } catch (\Exception $e) {
-                if ($e->getMessage() === $expected->getMessage() && get_class($e) === get_class($expected)) {
+                if ($e->getMessage() === $expected->getMessage() && $e::class === $expected::class) {
                     $passed = true;
                 }
             }

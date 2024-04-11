@@ -35,7 +35,7 @@ final class Create extends AbstractCommandHandler
         $translationKey = TranslationKey::create($command->getTranslationKey(), $command->getDescription());
         try {
             $repo->save($translationKey);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             throw new NotFoundException('editable-translations-cant-save');
         }
 

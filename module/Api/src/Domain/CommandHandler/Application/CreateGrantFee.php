@@ -46,7 +46,6 @@ final class CreateGrantFee extends AbstractCommandHandler implements Transaction
     /**
      * Create a grant fee only if one doesn't already exist for the application
      *
-     * @param ApplicationEntity $application
      * @return Result
      */
     protected function maybeCreateApplicationFee(ApplicationEntity $application)

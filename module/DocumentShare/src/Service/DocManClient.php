@@ -17,10 +17,6 @@ class DocManClient implements DocumentStoreInterface
     /** @var HttpClient */
     protected $httpClient;
     /** @var string */
-    protected $baseUri;
-    /** @var string */
-    protected $workspace;
-    /** @var string */
     protected $uuid;
 
     /** @var array */
@@ -35,12 +31,10 @@ class DocManClient implements DocumentStoreInterface
      */
     public function __construct(
         HttpClient $httpClient,
-        $baseUri,
-        $workspace
+        protected $baseUri,
+        protected $workspace
     ) {
         $this->httpClient = $httpClient;
-        $this->baseUri = $baseUri;
-        $this->workspace = $workspace;
     }
 
     /**

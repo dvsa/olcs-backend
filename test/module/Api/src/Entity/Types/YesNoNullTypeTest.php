@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Entity\Types;
 
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Dvsa\Olcs\Api\Entity\Types\YesNoNullType;
 
 class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
@@ -22,7 +22,7 @@ class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSqlDeclaration()
     {
-        $mockPlatform = $this->createMock(MySQLPlatform::class);
+        $mockPlatform = $this->createMock(\Doctrine\DBAL\Platforms\MySqlPlatform::class);
         $this->assertEquals(
             'tinyint(1) NULL COMMENT \'(DC2Type:yesnonull)\'',
             $this->type->getSqlDeclaration([], $mockPlatform)

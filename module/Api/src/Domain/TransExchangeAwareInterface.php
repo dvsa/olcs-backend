@@ -10,9 +10,6 @@ use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientInterface;
  */
 interface TransExchangeAwareInterface
 {
-    /**
-     * @param TransExchangeClientInterface $transExchange
-     */
     public function setTransExchange(TransExchangeClientInterface $transExchange);
 
     /**

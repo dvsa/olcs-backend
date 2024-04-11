@@ -161,35 +161,18 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
             self::PUBLICATION => 'Publication ID'
         ];
         try {
-            switch ($type) {
-                case self::APP:
-                    $entity = $this->getRepo('Application')->fetchWithLicence($entityId);
-                    break;
-                case self::LIC:
-                    $entity = $this->getRepo('Licence')->fetchByLicNo($entityId);
-                    break;
-                case self::BUSREG:
-                    $entity = $this->getRepo('BusRegSearchView')->fetchByRegNo($entityId);
-                    break;
-                case self::CASES:
-                    $entity = $this->getRepo('Cases')->fetchExtended($entityId);
-                    break;
-                case self::IRFO:
-                    $entity = $this->getRepo('Organisation')->fetchById($entityId);
-                    break;
-                case self::IRHP_APP:
-                    $entity = $this->getRepo('IrhpApplication')->fetchById($entityId);
-                    break;
-                case self::TM:
-                    $entity = $this->getRepo('TransportManager')->fetchById($entityId);
-                    break;
-                case self::PUBLICATION:
-                    $entity = $this->getRepo('Publication')->fetchById($entityId);
-                    break;
-                default:
-                    throw new ValidationException(['type' => 'Unknown entity']);
-            }
-        } catch (NotFoundException $ex) {
+            $entity = match ($type) {
+                self::APP => $this->getRepo('Application')->fetchWithLicence($entityId),
+                self::LIC => $this->getRepo('Licence')->fetchByLicNo($entityId),
+                self::BUSREG => $this->getRepo('BusRegSearchView')->fetchByRegNo($entityId),
+                self::CASES => $this->getRepo('Cases')->fetchExtended($entityId),
+                self::IRFO => $this->getRepo('Organisation')->fetchById($entityId),
+                self::IRHP_APP => $this->getRepo('IrhpApplication')->fetchById($entityId),
+                self::TM => $this->getRepo('TransportManager')->fetchById($entityId),
+                self::PUBLICATION => $this->getRepo('Publication')->fetchById($entityId),
+                default => throw new ValidationException(['type' => 'Unknown entity']),
+            };
+        } catch (NotFoundException) {
             throw new ValidationException(['targetId' => $labels[$type] . ' is invalid']);
         }
         return $entity;

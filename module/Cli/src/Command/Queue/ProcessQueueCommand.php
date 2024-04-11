@@ -17,16 +17,11 @@ class ProcessQueueCommand extends AbstractOlcsCommand
     public const DEFAULT_RUN_FOR = 60;
     protected $sleepFor = 1000000;
 
-    private QueueProcessor $queueProcessor;
-    private array $config;
-
     public function __construct(
         CommandHandlerManager $commandHandlerManager,
-        array $config,
-        QueueProcessor $queueProcessor
+        private array $config,
+        private QueueProcessor $queueProcessor
     ) {
-        $this->config = $config;
-        $this->queueProcessor = $queueProcessor;
         parent::__construct(
             $commandHandlerManager
         );

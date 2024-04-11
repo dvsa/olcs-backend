@@ -47,7 +47,7 @@ final class Disable extends AbstractCommandHandler implements ToggleRequiredInte
                 [
                     'organisation_d' => $organisation->getId(),
                     'exception' => [
-                        'class' => get_class($e),
+                        'class' => $e::class,
                         'message' => $e->getMessage(),
                         'trace' => $e->getTraceAsString(),
                     ],

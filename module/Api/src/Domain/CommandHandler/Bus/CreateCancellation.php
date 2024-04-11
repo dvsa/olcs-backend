@@ -35,7 +35,6 @@ final class CreateCancellation extends AbstractCommandHandler
     }
 
     /**
-     * @param CreateCancellationCmd $command
      * @return BusReg
      */
     private function createBusRegObject(CreateCancellationCmd $command)

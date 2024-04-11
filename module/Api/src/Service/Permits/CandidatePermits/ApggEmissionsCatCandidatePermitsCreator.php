@@ -8,38 +8,19 @@ use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
 
 class ApggEmissionsCatCandidatePermitsCreator
 {
-    /** @var ApggCandidatePermitFactory */
-    private $apggCandidatePermitFactory;
-
-    /** @var IrhpCandidatePermitRepository */
-    private $irhpCandidatePermitRepo;
-
-    /** @var EmissionsStandardCriteriaFactory */
-    private $emissionsStandardCriteriaFactory;
-
     /**
      * Create service instance
      *
-     * @param ApggCandidatePermitFactory $apggCandidatePermitFactory
-     * @param IrhpCandidatePermitRepository $irhpCandidatePermitRepo
-     * @param EmissionsStandardCriteriaFactory $emissionsStandardCriteriaFactory
      *
      * @return ApggEmissionsCatCandidatePermitsCreator
      */
-    public function __construct(
-        ApggCandidatePermitFactory $apggCandidatePermitFactory,
-        IrhpCandidatePermitRepository $irhpCandidatePermitRepo,
-        EmissionsStandardCriteriaFactory $emissionsStandardCriteriaFactory
-    ) {
-        $this->apggCandidatePermitFactory = $apggCandidatePermitFactory;
-        $this->irhpCandidatePermitRepo = $irhpCandidatePermitRepo;
-        $this->emissionsStandardCriteriaFactory = $emissionsStandardCriteriaFactory;
+    public function __construct(private ApggCandidatePermitFactory $apggCandidatePermitFactory, private IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private EmissionsStandardCriteriaFactory $emissionsStandardCriteriaFactory)
+    {
     }
 
     /**
      * Create apgg candidate permits as required for the specified application
      *
-     * @param IrhpApplication $irhpApplication
      * @param string $emissionsCategoryId
      */
     public function createIfRequired(IrhpApplication $irhpApplication, $emissionsCategoryId)

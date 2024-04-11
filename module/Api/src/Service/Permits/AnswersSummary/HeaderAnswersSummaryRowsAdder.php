@@ -10,24 +10,14 @@ class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {
     public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
-    /** @var AnswersSummaryRowFactory */
-    private $answersSummaryRowFactory;
-
-    /** @var RendererInterface */
-    private $viewRenderer;
-
     /**
      * Create service instance
      *
-     * @param AnswersSummaryRowFactory $answersSummaryRowFactory
-     * @param RendererInterface $viewRenderer
      *
      * @return HeaderAnswersSummaryRowsAdder
      */
-    public function __construct(AnswersSummaryRowFactory $answersSummaryRowFactory, RendererInterface $viewRenderer)
+    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer)
     {
-        $this->answersSummaryRowFactory = $answersSummaryRowFactory;
-        $this->viewRenderer = $viewRenderer;
     }
 
     /**
@@ -49,7 +39,6 @@ class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
     /**
      * Return a row representing the selected permit type
      *
-     * @param IrhpApplicationEntity $irhpApplicationEntity
      *
      * @return AnswersSummaryRow
      */
@@ -71,7 +60,6 @@ class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
     /**
      * Return a row representing the selected licence
      *
-     * @param IrhpApplicationEntity $irhpApplicationEntity
      *
      * @return AnswersSummaryRow
      */

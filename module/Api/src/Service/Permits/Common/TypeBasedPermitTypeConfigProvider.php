@@ -6,19 +6,14 @@ use RuntimeException;
 
 class TypeBasedPermitTypeConfigProvider
 {
-    /** @var array */
-    private $config;
-
     /**
      * Create service instance
      *
-     * @param array $config
      *
      * @return TypeBasedPermitTypeConfigProvider
      */
-    public function __construct(array $config)
+    public function __construct(private array $config)
     {
-        $this->config = $config;
     }
 
     /**

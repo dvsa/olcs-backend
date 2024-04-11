@@ -14,22 +14,10 @@ use Doctrine\ORM\QueryBuilder;
  */
 final class WithRefdata implements QueryPartialInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var With
-     */
-    private $with;
-
     private $refDataEntity = \Dvsa\Olcs\Api\Entity\System\RefData::class;
 
-    public function __construct(EntityManagerInterface $em, With $with)
+    public function __construct(private EntityManagerInterface $em, private With $with)
     {
-        $this->em = $em;
-        $this->with = $with;
     }
 
     /**

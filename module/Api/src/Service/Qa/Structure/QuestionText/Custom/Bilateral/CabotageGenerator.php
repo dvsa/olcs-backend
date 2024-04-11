@@ -11,19 +11,14 @@ class CabotageGenerator implements QuestionTextGeneratorInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var QuestionTextGenerator */
-    private $questionTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param QuestionTextGenerator $questionTextGenerator
      *
      * @return CabotageGenerator
      */
-    public function __construct(QuestionTextGenerator $questionTextGenerator)
+    public function __construct(private QuestionTextGenerator $questionTextGenerator)
     {
-        $this->questionTextGenerator = $questionTextGenerator;
     }
 
     /**

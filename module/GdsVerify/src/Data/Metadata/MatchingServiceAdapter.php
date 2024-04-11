@@ -66,7 +66,6 @@ class MatchingServiceAdapter
      * -----END CERTIFICATE-----
      * Also, each line must be maximum 79 characters long.
      *
-     * @param string $certificateString
      *
      * @return string
      */

@@ -58,8 +58,6 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
     /**
      * Create the complaint object
      *
-     * @param Cmd $command
-     * @param ContactDetails $contactDetails
      * @return Complaint
      */
     private function createComplaintObject(Cmd $command, ContactDetails $contactDetails)
@@ -100,7 +98,6 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
 
     /**
      * Create person object
-     * @param Cmd $command
      * @return Person
      */
     private function createPersonObject(Cmd $command)
@@ -115,7 +112,6 @@ final class CreateComplaint extends AbstractCommandHandler implements Transactio
 
     /**
      * Create ContactDetails object
-     * @param Person $person
      * @return ContactDetails
      */
     private function createContactDetailsObject(Person $person)

@@ -172,7 +172,7 @@ abstract class EntityTester extends MockeryTestCase
         $methods = $reflection->getMethods();
         $testMethods = [];
         foreach ($methods as $method) {
-            if (substr($method->getName(), 0, 3) == 'set') {
+            if (str_starts_with($method->getName(), 'set')) {
                 $methodName = substr($method->getName(), 3);
 
                 if (
@@ -183,8 +183,11 @@ abstract class EntityTester extends MockeryTestCase
                 ) {
                     // If this $parameter->getClass() is not null, one of the methods is type-hinted.
                     foreach ($method->getParameters() as $parameter) {
-                        if ($parameter->getClass() !== null) {
-                            continue 2;
+                        $type = $parameter->getType(); // Get the ReflectionType of the parameter
+                        if ($type !== null) {
+                            if (!$type instanceof \ReflectionNamedType || !$type->isBuiltin()) {
+                                continue 2;
+                            }
                         }
                     }
 
@@ -224,7 +227,7 @@ abstract class EntityTester extends MockeryTestCase
         $testMethods = [null];
 
         foreach ($methods as $method) {
-            if (substr($method->getName(), 0, 3) == 'add') {
+            if (str_starts_with($method->getName(), 'add')) {
                 $testMethods[] = substr($method->getName(), 3);
             }
         }

@@ -23,24 +23,14 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
         IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => 'cabotage'
     ];
 
-    /** @var NoOfPermitsFactory */
-    private $noOfPermitsFactory;
-
-    /** @var NoOfPermitsTextFactory */
-    private $noOfPermitsTextFactory;
-
     /**
      * Create service instance
      *
-     * @param NoOfPermitsFactory $noOfPermitsFactory
-     * @param NoOfPermitsTextFactory $noOfPermitsTextFactory
      *
      * @return NoOfPermitsGenerator
      */
-    public function __construct(NoOfPermitsFactory $noOfPermitsFactory, NoOfPermitsTextFactory $noOfPermitsTextFactory)
+    public function __construct(private NoOfPermitsFactory $noOfPermitsFactory, private NoOfPermitsTextFactory $noOfPermitsTextFactory)
     {
-        $this->noOfPermitsFactory = $noOfPermitsFactory;
-        $this->noOfPermitsTextFactory = $noOfPermitsTextFactory;
     }
 
     /**

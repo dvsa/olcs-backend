@@ -8,8 +8,6 @@ use Psr\Container\ContainerInterface;
 class S3FileOptionsFactory implements FactoryInterface
 {
     /**
-     * @param array $config
-     *
      * @return array
      */
     private function extractConfig(array $config): array

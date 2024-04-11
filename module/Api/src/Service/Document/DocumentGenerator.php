@@ -74,7 +74,7 @@ class DocumentGenerator implements FactoryInterface
             try {
                 /** @var \Dvsa\Olcs\Api\Entity\Doc\Document $documentTemplate */
                 $documentTemplate = $this->documentRepo->fetchById($template);
-            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
+            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException) {
                 throw new \Exception('Template not found whilst trying to fetch document id' . $template);
             }
             $possibleTemplatePaths = [$documentTemplate->getIdentifier()];

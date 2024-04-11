@@ -70,7 +70,6 @@ final class UpdateOpposition extends AbstractCommandHandler implements Transacti
     /**
      * Update the opposition  object
      *
-     * @param Cmd $command
      * @return Opposition
      */
     private function updateOppositionObject(Cmd $command)
@@ -129,7 +128,6 @@ final class UpdateOpposition extends AbstractCommandHandler implements Transacti
      * Generate list of operatingCentres based on type of opposition. At present it allows both types to specify OCs
      * This may need to be either one or the other.
      *
-     * @param Cmd $command
      * @return ArrayCollection
      */
     private function generateOperatingCentres(Cmd $command)

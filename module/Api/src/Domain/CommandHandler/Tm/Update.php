@@ -94,7 +94,6 @@ final class Update extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Updates the home contact details for a transport manager.
      *
-     * @param UpdateTmCmd $command
      * @return Result
      * @throws NotFoundException
      * @throws RuntimeException

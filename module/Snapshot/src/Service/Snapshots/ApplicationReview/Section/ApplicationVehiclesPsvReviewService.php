@@ -15,9 +15,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class ApplicationVehiclesPsvReviewService extends AbstractReviewService
 {
-    /** @var VehiclesPsvReviewService */
-    private $vehiclesPsvReviewService;
-
     /**
      * Create service instance
      *
@@ -28,10 +25,9 @@ class ApplicationVehiclesPsvReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        VehiclesPsvReviewService $vehiclesPsvReviewService
+        private VehiclesPsvReviewService $vehiclesPsvReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->vehiclesPsvReviewService = $vehiclesPsvReviewService;
     }
 
     /**

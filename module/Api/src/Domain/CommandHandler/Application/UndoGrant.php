@@ -54,7 +54,6 @@ final class UndoGrant extends AbstractCommandHandler implements TransactionedInt
     /**
      * Cancel GRANT fees that are fully outstanding as per OLCS-11026
      *
-     * @param ApplicationEntity $application
      * @return Result
      */
     private function maybeCancelFees(ApplicationEntity $application)

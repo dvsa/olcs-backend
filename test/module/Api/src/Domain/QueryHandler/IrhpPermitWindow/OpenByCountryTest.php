@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\IrhpPermitWindow;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\IrhpPermitWindow\OpenByCountry as QueryHandler;
@@ -49,6 +48,16 @@ class OpenByCountryTest extends QueryHandlerTestCase
             ]
         ];
 
-        Assert::assertArraySubset($expected, $result);
+        $this->assertIsArray($result);
+
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $result);
+            if (is_array($value)) {
+                $this->assertIsArray($result[$key]);
+                $this->assertCount(count($value), $result[$key]);
+            } else {
+                $this->assertEquals($value, $result[$key]);
+            }
+        }
     }
 }

@@ -65,7 +65,6 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
      *
      * @param int $licenceId
      * @param DateTime|null $receivedDate
-     * @param RefData $appliedVia
      *
      * @return Result
      */
@@ -85,7 +84,6 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
     /**
      * If the user is required to confirm this change, throw an exception to the front end to indicate as such
      *
-     * @param Cmd $command
      *
      * @throws RequiresConfirmationException
      */

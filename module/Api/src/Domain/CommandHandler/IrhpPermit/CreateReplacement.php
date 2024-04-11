@@ -38,7 +38,7 @@ final class CreateReplacement extends AbstractCommandHandler
 
         try {
             $this->getRepo()->save($irhpPermit);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             throw new ValidationException(['An error occurred saving the replacement permit']);
         }
 

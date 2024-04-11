@@ -8,26 +8,14 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicati
 
 class QaEntityProvider
 {
-    /** @var IrhpApplicationRepository */
-    private $irhpApplicationRepo;
-
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpApplicationRepository $irhpApplicationRepo
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
      *
      * @return QaEntityProvider
      */
-    public function __construct(
-        IrhpApplicationRepository $irhpApplicationRepo,
-        IrhpPermitApplicationRepository $irhpPermitApplicationRepo
-    ) {
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
+    public function __construct(private IrhpApplicationRepository $irhpApplicationRepo, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
+    {
     }
 
     /**

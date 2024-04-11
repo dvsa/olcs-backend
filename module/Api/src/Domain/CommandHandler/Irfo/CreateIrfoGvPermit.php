@@ -53,7 +53,6 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
     }
 
     /**
-     * @param Cmd $command
      * @return IrfoGvPermit
      */
     private function createIrfoGvPermitObject(Cmd $command)

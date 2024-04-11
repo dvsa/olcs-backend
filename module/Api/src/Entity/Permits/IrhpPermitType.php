@@ -143,7 +143,6 @@ class IrhpPermitType extends AbstractIrhpPermitType
     /**
      * Generate an expiry date for this permit type using the supplied date time as an issue date
      *
-     * @param DateTime $issueDateTime
      *
      * @return DateTime
      */

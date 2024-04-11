@@ -6,15 +6,8 @@ namespace Dvsa\Olcs\Cpms\Authenticate;
 
 class CpmsIdentityProviderFactory
 {
-    private $clientId;
-    private $clientSecret;
-    private $userId;
-
-    public function __construct(string $clientId, string $clientSecret, string $userId)
+    public function __construct(private string $clientId, private string $clientSecret, private string $userId)
     {
-        $this->clientId = $clientId;
-        $this->clientSecret = $clientSecret;
-        $this->userId = $userId;
     }
 
     public function createCpmsIdentityProvider(): CpmsIdentityProvider

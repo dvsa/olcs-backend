@@ -7,25 +7,19 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 
 class CandidatePermitsGrantabilityChecker
 {
-    /** @var CandidatePermitsAvailableCountCalculator */
-    private $candidatePermitsAvailableCountCalculator;
-
     /**
      * Create service instance
      *
-     * @param CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator
      *
      * @return CandidatePermitsGrantabilityChecker
      */
-    public function __construct(CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator)
+    public function __construct(private CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator)
     {
-        $this->candidatePermitsAvailableCountCalculator = $candidatePermitsAvailableCountCalculator;
     }
 
     /**
      * Whether there is sufficient stock to grant the permits required by the application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return bool
      */

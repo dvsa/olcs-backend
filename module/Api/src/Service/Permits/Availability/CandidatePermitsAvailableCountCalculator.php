@@ -8,35 +8,21 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 
 class CandidatePermitsAvailableCountCalculator
 {
-    /** @var IrhpCandidatePermitRepository */
-    private $irhpCandidatePermitRepo;
-
-    /** @var IrhpPermitRepository */
-    private $irhpPermitRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpCandidatePermitRepository $irhpCandidatePermitRepo
-     * @param IrhpPermitRepository $irhpPermitRepo
      *
      * @return CandidatePermitsAvailableCountCalculator
      */
-    public function __construct(
-        IrhpCandidatePermitRepository $irhpCandidatePermitRepo,
-        IrhpPermitRepository $irhpPermitRepo
-    ) {
-        $this->irhpCandidatePermitRepo = $irhpCandidatePermitRepo;
-        $this->irhpPermitRepo = $irhpPermitRepo;
+    public function __construct(private IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private IrhpPermitRepository $irhpPermitRepo)
+    {
     }
 
     /**
      * Return the number of permits that would be available for granting in the specified range after taking into account
      * the request for permitsRequired permits. May return a negative number if there is insufficient availability.
      *
-     * @param IrhpPermitRange $irhpPermitRange
      * @param int $permitsRequired
-     *
      * @return int
      */
     public function getCount(IrhpPermitRange $irhpPermitRange, $permitsRequired)

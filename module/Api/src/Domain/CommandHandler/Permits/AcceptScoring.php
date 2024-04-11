@@ -114,7 +114,6 @@ class AcceptScoring extends AbstractCommandHandler
     /**
      * Send outcome notification and create fees as required for an application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @throws Exception
      */
@@ -133,16 +132,11 @@ class AcceptScoring extends AbstractCommandHandler
         }
 
         $outcomeNotificationType = $irhpApplication->getOutcomeNotificationType();
-        switch ($outcomeNotificationType) {
-            case ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL:
-                $this->triggerEmailNotification($irhpApplication);
-                break;
-            case ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL:
-                $this->triggerManualNotification($irhpApplication);
-                break;
-            default:
-                throw new Exception('Unknown notification type: ' . $outcomeNotificationType);
-        }
+        match ($outcomeNotificationType) {
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_EMAIL => $this->triggerEmailNotification($irhpApplication),
+            ApplicationAcceptConsts::NOTIFICATION_TYPE_MANUAL => $this->triggerManualNotification($irhpApplication),
+            default => throw new Exception('Unknown notification type: ' . $outcomeNotificationType),
+        };
 
         $this->createApplicationFeesAndUpdateStatus($irhpApplication);
         $this->getRepo('IrhpApplication')->save($irhpApplication);
@@ -150,8 +144,6 @@ class AcceptScoring extends AbstractCommandHandler
 
     /**
      * Send the outcome notification for an application requiring manual notification
-     *
-     * @param IrhpApplication $irhpApplication
      */
     private function triggerManualNotification(IrhpApplication $irhpApplication)
     {
@@ -164,8 +156,6 @@ class AcceptScoring extends AbstractCommandHandler
 
     /**
      * Send the outcome notification for an application requiring email notification
-     *
-     * @param IrhpApplication $irhpApplication
      */
     private function triggerEmailNotification(IrhpApplication $irhpApplication)
     {
@@ -201,8 +191,6 @@ class AcceptScoring extends AbstractCommandHandler
 
     /**
      * Create any applicable fees for an application and update the status accordingly
-     *
-     * @param IrhpApplication $irhpApplication
      */
     private function createApplicationFeesAndUpdateStatus(IrhpApplication $irhpApplication)
     {
@@ -235,7 +223,6 @@ class AcceptScoring extends AbstractCommandHandler
     /**
      * Get task creation command for an application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return CreateTask
      */

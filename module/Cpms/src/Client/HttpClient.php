@@ -86,8 +86,6 @@ class HttpClient
 
 
     /**
-     * @param ResponseInterface $response
-     *
      * @return mixed
      */
     protected function decodeResponse(ResponseInterface $response)
@@ -106,15 +104,10 @@ class HttpClient
 
     protected function buildOptions(string $method, array $data): array
     {
-        switch ($method) {
-            case self::METHOD_PUT:
-            case self::METHOD_POST:
-                $options = $this->buildPostOrPutQuery($this->sanitiseDataCharset($data), $method);
-                break;
-            case self::METHOD_GET:
-            default:
-                $options = $this->buildGetQuery($data);
-        }
+        $options = match ($method) {
+            self::METHOD_PUT, self::METHOD_POST => $this->buildPostOrPutQuery($this->sanitiseDataCharset($data), $method),
+            default => $this->buildGetQuery($data),
+        };
 
         $options['headers'] = array_merge($options['headers'], $this->buildHeaders());
         return $options;
@@ -143,7 +136,6 @@ class HttpClient
     /**
      * Sanitizes strings submitted in JSON payload to safe charset for SAP export
      *
-     * @param array $data
      * @return array
      */
     protected function sanitiseDataCharset(array $data): array

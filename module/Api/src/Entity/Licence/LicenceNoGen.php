@@ -24,7 +24,6 @@ class LicenceNoGen extends AbstractLicenceNoGen
     }
 
     /**
-     * @param RefData $goodsOrPsv
      * @return string
      */
     public static function getCategoryPrefix(RefData $goodsOrPsv)

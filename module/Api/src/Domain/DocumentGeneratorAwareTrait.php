@@ -15,9 +15,6 @@ trait DocumentGeneratorAwareTrait
      */
     protected $documentGenerator;
 
-    /**
-     * @param DocumentGenerator $service
-     */
     public function setDocumentGenerator(DocumentGenerator $service)
     {
         $this->documentGenerator = $service;

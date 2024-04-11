@@ -116,7 +116,7 @@ class RunScoring extends AbstractCommandHandler
                     UploadScoringLog::create(['logContent' => $logOutput])
                 )
             );
-        } catch (Exception $e) {
+        } catch (Exception) {
             Logger::err('Unable to update status/write scoring log file for stock id ' . $this->stockId);
         }
 

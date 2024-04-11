@@ -10,9 +10,6 @@ class AccessTokenTest extends TestCase
     /**
      * @test
      * @dataProvider isExpiredDataProvider
-     * @param int $issuedAt
-     * @param int $expiresIn
-     * @param bool $isExpired
      */
     public function isExpired(int $issuedAt, int $expiresIn, bool $isExpired)
     {

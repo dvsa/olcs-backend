@@ -64,9 +64,6 @@ class AllocateCandidatePermits extends AbstractCommandHandler
     /**
      * Derive an IrhpPermit entity from the IrhpCandidatePermit entity and save it to the repository
      *
-     * @param IrhpCandidatePermit $candidatePermit
-     * @param DateTime|null $expiryDate
-     * @param DateTime|null $issueDate
      *
      * @return void
      */
@@ -88,7 +85,6 @@ class AllocateCandidatePermits extends AbstractCommandHandler
     /**
      * Get the first available permit number from the specified range
      *
-     * @param IrhpPermitRange $range
      *
      * @return int
      */

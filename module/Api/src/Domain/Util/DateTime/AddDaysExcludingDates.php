@@ -8,13 +8,8 @@ use Olcs\Logging\Log\Logger;
 
 class AddDaysExcludingDates implements DateTimeCalculatorInterface
 {
-    private DateTimeCalculatorInterface $wrapped;
-    private DateProviderInterface $excluded;
-
-    public function __construct(DateTimeCalculatorInterface $wrapped, DateProviderInterface $excluded)
+    public function __construct(private DateTimeCalculatorInterface $wrapped, private DateProviderInterface $excluded)
     {
-        $this->wrapped = $wrapped;
-        $this->excluded = $excluded;
     }
 
     public function calculateDate(\DateTime $date, int $days): \DateTime

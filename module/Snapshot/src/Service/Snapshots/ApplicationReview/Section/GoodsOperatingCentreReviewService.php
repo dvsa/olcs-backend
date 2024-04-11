@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
  */
 class GoodsOperatingCentreReviewService extends AbstractReviewService
 {
-    /** @var PsvOperatingCentreReviewService */
-    private $psvOperatingCentreReviewService;
-
     /**
      * Create service instance
      *
@@ -24,10 +21,9 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        PsvOperatingCentreReviewService $psvOperatingCentreReviewService
+        private PsvOperatingCentreReviewService $psvOperatingCentreReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->psvOperatingCentreReviewService = $psvOperatingCentreReviewService;
     }
 
     /**

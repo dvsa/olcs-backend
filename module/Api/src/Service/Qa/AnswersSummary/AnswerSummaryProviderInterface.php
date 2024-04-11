@@ -18,8 +18,6 @@ interface AnswerSummaryProviderInterface
     /**
      * Return the template variables to be used in building the answer summary
      *
-     * @param QaContext $qaContext
-     * @param ElementInterface $element
      * @param bool $isSnapshot
      *
      * @return array
@@ -29,7 +27,6 @@ interface AnswerSummaryProviderInterface
     /**
      * Whether this answer summary provider supports the specified entity
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */
@@ -38,7 +35,6 @@ interface AnswerSummaryProviderInterface
     /**
      * Whether this answer summary provider should include slug
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

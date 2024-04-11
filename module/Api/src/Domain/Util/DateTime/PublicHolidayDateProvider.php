@@ -9,13 +9,8 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
 final class PublicHolidayDateProvider implements DateProviderInterface
 {
-    private PublicHoliday $repository;
-    private ?TrafficArea $trafficArea;
-
-    public function __construct(PublicHoliday $repository, ?TrafficArea $trafficArea)
+    public function __construct(private PublicHoliday $repository, private ?TrafficArea $trafficArea)
     {
-        $this->repository = $repository;
-        $this->trafficArea = $trafficArea;
     }
 
     public function between(\DateTime $startDate, \DateTime $endDate): array

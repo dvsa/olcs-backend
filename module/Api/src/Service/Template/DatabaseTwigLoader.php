@@ -9,19 +9,14 @@ use Twig\Source;
 
 class DatabaseTwigLoader implements LoaderInterface
 {
-    /** @var DatabaseTemplateFetcher */
-    private $templateFetcher;
-
     /**
      * Create service instance
      *
-     * @param DatabaseTemplateFetcher $templateFetcher
      *
      * @return DatabaseTwigLoader
      */
-    public function __construct(DatabaseTemplateFetcher $templateFetcher)
+    public function __construct(private DatabaseTemplateFetcher $templateFetcher)
     {
-        $this->templateFetcher = $templateFetcher;
     }
 
     /**
@@ -37,7 +32,7 @@ class DatabaseTwigLoader implements LoaderInterface
     {
         try {
             $template = $this->templateFetcher->fetch($name);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             throw new LoaderError(sprintf('Template "%s" does not exist.', $name));
         }
 
@@ -56,7 +51,7 @@ class DatabaseTwigLoader implements LoaderInterface
         $exists = true;
         try {
             $this->templateFetcher->fetch($name);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $exists = false;
         }
 

@@ -34,7 +34,7 @@ class CpmsResponseException extends Exception
      *
      * @return self
      */
-    public function setResponse($response)
+    public function setResponse(mixed $response)
     {
         $this->response = $response;
 

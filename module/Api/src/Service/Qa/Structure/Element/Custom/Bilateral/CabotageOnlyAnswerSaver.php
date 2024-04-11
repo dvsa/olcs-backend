@@ -11,19 +11,14 @@ class CabotageOnlyAnswerSaver implements AnswerSaverInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var CountryDeletingAnswerSaver */
-    private $countryDeletingAnswerSaver;
-
     /**
      * Create service instance
      *
-     * @param CountryDeletingAnswerSaver $countryDeletingAnswerSaver
      *
      * @return CabotageOnlyAnswerSaver
      */
-    public function __construct(CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
+    public function __construct(private CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
     {
-        $this->countryDeletingAnswerSaver = $countryDeletingAnswerSaver;
     }
 
     /**

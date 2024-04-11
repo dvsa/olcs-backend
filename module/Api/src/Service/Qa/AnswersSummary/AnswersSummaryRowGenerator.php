@@ -16,45 +16,19 @@ class AnswersSummaryRowGenerator
 {
     public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
-    /** @var AnswersSummaryRowFactory */
-    private $answersSummaryRowFactory;
-
-    /** @var RendererInterface */
-    private $viewRenderer;
-
-    /** @var QaContextFactory */
-    private $qaContextFactory;
-
-    /** @var ElementGeneratorContextGenerator */
-    private $elementGeneratorContextGenerator;
-
     /**
      * Create service instance
      *
-     * @param AnswersSummaryRowFactory $answersSummaryRowFactory
-     * @param RendererInterface $viewRenderer
-     * @param QaContextFactory $qaContextFactory
-     * @param ElementGeneratorContextGenerator $elementGeneratorContextGenerator
      *
      * @return AnswersSummaryRowGenerator
      */
-    public function __construct(
-        AnswersSummaryRowFactory $answersSummaryRowFactory,
-        RendererInterface $viewRenderer,
-        QaContextFactory $qaContextFactory,
-        ElementGeneratorContextGenerator $elementGeneratorContextGenerator
-    ) {
-        $this->answersSummaryRowFactory = $answersSummaryRowFactory;
-        $this->viewRenderer = $viewRenderer;
-        $this->qaContextFactory = $qaContextFactory;
-        $this->elementGeneratorContextGenerator = $elementGeneratorContextGenerator;
+    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer, private QaContextFactory $qaContextFactory, private ElementGeneratorContextGenerator $elementGeneratorContextGenerator)
+    {
     }
 
     /**
      * Build and return a AnswersSummaryRow instance using the appropriate data sources
      *
-     * @param SupplementedApplicationStep $supplementedApplicationStep
-     * @param QaEntityInterface $qaEntity
      * @param bool $isSnapshot
      *
      * @return AnswersSummaryRow

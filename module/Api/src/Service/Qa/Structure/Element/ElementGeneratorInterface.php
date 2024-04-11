@@ -9,7 +9,6 @@ interface ElementGeneratorInterface
     /**
      * Build and return an element instance using the appropriate data sources
      *
-     * @param ElementGeneratorContext $context
      *
      * @return ElementInterface
      */
@@ -18,7 +17,6 @@ interface ElementGeneratorInterface
     /**
      * Whether this element generator supports the specified entity
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

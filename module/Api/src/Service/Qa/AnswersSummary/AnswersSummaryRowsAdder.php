@@ -9,26 +9,14 @@ use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 
 class AnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
 {
-    /** @var SupplementedApplicationStepsProvider */
-    private $supplementedApplicationStepsProvider;
-
-    /** @var AnswersSummaryRowGenerator */
-    private $answersSummaryRowGenerator;
-
     /**
      * Create service instance
      *
-     * @param SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider
-     * @param AnswersSummaryRowGenerator $answersSummaryRowGenerator
      *
      * @return AnswersSummaryRowsAdder
      */
-    public function __construct(
-        SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider,
-        AnswersSummaryRowGenerator $answersSummaryRowGenerator
-    ) {
-        $this->supplementedApplicationStepsProvider = $supplementedApplicationStepsProvider;
-        $this->answersSummaryRowGenerator = $answersSummaryRowGenerator;
+    public function __construct(private SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider, private AnswersSummaryRowGenerator $answersSummaryRowGenerator)
+    {
     }
 
     /**

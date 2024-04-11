@@ -6,25 +6,19 @@ use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 
 class CreateTaskCommandGenerator
 {
-    /** @var CreateTaskCommandFactory */
-    private $createTaskCommandFactory;
-
     /**
      * Create service instance
      *
-     * @param CreateTaskCommandFactory $createTaskCommandFactory
      *
      * @return CreateTaskCommandGenerator
      */
-    public function __construct(CreateTaskCommandFactory $createTaskCommandFactory)
+    public function __construct(private CreateTaskCommandFactory $createTaskCommandFactory)
     {
-        $this->createTaskCommandFactory = $createTaskCommandFactory;
     }
 
     /**
      * Get a CreateTask command instance representing the application submission task for the provided application
      *
-     * @param CheckableApplicationInterface $application
      *
      * @return CreateTask
      */

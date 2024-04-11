@@ -21,7 +21,6 @@ interface FormControlStrategyInterface
     /**
      * Get an instance of ElementInterface representing this form control
      *
-     * @param ElementGeneratorContext $context
      *
      * @return ElementInterface
      */
@@ -30,8 +29,6 @@ interface FormControlStrategyInterface
     /**
      * Save the data for this form control to the persistent data store
      *
-     * @param QaContext $qaContext
-     * @param array $postData
      *
      * @return string
      */
@@ -39,15 +36,12 @@ interface FormControlStrategyInterface
 
     /**
      * Remove or reset to the default state any answer present for this form control
-     *
-     * @param QaContext $qaContext
      */
     public function clearAnswer(QaContext $qaContext);
 
     /**
      * Get a QuestionText instance corresponding to this form control
      *
-     * @param QaContext $qaContext
      *
      * @return QuestionText
      */

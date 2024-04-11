@@ -37,8 +37,6 @@ class TmCaseDecision extends AbstractTmCaseDecision
     }
 
     /**
-     * @param CasesEntity $case
-     * @param RefData $decision
      * @param array $data Array of data
      * @return TmCaseDecision
      */
@@ -72,17 +70,12 @@ class TmCaseDecision extends AbstractTmCaseDecision
         }
 
         // each decision may have different update
-        switch ($this->getDecision()->getId()) {
-            case self::DECISION_REPUTE_NOT_LOST:
-                $this->updateReputeNotLost($data);
-                break;
-            case self::DECISION_NO_FURTHER_ACTION:
-                $this->updateNoFurtherAction($data);
-                break;
-            case self::DECISION_DECLARE_UNFIT:
-                $this->updateDeclareUnfit($data);
-                break;
-        }
+        match ($this->getDecision()->getId()) {
+            self::DECISION_REPUTE_NOT_LOST => $this->updateReputeNotLost($data),
+            self::DECISION_NO_FURTHER_ACTION => $this->updateNoFurtherAction($data),
+            self::DECISION_DECLARE_UNFIT => $this->updateDeclareUnfit($data),
+            default => $this,
+        };
 
         return $this;
     }

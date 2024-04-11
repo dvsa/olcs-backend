@@ -45,7 +45,6 @@ final class CreateFinancialStandingRate extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
      * @return Entity
      */
     private function createObject(Cmd $command)

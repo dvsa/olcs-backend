@@ -53,7 +53,6 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
     }
 
     /**
-     * @param Cmd $command
      * @return CreateTask
      */
     private function createCreateTaskCommand(Cmd $command)
@@ -88,7 +87,6 @@ final class CreateApplicationFee extends AbstractCommandHandler implements AuthA
     }
 
     /**
-     * @param Cmd $command
      * @param $taskId
      * @return CreateFeeCmd
      */

@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ConditionUndertaking;
 
-use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ConditionUndertaking\GetList as QueryHandler;
@@ -72,7 +71,18 @@ class GetListTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        Assert::assertArraySubset(['id' => 324], $result['result'][0]);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
+        $this->assertIsArray($result['result']);
+
+        $this->assertNotEmpty($result['result']);
+        $this->assertArrayHasKey(0, $result['result']);
+
+        $this->assertIsArray($result['result'][0]);
+        $this->assertArrayHasKey('id', $result['result'][0]);
+        $this->assertSame(324, $result['result'][0]['id']);
+
+        $this->assertArrayHasKey('count', $result);
         $this->assertSame(1, $result['count']);
     }
 
@@ -105,7 +115,18 @@ class GetListTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        Assert::assertArraySubset(['id' => 324], $result['result'][0]);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
+        $this->assertIsArray($result['result']);
+
+        $this->assertNotEmpty($result['result']);
+        $this->assertArrayHasKey(0, $result['result']);
+
+        $this->assertIsArray($result['result'][0]);
+        $this->assertArrayHasKey('id', $result['result'][0]);
+        $this->assertSame(324, $result['result'][0]['id']);
+
+        $this->assertArrayHasKey('count', $result);
         $this->assertSame(1, $result['count']);
     }
 
@@ -134,7 +155,18 @@ class GetListTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        Assert::assertArraySubset(['id' => 324], $result['result'][0]);
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('result', $result);
+        $this->assertIsArray($result['result']);
+
+        $this->assertNotEmpty($result['result']);
+        $this->assertArrayHasKey(0, $result['result']);
+
+        $this->assertIsArray($result['result'][0]);
+        $this->assertArrayHasKey('id', $result['result'][0]);
+        $this->assertSame(324, $result['result'][0]['id']);
+
+        $this->assertArrayHasKey('count', $result);
         $this->assertSame(1, $result['count']);
     }
 }

@@ -15,19 +15,14 @@ class RadioAnswerSummaryProvider implements AnswerSummaryProviderInterface
     use AlwaysIncludeSlugTrait;
     use AnyTrait;
 
-    /** @var OptionListGenerator */
-    private $optionListGenerator;
-
     /**
      * Create service instance
      *
-     * @param OptionListGenerator $optionListGenerator
      *
      * @return RadioAnswerSummaryProvider
      */
-    public function __construct(OptionListGenerator $optionListGenerator)
+    public function __construct(private OptionListGenerator $optionListGenerator)
     {
-        $this->optionListGenerator = $optionListGenerator;
     }
 
     /**

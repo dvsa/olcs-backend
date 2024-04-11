@@ -9,19 +9,14 @@ use RuntimeException;
 
 class StandardFieldsGenerator implements FieldsGeneratorInterface
 {
-    /** @var CurrentFieldValuesGenerator */
-    private $currentFieldValuesGenerator;
-
     /**
      * Create service instance
      *
-     * @param CurrentFieldValuesGenerator $currentFieldValuesGenerator
      *
      * @return StandardFieldsGenerator
      */
-    public function __construct(CurrentFieldValuesGenerator $currentFieldValuesGenerator)
+    public function __construct(private CurrentFieldValuesGenerator $currentFieldValuesGenerator)
     {
-        $this->currentFieldValuesGenerator = $currentFieldValuesGenerator;
     }
 
     /**
@@ -30,28 +25,19 @@ class StandardFieldsGenerator implements FieldsGeneratorInterface
     public function generate(IrhpPermitStock $irhpPermitStock, ?IrhpPermitApplication $irhpPermitApplication)
     {
         $applicationPathGroupId = $irhpPermitStock->getApplicationPathGroup()->getId();
-        switch ($applicationPathGroupId) {
-            case ApplicationPathGroup::BILATERALS_CABOTAGE_PERMITS_ONLY_ID:
-                $cabotageOptions = [
-                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED
-                ];
-                break;
-            case ApplicationPathGroup::BILATERALS_STANDARD_PERMITS_ONLY_ID:
-            case ApplicationPathGroup::BILATERALS_TURKEY_ID:
-            case ApplicationPathGroup::BILATERALS_UKRAINE_ID:
-                $cabotageOptions = [
-                    IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED
-                ];
-                break;
-            case ApplicationPathGroup::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID:
-                $cabotageOptions = [
-                    IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED,
-                    IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED
-                ];
-                break;
-            default:
-                throw new RuntimeException('Unexpected application path group');
-        }
+        $cabotageOptions = match ($applicationPathGroupId) {
+            ApplicationPathGroup::BILATERALS_CABOTAGE_PERMITS_ONLY_ID => [
+                IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED
+            ],
+            ApplicationPathGroup::BILATERALS_STANDARD_PERMITS_ONLY_ID, ApplicationPathGroup::BILATERALS_TURKEY_ID, ApplicationPathGroup::BILATERALS_UKRAINE_ID => [
+                IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED
+            ],
+            ApplicationPathGroup::BILATERALS_STANDARD_AND_CABOTAGE_PERMITS_ID => [
+                IrhpPermitApplication::BILATERAL_STANDARD_REQUIRED,
+                IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED
+            ],
+            default => throw new RuntimeException('Unexpected application path group'),
+        };
 
         $currentFieldValues = $this->currentFieldValuesGenerator->generate($irhpPermitStock, $irhpPermitApplication);
 

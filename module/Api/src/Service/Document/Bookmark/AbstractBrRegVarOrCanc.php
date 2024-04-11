@@ -39,6 +39,6 @@ abstract class AbstractBrRegVarOrCanc extends SingleValueAbstract
             }
         }
 
-        throw new \Exception('Failed to generate bookmark ' . get_class($this));
+        throw new \Exception('Failed to generate bookmark ' . static::class);
     }
 }

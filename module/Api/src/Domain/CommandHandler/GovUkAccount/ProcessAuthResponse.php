@@ -28,11 +28,8 @@ class ProcessAuthResponse extends AbstractCommandHandler implements Transactione
 
     protected $repoServiceName = 'DigitalSignature';
 
-    private GovUkAccountService $govUkAccountService;
-
-    public function __construct(GovUkAccountService $govUkAccountService)
+    public function __construct(private GovUkAccountService $govUkAccountService)
     {
-        $this->govUkAccountService = $govUkAccountService;
     }
 
     public function handleCommand(CommandInterface $command): Result
@@ -97,43 +94,34 @@ class ProcessAuthResponse extends AbstractCommandHandler implements Transactione
             $this->result->addId('DigitalSignature', $digitalSignatureId);
             $this->result->addMessage('Digital signature created');
 
-            switch ($stateTokenClaims['journey']) {
-                case RefData::JOURNEY_NEW_APPLICATION:
-                    $sideEffectCmd = UpdateApplication::create(
-                        [
-                            'application' => $stateTokenClaims['id'],
-                            'digitalSignature' => $digitalSignatureId,
-                        ]
-                    );
-                    break;
-                case RefData::JOURNEY_CONTINUATION:
-                    $sideEffectCmd = UpdateContinuationDetail::create(
-                        [
-                            'continuationDetail' => $stateTokenClaims['id'],
-                            'digitalSignature' => $digitalSignatureId,
-                        ]
-                    );
-                    break;
-                case RefData::JOURNEY_SURRENDER:
-                    $sideEffectCmd = UpdateSurrender::create(
-                        [
-                            'licence' => $stateTokenClaims['id'],
-                            'digitalSignature' => $digitalSignatureId,
-                        ]
-                    );
-                    break;
-                case RefData::JOURNEY_TM_APPLICATION:
-                    $sideEffectCmd = UpdateTmApplication::create(
-                        [
-                            'application' => $stateTokenClaims['id'],
-                            'digitalSignature' => $digitalSignatureId,
-                            'role' => $stateTokenClaims['role'],
-                        ]
-                    );
-                    break;
-                default:
-                    throw new \Exception(self::ERR_MISSING_JOURNEY);
-            }
+            $sideEffectCmd = match ($stateTokenClaims['journey']) {
+                RefData::JOURNEY_NEW_APPLICATION => UpdateApplication::create(
+                    [
+                        'application' => $stateTokenClaims['id'],
+                        'digitalSignature' => $digitalSignatureId,
+                    ]
+                ),
+                RefData::JOURNEY_CONTINUATION => UpdateContinuationDetail::create(
+                    [
+                        'continuationDetail' => $stateTokenClaims['id'],
+                        'digitalSignature' => $digitalSignatureId,
+                    ]
+                ),
+                RefData::JOURNEY_SURRENDER => UpdateSurrender::create(
+                    [
+                        'licence' => $stateTokenClaims['id'],
+                        'digitalSignature' => $digitalSignatureId,
+                    ]
+                ),
+                RefData::JOURNEY_TM_APPLICATION => UpdateTmApplication::create(
+                    [
+                        'application' => $stateTokenClaims['id'],
+                        'digitalSignature' => $digitalSignatureId,
+                        'role' => $stateTokenClaims['role'],
+                    ]
+                ),
+                default => throw new \Exception(self::ERR_MISSING_JOURNEY),
+            };
 
             $this->result->merge(
                 $this->handleSideEffect($sideEffectCmd)

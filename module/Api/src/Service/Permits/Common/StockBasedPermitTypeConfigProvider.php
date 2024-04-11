@@ -6,26 +6,14 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository
 
 class StockBasedPermitTypeConfigProvider
 {
-    /** @var IrhpPermitStockRepository */
-    private $irhpPermitStockRepo;
-
-    /** @var TypeBasedPermitTypeConfigProvider */
-    private $typeBasedPermitTypeConfigProvider;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider
      *
      * @return StockBasedPermitTypeConfigProvider
      */
-    public function __construct(
-        IrhpPermitStockRepository $irhpPermitStockRepo,
-        TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider
-    ) {
-        $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->typeBasedPermitTypeConfigProvider = $typeBasedPermitTypeConfigProvider;
+    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo, private TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider)
+    {
     }
 
     /**

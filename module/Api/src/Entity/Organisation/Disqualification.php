@@ -28,8 +28,6 @@ class Disqualification extends AbstractDisqualification
     public const STATUS_INACTIVE = 'Inactive';
 
     /**
-     * @param \Dvsa\Olcs\Api\Entity\Organisation\Organisation $organisation
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */

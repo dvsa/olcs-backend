@@ -156,7 +156,6 @@ final class Revoke extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Publish the licence
      *
-     * @param Licence $licence
      *
      * @return Result
      */

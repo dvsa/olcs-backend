@@ -907,7 +907,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
      *
      * @return array
      */
-    protected function getTotAuthVehicles($entity)
+    protected function getTotAuthVehicles(mixed $entity)
     {
         return $entity->getTotAuthVehicles();
     }

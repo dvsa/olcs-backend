@@ -351,10 +351,9 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
                 $transactions,
                 function ($a, $b) {
                     if ($a->getCompletedDate() == $b->getCompletedDate()) {
-                        // if same date, use createdOn timestamp
-                        return $a->getCreatedOn() < $b->getCreatedOn();
+                        return ($b->getCreatedOn() <=> $a->getCreatedOn());
                     }
-                    return $a->getCompletedDate() < $b->getCompletedDate();
+                    return ($b->getCompletedDate() <=> $a->getCompletedDate());
                 }
             );
 

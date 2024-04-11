@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class StandardAndCabotage implements ElementInterface
 {
-    /** @var string|null */
-    private $value;
-
     /**
      * Create instance
      *
@@ -16,9 +13,8 @@ class StandardAndCabotage implements ElementInterface
      *
      * @return StandardAndCabotage
      */
-    public function __construct($value)
+    public function __construct(private $value)
     {
-        $this->value = $value;
     }
 
     /**

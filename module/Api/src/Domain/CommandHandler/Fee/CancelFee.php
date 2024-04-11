@@ -39,8 +39,6 @@ final class CancelFee extends AbstractCommandHandler
 
     /**
      * If the fee has an associated task, close it
-     *
-     * @param Fee $fee
      */
     protected function maybeCloseFeeTask(Fee $fee)
     {

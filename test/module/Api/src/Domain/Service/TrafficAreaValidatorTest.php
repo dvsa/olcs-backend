@@ -523,7 +523,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $exception = false;
         try {
             $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $exception = true;
         }
 
@@ -544,7 +544,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $exception = false;
         try {
             $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $exception = true;
         }
 
@@ -565,7 +565,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $exception = false;
         try {
             $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $exception = true;
         }
 
@@ -625,7 +625,7 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $exception = false;
         try {
             $this->sut->validateTrafficAreaWithPostcode($app, $postcode);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $exception = true;
         }
 

@@ -13,26 +13,14 @@ class StandardAndCabotageAnswerSaver implements AnswerSaverInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var NamedAnswerFetcher */
-    private $namedAnswerFetcher;
-
-    /** @var StandardAndCabotageUpdater */
-    private $standardAndCabotageUpdater;
-
     /**
      * Create service instance
      *
-     * @param NamedAnswerFetcher $namedAnswerFetcher
-     * @param StandardAndCabotageUpdater $standardAndCabotageUpdater
      *
      * @return StandardAndCabotageAnswerSaver
      */
-    public function __construct(
-        NamedAnswerFetcher $namedAnswerFetcher,
-        StandardAndCabotageUpdater $standardAndCabotageUpdater
-    ) {
-        $this->namedAnswerFetcher = $namedAnswerFetcher;
-        $this->standardAndCabotageUpdater = $standardAndCabotageUpdater;
+    public function __construct(private NamedAnswerFetcher $namedAnswerFetcher, private StandardAndCabotageUpdater $standardAndCabotageUpdater)
+    {
     }
 
     /**

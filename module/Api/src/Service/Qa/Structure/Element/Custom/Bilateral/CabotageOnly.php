@@ -6,12 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class CabotageOnly implements ElementInterface
 {
-    /** @var string|null */
-    private $yesNo;
-
-    /** @var string */
-    private $countryName;
-
     /**
      * Create instance
      *
@@ -20,10 +14,8 @@ class CabotageOnly implements ElementInterface
      *
      * @return CabotageOnly
      */
-    public function __construct($yesNo, $countryName)
+    public function __construct(private $yesNo, private $countryName)
     {
-        $this->yesNo = $yesNo;
-        $this->countryName = $countryName;
     }
 
     /**

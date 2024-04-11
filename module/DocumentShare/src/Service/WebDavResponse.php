@@ -24,9 +24,6 @@ class WebDavResponse extends Response
         return $this->response;
     }
 
-    /**
-     * @param bool $response
-     */
     public function setResponse(bool $response)
     {
         $this->response = $response;

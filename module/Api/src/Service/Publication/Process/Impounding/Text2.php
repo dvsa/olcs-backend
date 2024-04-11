@@ -40,7 +40,6 @@ final class Text2 extends AbstractText
     /**
      * Get all the impounding legislation as single string.
      *
-     * @param PublicationLink $publicationLink
      * @return string
      */
     private function getImpoundingLegislationString(PublicationLink $publicationLink)

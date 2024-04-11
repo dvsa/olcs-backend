@@ -19,7 +19,6 @@ interface QaEntityInterface
     /**
      * Return additional Q&A view data applicable to this entity type
      *
-     * @param ApplicationStep $applicationStep
      *
      * @return array
      */

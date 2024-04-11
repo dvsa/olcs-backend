@@ -76,6 +76,7 @@ class SendEmailTest extends AbstractCommandHandlerTestCase
             'plainBody' => 'This is the email',
             'htmlBody' => null,
             'highPriority' => false,
+            'subjectVariables' => []
         ];
 
         $command = Cmd::create($data);
@@ -131,6 +132,7 @@ class SendEmailTest extends AbstractCommandHandlerTestCase
             'plainBody' => 'This is the email http://selfserve/ http://internal/',
             'htmlBody' => 'This is the html email http://selfserve/ http://internal/',
             'highPriority' => true,
+            'subjectVariables' => []
         ];
 
         $command = Cmd::create($data);
@@ -216,7 +218,8 @@ class SendEmailTest extends AbstractCommandHandlerTestCase
             'subject' => 'Some subject',
             'plainBody' => 'This is the email http://selfserve/ http://internal/',
             'htmlBody' => 'This is the html email http://selfserve/ http://internal/',
-            'highPriority' => false
+            'highPriority' => false,
+            'subjectVariables' => []
         ];
 
         $command = Cmd::create($data);

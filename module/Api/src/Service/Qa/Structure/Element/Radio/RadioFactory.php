@@ -10,13 +10,10 @@ class RadioFactory
     /**
      * Create and return a Radio instance
      *
-     * @param OptionList $optionList
-     * @param TranslateableText $notSelectedMessage
-     * @param mixed $value
      *
      * @return Radio
      */
-    public function create(OptionList $optionList, TranslateableText $notSelectedMessage, $value)
+    public function create(OptionList $optionList, TranslateableText $notSelectedMessage, mixed $value)
     {
         return new Radio($optionList, $notSelectedMessage, $value);
     }

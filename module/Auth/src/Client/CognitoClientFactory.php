@@ -65,7 +65,6 @@ class CognitoClientFactory implements FactoryInterface
     }
 
     /**
-     * @param array $config
      * @return bool
      */
     protected function validateConfig(array $config): bool

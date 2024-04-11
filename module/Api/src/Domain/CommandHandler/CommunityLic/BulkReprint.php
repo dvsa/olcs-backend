@@ -125,8 +125,6 @@ final class BulkReprint extends AbstractCommandHandler implements UploaderAwareI
 
     /**
      * Attempt to reprint the community licence corresponding to the specified row values
-     *
-     * @param array $row
      */
     private function processRow(array $row)
     {

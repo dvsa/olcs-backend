@@ -94,7 +94,7 @@ class TextGeneratorTest extends MockeryTestCase
     public function testGenerate()
     {
         $this->textFactory->shouldReceive('create')
-            ->with($this->labelTranslateableText, $this->hintTranslateableText, $this->answerValue)
+            ->with($this->answerValue, $this->labelTranslateableText, $this->hintTranslateableText)
             ->andReturn($this->text);
 
         $decodedOptionSource = [
@@ -114,7 +114,7 @@ class TextGeneratorTest extends MockeryTestCase
     public function testGenerateWithLabelOnly()
     {
         $this->textFactory->shouldReceive('create')
-            ->with($this->labelTranslateableText, null, $this->answerValue)
+            ->with($this->answerValue, $this->labelTranslateableText, null)
             ->andReturn($this->text);
 
         $decodedOptionSource = [
@@ -133,7 +133,7 @@ class TextGeneratorTest extends MockeryTestCase
     public function testGenerateWithHintOnly()
     {
         $this->textFactory->shouldReceive('create')
-            ->with(null, $this->hintTranslateableText, $this->answerValue)
+            ->with($this->answerValue, null, $this->hintTranslateableText)
             ->andReturn($this->text);
 
         $decodedOptionSource = [

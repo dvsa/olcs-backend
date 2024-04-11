@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DvsaReports;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Laminas\Http\Client;
 use Laminas\Http\Response;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
@@ -15,6 +16,7 @@ use Dvsa\Olcs\Transfer\Command\DvsaReports\GetRedirect as GetRedirectCmd;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
 use LmcRbacMvc\Service\AuthorizationService;
+use ReflectionClass;
 
 /**
  * Get DVSA Reports Redirect Test
@@ -71,6 +73,10 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
         $user = m::mock(User::class)->makePartial();
         $user->initCollections();
         $user->setOrganisationUsers(new ArrayCollection([$orgUser]));
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_OPERATOR);
 
         $this->mockedSmServices[AuthorizationService::class]
             ->shouldReceive('getIdentity')->once()->with()->andReturn($identity);

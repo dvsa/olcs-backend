@@ -6,26 +6,20 @@ use Twig\Environment;
 
 class TwigRenderer
 {
-    /** @var Environment */
-    private $twig;
-
     /**
      * Create service instance
      *
-     * @param Environment $twig
      *
      * @return TwigRenderer
      */
-    public function __construct(Environment $twig)
+    public function __construct(private Environment $twig)
     {
-        $this->twig = $twig;
     }
 
     /**
      * Render the template with the specified path using the supplied variables
      *
      * @param string $templatePath
-     * @param array $variables
      *
      * @return string
      */
@@ -38,7 +32,6 @@ class TwigRenderer
      * Render the template within the supplied string using the supplied variables
      *
      * @param string $templateString
-     * @param array $variables
      *
      * @return string
      */

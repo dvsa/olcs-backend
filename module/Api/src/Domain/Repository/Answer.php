@@ -37,7 +37,7 @@ class Answer extends AbstractRepository
                 ->setParameter(2, $entityId)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             throw new NotFoundException('Answer not found');
         }
     }

@@ -115,9 +115,7 @@ class Question extends AbstractQuestion
     /**
      * Get the answer corresponding to a question for a non-custom question type
      *
-     * @param QaEntityInterface $qaEntity
      * @param \DateTime $applicationPathLockedOn
-     *
      * @return mixed|null
      */
     public function getStandardAnswer(QaEntityInterface $qaEntity, \DateTime $applicationPathLockedOn)

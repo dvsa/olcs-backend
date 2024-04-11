@@ -8,7 +8,6 @@ class CommandCreator
      * Create a new cqrs command object based upon the specified fully qualified class name and parameters
      *
      * @param string $className
-     * @param array $parameters
      *
      * @return mixed
      */

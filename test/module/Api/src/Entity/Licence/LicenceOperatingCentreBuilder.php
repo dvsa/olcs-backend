@@ -18,10 +18,6 @@ class LicenceOperatingCentreBuilder implements BuilderInterface
      */
     protected $instance;
 
-    /**
-     * @param Licence $licence
-     * @param int|null $id
-     */
     public function __construct(Licence $licence, ?int $id = self::AN_ID)
     {
         $oc = new OperatingCentre();
@@ -31,7 +27,6 @@ class LicenceOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $noOfVehicles
      * @return self
      */
     public function withVehicleCapacity(int $noOfVehicles): self
@@ -49,7 +44,6 @@ class LicenceOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param Licence $licence
      * @param int|null $id
      * @return self
      */

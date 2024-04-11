@@ -7,7 +7,6 @@ class OptionListFactory
     /**
      * Create instance
      *
-     * @param OptionFactory $optionFactory
      *
      * @return OptionList
      */

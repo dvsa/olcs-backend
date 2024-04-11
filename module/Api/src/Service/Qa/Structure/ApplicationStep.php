@@ -6,27 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class ApplicationStep
 {
-    /** @var string */
-    private $type;
-
-    /** @var string */
-    private $fieldsetName;
-
-    /** @var string */
-    private $shortName;
-
-    /** @var string */
-    private $slug;
-
-    /** @var bool */
-    private $enabled;
-
-    /** @var ElementInterface */
-    private $element;
-
-    /** @var ValidatorList */
-    private $validatorList;
-
     /**
      * Create instance
      *
@@ -35,27 +14,11 @@ class ApplicationStep
      * @param string $shortName
      * @param string $slug
      * @param string $enabled
-     * @param ElementInterface $element
-     * @param ValidatorList $validatorList
      *
      * @return ApplicationStep
      */
-    public function __construct(
-        $type,
-        $fieldsetName,
-        $shortName,
-        $slug,
-        $enabled,
-        ElementInterface $element,
-        ValidatorList $validatorList
-    ) {
-        $this->type = $type;
-        $this->fieldsetName = $fieldsetName;
-        $this->shortName = $shortName;
-        $this->slug = $slug;
-        $this->enabled = $enabled;
-        $this->element = $element;
-        $this->validatorList = $validatorList;
+    public function __construct(private $type, private $fieldsetName, private $shortName, private $slug, private $enabled, private ElementInterface $element, private ValidatorList $validatorList)
+    {
     }
 
     /**

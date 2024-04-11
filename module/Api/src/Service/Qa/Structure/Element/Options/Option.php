@@ -4,15 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options;
 
 class Option
 {
-    /** @var string */
-    private $value;
-
-    /** @var string */
-    private $label;
-
-    /** @var string|null */
-    private $hint;
-
     /**
      * Create instance
      *
@@ -22,11 +13,8 @@ class Option
      *
      * @return Option
      */
-    public function __construct($value, $label, $hint = null)
+    public function __construct(private $value, private $label, private $hint = null)
     {
-        $this->value = $value;
-        $this->label = $label;
-        $this->hint = $hint;
     }
 
     /**

@@ -10,32 +10,14 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
 {
     public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
-    /** @var AnswersSummaryRowFactory */
-    private $answersSummaryRowFactory;
-
-    /** @var RendererInterface */
-    private $viewRenderer;
-
-    /** @var BilateralIpaAnswersSummaryRowsAdder */
-    private $bilateralIpaAnswersSummaryRowsAdder;
-
     /**
      * Create service instance
      *
-     * @param AnswersSummaryRowFactory $answersSummaryRowFactory
-     * @param RendererInterface $viewRenderer
-     * @param BilateralIpaAnswersSummaryRowsAdder $bilateralIpaAnswersSummaryRowsAdder
      *
      * @return BilateralAnswersSummaryRowsAdder
      */
-    public function __construct(
-        AnswersSummaryRowFactory $answersSummaryRowFactory,
-        RendererInterface $viewRenderer,
-        BilateralIpaAnswersSummaryRowsAdder $bilateralIpaAnswersSummaryRowsAdder
-    ) {
-        $this->answersSummaryRowFactory = $answersSummaryRowFactory;
-        $this->viewRenderer = $viewRenderer;
-        $this->bilateralIpaAnswersSummaryRowsAdder = $bilateralIpaAnswersSummaryRowsAdder;
+    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer, private BilateralIpaAnswersSummaryRowsAdder $bilateralIpaAnswersSummaryRowsAdder)
+    {
     }
 
     /**
@@ -61,12 +43,10 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
     /**
      * Get a row representing the country names for a bilateral application
      *
-     * @param mixed $irhpPermitApplications
      * @param $isSnapshot
-     *
      * @return AnswersSummaryRow
      */
-    private function getCountryNamesRow($irhpPermitApplications, $isSnapshot)
+    private function getCountryNamesRow(mixed $irhpPermitApplications, $isSnapshot)
     {
         $countryNames = [];
 
@@ -97,7 +77,6 @@ class BilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterfa
     /**
      * Get a row representing the country name for a bilateral application
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      *
      * @return AnswersSummaryRow
      */

@@ -8,32 +8,19 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 
 class WindowAvailabilityChecker
 {
-    /** @var IrhpPermitWindowRepository */
-    private $irhpPermitWindowRepo;
-
-    /** @var StockAvailabilityChecker */
-    private $stockAvailabilityChecker;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitWindowRepository $irhpPermitWindowRepo
-     * @param StockAvailabilityChecker $stockAvailabilityChecker
      *
      * @return WindowAvailabilityChecker
      */
-    public function __construct(
-        IrhpPermitWindowRepository $irhpPermitWindowRepo,
-        StockAvailabilityChecker $stockAvailabilityChecker
-    ) {
-        $this->irhpPermitWindowRepo = $irhpPermitWindowRepo;
-        $this->stockAvailabilityChecker = $stockAvailabilityChecker;
+    public function __construct(private IrhpPermitWindowRepository $irhpPermitWindowRepo, private StockAvailabilityChecker $stockAvailabilityChecker)
+    {
     }
 
     /**
      * Whether there are any short term ecmt windows both open and having available stock
      *
-     * @param DateTime $now
      *
      * @return bool
      */

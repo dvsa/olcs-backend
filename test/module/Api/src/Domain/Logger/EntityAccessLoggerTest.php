@@ -103,7 +103,6 @@ class EntityAccessLoggerTest extends MockeryTestCase
     }
 
     /**
-     * @param object $entity
      * @test
      * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithTheInternalUserPermissionDataProvider
@@ -193,7 +192,6 @@ class EntityAccessLoggerTest extends MockeryTestCase
     }
 
     /**
-     * @param object $entity
      * @test
      * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithThePartnerUserPermissionDataProvider
@@ -259,7 +257,6 @@ class EntityAccessLoggerTest extends MockeryTestCase
     }
 
     /**
-     * @param object $entity
      * @test
      * @depends logAccessToEntityIsCallable
      * @dataProvider entitiesThatAreLoggedForUsersWithThePartnerAdminPermissionDataProvider
@@ -496,9 +493,6 @@ class EntityAccessLoggerTest extends MockeryTestCase
         return $entity;
     }
 
-    /**
-     * @param string $permission
-     */
     protected function grantAllUsersPermission(string $permission)
     {
         $this->authorizationService()->allows('isGranted')->with($permission)->andReturn(static::IS_GRANTED)->byDefault();
@@ -507,7 +501,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
     protected function assertThatAuditLogEntryWasMadeForEntity(object $entity)
     {
         $this->commandHandler()->shouldHaveReceived('handleCommand')->withArgs(function ($command) use ($entity) {
-            $this->assertInstanceOf(EntityAccessLogger::ENTITY_AUDIT_LOG_COMMAND_MAP[get_class($entity)], $command);
+            $this->assertInstanceOf(EntityAccessLogger::ENTITY_AUDIT_LOG_COMMAND_MAP[$entity::class], $command);
             $this->assertSame($entity->getId(), $command->getId());
             return true;
         });

@@ -30,11 +30,8 @@ final class DeleteUserSelfserve extends AbstractCommandHandler implements
 
     protected $extraRepos = ['OrganisationUser'];
 
-    private ValidatableAdapterInterface $adapter;
-
-    public function __construct(ValidatableAdapterInterface $adapter)
+    public function __construct(private ValidatableAdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
     }
 
     /**

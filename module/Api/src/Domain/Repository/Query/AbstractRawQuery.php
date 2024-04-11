@@ -115,7 +115,7 @@ abstract class AbstractRawQuery implements AuthAwareInterface, QueryInterface, F
             return $this->connection->executeQuery($query, $params, $paramTypes);
         } catch (\Exception $ex) {
             throw new RuntimeException(
-                'An unexpected error occurred while running query: ' .  get_class($this) . ' ' . $ex->getMessage()
+                'An unexpected error occurred while running query: ' .  static::class . ' ' . $ex->getMessage()
             );
         }
     }

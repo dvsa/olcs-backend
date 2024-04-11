@@ -73,7 +73,7 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
             //deal with missing user records for the irhp application
             try {
                 $lastUpdateBy = $irhpApplication->getLastModifiedBy()->getContactDetails()->getPerson()->getFullName();
-            } catch (EntityNotFoundException $ex) {
+            } catch (EntityNotFoundException) {
                 $lastUpdateBy = self::MSG_USER_MISSING;
             }
 

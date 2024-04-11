@@ -131,37 +131,31 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
     {
         $descriptionPrefix = sprintf('%s Application %d Snapshot ', $code, $application->getId());
 
-        switch ((string)$event) {
-            case (string)Cmd::ON_GRANT:
-                return [
-                    'filename' => $descriptionPrefix . 'Grant.html',
-                    'description' => $descriptionPrefix . '(at grant/valid)',
-                ];
-            case (string)Cmd::ON_SUBMIT:
-                return [
-                    'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
-                    'filename' => $descriptionPrefix . 'Submit.html',
-                    'description' => $descriptionPrefix . '(at submission)',
-                    'isExternal' => true,
-                ];
-            case (string)Cmd::ON_REFUSE:
-                return [
-                    'filename' => $descriptionPrefix . 'Refuse.html',
-                    'description' => $descriptionPrefix . '(at refuse)',
-                ];
-            case (string)Cmd::ON_WITHDRAW:
-                return [
-                    'filename' => $descriptionPrefix . 'Withdraw.html',
-                    'description' => $descriptionPrefix . '(at withdraw)',
-                ];
-            case (string)Cmd::ON_NTU:
-                return [
-                    'filename' => $descriptionPrefix . 'NTU.html',
-                    'description' => $descriptionPrefix . '(at NTU)',
-                ];
-            default:
-                throw new ValidationException(['Unexpected event']);
-        }
+        return match ((string)$event) {
+            (string)Cmd::ON_GRANT => [
+                'filename' => $descriptionPrefix . 'Grant.html',
+                'description' => $descriptionPrefix . '(at grant/valid)',
+            ],
+            (string)Cmd::ON_SUBMIT => [
+                'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_FORMS_DIGITAL,
+                'filename' => $descriptionPrefix . 'Submit.html',
+                'description' => $descriptionPrefix . '(at submission)',
+                'isExternal' => true,
+            ],
+            (string)Cmd::ON_REFUSE => [
+                'filename' => $descriptionPrefix . 'Refuse.html',
+                'description' => $descriptionPrefix . '(at refuse)',
+            ],
+            (string)Cmd::ON_WITHDRAW => [
+                'filename' => $descriptionPrefix . 'Withdraw.html',
+                'description' => $descriptionPrefix . '(at withdraw)',
+            ],
+            (string)Cmd::ON_NTU => [
+                'filename' => $descriptionPrefix . 'NTU.html',
+                'description' => $descriptionPrefix . '(at NTU)',
+            ],
+            default => throw new ValidationException(['Unexpected event']),
+        };
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

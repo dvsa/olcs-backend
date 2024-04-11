@@ -45,7 +45,6 @@ class Schedule41Approve extends AbstractQueryHandler
     /**
      * Validate that the applications schedule41 can be approved
      *
-     * @param ApplicationEntity $application
      * @return array of errors
      */
     private function validate(ApplicationEntity $application)

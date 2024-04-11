@@ -10,19 +10,14 @@ class ThirdCountryGenerator implements ElementGeneratorInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var ThirdCountryFactory */
-    private $thirdCountryFactory;
-
     /**
      * Create service instance
      *
-     * @param ThirdCountryFactory $thirdCountryFactory
      *
      * @return ThirdCountryGenerator
      */
-    public function __construct(ThirdCountryFactory $thirdCountryFactory)
+    public function __construct(private ThirdCountryFactory $thirdCountryFactory)
     {
-        $this->thirdCountryFactory = $thirdCountryFactory;
     }
 
     /**

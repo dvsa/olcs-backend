@@ -8,32 +8,14 @@ use Laminas\View\Renderer\RendererInterface;
 
 class StrategySelectingViewRenderer
 {
-    /** @var RendererInterface */
-    private $legacyViewRenderer;
-
-    /** @var TwigRenderer */
-    private $twigRenderer;
-
-    /** @var TwigLoader */
-    private $twigLoader;
-
     /**
      * Create service instance
      *
-     * @param RendererInterface $legacyViewRenderer
-     * @param TwigRenderer $twigRenderer
-     * @param TwigLoader $twigLoader
      *
      * @return StrategySelectingViewRenderer
      */
-    public function __construct(
-        RendererInterface $legacyViewRenderer,
-        TwigRenderer $twigRenderer,
-        TwigLoader $twigLoader
-    ) {
-        $this->legacyViewRenderer = $legacyViewRenderer;
-        $this->twigRenderer = $twigRenderer;
-        $this->twigLoader = $twigLoader;
+    public function __construct(private RendererInterface $legacyViewRenderer, private TwigRenderer $twigRenderer, private TwigLoader $twigLoader)
+    {
     }
 
     /**
@@ -43,7 +25,6 @@ class StrategySelectingViewRenderer
      * @param string $locale
      * @param string $format
      * @param string $template
-     * @param array $variables
      *
      * @return string
      */

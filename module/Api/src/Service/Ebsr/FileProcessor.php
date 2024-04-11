@@ -16,23 +16,6 @@ use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 class FileProcessor implements FileProcessorInterface
 {
     public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
-
-    /**
-     * @var Filesystem
-     */
-    private $fileSystem;
-    /**
-     * @var Decompress
-     */
-    private $decompressFilter;
-    /**
-     * @var FileUploaderInterface
-     */
-    private $fileUploader;
-    /**
-     * @var string
-     */
-    private $tmpDir;
     /**
      * @var string
      */
@@ -46,16 +29,8 @@ class FileProcessor implements FileProcessorInterface
      * @param Decompress            $decompressFilter decompression filter
      * @param string                $tmpDir           the temporary directory
      */
-    public function __construct(
-        FileUploaderInterface $fileUploader,
-        Filesystem $fileSystem,
-        Decompress $decompressFilter,
-        $tmpDir
-    ) {
-        $this->fileUploader = $fileUploader;
-        $this->fileSystem = $fileSystem;
-        $this->decompressFilter = $decompressFilter;
-        $this->tmpDir = $tmpDir;
+    public function __construct(private FileUploaderInterface $fileUploader, private Filesystem $fileSystem, private Decompress $decompressFilter, private $tmpDir)
+    {
     }
 
     /**

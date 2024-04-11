@@ -7,24 +7,14 @@ use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 
 class SupplementedApplicationStep
 {
-    /** @var ApplicationStep */
-    private $applicationStep;
-
-    /** @var FormControlStrategyInterface */
-    private $formControlStrategy;
-
     /**
      * Create instance
      *
-     * @param ApplicationStep $applicationStep
-     * @param FormControlStrategyInterface $formControlStrategy
      *
      * @return SupplementedApplicationStep
      */
-    public function __construct(ApplicationStep $applicationStep, FormControlStrategyInterface $formControlStrategy)
+    public function __construct(private ApplicationStep $applicationStep, private FormControlStrategyInterface $formControlStrategy)
     {
-        $this->applicationStep = $applicationStep;
-        $this->formControlStrategy = $formControlStrategy;
     }
 
     /**

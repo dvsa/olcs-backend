@@ -37,7 +37,7 @@ class CanAccessCorrelatedDocuments extends AbstractHandler implements CacheAware
             /** @var Document $doc */
             try {
                 $doc = $repo->fetchById($documentId);
-            } catch (NotFoundException $ex) {
+            } catch (NotFoundException) {
                 continue;
             }
             if ($doc && $doc->getCreatedBy()->getId() !== $this->getUser()->getId()) {

@@ -4,19 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Permits\ApplyRanges;
 
 class WithFewestNonRequestedCountriesProvider
 {
-    /** @var RestrictedCountryIdsProvider */
-    private $restrictedCountryIdsProvider;
-
     /**
      * Create service instance
      *
-     * @param RestrictedCountryIdsProvider $restrictedCountryIdsProvider
      *
      * @return WithFewestNonRequestedCountriesProvider
      */
-    public function __construct(RestrictedCountryIdsProvider $restrictedCountryIdsProvider)
+    public function __construct(private RestrictedCountryIdsProvider $restrictedCountryIdsProvider)
     {
-        $this->restrictedCountryIdsProvider = $restrictedCountryIdsProvider;
     }
 
     /**

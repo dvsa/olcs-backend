@@ -871,13 +871,10 @@ class ContinueLicenceTest extends AbstractCommandHandlerTestCase
         return $repositoryServiceManager->get('ContinuationDetail');
     }
 
-    /**
-     * @param object ...$entities
-     */
     protected function injectEntities(object ...$entities)
     {
         foreach ($entities as $entity) {
-            switch (get_class($entity)) {
+            switch ($entity::class) {
                 case Licence::class:
                     assert(is_callable([$entity, 'getId']));
                     $this->licenceRepository()
@@ -905,7 +902,6 @@ class ContinueLicenceTest extends AbstractCommandHandlerTestCase
     }
 
     /**
-     * @param Licence $licence
      * @return ContinuationDetail
      */
     protected function continuationDetailForLicence(Licence $licence): ContinuationDetail
@@ -916,10 +912,9 @@ class ContinueLicenceTest extends AbstractCommandHandlerTestCase
     }
 
     /**
-     * @param mixed $id
      * @return Licence
      */
-    protected function licenceForPsv($id): Licence
+    protected function licenceForPsv(mixed $id): Licence
     {
         $instance = new Licence($this->organisation(), new RefData(Licence::LICENCE_STATUS_VALID));
         $instance->setId($id);

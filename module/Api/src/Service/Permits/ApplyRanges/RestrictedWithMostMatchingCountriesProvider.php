@@ -6,28 +6,21 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 
 class RestrictedWithMostMatchingCountriesProvider
 {
-    /** @var RestrictedRangesProvider */
-    private $restrictedRangesProvider;
-
     /**
      * Create service instance
      *
-     * @param RestrictedRangesProvider $restrictedRangesProvider
      *
      * @return RestrictedWithMostMatchingCountriesProvider
      */
-    public function __construct(RestrictedRangesProvider $restrictedRangesProvider)
+    public function __construct(private RestrictedRangesProvider $restrictedRangesProvider)
     {
-        $this->restrictedRangesProvider = $restrictedRangesProvider;
     }
 
     /**
      * From the set of restricted ranges (i.e. ranges that allow travel to one or more restricted countries), return
      * the ranges that have the most countries in common with those passed in
      *
-     * @param array $ranges
      * @param array $applicationCountryIds The country ids requested in the application
-     *
      * @return array
      */
     public function getRanges(array $ranges, array $applicationCountryIds)

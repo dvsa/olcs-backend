@@ -76,9 +76,6 @@ final class UpdateDeclareUnfit extends AbstractCommandHandler implements Transac
     /**
      * Update the task. We only update the actionDate but we need to query it because tasks are not directly associated
      *
-     * @param CommandInterface $command
-     * @param CasesEntity $case
-     * @param TransportManager $transportManager
      * @return static
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

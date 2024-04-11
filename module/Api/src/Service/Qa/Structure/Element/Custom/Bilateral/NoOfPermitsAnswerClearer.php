@@ -12,26 +12,14 @@ class NoOfPermitsAnswerClearer implements AnswerClearerInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var ApplicationFeesClearer */
-    private $applicationFeesClearer;
-
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
     /**
      * Create service instance
      *
-     * @param ApplicationFeesClearer $applicationFeesClearer
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
      *
      * @return NoOfPermitsAnswerClearer
      */
-    public function __construct(
-        ApplicationFeesClearer $applicationFeesClearer,
-        IrhpPermitApplicationRepository $irhpPermitApplicationRepo
-    ) {
-        $this->applicationFeesClearer = $applicationFeesClearer;
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
+    public function __construct(private ApplicationFeesClearer $applicationFeesClearer, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
+    {
     }
 
     /**

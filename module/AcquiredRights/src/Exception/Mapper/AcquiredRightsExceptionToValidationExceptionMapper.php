@@ -46,7 +46,7 @@ class AcquiredRightsExceptionToValidationExceptionMapper
      */
     public static function mapException(AcquiredRightsException $exception, string $inputName, bool $rethrowIfNotExists = true): bool
     {
-        $exceptionClassName = get_class($exception);
+        $exceptionClassName = $exception::class;
 
         if (!array_key_exists($exceptionClassName, self::MAP)) {
             if ($rethrowIfNotExists) {

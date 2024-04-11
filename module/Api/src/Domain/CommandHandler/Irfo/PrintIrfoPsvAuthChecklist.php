@@ -58,7 +58,6 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
     /**
      * Print IRFO PSV Auth Checklist
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      *
      * @return Result
      */
@@ -78,7 +77,6 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
     /**
      * Print Renewal Letter
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      *
      * @return Result
      */
@@ -122,7 +120,6 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
     /**
      * Print Application Letter
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      *
      * @return Result
      */
@@ -173,21 +170,15 @@ final class PrintIrfoPsvAuthChecklist extends AbstractCommandHandler implements 
     /**
      * Get Application Letter Template
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      *
      * @return string
      */
     private function getApplicationLetterTemplate(IrfoPsvAuth $irfoPsvAuth)
     {
-        switch ($irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()) {
-            case IrfoPsvAuthType::IRFO_FEE_TYPE_EU_REG_17:
-            case IrfoPsvAuthType::IRFO_FEE_TYPE_EU_REG_19A:
-                $template = 'IRFO_app_eu_regular_service';
-                break;
-            default:
-                $template = 'IRFO_app_non_eu_service';
-                break;
-        }
+        $template = match ($irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()) {
+            IrfoPsvAuthType::IRFO_FEE_TYPE_EU_REG_17, IrfoPsvAuthType::IRFO_FEE_TYPE_EU_REG_19A => 'IRFO_app_eu_regular_service',
+            default => 'IRFO_app_non_eu_service',
+        };
 
         return $template;
     }

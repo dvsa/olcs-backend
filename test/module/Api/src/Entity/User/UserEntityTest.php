@@ -4,6 +4,7 @@ namespace Dvsa\OlcsTest\Api\Entity\User;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
@@ -17,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\User\Role as RoleEntity;
 use Dvsa\Olcs\Api\Entity\User\User as Entity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Mockery as m;
+use ReflectionClass;
 
 /**
  * User Entity Unit Tests
@@ -55,6 +57,11 @@ class UserEntityTest extends EntityTester
         $this->entity->setLocalAuthority($localAuthority);
         $this->entity->setTransportManager($transportManager);
         $this->entity->setPartnerContactDetails($partnerContactDetails);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($this->entity, $expected);
 
         $this->assertEquals($expected, $this->entity->getUserType());
         $this->assertEquals($expectedIsInternal, $this->entity->isInternal());

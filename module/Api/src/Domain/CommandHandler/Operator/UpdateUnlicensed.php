@@ -61,8 +61,6 @@ final class UpdateUnlicensed extends AbstractCommandHandler
     }
 
     /**
-     * @param OrganisationEntity $organisation
-     * @param CommandInterface $command
      * @return OrganisationEntity
      */
     private function updateOrganisation(OrganisationEntity $organisation, CommandInterface $command)
@@ -74,8 +72,6 @@ final class UpdateUnlicensed extends AbstractCommandHandler
     }
 
     /**
-     * @param LicenceEntity $licence
-     * @param CommandInterface $command
      * @return LicenceEntity
      */
     private function updateLicence(LicenceEntity $licence, CommandInterface $command)
@@ -98,8 +94,6 @@ final class UpdateUnlicensed extends AbstractCommandHandler
     }
 
     /**
-     * @param ContactDetailsEntity $contactDetails
-     * @param CommandInterface $command
      * @return ContactDetailsEntity
      */
     private function updateContactDetails(ContactDetailsEntity $contactDetails, CommandInterface $command)

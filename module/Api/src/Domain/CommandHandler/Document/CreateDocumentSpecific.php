@@ -145,7 +145,6 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
         }
     }
 
-    /** @param CommandInterface|Cmd $command */
     private function updateCorrelationStore(CommandInterface $command, Document $document): void
     {
         if ($command->getCorrelationId() === null) {

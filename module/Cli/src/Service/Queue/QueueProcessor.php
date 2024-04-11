@@ -25,26 +25,14 @@ use Olcs\Logging\Log\Logger;
  */
 class QueueProcessor
 {
-    /** @var QueryHandlerManager */
-    private $queryHandlerManager;
-
-    /** @var MessageConsumerManager */
-    private $messageConsumerManager;
-
     /**
      * Create service instance
      *
-     * @param QueryHandlerManager $queryHandlerManager
-     * @param MessageConsumerManager $messageConsumerManager
      *
      * @return QueueProcessor
      */
-    public function __construct(
-        QueryHandlerManager $queryHandlerManager,
-        MessageConsumerManager $messageConsumerManager
-    ) {
-        $this->queryHandlerManager = $queryHandlerManager;
-        $this->messageConsumerManager = $messageConsumerManager;
+    public function __construct(private QueryHandlerManager $queryHandlerManager, private MessageConsumerManager $messageConsumerManager)
+    {
     }
 
     /**

@@ -47,7 +47,6 @@ final class DvlaVehicleResponseToModelMapper
     }
 
     /**
-     * @param string $key
      * @param array<mixed> $array
      * @param null $default
      * @return mixed|null
@@ -58,8 +57,6 @@ final class DvlaVehicleResponseToModelMapper
     }
 
     /**
-     * @param string|null $date
-     * @param bool $ignoreDay
      * @return \DateTime|null
      */
     private function parseDate(?string $date, bool $ignoreDay = false): ?\DateTime

@@ -56,7 +56,6 @@ class IrhpPermitStock extends AbstractRepository
     }
 
     /**
-     * @param int $irhpPermitType
      * @return array
      */
     public function fetchByIrhpPermitType(int $irhpPermitType)
@@ -76,9 +75,7 @@ class IrhpPermitStock extends AbstractRepository
     /**
      * Fetch all bilateral stocks with open windows for a given country
      *
-     * @param string $country
      * @param DateTime $now Now
-     *
      * @return array
      */
     public function fetchOpenBilateralStocksByCountry(string $country, DateTime $now)

@@ -12,8 +12,6 @@ use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 interface CacheAwareInterface
 {
     /**
-     * @param CacheEncryption $cacheService
-     *
      * @return void
      */
     public function setCache(CacheEncryption $cacheService): void;

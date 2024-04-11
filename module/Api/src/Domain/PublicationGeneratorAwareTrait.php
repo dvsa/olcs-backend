@@ -14,9 +14,6 @@ trait PublicationGeneratorAwareTrait
      */
     protected $publicationGenerator;
 
-    /**
-     * @param PublicationGenerator $service
-     */
     public function setPublicationGenerator(PublicationGenerator $service)
     {
         $this->publicationGenerator = $service;

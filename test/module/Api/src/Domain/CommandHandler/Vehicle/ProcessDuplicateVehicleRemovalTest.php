@@ -422,8 +422,8 @@ class ProcessDuplicateVehicleRemovalTest extends AbstractCommandHandlerTestCase
 
         $emailParams = [
             'removedVehicles' => [
-                ['vrm' => 'VRM2', 'licNo' => 'LICNO3'],
                 ['vrm' => 'VRM2', 'licNo' => 'LICNO2'],
+                ['vrm' => 'VRM2', 'licNo' => 'LICNO3'],
                 ['vrm' => 'VRM3', 'licNo' => 'LICNO1'],
             ]
         ];
@@ -432,7 +432,7 @@ class ProcessDuplicateVehicleRemovalTest extends AbstractCommandHandlerTestCase
             'email-duplicate-vehicles-removal',
             $emailParams,
             'default'
-        );
+        )->once();
 
         $data = [
             'to' => 'FOO',

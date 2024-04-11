@@ -256,7 +256,7 @@ class QueryHandlerTestCase extends MockeryTestCase
                 $cmdDataToMatch[$key] = $cmdData[$key] ?? null;
             }
 
-            $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
+            $this->assertEquals($data, $cmdDataToMatch, $cmd::class . ' has unexpected data');
         }
     }
 
@@ -276,7 +276,7 @@ class QueryHandlerTestCase extends MockeryTestCase
                 $qryDataToMatch[$key] = $qryData[$key] ?? null;
             }
 
-            $this->assertEquals($data, $qryDataToMatch, get_class($qry) . ' has unexpected data');
+            $this->assertEquals($data, $qryDataToMatch, $qry::class . ' has unexpected data');
         }
     }
 

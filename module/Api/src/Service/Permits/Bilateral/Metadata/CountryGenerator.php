@@ -12,26 +12,19 @@ class CountryGenerator
         Behaviour::MOROCCO => 'Select stock',
     ];
 
-    /** @var PeriodArrayGenerator */
-    private $periodArrayGenerator;
-
     /**
      * Create service instance
      *
-     * @param PeriodArrayGenerator $periodArrayGenerator
      *
      * @return CountryGenerator
      */
-    public function __construct(PeriodArrayGenerator $periodArrayGenerator)
+    public function __construct(private PeriodArrayGenerator $periodArrayGenerator)
     {
-        $this->periodArrayGenerator = $periodArrayGenerator;
     }
 
     /**
      * Generate the country part of the response
      *
-     * @param Country $country
-     * @param IrhpApplication $irhpApplication
      *
      * @return array
      */

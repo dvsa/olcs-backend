@@ -41,7 +41,7 @@ abstract class AbstractDoesOwnEntity extends AbstractValidator implements
      *
      * @return mixed An Entity object
      */
-    protected function getEntity($entityId)
+    protected function getEntity(mixed $entityId)
     {
         return $this->getRepo($this->repo)->fetchById($entityId);
     }

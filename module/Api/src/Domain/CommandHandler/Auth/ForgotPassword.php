@@ -33,16 +33,8 @@ class ForgotPassword extends AbstractCommandHandler implements ConfigAwareInterf
     public const MSG_USER_NOT_FOUND = 'auth.forgot-password.user-not-found';
     public const MSG_USER_NOT_ALLOWED_RESET = 'auth.forgot-password.not-eligible';
 
-    /**
-     * @var ValidatableAdapterInterface|CognitoAdapter
-     */
-    private ValidatableAdapterInterface $authAdapter;
-    private PasswordService $passwordService;
-
-    public function __construct(ValidatableAdapterInterface $authAdapter, PasswordService $passwordService)
+    public function __construct(private ValidatableAdapterInterface $authAdapter, private PasswordService $passwordService)
     {
-        $this->authAdapter = $authAdapter;
-        $this->passwordService = $passwordService;
     }
 
     /**

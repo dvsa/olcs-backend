@@ -9,15 +9,12 @@ interface AnswerClearerInterface
 {
     /**
      * Clears from persistent storage the answer data corresponding to the supplied application step and application
-     *
-     * @param QaContext $qaContext
      */
     public function clear(QaContext $qaContext);
 
     /**
      * Whether this answer clearer supports the specified entity
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

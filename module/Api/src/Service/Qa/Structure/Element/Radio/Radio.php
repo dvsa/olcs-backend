@@ -8,29 +8,14 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 
 class Radio implements ElementInterface
 {
-    /** @var OptionList */
-    private $optionList;
-
-    /** @var TranslateableText */
-    private $notSelectedMessage;
-
-    /** @var mixed */
-    private $value;
-
     /**
      * Create instance
      *
-     * @param OptionList $optionList
-     * @param TranslateableText $notSelectedMessage
-     * @param mixed $value
      *
      * @return Radio
      */
-    public function __construct(OptionList $optionList, TranslateableText $notSelectedMessage, $value)
+    public function __construct(private OptionList $optionList, private TranslateableText $notSelectedMessage, private mixed $value)
     {
-        $this->optionList = $optionList;
-        $this->notSelectedMessage = $notSelectedMessage;
-        $this->value = $value;
     }
 
     /**

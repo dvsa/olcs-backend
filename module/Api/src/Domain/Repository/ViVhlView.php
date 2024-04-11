@@ -55,7 +55,7 @@ class ViVhlView extends AbstractRepository
                             'vehicleId' => $recordParams['vhlId']
                         ]
                     );
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 throw new RuntimeException('Error clearing VI flags for Operating Centres');
             }
         }

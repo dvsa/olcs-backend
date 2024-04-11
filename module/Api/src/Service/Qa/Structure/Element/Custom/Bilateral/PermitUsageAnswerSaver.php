@@ -12,26 +12,14 @@ class PermitUsageAnswerSaver implements AnswerSaverInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
-    /** @var PermitUsageUpdater */
-    private $permitUsageUpdater;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param PermitUsageUpdater $permitUsageUpdater
      *
      * @return PermitUsageAnswerSaver
      */
-    public function __construct(
-        GenericAnswerFetcher $genericAnswerFetcher,
-        PermitUsageUpdater $permitUsageUpdater
-    ) {
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->permitUsageUpdater = $permitUsageUpdater;
+    public function __construct(private GenericAnswerFetcher $genericAnswerFetcher, private PermitUsageUpdater $permitUsageUpdater)
+    {
     }
 
     /**

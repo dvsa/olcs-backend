@@ -23,8 +23,6 @@ class TeamPrinter extends AbstractTeamPrinter
 
     /**
      * Constructor for TeamPrinter
-     * @param TeamEntity $team
-     * @param Printer $printer
      */
     public function __construct(TeamEntity $team, PrinterEntity $printer)
     {

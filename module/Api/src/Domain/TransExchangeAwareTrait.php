@@ -17,9 +17,6 @@ trait TransExchangeAwareTrait
      */
     private $transExchange;
 
-    /**
-     * @param TransExchangeClientInterface $transExchange
-     */
     public function setTransExchange(TransExchangeClientInterface $transExchange)
     {
         $this->transExchange = $transExchange;

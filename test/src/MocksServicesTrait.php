@@ -68,7 +68,6 @@ trait MocksServicesTrait
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
      * @return MockInterface|AbstractPluginManager
      */
     protected function setUpAbstractPluginManager(ServiceLocatorInterface $serviceLocator): MockInterface
@@ -103,7 +102,6 @@ trait MocksServicesTrait
     }
 
     /**
-     * @param string $class
      * @return MockInterface
      */
     protected function setUpMockService(string $class): MockInterface
@@ -116,7 +114,6 @@ trait MocksServicesTrait
     /**
      * Sets up default services.
      *
-     * @param ServiceManager $serviceManager
      *
      * @return void|array
      */
@@ -126,8 +123,6 @@ trait MocksServicesTrait
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string $name
      * @return MockInterface
      * @deprecated Use $this->serviceManager()->get($name) instead
      */

@@ -66,7 +66,7 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
                     'application_id' => $application->getId(),
                     'licence_id' => $application->getLicence()->getId(),
                     'exception' => [
-                        'class' => get_class($e),
+                        'class' => $e::class,
                         'message' => $e->getMessage(),
                         'trace' => $e->getTraceAsString(),
                     ],
@@ -364,7 +364,6 @@ final class SubmitApplication extends AbstractCommandHandler implements Transact
     /**
      * Maybe create light goods vehicle condition
      *
-     * @param ApplicationEntity $application
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */

@@ -19,19 +19,14 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
         RefData::JOURNEY_MULTIPLE => 'multiple'
     ];
 
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
     /**
      * Create service instance
      *
-     * @param FeeTypeRepository $feeTypeRepo
      *
      * @return BilateralFeeBreakdownGenerator
      */
-    public function __construct(FeeTypeRepository $feeTypeRepo)
+    public function __construct(private FeeTypeRepository $feeTypeRepo)
     {
-        $this->feeTypeRepo = $feeTypeRepo;
     }
 
     /**
@@ -81,9 +76,7 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
     /**
      * Get the fee amount per permit
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param string $requestedType
-     *
      * @return int
      */
     public function getFeePerPermit(IrhpPermitApplication $irhpPermitApplication, $requestedType)
@@ -106,9 +99,7 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
     /**
      * Generate a translation key for use in the type column
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param string $requestedType
-     *
      * @return string
      */
     private function generateTranslationKey(IrhpPermitApplication $irhpPermitApplication, $requestedType)

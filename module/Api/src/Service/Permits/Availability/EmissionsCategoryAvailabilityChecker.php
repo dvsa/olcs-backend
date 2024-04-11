@@ -4,19 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 class EmissionsCategoryAvailabilityChecker
 {
-    /** @var EmissionsCategoryAvailabilityCounter */
-    private $emissionsCategoryAvailabilityCounter;
-
     /**
      * Create service instance
      *
-     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
      *
      * @return EmissionsCategoryAvailabilityChecker
      */
-    public function __construct(EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
-        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
     }
 
     /**

@@ -4,19 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Permits\ApplyRanges;
 
 class RestrictedCountryIdsProvider
 {
-    /** @var array */
-    private $restrictedCountryIds;
-
     /**
      * Create service instance
      *
-     * @param array $restrictedCountryIds
      *
      * @return RestrictedCountryIdsProvider
      */
-    public function __construct(array $restrictedCountryIds)
+    public function __construct(private array $restrictedCountryIds)
     {
-        $this->restrictedCountryIds = $restrictedCountryIds;
     }
 
     /**

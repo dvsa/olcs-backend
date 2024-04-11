@@ -16,17 +16,8 @@ class ChangePassword extends AbstractCommandHandler implements AuthAwareInterfac
 {
     use AuthAwareTrait;
 
-    /**
-     * @var ValidatableAdapterInterface|CognitoAdapter
-     */
-    protected ValidatableAdapterInterface $adapter;
-
-    /**
-     * @param ValidatableAdapterInterface $adapter
-     */
-    public function __construct(ValidatableAdapterInterface $adapter)
+    public function __construct(protected ValidatableAdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
     }
 
     /**

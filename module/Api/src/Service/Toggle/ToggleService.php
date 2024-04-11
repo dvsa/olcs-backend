@@ -11,21 +11,13 @@ use Qandidate\Toggle\ToggleManager;
  */
 class ToggleService
 {
-    /**
-     * @var ToggleManager
-     */
-    private $toggleManager;
-
-    public function __construct(ToggleManager $toggleManager)
+    public function __construct(private ToggleManager $toggleManager)
     {
-        $this->toggleManager = $toggleManager;
     }
 
     /**
      * return whether the toggle is enabled
      *
-     * @param string  $name
-     * @param Context $context
      *
      * @return bool
      */
@@ -41,7 +33,6 @@ class ToggleService
     /**
      * override config to toggle a named feature on (for this single request only)
      *
-     * @param string $name
      *
      * @return Toggle
      */
@@ -54,7 +45,6 @@ class ToggleService
     /**
      * override config to toggle a named feature off (for this single request only)
      *
-     * @param string $name
      *
      * @return Toggle
      */
@@ -67,7 +57,6 @@ class ToggleService
     /**
      * make a toggle active
      *
-     * @param Toggle $toggle
      *
      * @return Toggle
      */
@@ -81,7 +70,6 @@ class ToggleService
     /**
      * make a toggle inactive
      *
-     * @param Toggle $toggle
      *
      * @return Toggle
      */
@@ -95,7 +83,6 @@ class ToggleService
     /**
      * fetch a toggle object
      *
-     * @param string $name
      *
      * @return Toggle
      */
@@ -109,7 +96,6 @@ class ToggleService
     /**
      * updates the toggle inside the toggle manager
      *
-     * @param Toggle $toggle
      *
      * @return void
      */

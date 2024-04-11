@@ -89,7 +89,6 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler
     /**
      * Whether a fee can be created or replaced
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return bool
      */
@@ -98,7 +97,6 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler
     /**
      * Get outstanding fees on this application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return array
      */
@@ -108,7 +106,6 @@ abstract class AbstractRegenerateFee extends AbstractCommandHandler
      * Get an array of key/value pairs representing the product references and quantities of each fee that needs to be
      * created
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return array
      */

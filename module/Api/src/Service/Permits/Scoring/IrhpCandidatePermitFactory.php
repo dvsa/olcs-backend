@@ -11,8 +11,6 @@ class IrhpCandidatePermitFactory
     /**
      * Create new instance of candidate permit
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param RefData $requestedEmissionsCategory
      * @param float $intensityOfUse
      * @param float $applicationScore
      *

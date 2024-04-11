@@ -63,7 +63,7 @@ class Template extends AbstractRepository
                 ->setParameter(3, $name)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             throw new NotFoundException('Resource not found');
         }
     }

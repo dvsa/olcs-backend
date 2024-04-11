@@ -73,7 +73,6 @@ class Create extends AbstractCommandHandler implements
     }
 
     /**
-     * @param string $identifier
      * @return bool
      */
     protected function identifierExists(string $identifier)

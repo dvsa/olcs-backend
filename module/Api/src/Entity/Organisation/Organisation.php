@@ -97,7 +97,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
                 ) {
                     $enabledOrgUsers->add($orgUser);
                 }
-            } catch (EntityNotFoundException $ex) {
+            } catch (EntityNotFoundException) {
                 // we may have the user id but will not be able to load it
                 // because SoftDeleteable is used
             }
@@ -506,7 +506,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         foreach ($adminUsers as $orgUser) {
             try {
                 $adminEmails[] = $orgUser->getUser()->getContactDetails()->getEmailAddress();
-            } catch (EntityNotFoundException $ex) {
+            } catch (EntityNotFoundException) {
                 //soft delete means no organisation user
                 continue;
             }

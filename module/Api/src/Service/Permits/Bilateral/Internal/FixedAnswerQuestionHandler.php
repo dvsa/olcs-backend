@@ -7,24 +7,14 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class FixedAnswerQuestionHandler implements QuestionHandlerInterface
 {
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var string */
-    private $answer;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerWriter $genericAnswerWriter
      * @param string $answer
-     *
      * @return FixedAnswerQuestionHandler
      */
-    public function __construct(GenericAnswerWriter $genericAnswerWriter, $answer)
+    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private $answer)
     {
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->answer = $answer;
     }
 
     /**

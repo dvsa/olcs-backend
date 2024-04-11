@@ -202,11 +202,10 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param RefData $goodsOrPsv  Goods or psv refdata
      * @param RefData $licenceType Licence type refdata
      * @param RefData|null $vehicleType Vehicle type refdata or null if not applicable
-     * @param mixed $lgvDeclarationConfirmation
      *
      * @return true|null
      */
-    public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)
+    public function updateTypeOfLicence($niFlag, $goodsOrPsv, $licenceType, $vehicleType, mixed $lgvDeclarationConfirmation)
     {
         if ($this->validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)) {
             $this->setNiFlag($niFlag);
@@ -253,15 +252,14 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param RefData $goodsOrPsv  Goods or psv refdata
      * @param RefData $licenceType Licence type refdata
      * @param RefData|null $vehicleType Vehicle type refdata or null if not applicable
-     * @param mixed $lgvDeclarationConfirmation
      *
      * @return false|null
      */
-    public function isValidTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)
+    public function isValidTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, mixed $lgvDeclarationConfirmation)
     {
         try {
             return $this->validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation);
-        } catch (ValidationException $ex) {
+        } catch (ValidationException) {
             return false;
         }
     }
@@ -273,12 +271,11 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @param RefData $goodsOrPsv  Goods or Psv
      * @param RefData $licenceType Licence type
      * @param RefData|null $vehicleType Vehicle type refdata or null if not applicable
-     * @param mixed $lgvDeclarationConfirmation
      *
      * @return bool
      * @throws ValidationException
      */
-    public function validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, $lgvDeclarationConfirmation)
+    public function validateTol($niFlag, $goodsOrPsv, $licenceType, $vehicleType, mixed $lgvDeclarationConfirmation)
     {
         $errors = [];
 
@@ -485,7 +482,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @return \Doctrine\Common\Collections\ArrayCollection|Collection
      */
-    public function getOtherLicencesByType($type)
+    public function getOtherLicencesByType(mixed $type)
     {
         $expr = Criteria::expr();
         $criteria = Criteria::create();
@@ -706,13 +703,13 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * @return void
      */
     public function updateLicenceHistory(
-        $prevHasLicence,
-        $prevHadLicence,
-        $prevBeenRefused,
-        $prevBeenRevoked,
-        $prevBeenAtPi,
-        $prevBeenDisqualifiedTc,
-        $prevPurchasedAssets
+        mixed $prevHasLicence,
+        mixed $prevHadLicence,
+        mixed $prevBeenRefused,
+        mixed $prevBeenRevoked,
+        mixed $prevBeenAtPi,
+        mixed $prevBeenDisqualifiedTc,
+        mixed $prevPurchasedAssets
     ) {
         $this->prevHasLicence = $prevHasLicence;
         $this->prevHadLicence = $prevHadLicence;
@@ -1505,7 +1502,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      *
      * @return string
      */
-    private function formatDateToString($date, $format = self::DATE_FORMAT)
+    private function formatDateToString(mixed $date, $format = self::DATE_FORMAT)
     {
         if (is_string($date)) {
             return $date;
@@ -2485,7 +2482,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * Update the total number of hgv vehicles authorized for interim and refresh the property containing the total of hgv and lgv
      * vehicles authorized for interim.
      *
-     * @param int|null $interimAuthHgvVehicles
      * @return self
      */
     public function updateInterimAuthHgvVehicles(?int $interimAuthHgvVehicles): self
@@ -2498,7 +2494,6 @@ class Application extends AbstractApplication implements ContextProviderInterfac
      * Update the total number of lgv vehicles authorized for interim and refresh the property containing the total of hgv and lgv
      * vehicles authorized for interim.
      *
-     * @param int|null $interimAuthLgvVehicles
      * @return self
      */
     public function updateInterimAuthLgvVehicles(?int $interimAuthLgvVehicles): self

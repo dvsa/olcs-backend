@@ -7,32 +7,14 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class NumberOfPermitsQuestionHandler implements QuestionHandlerInterface
 {
-    /** @var PermitUsageSelectionGenerator */
-    private $permitUsageSelectionGenerator;
-
-    /** @var BilateralRequiredGenerator */
-    private $bilateralRequiredGenerator;
-
-    /** @var NoOfPermitsConditionalUpdater */
-    private $noOfPermitsConditionalUpdater;
-
     /**
      * Create service instance
      *
-     * @param PermitUsageSelectionGenerator $permitUsageSelectionGenerator
-     * @param BilateralRequiredGenerator $bilateralRequiredGenerator
-     * @param NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
      *
      * @return NumberOfPermitsQuestionHandler
      */
-    public function __construct(
-        PermitUsageSelectionGenerator $permitUsageSelectionGenerator,
-        BilateralRequiredGenerator $bilateralRequiredGenerator,
-        NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
-    ) {
-        $this->permitUsageSelectionGenerator = $permitUsageSelectionGenerator;
-        $this->bilateralRequiredGenerator = $bilateralRequiredGenerator;
-        $this->noOfPermitsConditionalUpdater = $noOfPermitsConditionalUpdater;
+    public function __construct(private PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private BilateralRequiredGenerator $bilateralRequiredGenerator, private NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
+    {
     }
 
     /**

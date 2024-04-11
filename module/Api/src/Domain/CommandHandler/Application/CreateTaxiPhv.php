@@ -55,8 +55,6 @@ final class CreateTaxiPhv extends AbstractCommandHandler implements Transactione
     /**
      * Create PrivateHireLicence entity
      *
-     * @param Application $application
-     * @param Command $command
      *
      * @return Result
      */
@@ -76,7 +74,6 @@ final class CreateTaxiPhv extends AbstractCommandHandler implements Transactione
     /**
      * Update the ApplicationCompletion
      *
-     * @param Application $application
      *
      * @return Result
      */

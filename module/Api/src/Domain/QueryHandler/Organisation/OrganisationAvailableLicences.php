@@ -98,8 +98,6 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
     /**
      * To preserve existing (broken) behaviour, we do things differently for permit types with multiple stocks
      *
-     * @param OrganisationEntity $organisation
-     * @param int                $permitTypeId
      *
      * @return array
      */
@@ -119,7 +117,7 @@ class OrganisationAvailableLicences extends AbstractQueryHandler
             );
 
             $eligibleLicences = $organisation->getEligibleIrhpLicencesForStock($window->getIrhpPermitStock());
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $hasOpenWindow = false;
             $eligibleLicences = [];
         }

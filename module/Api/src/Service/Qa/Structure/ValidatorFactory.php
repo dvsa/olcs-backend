@@ -8,7 +8,6 @@ class ValidatorFactory
      * Create and return a ValidatorFactory instance
      *
      * @param string $rule
-     * @param array $parameters
      *
      * @return Validator
      */

@@ -70,9 +70,6 @@ class RefreshTokenFactoryTest extends MockeryTestCase
         $this->sut = new RefreshTokensFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->authorizationService();

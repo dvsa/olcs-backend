@@ -33,7 +33,6 @@ final class ProcessReminder extends AbstractCommandHandler implements Transactio
     }
 
     /**
-     * @param ContinuationDetailEntity $continuationDetail
      * @return Result
      */
     protected function generateDocument(ContinuationDetailEntity $continuationDetail, $userId)

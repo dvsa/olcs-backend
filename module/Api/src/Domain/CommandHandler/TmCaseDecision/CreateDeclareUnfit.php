@@ -70,7 +70,6 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
 
     /**
      * Create the
-     * @param Cmd $command
      * @return Entity
      */
     private function createEntityObject(Cmd $command, CasesEntity $case)
@@ -101,7 +100,6 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
     /**
      * Retrieves the case entity
      *
-     * @param Cmd $command
      * @return mixed
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -118,7 +116,6 @@ final class CreateDeclareUnfit extends AbstractCommandHandler implements Transac
     /**
      * Create the task
      *
-     * @param Cmd $command
      * @return CreateTask
      */
     private function createCreateTaskCommand(Cmd $command, CasesEntity $case, TransportManager $transportManager)

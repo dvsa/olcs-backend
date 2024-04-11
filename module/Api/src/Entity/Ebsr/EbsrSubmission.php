@@ -221,7 +221,7 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
     {
         try {
             $errorInfo = LaminasJson::decode($this->ebsrSubmissionResult, LaminasJson::TYPE_ARRAY);
-        } catch (JsonException $e) {
+        } catch (JsonException) {
             $errorInfo = [];
         }
 

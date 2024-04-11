@@ -29,7 +29,6 @@ trait IrhpPermitWindowTrait
     /**
      * Validate ranges in the stock
      *
-     * @param IrhpPermitStock $irhpPermitStock
      *
      * @return void
      * @throws ValidationException

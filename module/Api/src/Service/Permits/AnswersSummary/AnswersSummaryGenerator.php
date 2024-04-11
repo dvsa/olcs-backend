@@ -6,43 +6,23 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 
 class AnswersSummaryGenerator
 {
-    /** @var AnswersSummaryFactory */
-    private $answersSummaryFactory;
-
-    /** @var AnswersSummaryRowsAdderInterface */
-    private $headerAnswersSummaryRowsAdder;
-
-    /** @var AnswersSummaryRowsAdderInterface */
-    private $defaultAnswersSummaryRowsAdder;
-
     /** @var array */
     private $customRowsAdders = [];
 
     /**
      * Create service instance
      *
-     * @param AnswersSummaryFactory $answersSummaryFactory
-     * @param AnswersSummaryRowsAdderInterface $headerAnswersSummaryRowsAdder
-     * @param AnswersSummaryRowsAdderInterface $defaultAnswersSummaryRowsAdder
      *
      * @return AnswersSummaryGenerator
      */
-    public function __construct(
-        AnswersSummaryFactory $answersSummaryFactory,
-        AnswersSummaryRowsAdderInterface $headerAnswersSummaryRowsAdder,
-        AnswersSummaryRowsAdderInterface $defaultAnswersSummaryRowsAdder
-    ) {
-        $this->answersSummaryFactory = $answersSummaryFactory;
-        $this->headerAnswersSummaryRowsAdder = $headerAnswersSummaryRowsAdder;
-        $this->defaultAnswersSummaryRowsAdder = $defaultAnswersSummaryRowsAdder;
+    public function __construct(private AnswersSummaryFactory $answersSummaryFactory, private AnswersSummaryRowsAdderInterface $headerAnswersSummaryRowsAdder, private AnswersSummaryRowsAdderInterface $defaultAnswersSummaryRowsAdder)
+    {
     }
 
     /**
      * Build and return a AnswersSummary instance using the appropriate data sources
      *
-     * @param IrhpApplicationEntity $irhpApplicationEntity
      * @param bool $isSnapshot
-     *
      * @return AnswersSummary
      */
     public function generate(IrhpApplicationEntity $irhpApplicationEntity, $isSnapshot = false)
@@ -65,7 +45,6 @@ class AnswersSummaryGenerator
      * Register a custom rows adder to accommodate old non-q&a types
      *
      * @param int $irhpPermitTypeId
-     * @param AnswersSummaryRowsAdderInterface $rowsAdder
      */
     public function registerCustomRowsAdder($irhpPermitTypeId, AnswersSummaryRowsAdderInterface $rowsAdder)
     {

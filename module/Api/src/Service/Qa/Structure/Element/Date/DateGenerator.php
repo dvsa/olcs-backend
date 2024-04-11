@@ -10,19 +10,14 @@ class DateGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var DateFactory */
-    private $dateFactory;
-
     /**
      * Create service instance
      *
-     * @param DateFactory $dateFactory
      *
      * @return Date
      */
-    public function __construct(DateFactory $dateFactory)
+    public function __construct(private DateFactory $dateFactory)
     {
-        $this->dateFactory = $dateFactory;
     }
 
     /**

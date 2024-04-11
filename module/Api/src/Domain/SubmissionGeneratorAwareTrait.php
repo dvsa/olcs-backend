@@ -19,9 +19,6 @@ trait SubmissionGeneratorAwareTrait
      */
     protected $submissionConfig;
 
-    /**
-     * @param SubmissionGenerator $service
-     */
     public function setSubmissionGenerator(SubmissionGenerator $service)
     {
         $this->submissionGenerator = $service;
@@ -43,9 +40,6 @@ trait SubmissionGeneratorAwareTrait
         return $this->submissionConfig;
     }
 
-    /**
-     * @param array $submissionConfig
-     */
     public function setSubmissionConfig(array $submissionConfig)
     {
         $this->submissionConfig = $submissionConfig;

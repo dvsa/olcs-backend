@@ -35,7 +35,6 @@ final class CreateRecipient extends AbstractCommandHandler implements Transactio
     }
 
     /**
-     * @param Cmd $command
      * @return Recipient
      */
     private function createRecipientObject(Cmd $command)

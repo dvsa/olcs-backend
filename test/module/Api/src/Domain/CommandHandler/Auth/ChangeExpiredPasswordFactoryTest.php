@@ -72,9 +72,6 @@ class ChangeExpiredPasswordFactoryTest extends MockeryTestCase
         $this->sut = new ChangeExpiredPasswordFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->adapter();

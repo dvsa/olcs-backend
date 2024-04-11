@@ -313,10 +313,7 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
     }
 
     /**
-     * @param ?int $totAuthHgvs
      * @param int $operatingCentreCount,
-     * @param array $operatingCentreConstraints
-     * @param string $validationErrorCode
      * @test
      * @dataProvider invalidTotalAuthVehicleConfigurations
      * @depends validateTotalAuthVehiclesIsCallable
@@ -376,8 +373,6 @@ class UpdateOperatingCentreHelperTest extends MockeryTestCase
 
     /**
      * @param ?int $totAuthVehicles
-     * @param int $operatingCentreCount
-     * @param array $operatingCentreConstraints
      * @test
      * @dataProvider validTotalAuthVehicleConfigurations
      * @depends validateTotalAuthVehiclesIsCallable

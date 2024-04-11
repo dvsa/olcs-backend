@@ -164,7 +164,7 @@ class OperatingCentreHelper implements FactoryInterface
 
         try {
             $trafficArea = $this->fetchTrafficAreaByPostcode($address['postcode']);
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If address service is not available then we can skip validation
             return;
         }

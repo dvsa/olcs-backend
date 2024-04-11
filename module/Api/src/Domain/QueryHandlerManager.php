@@ -29,7 +29,7 @@ class QueryHandlerManager extends AbstractPluginManager
     {
         $start = microtime(true);
 
-            $queryFqcl = get_class($query);
+            $queryFqcl = $query::class;
 
         /** @var QueryHandlerInterface $queryHandler */
         $queryHandler = $this->get($queryFqcl);
@@ -41,7 +41,7 @@ class QueryHandlerManager extends AbstractPluginManager
 
         $queryHandler->checkEnabled();
 
-        $queryHandlerFqcl = get_class($queryHandler);
+        $queryHandlerFqcl = $queryHandler::class;
 
         if ($validate) {
             $this->validateDto($query, $queryHandlerFqcl);

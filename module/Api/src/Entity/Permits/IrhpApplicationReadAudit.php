@@ -27,8 +27,6 @@ class IrhpApplicationReadAudit extends AbstractIrhpApplicationReadAudit
     /**
      * Constructor
      *
-     * @param User $user
-     * @param IrhpApplication $irhpApplication
      *
      * @return $this
      */

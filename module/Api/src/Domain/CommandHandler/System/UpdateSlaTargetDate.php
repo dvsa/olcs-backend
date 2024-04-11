@@ -42,7 +42,6 @@ final class UpdateSlaTargetDate extends AbstractCommandHandler
     }
 
     /**
-     * @param CommandInterface $command
      * @return mixed
      * @throws NotFoundException
      * @throws ValidationException

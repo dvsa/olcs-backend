@@ -6,26 +6,18 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 class ApplicationUpdater
 {
-    /** @var ApplicationCountryUpdater */
-    private $applicationCountryUpdater;
-
     /**
      * Create service instance
      *
-     * @param ApplicationCountryUpdater $applicationCountryUpdater
      *
      * @return ApplicationUpdater
      */
-    public function __construct(ApplicationCountryUpdater $applicationCountryUpdater)
+    public function __construct(private ApplicationCountryUpdater $applicationCountryUpdater)
     {
-        $this->applicationCountryUpdater = $applicationCountryUpdater;
     }
 
     /**
      * Update the application using the supplied fields data
-     *
-     * @param IrhpApplication $irhpApplication
-     * @param array $countries
      */
     public function update(IrhpApplication $irhpApplication, array $countries)
     {

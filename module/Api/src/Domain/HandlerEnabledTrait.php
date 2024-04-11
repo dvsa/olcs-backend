@@ -21,7 +21,7 @@ trait HandlerEnabledTrait
     public function checkEnabled(): bool
     {
         if (!$this->isEnabled()) {
-            $fqdn = get_class($this);
+            $fqdn = $this::class;
             $exception = new DisabledHandlerException($fqdn);
             Logger::warn($fqdn . ': ' . $exception->getMessage());
             throw $exception;

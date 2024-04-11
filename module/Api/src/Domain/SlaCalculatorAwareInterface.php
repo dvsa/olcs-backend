@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Domain\Util\SlaCalculatorInterface;
 
 interface SlaCalculatorAwareInterface
 {
-    /**
-     * @param SlaCalculatorInterface $slaCalculator
-     */
     public function setSlaCalculator(SlaCalculatorInterface $slaCalculator);
 
     /**

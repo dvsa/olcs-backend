@@ -186,7 +186,6 @@ class Cases extends AbstractRepository
     }
 
     /**
-     * @param QueryInterface $query
      * @param int            $hydrateMode
      * @param null           $version
      *
@@ -220,7 +219,6 @@ class Cases extends AbstractRepository
     }
 
     /**
-     * @param int $id
      *
      * @return mixed
      * @throws Exception\NotFoundException
