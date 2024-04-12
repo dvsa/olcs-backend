@@ -26,6 +26,7 @@ use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
 use Dvsa\Olcs\Api\Entity\Traits\TotAuthVehiclesTrait;
 
@@ -442,7 +443,14 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             $criteria->andWhere($criteria->expr()->neq('specifiedDate', null));
         }
 
-        return $this->getLicenceVehicles()->matching($criteria);
+        /** @var LicenceVehicle[] $vehicles */
+        $vehicles = $this->getLicenceVehicles()->matching($criteria)->toArray();
+        $vehicles = array_filter(
+            $vehicles,
+            fn($vehicle) => $vehicle->getApplication() === null || $vehicle->getApplication()->getStatus()->getId() !== Application::APPLICATION_STATUS_CANCELLED,
+        );
+
+        return new ArrayCollection($vehicles);
     }
 
     /**
