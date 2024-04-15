@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\OtherLicence;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreateForTml as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -21,7 +21,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateForTmlTest extends CommandHandlerTestCase
+class CreateForTmlTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

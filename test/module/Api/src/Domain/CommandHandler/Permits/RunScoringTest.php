@@ -16,12 +16,12 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog;
 use Dvsa\Olcs\Api\Domain\Query\Permits\CheckRunScoringPrerequisites;
 use Dvsa\Olcs\Api\Domain\Query\Permits\GetScoredPermitList;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Exception;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
 
-class RunScoringTest extends CommandHandlerTestCase
+class RunScoringTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

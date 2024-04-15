@@ -15,13 +15,13 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Service\Permits\Fees\EcmtApplicationFeeCommandCreator;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\ResetToNotYetSubmittedFromCancelled as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Reset to Not Yet Submitted from Cancelled test
  */
-class ResetToNotYetSubmittedFromCancelledTest extends CommandHandlerTestCase
+class ResetToNotYetSubmittedFromCancelledTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

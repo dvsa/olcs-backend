@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\DeleteList as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\PrivateHireLicence\DeleteList as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteListTest extends CommandHandlerTestCase
+class DeleteListTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

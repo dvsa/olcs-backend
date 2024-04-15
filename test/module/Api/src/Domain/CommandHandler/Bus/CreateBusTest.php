@@ -12,13 +12,13 @@ use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Create Bus Test
  */
-class CreateBusTest extends CommandHandlerTestCase
+class CreateBusTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

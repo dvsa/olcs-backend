@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Service\GovUkAccount\GovUkAccountService;
 use Dvsa\Olcs\Api\Service\GovUkAccount\Response\GetAuthorisationUrlResponse;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GovUkAccount\GetGovUkAccountRedirect as GetGovUkAccountRedirectHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GovUkAccount\GetGovUkAccountRedirect as GetGovUkAccountRedirectCmd;
 
 /**
  * Get GovUkAccount Redirect Test
  */
-class GetGovUkAccountRedirectTest extends CommandHandlerTestCase
+class GetGovUkAccountRedirectTest extends AbstractCommandHandlerTestCase
 {
     public $acctService = null;
 

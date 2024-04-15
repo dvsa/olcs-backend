@@ -26,7 +26,7 @@ use Dvsa\Olcs\Auth\Service\PasswordService;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\CreateNewUser as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
@@ -37,7 +37,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateNewUserTest extends CommandHandlerTestCase
+class CreateNewUserTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var CreateNewUser

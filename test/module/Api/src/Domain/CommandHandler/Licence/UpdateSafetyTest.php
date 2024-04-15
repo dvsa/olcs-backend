@@ -13,7 +13,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateSafety;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateSafety as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateSafetyTest extends CommandHandlerTestCase
+class UpdateSafetyTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

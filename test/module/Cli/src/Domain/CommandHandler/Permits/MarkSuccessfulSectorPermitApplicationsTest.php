@@ -11,7 +11,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulSectorPermitApplications
     as MarkSuccessfulSectorPermitApplicationsHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -19,7 +19,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulSectorPermitApplicationsTest extends CommandHandlerTestCase
+class MarkSuccessfulSectorPermitApplicationsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

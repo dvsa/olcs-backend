@@ -14,7 +14,7 @@ use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\ResetApplication;
 use Dvsa\Olcs\Api\Domain\Command\Application\ResetApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ResetApplicationTest extends CommandHandlerTestCase
+class ResetApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

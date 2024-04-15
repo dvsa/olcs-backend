@@ -6,13 +6,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\Applied\Delete as DeletePenalty
 use Dvsa\Olcs\Api\Domain\Repository\SiPenalty as SiPenaltyRepo;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\Applied\Delete as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Delete Test
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

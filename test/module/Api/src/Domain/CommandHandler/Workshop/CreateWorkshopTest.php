@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Workshop;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Workshop\CreateWorkshop;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Workshop\CreateWorkshop as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Workshop as WorkshopEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateWorkshopTest extends CommandHandlerTestCase
+class CreateWorkshopTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

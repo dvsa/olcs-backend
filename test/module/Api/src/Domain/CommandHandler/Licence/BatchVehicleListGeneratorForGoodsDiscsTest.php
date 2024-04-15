@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as CreateVehicleListDocumentCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\BatchVehicleListGeneratorForGoodsDiscs as Batch;
 use Dvsa\Olcs\Api\Domain\Command\Licence\BatchVehicleListGeneratorForGoodsDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class BatchVehicleListGeneratorForGoodsDiscsTest extends CommandHandlerTestCase
+class BatchVehicleListGeneratorForGoodsDiscsTest extends AbstractCommandHandlerTestCase
 {
     protected $batchSize = 180;
 

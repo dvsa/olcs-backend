@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\GoodsDisc\ConfirmPrinting;
 use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\GoodsDisc\ConfirmPrinting as Cmd;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ConfirmPrintingTest extends CommandHandlerTestCase
+class ConfirmPrintingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

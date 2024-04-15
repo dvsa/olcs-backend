@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre\DeleteApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre as Cmd;
 
 /**
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOpe
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class DeleteApplicationOperatingCentreTest extends CommandHandlerTestCase
+class DeleteApplicationOperatingCentreTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Domain\Repository\Statement;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Delete Statement Test
  */
-class DeleteStatementTest extends CommandHandlerTestCase
+class DeleteStatementTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmQualification;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TmQualification\Create as CreateTmQualification;
 use Dvsa\Olcs\Api\Domain\Repository\TmQualification as TmQualificationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TmQualification\Create as Cmd;
 use Dvsa\Olcs\Api\Entity\Tm\TmQualification as TmQualificationEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

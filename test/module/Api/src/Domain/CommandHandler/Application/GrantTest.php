@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Lva\Application\GrantValidationService;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Dvsa\Olcs\Transfer\Command\Application\Grant as Cmd;
@@ -29,7 +29,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantTest extends CommandHandlerTestCase
+class GrantTest extends AbstractCommandHandlerTestCase
 {
     public const SERVICE_TRANSACTION_MANAGER = 'TransactionManager';
     public const SERVICE_REPOSITORY_MANAGER = 'RepositoryServiceManager';

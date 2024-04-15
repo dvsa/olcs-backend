@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\OperatingCentre\DeleteApplicationLinks a
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -22,7 +22,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class DeleteApplicationLinksTest extends CommandHandlerTestCase
+class DeleteApplicationLinksTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

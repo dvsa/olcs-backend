@@ -10,13 +10,13 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteOperatingCentres as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteOperatingCentres
  */
-class DeleteOperatingCentresTest extends CommandHandlerTestCase
+class DeleteOperatingCentresTest extends AbstractCommandHandlerTestCase
 {
     /** @var CommandHandler\Application\DeleteOperatingCentres  */
     protected $sut;

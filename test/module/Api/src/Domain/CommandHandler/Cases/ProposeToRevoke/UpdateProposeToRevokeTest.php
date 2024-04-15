@@ -15,14 +15,14 @@ use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke as ProposeToRevokeEntity;
 use Dvsa\Olcs\Api\Entity\Pi\Reason;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc;
 use Dvsa\Olcs\Transfer\Command\Cases\ProposeToRevoke\UpdateProposeToRevoke as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Update ProposeToRevoke Test
  */
-class UpdateProposeToRevokeTest extends CommandHandlerTestCase
+class UpdateProposeToRevokeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

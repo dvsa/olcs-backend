@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\System;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\System\GenerateSlaTargetDate as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as Command;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
@@ -26,7 +26,7 @@ use Mockery as m;
 /**
  * GenerateSlaTargetDate command handler test
  */
-class GenerateSlaTargetDateTest extends CommandHandlerTestCase
+class GenerateSlaTargetDateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

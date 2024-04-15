@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\CreatePoliceDocument;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class CreatePoliceDocumentTest extends CommandHandlerTestCase
+class CreatePoliceDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -6,13 +6,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\DeleteList as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking\DeleteList
  */
-class DeleteListTest extends CommandHandlerTestCase
+class DeleteListTest extends AbstractCommandHandlerTestCase
 {
     public const CU_ID = 8001;
     public const CU2_ID = 8002;

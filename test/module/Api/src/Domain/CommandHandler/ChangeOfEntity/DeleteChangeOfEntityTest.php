@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ChangeOfEntity\DeleteChangeOfEntity as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ChangeOfEntity as ChangeOfEntityRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\ChangeOfEntity\DeleteChangeOfEntity as Cmd;
 use Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity as ChangeOfEntityEntity;
 
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity as ChangeOfEntityEntity;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class DeleteChangeOfEntityTest extends CommandHandlerTestCase
+class DeleteChangeOfEntityTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

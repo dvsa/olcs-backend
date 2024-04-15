@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Class CreatePostAddPeopleGrantTaskTest
  */
-class CreatePostAddPeopleGrantTaskTest extends CommandHandlerTestCase
+class CreatePostAddPeopleGrantTaskTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\GenerateChecklistDocument;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\GenerateChecklistReminder as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\GenerateCheckListReminder as Command;
 use Dvsa\Olcs\Api\Domain\Repository;
@@ -15,7 +15,7 @@ use Mockery as m;
 /**
  * Class GenerateChecklistReminderTest
  */
-class GenerateChecklistReminderTest extends CommandHandlerTestCase
+class GenerateChecklistReminderTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

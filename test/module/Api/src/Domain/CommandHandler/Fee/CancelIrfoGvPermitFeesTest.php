@@ -12,13 +12,13 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CancelIrfoGvPermitFees as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * CancelIrfoGvPermitFeesTest
  */
-class CancelIrfoGvPermitFeesTest extends CommandHandlerTestCase
+class CancelIrfoGvPermitFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

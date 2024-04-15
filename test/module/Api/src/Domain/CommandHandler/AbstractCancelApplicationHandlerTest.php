@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-abstract class AbstractCancelApplicationHandlerTest extends CommandHandlerTestCase
+abstract class AbstractCancelApplicationHandlerTest extends AbstractCommandHandlerTestCase
 {
     protected $repoServiceName = 'changeMe';
     protected $entityClass = 'changeMe';

@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Create as CreateTransportManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\Create as CreatePersonCmd;
@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

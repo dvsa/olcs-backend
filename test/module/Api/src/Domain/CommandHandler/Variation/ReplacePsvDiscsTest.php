@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\ReplacePsvDiscs;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Variation\ReplacePsvDiscs as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Licence\ReplacePsvDiscs as LicenceReplacePsvDiscs;
 
 /**
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\ReplacePsvDiscs as LicenceReplacePsvDiscs
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ReplacePsvDiscsTest extends CommandHandlerTestCase
+class ReplacePsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

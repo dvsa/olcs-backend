@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateTaAuthority;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateTaAuthority as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Update TaAuthorityTest
  */
-class UpdateTaAuthorityTest extends CommandHandlerTestCase
+class UpdateTaAuthorityTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

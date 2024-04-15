@@ -17,14 +17,14 @@ use Dvsa\Olcs\Api\Entity\Note\Note;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\I18n\Translator\Translator;
 use Mockery as m;
 
 /**
  * @see RoadworthinessReportHandler
  */
-class RoadworthinessReportTest extends CommandHandlerTestCase
+class RoadworthinessReportTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRe
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-abstract class AbstractReviveFromUnsuccessfulTest extends CommandHandlerTestCase
+abstract class AbstractReviveFromUnsuccessfulTest extends AbstractCommandHandlerTestCase
 {
     protected $applicationRepoServiceName = 'changeMe';
 

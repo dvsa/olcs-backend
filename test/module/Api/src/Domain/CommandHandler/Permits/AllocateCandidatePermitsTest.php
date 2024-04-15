@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\AllocateCandidatePermits;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 
-class AllocateCandidatePermitsTest extends CommandHandlerTestCase
+class AllocateCandidatePermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

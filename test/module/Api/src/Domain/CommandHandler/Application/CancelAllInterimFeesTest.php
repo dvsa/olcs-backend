@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelAllInterimFees;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CancelAllInterimFees;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CancelAllInterimFeesTest extends CommandHandlerTestCase
+class CancelAllInterimFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

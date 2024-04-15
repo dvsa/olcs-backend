@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
 use Dvsa\Olcs\Transfer\Command\Variation\Grant as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -32,7 +32,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantTest extends CommandHandlerTestCase
+class GrantTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

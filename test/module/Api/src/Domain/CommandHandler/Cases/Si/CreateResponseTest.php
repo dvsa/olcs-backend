@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\CreateResponse;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\CreateResponse as CreateErruResponseCmd;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class CreateResponseTest extends CommandHandlerTestCase
+class CreateResponseTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

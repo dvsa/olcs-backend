@@ -11,13 +11,13 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CancelApplication as CancelIrhpApplication;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Close IRHP Permit Window Test
  */
-class CloseTest extends CommandHandlerTestCase
+class CloseTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

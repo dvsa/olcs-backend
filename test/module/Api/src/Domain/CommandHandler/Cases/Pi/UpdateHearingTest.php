@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\UpdateHearing;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateHearing as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
 use Dvsa\Olcs\Api\Entity\Venue as VenueEntity;
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTarg
 /**
  * Update Hearing Test
  */
-class UpdateHearingTest extends CommandHandlerTestCase
+class UpdateHearingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

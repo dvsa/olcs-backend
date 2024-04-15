@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Messaging\EnableFileUpload as EnableComm
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Transfer\Command\Messaging\EnableFileUpload as EnableCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class EnableFileUpload extends CommandHandlerTestCase
+class EnableFileUpload extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

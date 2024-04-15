@@ -17,11 +17,11 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\GovUkAccount\Data\Attributes;
 use Dvsa\Olcs\Api\Service\GovUkAccount\GovUkAccountService;
 use Dvsa\Olcs\Transfer\Command\GovUkAccount\ProcessAuthResponse as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Mockery as m;
 
-class ProcessAuthResponseTest extends CommandHandlerTestCase
+class ProcessAuthResponseTest extends AbstractCommandHandlerTestCase
 {
     protected $sut;
     private m\MockInterface $govUkAccountService;

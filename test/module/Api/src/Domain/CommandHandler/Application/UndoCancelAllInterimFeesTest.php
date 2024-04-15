@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UndoCancelAllInterimFees;
 use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCancelAllInterimFeesCmd;
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCan
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UndoCancelAllInterimFeesTest extends CommandHandlerTestCase
+class UndoCancelAllInterimFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

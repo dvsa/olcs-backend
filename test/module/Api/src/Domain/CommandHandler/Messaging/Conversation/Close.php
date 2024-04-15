@@ -13,11 +13,11 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Close as CloseConversationCommand;
 use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 
-class Close extends CommandHandlerTestCase
+class Close extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

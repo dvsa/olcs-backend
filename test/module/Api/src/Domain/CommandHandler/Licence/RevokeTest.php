@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Revoke as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs;
@@ -34,7 +34,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class RevokeTest extends CommandHandlerTestCase
+class RevokeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

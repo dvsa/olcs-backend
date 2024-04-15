@@ -17,6 +17,7 @@ use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 
 /**
  * NotTakenUpList Test
@@ -27,6 +28,11 @@ class NotTakenUpListTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+
         $this->sut = new NotTakenUpList();
         $this->mockRepo('Application', ApplicationRepo::class);
         $this->mockRepo('TrafficArea', TrafficAreaRepo::class);

@@ -6,14 +6,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\UpdateRule as CommandHandl
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule as Repo;
 use Dvsa\Olcs\Api\Entity\DataRetentionRule as Entity;
 use Dvsa\Olcs\Transfer\Command\DataRetention\UpdateRule as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * UpdateRule command handler test
  *
  */
-class UpdateRuleTest extends CommandHandlerTestCase
+class UpdateRuleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

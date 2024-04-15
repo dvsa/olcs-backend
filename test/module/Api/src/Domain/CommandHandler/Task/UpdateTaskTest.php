@@ -11,13 +11,13 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Task\UpdateTask as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Task\UpdateTask
  */
-class UpdateTaskTest extends CommandHandlerTestCase
+class UpdateTaskTest extends AbstractCommandHandlerTestCase
 {
     public const TASK_ID = 999;
 

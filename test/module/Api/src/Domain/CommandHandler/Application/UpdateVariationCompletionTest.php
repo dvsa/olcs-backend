@@ -7,7 +7,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateVariationCompletion;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateVariationCompletion as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -38,7 +38,7 @@ use Dvsa\OlcsTest\Api\Domain\Repository\MocksUserRepositoryTrait;
 /**
  * @see UpdateVariationCompletion
  */
-class UpdateVariationCompletionTest extends CommandHandlerTestCase
+class UpdateVariationCompletionTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -17,7 +17,7 @@ use Mockery as m;
  *
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle\CreateUnlicensedOperatorLicenceVehicle
  */
-class CreateUnlicensedOperatorLicenceVehicleTest extends CommandHandlerTestCase
+class CreateUnlicensedOperatorLicenceVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

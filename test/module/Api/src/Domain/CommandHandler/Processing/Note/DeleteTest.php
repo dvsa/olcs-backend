@@ -13,13 +13,13 @@ use Dvsa\Olcs\Transfer\Command\Processing\Note\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Note;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create Note Test
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

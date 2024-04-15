@@ -5,6 +5,7 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
@@ -19,6 +20,14 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class TransExchangeClientTest extends TestCase
 {
+    public function setUp(): void
+    {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+    }
+
     /**
      * Tests making a request
      */

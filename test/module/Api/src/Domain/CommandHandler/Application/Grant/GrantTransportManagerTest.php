@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantTransportManager as GrantTransportManagerCmd;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -31,7 +31,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantTransportManagerTest extends CommandHandlerTestCase
+class GrantTransportManagerTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

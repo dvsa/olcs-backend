@@ -11,7 +11,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-abstract class AbstractMultiDeleteCommandHandlerTest extends CommandHandlerTestCase
+abstract class AbstractMultiDeleteCommandHandlerTest extends AbstractCommandHandlerTestCase
 {
     protected $cmdClass = 'changeMe';
     protected $sutClass = 'changeMe';

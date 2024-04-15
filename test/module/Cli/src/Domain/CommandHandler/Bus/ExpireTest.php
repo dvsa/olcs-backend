@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Cli\Domain\Command\Bus\Expire as ExpireBusCmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Bus\Expire as ExpireHandler;
@@ -14,7 +14,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ExpireTest extends CommandHandlerTestCase
+class ExpireTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

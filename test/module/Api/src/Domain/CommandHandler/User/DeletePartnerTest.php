@@ -7,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Partner as PartnerRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeletePartner;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\User\DeletePartner as Cmd;
 /**
  * Class DeletePartnerTest
  */
-class DeletePartnerTest extends CommandHandlerTestCase
+class DeletePartnerTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

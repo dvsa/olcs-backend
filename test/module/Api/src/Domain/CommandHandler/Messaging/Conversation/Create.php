@@ -11,10 +11,10 @@ use Dvsa\Olcs\Api\Domain\Exception\Exception;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Messaging\Conversation\Create as CreateConversationCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class Create extends CommandHandlerTestCase
+class Create extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

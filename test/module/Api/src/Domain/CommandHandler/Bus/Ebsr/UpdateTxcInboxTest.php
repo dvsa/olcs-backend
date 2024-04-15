@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\UpdateTxcInbox;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\UpdateTxcInbox as Cmd;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -19,7 +19,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * Update TxcInbox Test
  */
-class UpdateTxcInboxTest extends CommandHandlerTestCase
+class UpdateTxcInboxTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -8,13 +8,13 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Submission\Submission;
 use Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment as SubmissionSectionCommentEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Submission\CreateSubmissionSectionComment
  */
-class CreateSubmissionSectionCommentTest extends CommandHandlerTestCase
+class CreateSubmissionSectionCommentTest extends AbstractCommandHandlerTestCase
 {
     public const COMMENT_ID = 9999;
 

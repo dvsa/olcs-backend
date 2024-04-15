@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateApplicationCompletionTest extends CommandHandlerTestCase
+class UpdateApplicationCompletionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

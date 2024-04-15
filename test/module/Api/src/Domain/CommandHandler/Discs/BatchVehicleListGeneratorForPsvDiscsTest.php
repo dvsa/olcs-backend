@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as CreatePsvVehicleListForDiscsCommand;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\BatchVehicleListGeneratorForPsvDiscs as Batch;
 use Dvsa\Olcs\Api\Domain\Command\Discs\BatchVehicleListGeneratorForPsvDiscs as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreatQueue;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class BatchVehicleListGeneratorForPsvDiscsTest extends CommandHandlerTestCase
+class BatchVehicleListGeneratorForPsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     protected $batchSize = 180;
 

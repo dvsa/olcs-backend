@@ -16,13 +16,13 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\ProcessInboxDocuments
  */
-class ProcessInboxDocumentsTest extends CommandHandlerTestCase
+class ProcessInboxDocumentsTest extends AbstractCommandHandlerTestCase
 {
     public const LIC_ID = 999;
     public const ORG_ID = 7777;

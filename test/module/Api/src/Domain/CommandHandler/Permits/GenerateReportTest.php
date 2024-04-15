@@ -8,12 +8,12 @@ use Dvsa\Olcs\Api\Domain\Command\Permits\GenerateReport as GenerateReportCmd;
 use Dvsa\Olcs\Api\Domain\Command\Permits\RoadworthinessReport;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\GenerateReport as GenerateReportHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @see GenerateReportHandler
  */
-class GenerateReportTest extends CommandHandlerTestCase
+class GenerateReportTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\ProcessDuplicateVehicleWarning;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\ProcessDuplicateVehicleWarning as Cmd;
 
 /**
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Vehicle\ProcessDuplicateVehicleWarning as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ProcessDuplicateVehicleWarningTest extends CommandHandlerTestCase
+class ProcessDuplicateVehicleWarningTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

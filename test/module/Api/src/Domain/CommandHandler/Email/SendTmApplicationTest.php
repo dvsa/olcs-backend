@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendTmApplication as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\SendTmApplication as Cmd;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class SendTmApplicationTest extends CommandHandlerTestCase
+class SendTmApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

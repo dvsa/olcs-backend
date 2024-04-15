@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Trailer;
 
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Trailer\UpdateTrailer;
 use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Trailer;
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class UpdateTrailerTest extends CommandHandlerTestCase
+class UpdateTrailerTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

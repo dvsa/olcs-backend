@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerLicence\DeleteForResponsibilities;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TransportManagerLicence\DeleteForResponsibilities as Cmd;
 
 /**
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\TransportManagerLicence\DeleteForResponsibilities
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteForResponsibilitiesTest extends CommandHandlerTestCase
+class DeleteForResponsibilitiesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Auth\Exception\ChangePasswordException;
 use Dvsa\Olcs\Transfer\Command\Auth\ChangePassword as ChangePasswordCmd;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangePasswordResult;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Http\Response;
 use Mockery as m;
@@ -19,7 +19,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * @see ChangePassword
  */
-class ChangePasswordTest extends CommandHandlerTestCase
+class ChangePasswordTest extends AbstractCommandHandlerTestCase
 {
     private m\MockInterface $adapter;
     private string $username = 'username';

@@ -9,12 +9,12 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\MyAccount;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\MyAccount\UpdateMyAccountSelfserve as Sut;
 use Dvsa\Olcs\Transfer\Command\MyAccount\UpdateMyAccountSelfserve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update MyAccount Selfserve Test
  */
-class UpdateMyAccountSelfserveTest extends CommandHandlerTestCase
+class UpdateMyAccountSelfserveTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit as IrfoGvPermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\ApproveIrfoGvPermit as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Approve Irfo Gv Permit Test
  */
-class ApproveIrfoGvPermitTest extends CommandHandlerTestCase
+class ApproveIrfoGvPermitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

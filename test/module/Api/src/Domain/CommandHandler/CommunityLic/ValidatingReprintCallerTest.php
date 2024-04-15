@@ -11,11 +11,11 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Reprint as ReprintCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use RuntimeException;
 
-class ValidatingReprintCallerTest extends CommandHandlerTestCase
+class ValidatingReprintCallerTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\Auth\ChangeExpiredPassword as ChangeExpiredPasswordCmd;
 use Dvsa\Olcs\Transfer\Result\Auth\ChangeExpiredPasswordResult;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Authentication\Result;
 use Mockery as m;
@@ -18,7 +18,7 @@ use Mockery as m;
 /**
  * @see ChangeExpiredPassword
  */
-class ChangeExpiredPasswordTest extends CommandHandlerTestCase
+class ChangeExpiredPasswordTest extends AbstractCommandHandlerTestCase
 {
     private m\MockInterface $adapter;
     private string $newPassword = 'newPassword';

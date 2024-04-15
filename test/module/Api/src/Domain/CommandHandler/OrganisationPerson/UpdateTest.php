@@ -8,14 +8,14 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\OrganisationPerson\Update as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\OrganisationPerson\Update
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public const ORG_ID = 9001;
     public const PERSON_ID = 8001;

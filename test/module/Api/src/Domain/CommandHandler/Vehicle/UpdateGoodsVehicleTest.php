@@ -13,7 +13,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\UpdateGoodsVehicle;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Transfer\Command\Vehicle\UpdateGoodsVehicle as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
@@ -21,7 +21,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateGoodsVehicleTest extends CommandHandlerTestCase
+class UpdateGoodsVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

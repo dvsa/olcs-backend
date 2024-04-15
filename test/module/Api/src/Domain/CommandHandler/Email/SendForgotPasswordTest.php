@@ -14,11 +14,11 @@ use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\I18n\Translator\LoaderPluginManager;
 use Mockery as m;
 
-class SendForgotPasswordTest extends CommandHandlerTestCase
+class SendForgotPasswordTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

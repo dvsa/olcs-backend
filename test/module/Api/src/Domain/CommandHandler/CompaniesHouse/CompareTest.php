@@ -13,14 +13,14 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Client as CompaniesHouseApi;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\Compare
  */
-class CompareTest extends CommandHandlerTestCase
+class CompareTest extends AbstractCommandHandlerTestCase
 {
     /** @var  CompaniesHouseApi | m\MockInterface */
     protected $mockApi;

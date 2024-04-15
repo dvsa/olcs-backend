@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\RestoreListConditionUndertaking as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Variation\RestoreListConditionUndertaking as Command;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
@@ -13,7 +13,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class RestoreListConditionUndertakingTest extends CommandHandlerTestCase
+class RestoreListConditionUndertakingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

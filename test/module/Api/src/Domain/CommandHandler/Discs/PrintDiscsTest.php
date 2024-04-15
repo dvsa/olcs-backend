@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\PrintDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\PrintDiscs as Cmd;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class PrintDiscsTest extends CommandHandlerTestCase
+class PrintDiscsTest extends AbstractCommandHandlerTestCase
 {
     protected $batchSize = 180;
 

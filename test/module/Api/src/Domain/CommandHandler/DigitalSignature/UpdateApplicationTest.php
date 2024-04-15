@@ -11,10 +11,10 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\DigitalSignature as DigitalSignatureEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class UpdateApplicationTest extends CommandHandlerTestCase
+class UpdateApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

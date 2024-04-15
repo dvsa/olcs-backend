@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseCompany as CompanyRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -18,7 +18,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CreateAlertTest extends CommandHandlerTestCase
+class CreateAlertTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

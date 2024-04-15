@@ -7,14 +7,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\EnqueueContinuationNotSought;
 use Dvsa\Olcs\Api\Domain\Command\Licence\EnqueueContinuationNotSought as Cmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Enqueue CNS Test
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class EnqueueContinuationNotSoughtTest extends CommandHandlerTestCase
+class EnqueueContinuationNotSoughtTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

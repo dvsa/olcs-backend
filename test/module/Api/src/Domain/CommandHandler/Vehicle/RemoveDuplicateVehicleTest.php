@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\RemoveDuplicateVehicle;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\RemoveDuplicateVehicle as Cmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class RemoveDuplicateVehicleTest extends CommandHandlerTestCase
+class RemoveDuplicateVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

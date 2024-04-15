@@ -13,14 +13,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\CancelIrfoPsvAuthFees as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Fee as FeeRepo;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 
 /**
  * CancelIrfoPsvAuthFeesTest
  */
-class CancelIrfoPsvAuthFeesTest extends CommandHandlerTestCase
+class CancelIrfoPsvAuthFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

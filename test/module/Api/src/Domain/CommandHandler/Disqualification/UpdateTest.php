@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Disqualification;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Disqualification\Update as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Disqualification\Update as Command;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

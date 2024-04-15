@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\Delete as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Delete as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Mockery as m;
 
@@ -19,7 +19,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

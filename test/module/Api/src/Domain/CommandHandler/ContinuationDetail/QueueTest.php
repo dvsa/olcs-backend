@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\Queue as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -21,7 +21,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class QueueTest extends CommandHandlerTestCase
+class QueueTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

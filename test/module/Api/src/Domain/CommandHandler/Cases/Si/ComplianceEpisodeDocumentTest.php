@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\ComplianceEpisodeDocument;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeDocCmd;
 use Dvsa\Olcs\Api\Domain\Command\Cases\Si\ComplianceEpisode as ComplianceEpisodeProcessCmd;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ComplianceEpisodeDocumentTest extends CommandHandlerTestCase
+class ComplianceEpisodeDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cache;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cache\Generate as Handler;
 use Dvsa\Olcs\Transfer\Query\Cache\ById;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
 
@@ -14,7 +14,7 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class GenerateTest extends CommandHandlerTestCase
+class GenerateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

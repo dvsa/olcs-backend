@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerApplication;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateStatus as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TmaEntity;
 use Mockery as m;
 
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateStatusTest extends CommandHandlerTestCase
+class UpdateStatusTest extends AbstractCommandHandlerTestCase
 {
     protected $loggedInUser;
 

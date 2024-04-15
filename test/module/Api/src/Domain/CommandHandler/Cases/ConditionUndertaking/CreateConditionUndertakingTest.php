@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OperatingCentre as OperatingCentreRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\CreateConditionUndertaking as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntit
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateConditionUndertakingTest extends CommandHandlerTestCase
+class CreateConditionUndertakingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

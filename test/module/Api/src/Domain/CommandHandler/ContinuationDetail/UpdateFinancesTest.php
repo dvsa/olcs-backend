@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ContinuationDetail;
 
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\UpdateFinances as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\ContinuationDetail\UpdateFinances as UpdateCommand;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 /**
  * UpdateFinancesTest
  */
-class UpdateFinancesTest extends CommandHandlerTestCase
+class UpdateFinancesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

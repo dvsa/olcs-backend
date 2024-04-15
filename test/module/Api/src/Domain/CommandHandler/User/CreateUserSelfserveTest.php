@@ -23,13 +23,13 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Transfer\Command\User\CreateUserSelfserve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Create User Selfserve Test
  */
-class CreateUserSelfserveTest extends CommandHandlerTestCase
+class CreateUserSelfserveTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var ValidatableAdapterInterface|m\LegacyMockInterface|m\MockInterface

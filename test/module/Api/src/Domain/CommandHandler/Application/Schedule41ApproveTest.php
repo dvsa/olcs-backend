@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Transfer\Command\Application\Schedule41Approve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -26,7 +26,7 @@ use Mockery as m;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class Schedule41ApproveTest extends CommandHandlerTestCase
+class Schedule41ApproveTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

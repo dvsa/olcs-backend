@@ -35,7 +35,7 @@ use Dvsa\Olcs\Api\Service\Exception as ServiceException;
 use Dvsa\Olcs\Api\Service\FeesHelperService as FeesHelper;
 use Dvsa\Olcs\Transfer\Command\Fee\RejectWaive as RejectWaiveCmd;
 use Dvsa\Olcs\Transfer\Command\Transaction\PayOutstandingFees as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
@@ -47,7 +47,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class PayOutstandingFeesTest extends CommandHandlerTestCase
+class PayOutstandingFeesTest extends AbstractCommandHandlerTestCase
 {
     protected $mockCpmsService;
 

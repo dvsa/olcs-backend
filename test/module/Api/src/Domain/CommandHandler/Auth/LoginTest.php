@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Login;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
@@ -19,7 +19,7 @@ use Dvsa\OlcsTest\MocksServicesTrait;
  * Class LoginTest
  * @see Login
  */
-class LoginTest extends CommandHandlerTestCase
+class LoginTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
 

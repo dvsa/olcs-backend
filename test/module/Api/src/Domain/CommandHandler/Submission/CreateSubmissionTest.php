@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmission as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 /**
  * Create Submission Test
  */
-class CreateSubmissionTest extends CommandHandlerTestCase
+class CreateSubmissionTest extends AbstractCommandHandlerTestCase
 {
     protected $submissionConfig = [
         'submissions' => [

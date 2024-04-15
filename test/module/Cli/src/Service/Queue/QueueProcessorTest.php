@@ -19,6 +19,7 @@ use Dvsa\Olcs\Cli\Service\Queue\MessageConsumerManager;
 use Dvsa\Olcs\Cli\Service\Queue\QueueProcessor;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Queue Processor Test
@@ -35,6 +36,11 @@ class QueueProcessorTest extends MockeryTestCase
 
     public function setUp(): void
     {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+
         $this->mockQueryHandlerManager = m::mock(QueryHandlerManager::class);
 
         $this->mockMsm = m::mock(MessageConsumerManager::class)->makePartial();

@@ -7,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Publication;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Recipient as RecipientRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Publication\DeleteRecipient;
 use Dvsa\Olcs\Api\Entity\Publication\Recipient;
@@ -16,7 +16,7 @@ use Dvsa\Olcs\Transfer\Command\Publication\DeleteRecipient as Cmd;
 /**
  * Class DeleteRecipientTest
  */
-class DeleteRecipientTest extends CommandHandlerTestCase
+class DeleteRecipientTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -10,14 +10,14 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Lva\AbstractCompanySubsidiary
  */
-class AbstractCompanySubsidiaryTest extends CommandHandlerTestCase
+class AbstractCompanySubsidiaryTest extends AbstractCommandHandlerTestCase
 {
     public const ID = 1111;
     public const LICENCE_ID = 2222;

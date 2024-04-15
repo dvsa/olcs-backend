@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\UpdateConditionUndertaking as CommandHandler;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\Variation\UpdateConditionUndertaking as Command;
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateConditionUndertakingTest extends CommandHandlerTestCase
+class UpdateConditionUndertakingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

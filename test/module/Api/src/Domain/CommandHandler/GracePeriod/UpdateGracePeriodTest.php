@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GracePeriod;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\GracePeriod as GracePeriodRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\GracePeriod\UpdateGracePeriod;
 use Dvsa\Olcs\Api\Entity\Licence\GracePeriod;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\GracePeriod\UpdateGracePeriod as Cmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class UpdateGracePeriodTest extends CommandHandlerTestCase
+class UpdateGracePeriodTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -17,7 +17,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplicatio
     as ApplyRangesToSuccessfulPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications
     as ApplyRangesToSuccessfulPermitApplicationsHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -25,7 +25,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class ApplyRangesToSuccessfulPermitApplicationsTest extends CommandHandlerTestCase
+class ApplyRangesToSuccessfulPermitApplicationsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

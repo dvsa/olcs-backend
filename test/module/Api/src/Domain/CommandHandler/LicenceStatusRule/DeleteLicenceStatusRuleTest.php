@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 use Doctrine\Common\Collections\ArrayCollection;
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as LicenceStatusRuleRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\DeleteLicenceStatusRule;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class DeleteLicenceStatusRuleTest extends CommandHandlerTestCase
+class DeleteLicenceStatusRuleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

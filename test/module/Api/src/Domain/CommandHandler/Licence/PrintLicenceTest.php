@@ -11,13 +11,13 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\PrintLicence;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Transfer\Command\Licence\PrintLicence as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\PrintLicence
  */
-class PrintLicenceTest extends CommandHandlerTestCase
+class PrintLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

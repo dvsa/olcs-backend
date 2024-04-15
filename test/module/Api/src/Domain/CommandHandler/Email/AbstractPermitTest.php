@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Laminas\I18n\Translator\Translator;
 
 /**
  * Abstract permit email tester
  */
-abstract class AbstractPermitTest extends CommandHandlerTestCase
+abstract class AbstractPermitTest extends AbstractCommandHandlerTestCase
 {
     /** @var string */
     protected $commandClass = 'changeMe';

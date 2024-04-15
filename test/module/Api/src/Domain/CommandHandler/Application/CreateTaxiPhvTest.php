@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateTaxiPhv as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\CreateTaxiPhv as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -12,7 +12,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateTaxiPhvTest extends CommandHandlerTestCase
+class CreateTaxiPhvTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

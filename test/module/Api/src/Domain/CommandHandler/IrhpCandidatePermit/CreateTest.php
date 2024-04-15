@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpCandidatePermit\Create as CreateHand
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as PermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpCandidatePermit\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

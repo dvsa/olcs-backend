@@ -13,12 +13,12 @@ use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\User\CreatePartner as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * CreatePartner Test
  */
-class CreatePartnerTest extends CommandHandlerTestCase
+class CreatePartnerTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

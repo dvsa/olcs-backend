@@ -14,12 +14,12 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\User\RemindUsernameSelfserve as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\User\RemindUsernameSelfserve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Remind Username Selfserve Test
  */
-class RemindUsernameSelfserveTest extends CommandHandlerTestCase
+class RemindUsernameSelfserveTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

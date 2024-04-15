@@ -11,12 +11,12 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\GeneratePermits;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\GeneratePermits as GeneratePermitsHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Generate Permits Test
  */
-class GeneratePermitsTest extends CommandHandlerTestCase
+class GeneratePermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

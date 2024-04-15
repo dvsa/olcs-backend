@@ -10,7 +10,7 @@ use Laminas\Http\Response;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DvsaReports\GetRedirect as GetRedirectHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\DvsaReports\GetRedirect as GetRedirectCmd;
 use Mockery\LegacyMockInterface;
 use Mockery\MockInterface;
@@ -19,7 +19,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * Get DVSA Reports Redirect Test
  */
-class GetRedirectTest extends CommandHandlerTestCase
+class GetRedirectTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var Client|(Client&LegacyMockInterface)|(Client&MockInterface)|LegacyMockInterface|MockInterface

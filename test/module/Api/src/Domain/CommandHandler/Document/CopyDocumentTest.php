@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Transfer\Command\Document\CopyDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\CopyDocument as CommandHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
@@ -31,7 +31,7 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CopyDocumentTest extends CommandHandlerTestCase
+class CopyDocumentTest extends AbstractCommandHandlerTestCase
 {
     /** @var  m\MockInterface */
     private $mockUploader;

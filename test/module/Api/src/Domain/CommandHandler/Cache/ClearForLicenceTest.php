@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cache\ClearForLicence as Handler;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -15,7 +15,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class ClearForLicenceTest extends CommandHandlerTestCase
+class ClearForLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

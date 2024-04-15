@@ -13,12 +13,12 @@ use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Irfo\ResetIrfoGvPermit as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Reset Irfo Gv Permit Test
  */
-class ResetIrfoGvPermitTest extends CommandHandlerTestCase
+class ResetIrfoGvPermitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

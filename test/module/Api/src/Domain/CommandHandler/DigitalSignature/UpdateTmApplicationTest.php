@@ -11,10 +11,10 @@ use Dvsa\Olcs\Api\Entity\DigitalSignature as DigitalSignatureEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TmApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\Submit as SubmitApplicationCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class UpdateTmApplicationTest extends CommandHandlerTestCase
+class UpdateTmApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

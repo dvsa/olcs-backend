@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CancelLicenceFees;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -25,7 +25,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CancelLicenceFeesTest extends CommandHandlerTestCase
+class CancelLicenceFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

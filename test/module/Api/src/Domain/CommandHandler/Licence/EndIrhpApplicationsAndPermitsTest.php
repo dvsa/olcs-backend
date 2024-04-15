@@ -8,7 +8,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\EndIrhpApplicationsAndPermits as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits as Command;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class EndIrhpApplicationsAndPermitsTest extends CommandHandlerTestCase
+class EndIrhpApplicationsAndPermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

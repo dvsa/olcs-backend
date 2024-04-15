@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @author Mat Evans <mat.evans@valtech.co.uk>
@@ -16,7 +16,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
  *
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\VoidAllCommunityLicences
  */
-class VoidAllCommunityLicencesTest extends CommandHandlerTestCase
+class VoidAllCommunityLicencesTest extends AbstractCommandHandlerTestCase
 {
     /** @var CommandHandler\Licence\VoidAllCommunityLicences */
     protected $sut;

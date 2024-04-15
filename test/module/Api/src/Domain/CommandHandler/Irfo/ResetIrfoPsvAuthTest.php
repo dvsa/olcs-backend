@@ -12,13 +12,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\ResetIrfoPsvAuth as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth as IrfoPsvAuthRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\ResetIrfoPsvAuth as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Reset Irfo Psv Auth Test
  */
-class ResetIrfoPsvAuthTest extends CommandHandlerTestCase
+class ResetIrfoPsvAuthTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

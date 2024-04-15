@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\GrantGoods as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees;
 
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GrantGoodsTest extends CommandHandlerTestCase
+class GrantGoodsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

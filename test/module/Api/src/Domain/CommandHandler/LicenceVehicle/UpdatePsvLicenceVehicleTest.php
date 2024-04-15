@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceVehicle\UpdatePsvLicenceVehicle a
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\LicenceVehicle\UpdatePsvLicenceVehicle as Cmd;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -27,7 +27,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdatePsvLicenceVehicleTest extends CommandHandlerTestCase
+class UpdatePsvLicenceVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

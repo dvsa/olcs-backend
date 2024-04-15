@@ -6,14 +6,14 @@ use Dvsa\Olcs\Api\Entity\Application\S4;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\LicenceOperatingCentre\AssociateS4 as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceOperatingCentre\AssociateS4 as CommandHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
  * Class AssociateS4Test
  */
-class AssociateS4Test extends CommandHandlerTestCase
+class AssociateS4Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

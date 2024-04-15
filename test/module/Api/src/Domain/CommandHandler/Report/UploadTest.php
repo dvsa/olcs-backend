@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command\Report\Upload as UploadCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 use Laminas\Json\Json as LaminasJson;
@@ -26,7 +26,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Report\Upload
  */
-class UploadTest extends CommandHandlerTestCase
+class UploadTest extends AbstractCommandHandlerTestCase
 {
     public const FILENAME = 'fileName.csv';
     public const BODY = 'expect_body';

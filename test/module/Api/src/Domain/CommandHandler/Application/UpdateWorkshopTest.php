@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateWorkshop;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateWorkshop as Cmd;
 use Dvsa\Olcs\Transfer\Command\Workshop\UpdateWorkshop as WorkshopUpdateWorkshop;
 
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Transfer\Command\Workshop\UpdateWorkshop as WorkshopUpdateWorkshop
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateWorkshopTest extends CommandHandlerTestCase
+class UpdateWorkshopTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Irfo\WithdrawIrfoGvPermit as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\IrfoGvPermit as IrfoGvPermitRepo;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\WithdrawIrfoGvPermit as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Withdraw Irfo Gv Permit Test
  */
-class WithdrawIrfoGvPermitTest extends CommandHandlerTestCase
+class WithdrawIrfoGvPermitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

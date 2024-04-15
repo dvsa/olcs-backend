@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\CreateSubmission as CreateSubmissionCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\CreateSubmission;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
@@ -17,7 +17,7 @@ use LmcRbacMvc\Identity\IdentityInterface;
 /**
  * Create Submission Test
  */
-class CreateSubmissionTest extends CommandHandlerTestCase
+class CreateSubmissionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedImpounding as UnpublishedImpo
 /**
  * Publish Impounding Test
  */
-class ImpoundingTest extends CommandHandlerTestCase
+class ImpoundingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TranslationKeyText;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKeyText\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as TranslationKeyTextRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Update as UpdateCmd;
 use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as TranslationKeyTextEntity;
 
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as TranslationKeyTextEntity;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

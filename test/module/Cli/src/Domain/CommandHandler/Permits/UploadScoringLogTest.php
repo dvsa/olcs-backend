@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringLog as UploadScoringLogCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\UploadScoringLog as UploadScoringLogHandler;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -17,7 +17,7 @@ use Mockery as m;
  *
  * @author Jason de Jonge <jason.de-jonge@capgemini.co.uk>
  */
-class UploadScoringLogTest extends CommandHandlerTestCase
+class UploadScoringLogTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

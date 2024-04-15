@@ -13,12 +13,12 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Publication\Recipient as RecipientEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Publication\CreateRecipient as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Create Recipient Test
  */
-class CreateRecipientTest extends CommandHandlerTestCase
+class CreateRecipientTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

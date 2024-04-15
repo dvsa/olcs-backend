@@ -11,14 +11,14 @@ use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\Schedule41Cancel as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Class Schedule41CancelTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class Schedule41CancelTest extends CommandHandlerTestCase
+class Schedule41CancelTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

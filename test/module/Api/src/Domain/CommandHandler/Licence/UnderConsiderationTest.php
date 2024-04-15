@@ -14,7 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UnderConsideration as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UnderConsideration as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class UnderConsiderationTest extends CommandHandlerTestCase
+class UnderConsiderationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

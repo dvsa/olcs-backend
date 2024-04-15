@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\AssignItems;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\DataRetention\DataRetention;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Class AssignItemsTest
  */
-class AssignItemsTest extends CommandHandlerTestCase
+class AssignItemsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

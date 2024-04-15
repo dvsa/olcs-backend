@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\UndoDisqualification;
 use Dvsa\Olcs\Transfer\Command\Tm\UndoDisqualification as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
  *
  * @author Alex Peshkov <alex.pehkov@valtech.co.uk>
  */
-class UndoDisqualificationTest extends CommandHandlerTestCase
+class UndoDisqualificationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

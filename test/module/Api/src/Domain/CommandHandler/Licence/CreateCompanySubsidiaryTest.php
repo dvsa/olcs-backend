@@ -9,14 +9,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateCompanySubsidiary;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateCompanySubsidiary
  */
-class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
+class CreateCompanySubsidiaryTest extends AbstractCommandHandlerTestCase
 {
     public const LICENCE_ID = 1111;
     public const TASK_ID = 877;

@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermitType;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Create Irfo Gv Permit Test
  */
-class CreateIrfoGvPermitTest extends CommandHandlerTestCase
+class CreateIrfoGvPermitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

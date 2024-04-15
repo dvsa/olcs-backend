@@ -10,11 +10,11 @@ use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Enqueue as EnqueueCmd;
 use Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
 
-class EnqueueTest extends CommandHandlerTestCase
+class EnqueueTest extends AbstractCommandHandlerTestCase
 {
     protected $sut;
     protected $queueService;

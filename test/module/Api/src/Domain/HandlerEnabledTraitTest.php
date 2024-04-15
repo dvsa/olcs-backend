@@ -4,14 +4,14 @@ namespace Dvsa\OlcsTest\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\HandlerEnabledTestStub;
 use Mockery as m;
 
 /**
  * test the handler enabled trait
  */
-class HandlerEnabledTraitTest extends CommandHandlerTestCase
+class HandlerEnabledTraitTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var HandlerEnabledTraitStub

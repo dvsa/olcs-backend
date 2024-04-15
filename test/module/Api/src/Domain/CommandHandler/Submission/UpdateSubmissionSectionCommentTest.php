@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Domain\Repository\SubmissionSectionComment;
 use Dvsa\Olcs\Api\Entity\Submission\SubmissionSectionComment as SubmissionSectionCommentEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmissionSectionComment as Cmd;
 use Dvsa\Olcs\Transfer\Command\Submission\DeleteSubmissionSectionComment;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 
 /**
  * Update SubmissionSectionComment Test
  */
-class UpdateSubmissionSectionCommentTest extends CommandHandlerTestCase
+class UpdateSubmissionSectionCommentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

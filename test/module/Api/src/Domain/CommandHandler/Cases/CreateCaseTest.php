@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\CreateCase;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\CreateCase as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 /**
  * Create Case Test
  */
-class CreateCaseTest extends CommandHandlerTestCase
+class CreateCaseTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateAppeal;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Cases\Appeal as AppealEntity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Hearing\UpdateAppeal
  */
-class UpdateAppealTest extends CommandHandlerTestCase
+class UpdateAppealTest extends AbstractCommandHandlerTestCase
 {
     /** @var  UpdateAppeal */
     protected $sut;

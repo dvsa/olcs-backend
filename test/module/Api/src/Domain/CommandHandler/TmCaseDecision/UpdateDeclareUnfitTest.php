@@ -7,7 +7,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmCaseDecision;
 
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TmCaseDecision\UpdateDeclareUnfit;
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision as TmCaseDecisionRepo;
@@ -24,7 +24,7 @@ use Mockery as m;
 /**
  * Update DeclareUnfit Test
  */
-class UpdateDeclareUnfitTest extends CommandHandlerTestCase
+class UpdateDeclareUnfitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

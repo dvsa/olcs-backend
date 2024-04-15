@@ -11,13 +11,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41\RefuseS4;
 use Dvsa\Olcs\Api\Domain\Repository\S4;
 use Dvsa\Olcs\Api\Entity\Application\S4 as S4Entity;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\RefuseS4 as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Class RefuseS4Test
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Schedule41
  */
-class RefuseS4Test extends CommandHandlerTestCase
+class RefuseS4Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

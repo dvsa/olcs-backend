@@ -25,7 +25,7 @@ use Dvsa\Olcs\Queue\Service\Queue;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Mockery as m;
 
-class ProcessInsolvencyTest extends CompaniesHouseConsumerTestCase
+class ProcessInsolvencyTest extends AbstractCompaniesHouseConsumerTestCase
 {
     protected $config = [
         'message_queue' => [

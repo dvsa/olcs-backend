@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as DiscRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\CeasePsvDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs as Cmd;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeasePsvDiscs as Cmd;
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CeasePsvDiscsTest extends CommandHandlerTestCase
+class CeasePsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

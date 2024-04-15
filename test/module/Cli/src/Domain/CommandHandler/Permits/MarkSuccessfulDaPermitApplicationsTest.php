@@ -11,7 +11,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulDaPermitApplications
     as MarkSuccessfulDaPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulDaPermitApplications
     as MarkSuccessfulDaPermitApplicationsHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -19,7 +19,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulDaPermitApplicationsTest extends CommandHandlerTestCase
+class MarkSuccessfulDaPermitApplicationsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -19,13 +19,13 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCandidatePermitSelection as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Update candidate permit selection test
  */
-class UpdateCandidatePermitSelectionTest extends CommandHandlerTestCase
+class UpdateCandidatePermitSelectionTest extends AbstractCommandHandlerTestCase
 {
     public const IRHP_APPLICATION_ID = 47;
 

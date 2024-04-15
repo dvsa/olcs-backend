@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Printer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Printer\DeletePrinter as DeletePrinter;
 use Dvsa\Olcs\Api\Domain\Repository\Printer as PrinterRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Printer\DeletePrinter as Cmd;
 use Dvsa\Olcs\Api\Entity\PrintScan\Printer as PrinterEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class DeletePrinterTest extends CommandHandlerTestCase
+class DeletePrinterTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

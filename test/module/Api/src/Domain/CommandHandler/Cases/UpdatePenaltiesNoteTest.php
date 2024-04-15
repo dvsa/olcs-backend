@@ -6,7 +6,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\UpdatePenaltiesNote;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\UpdatePenaltiesNote as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdatePenaltiesNoteTest extends CommandHandlerTestCase
+class UpdatePenaltiesNoteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

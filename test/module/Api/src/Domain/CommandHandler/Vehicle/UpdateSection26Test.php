@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Vehicle;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\UpdateSection26 as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Vehicle\UpdateSection26 as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateSection26Test extends CommandHandlerTestCase
+class UpdateSection26Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

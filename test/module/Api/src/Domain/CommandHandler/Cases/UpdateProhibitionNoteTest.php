@@ -10,14 +10,14 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\UpdateProhibitionNote;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\UpdateProhibitionNote as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
  * UpdateProhibitionNote Test
  */
-class UpdateProhibitionNoteTest extends CommandHandlerTestCase
+class UpdateProhibitionNoteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

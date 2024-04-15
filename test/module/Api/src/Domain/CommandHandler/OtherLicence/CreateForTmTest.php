@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence\CreateForTm as CommandHandl
 use Dvsa\Olcs\Api\Domain\Repository\OtherLicence;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreateForTm as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 
@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateForTmTest extends CommandHandlerTestCase
+class CreateForTmTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

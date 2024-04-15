@@ -12,13 +12,13 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\GenerateCoverLetter
  */
-class GenerateCoverLetterTest extends CommandHandlerTestCase
+class GenerateCoverLetterTest extends AbstractCommandHandlerTestCase
 {
     /** @var GenerateCoverLetter */
     protected $sut;

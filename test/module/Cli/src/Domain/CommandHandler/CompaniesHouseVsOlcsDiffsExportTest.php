@@ -6,14 +6,14 @@ use Doctrine\DBAL\Result;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Cli\Domain\Command\CompaniesHouseVsOlcsDiffsExport as Cmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CompaniesHouseVsOlcsDiffsExport;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use org\bovigo\vfs\vfsStream;
 
 /**
  * @covers Dvsa\Olcs\Cli\Domain\CommandHandler\CompaniesHouseVsOlcsDiffsExport
  */
-class CompaniesHouseVsOlcsDiffsExportTest extends CommandHandlerTestCase
+class CompaniesHouseVsOlcsDiffsExportTest extends AbstractCommandHandlerTestCase
 {
     /** @var CompaniesHouseVsOlcsDiffsExport */
     protected $sut;

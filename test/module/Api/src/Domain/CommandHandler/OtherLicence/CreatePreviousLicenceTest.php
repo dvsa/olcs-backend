@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMana
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\OtherLicence\CreatePreviousLicence as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * CreatePreviousLicenceTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreatePreviousLicenceTest extends CommandHandlerTestCase
+class CreatePreviousLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

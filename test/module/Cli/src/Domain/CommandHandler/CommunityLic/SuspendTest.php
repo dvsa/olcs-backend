@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic\Suspend;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Cli\Domain\Command\CommunityLic\Suspend as Cmd;
@@ -14,7 +14,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class SuspendTest extends CommandHandlerTestCase
+class SuspendTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

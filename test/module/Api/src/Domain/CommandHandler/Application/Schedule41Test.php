@@ -8,7 +8,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Transfer\Command\Application\Schedule41 as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as LicenceOperatingCentreEntity;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cases\ConditionUndertaking\CreateConditionUnder
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class Schedule41Test extends CommandHandlerTestCase
+class Schedule41Test extends AbstractCommandHandlerTestCase
 {
     protected $application;
     protected $licence;

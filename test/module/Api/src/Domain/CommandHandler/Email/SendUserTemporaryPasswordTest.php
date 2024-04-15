@@ -15,13 +15,13 @@ use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Send Temporary Password Email Test
  */
-class SendUserTemporaryPasswordTest extends CommandHandlerTestCase
+class SendUserTemporaryPasswordTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

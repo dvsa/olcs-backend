@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Queue\Retry;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  *  Queue Retry Command Handler Test
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class RetryTest extends CommandHandlerTestCase
+class RetryTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

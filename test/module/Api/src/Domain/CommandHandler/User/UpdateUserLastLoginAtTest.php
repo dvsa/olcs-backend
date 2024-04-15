@@ -7,11 +7,11 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserLastLoginAt as Sut;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserLastLoginAt as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-class UpdateUserLastLoginAtTest extends CommandHandlerTestCase
+class UpdateUserLastLoginAtTest extends AbstractCommandHandlerTestCase
 {
     public const USER_ID = 123456;
 

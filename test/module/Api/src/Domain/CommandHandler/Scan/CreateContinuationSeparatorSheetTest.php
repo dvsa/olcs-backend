@@ -5,14 +5,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Scan;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateContinuationSeparatorSheet as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Scan\CreateContinuationSeparatorSheet as Cmd;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * CreateContinuationSeparatorSheetTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateContinuationSeparatorSheetTest extends CommandHandlerTestCase
+class CreateContinuationSeparatorSheetTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\HandleOcVariationFees as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class HandleOcVariationFeesTest extends CommandHandlerTestCase
+class HandleOcVariationFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\OrganisationPerson as OrgPersonRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeletePeople as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\DeletePeople as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeletePeopleTest extends CommandHandlerTestCase
+class DeletePeopleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

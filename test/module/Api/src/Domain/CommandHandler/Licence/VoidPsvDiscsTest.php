@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository\PsvDisc;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
 use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs as Cmd;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as PsvDiscEntity;
 
 /**
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\PsvDisc as PsvDiscEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class VoidPsvDiscsTest extends CommandHandlerTestCase
+class VoidPsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

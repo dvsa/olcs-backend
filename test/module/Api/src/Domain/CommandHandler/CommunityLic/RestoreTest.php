@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReason as CommunityLic
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawal as CommunityLicWithdrawalRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicWithdrawalReason as CommunityLicWithdrawalReasonRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\Restore as Cmd;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as UpdateTotalCommunityLicencesCmd;
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class RestoreTest extends CommandHandlerTestCase
+class RestoreTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

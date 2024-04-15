@@ -12,12 +12,12 @@ use Dvsa\Olcs\Transfer\Command\Opposition\DeleteOpposition as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Delete Opposition Test
  */
-class DeleteOppositionTest extends CommandHandlerTestCase
+class DeleteOppositionTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

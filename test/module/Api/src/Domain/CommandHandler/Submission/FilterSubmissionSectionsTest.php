@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\FilterSubmissionSections as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
-class FilterSubmissionSectionsTest extends CommandHandlerTestCase
+class FilterSubmissionSectionsTest extends AbstractCommandHandlerTestCase
 {
     protected $submissionConfig = [
         'submissions' => [

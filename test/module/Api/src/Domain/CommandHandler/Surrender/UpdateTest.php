@@ -7,10 +7,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Update as Sut;
 use Dvsa\Olcs\Transfer\Command\Surrender\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     /** @var Sut */
     protected $sut;

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Publication\Application as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result as ResultCmd;
 /**
  * ApplicationTest
  */
-class ApplicationTest extends CommandHandlerTestCase
+class ApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

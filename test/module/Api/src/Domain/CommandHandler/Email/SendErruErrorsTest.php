@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Si\ErruRequestFailure;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequestFailure as ErruRequestFailureRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Doctrine\ORM\Query;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Email\Data\Message;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendErruErrorsTest extends CommandHandlerTestCase
+class SendErruErrorsTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var SendErruErrors

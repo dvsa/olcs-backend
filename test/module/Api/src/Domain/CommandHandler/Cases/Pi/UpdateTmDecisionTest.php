@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\UpdateTmDecision;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\UpdateTmDecision as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PublishDecisionCmd;
 /**
  * Update TM Decision Test
  */
-class UpdateTmDecisionTest extends CommandHandlerTestCase
+class UpdateTmDecisionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {
