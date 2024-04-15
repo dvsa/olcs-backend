@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -28,7 +28,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateDocumentSpecificTest extends CommandHandlerTestCase
+class CreateDocumentSpecificTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

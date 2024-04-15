@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Continuation;
 
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Continuation\Create as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Continuation\Create as Command;
 use Dvsa\Olcs\Api\Domain\Repository\Continuation as ContinuationRepo;
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -12,13 +12,13 @@ use Dvsa\Olcs\Transfer\Command\Bus\CreateVariation as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Create Variation Test
  */
-class CreateVariationTest extends CommandHandlerTestCase
+class CreateVariationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

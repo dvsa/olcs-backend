@@ -12,13 +12,13 @@ use Dvsa\Olcs\Transfer\Command\Bus\CreateCancellation as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Create Cancellation Test
  */
-class CreateCancellationTest extends CommandHandlerTestCase
+class CreateCancellationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

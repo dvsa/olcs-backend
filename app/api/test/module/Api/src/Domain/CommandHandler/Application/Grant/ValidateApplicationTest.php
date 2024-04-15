@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication as Cmd;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
 
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ValidateApplicationTest extends CommandHandlerTestCase
+class ValidateApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

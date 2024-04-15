@@ -15,14 +15,14 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
 use Dvsa\Olcs\Transfer\Command\Licence\ReplacePsvDiscs as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\VoidPsvDiscs;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Replace Psv Discs Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ReplacePsvDiscsTest extends CommandHandlerTestCase
+class ReplacePsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

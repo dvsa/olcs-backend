@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\ProcessDuplicateVehicleRemoval;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\ProcessDuplicateVehicleRemoval as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\RemoveDuplicateVehicle as RemoveDuplicateVehicleCmd;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as SendEmailCmd;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Email\Service\TemplateRenderer;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ProcessDuplicateVehicleRemovalTest extends CommandHandlerTestCase
+class ProcessDuplicateVehicleRemovalTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

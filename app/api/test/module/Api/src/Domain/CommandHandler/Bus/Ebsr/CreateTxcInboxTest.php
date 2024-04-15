@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Create TxcInbox Test
  */
-class CreateTxcInboxTest extends CommandHandlerTestCase
+class CreateTxcInboxTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

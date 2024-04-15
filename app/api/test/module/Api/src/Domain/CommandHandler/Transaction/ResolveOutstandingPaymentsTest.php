@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Transaction\ResolvePayment as ResolvePaymentCmd
 use Dvsa\Olcs\Api\Domain\CommandHandler\Transaction\ResolveOutstandingPayments;
 use Dvsa\Olcs\Api\Domain\Repository\AbstractRepository as Repo;
 use Dvsa\Olcs\Api\Entity\Fee\Transaction as PaymentEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 use Olcs\Logging\Log\Logger;
@@ -25,7 +25,7 @@ use Olcs\Logging\Log\Logger;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ResolveOutstandingPaymentsTest extends CommandHandlerTestCase
+class ResolveOutstandingPaymentsTest extends AbstractCommandHandlerTestCase
 {
     protected $mockCpmsService;
 

@@ -14,7 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateTotalCommunityLicences;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Licence\UpdateTotalCommunityLicences as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTotalCommunityLicencesTest extends CommandHandlerTestCase
+class UpdateTotalCommunityLicencesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

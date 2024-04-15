@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Workshop;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Workshop\DeleteWorkshop;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Workshop\DeleteWorkshop as Cmd;
 use Dvsa\Olcs\Api\Entity\Licence\Workshop as WorkshopEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteWorkshopTest extends CommandHandlerTestCase
+class DeleteWorkshopTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

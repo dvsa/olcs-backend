@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTypeOfLicence as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -32,7 +32,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
+class UpdateTypeOfLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

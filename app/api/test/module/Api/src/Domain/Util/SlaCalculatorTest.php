@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Util\SlaCalculator;
 use Dvsa\Olcs\Api\Entity\System\Sla;
 use Dvsa\Olcs\Api\Domain\Util\TimeProcessorBuilder;
 use Dvsa\Olcs\Api\Domain\Repository\PublicHoliday as PublicHolidayRepo;
+use Olcs\Logging\Log\Logger;
 
 /**
  * SlaCalculator Test
@@ -25,6 +26,11 @@ class SlaCalculatorTest extends MockeryTestCase
 {
     public function setUp(): void
     {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+
         $this->publicHolidayRepo = m::mock(PublicHolidayRepo::class);
 
         $this->dateTimeProcessor = new TimeProcessorBuilder($this->publicHolidayRepo);

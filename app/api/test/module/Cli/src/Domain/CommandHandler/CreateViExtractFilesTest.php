@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CreateViExtractFiles;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 
 /**
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateViExtractFilesTest extends CommandHandlerTestCase
+class CreateViExtractFilesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

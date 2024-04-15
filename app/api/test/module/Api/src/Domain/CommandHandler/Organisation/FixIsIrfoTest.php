@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\FixIsIrfo;
 use Dvsa\Olcs\Api\Domain\Command\Organisation\FixIsIrfo as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
 /**
  * Class FixIsIrfoTest
  */
-class FixIsIrfoTest extends CommandHandlerTestCase
+class FixIsIrfoTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\UpdateTxcInboxPdf;
 use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as Cmd;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -22,7 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 /**
  * Update TxcInbox PDF Test
  */
-class UpdateTxcInboxPdfTest extends CommandHandlerTestCase
+class UpdateTxcInboxPdfTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

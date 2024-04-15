@@ -11,7 +11,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\WithdrawBusReg;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\WithdrawBusReg as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee as CancelFeeCmd;
 /**
  * Withdraw BusReg Test
  */
-class WithdrawBusRegTest extends CommandHandlerTestCase
+class WithdrawBusRegTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

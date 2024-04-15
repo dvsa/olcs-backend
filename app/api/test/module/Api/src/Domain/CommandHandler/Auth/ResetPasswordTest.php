@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\User\UserPasswordReset as UserPasswordResetEntity;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\Auth\ResetPassword as ResetPasswordCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 
 /**
  * @see ResetPassword
  */
-class ResetPasswordTest extends CommandHandlerTestCase
+class ResetPasswordTest extends AbstractCommandHandlerTestCase
 {
     private m\MockInterface $adapter;
     private m\MockInterface $eventHistoryCreator;

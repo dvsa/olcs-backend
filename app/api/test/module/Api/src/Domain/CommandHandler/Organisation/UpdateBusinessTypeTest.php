@@ -16,7 +16,7 @@ use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\UpdateBusinessType;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Organisation\UpdateBusinessType as Cmd;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
@@ -28,7 +28,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateBusinessTypeTest extends CommandHandlerTestCase
+class UpdateBusinessTypeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

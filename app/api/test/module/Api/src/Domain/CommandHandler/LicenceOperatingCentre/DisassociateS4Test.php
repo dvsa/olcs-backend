@@ -13,7 +13,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\LicenceOperatingCentre\DisassociateS4 as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceOperatingCentre\DisassociateS4 as CommandHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository;
 
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceOperatingCentre
  * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
-class DisassociateS4Test extends CommandHandlerTestCase
+class DisassociateS4Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

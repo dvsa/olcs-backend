@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\EndInterim;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Variation\EndInterim as Cmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class EndInterimTest extends CommandHandlerTestCase
+class EndInterimTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

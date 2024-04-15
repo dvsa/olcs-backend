@@ -11,12 +11,12 @@ use Dvsa\Olcs\Api\Domain\Repository\S4;
 use Dvsa\Olcs\Api\Entity\Application\S4 as S4Entity;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Schedule41\ApproveS4;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\ApproveS4 as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Create SubmissionAction Test
  */
-class ApproveS4Test extends CommandHandlerTestCase
+class ApproveS4Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

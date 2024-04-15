@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\UpdateNysiisName;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Tm\UpdateNysiisName as Cmd;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
@@ -18,7 +18,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  * @author Shaun Lizzio <shaun@lizzzio.co.uk>
  */
-class UpdateNysiisNameTest extends CommandHandlerTestCase
+class UpdateNysiisNameTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

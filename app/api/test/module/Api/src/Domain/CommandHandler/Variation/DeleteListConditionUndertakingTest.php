@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\DeleteListConditionUndertaking
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -15,7 +15,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteListConditionUndertakingTest extends CommandHandlerTestCase
+class DeleteListConditionUndertakingTest extends AbstractCommandHandlerTestCase
 {
     public const APP_ID = 65;
     public const CU_ID_1 = 9001;

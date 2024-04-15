@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMana
 use Dvsa\Olcs\Api\Entity\Application\PreviousConviction as PreviousConvictionEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\PreviousConviction\CreateForTma as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * CreateForTmaTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateForTmaTest extends CommandHandlerTestCase
+class CreateForTmaTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -6,13 +6,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\System\PublicHoliday\Delete as Handler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\System\PublicHoliday\Delete as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\System\PublicHoliday\Delete
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -12,10 +12,10 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Variation\GrantDirectorChange as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class GrantDirectorChangeTest extends CommandHandlerTestCase
+class GrantDirectorChangeTest extends AbstractCommandHandlerTestCase
 {
     public const TEST_VARIATION_ID = 'TEST_VARIATION_ID';
 

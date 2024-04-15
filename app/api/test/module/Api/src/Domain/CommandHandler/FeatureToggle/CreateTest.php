@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\FeatureToggle;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\FeatureToggle\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\FeatureToggle as FeatureToggleRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\FeatureToggle\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
 
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle as FeatureToggleEntity;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     protected $refData = [FeatureToggleEntity::ACTIVE_STATUS];
 

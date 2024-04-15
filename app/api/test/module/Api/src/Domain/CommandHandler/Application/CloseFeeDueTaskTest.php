@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CloseFeeDueTask;
 
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CloseFeeDueTask;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CloseFeeDueTaskTest extends CommandHandlerTestCase
+class CloseFeeDueTaskTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Application\UndoGrant as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCmd;
 
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UndoCancelAllInterimFees as UndoCmd
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UndoGrantTest extends CommandHandlerTestCase
+class UndoGrantTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Licence\ReturnAllCommunityLicences as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ReturnAllCommunityLicences as CommandHandler;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
@@ -16,7 +16,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class ReturnAllCommunityLicencesTest extends CommandHandlerTestCase
+class ReturnAllCommunityLicencesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

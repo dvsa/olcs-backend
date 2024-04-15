@@ -5,13 +5,13 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
 use Dvsa\Olcs\Transfer\Command\Task\FlagUrgentTasks as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Task\FlagUrgentTasks;
 use Dvsa\Olcs\Api\Domain\Repository\Task;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * FlagUrgentTasksTest
  */
-class FlagUrgentTasksTest extends CommandHandlerTestCase
+class FlagUrgentTasksTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

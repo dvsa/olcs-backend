@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TranslationKey;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\Language;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\Olcs\Transfer\Command\TranslationKey\GenerateCache as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKey\GenerateCache as Handler;
@@ -17,7 +17,7 @@ use Laminas\Mvc\I18n\Translator;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class GenerateCacheTest extends CommandHandlerTestCase
+class GenerateCacheTest extends AbstractCommandHandlerTestCase
 {
     private $translator;
 

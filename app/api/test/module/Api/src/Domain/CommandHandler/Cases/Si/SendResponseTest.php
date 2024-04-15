@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Si;
 
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Si\SendResponse;
 use Dvsa\Olcs\Api\Domain\Command\Cases\Si\SendResponse as SendResponseCmd;
 use Dvsa\Olcs\Api\Domain\Repository\ErruRequest as ErruRequestRepo;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendResponseTest extends CommandHandlerTestCase
+class SendResponseTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

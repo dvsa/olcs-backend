@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 
 use Dvsa\Olcs\Transfer\Command\Document\MoveDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\MoveDocument as CommandHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Dvsa\Olcs\Transfer\Command\Document\CopyDocument as CopyDocumentCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class MoveDocumentTest extends CommandHandlerTestCase
+class MoveDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

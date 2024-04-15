@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateInterim as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateInterimTest extends CommandHandlerTestCase
+class UpdateInterimTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

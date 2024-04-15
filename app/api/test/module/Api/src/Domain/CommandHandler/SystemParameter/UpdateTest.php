@@ -8,14 +8,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\SystemParameter\Update;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as Repo;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as Entity;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\SystemParameter\UpdateSystemParameter as Cmd;
 use Mockery as m;
 
 /**
  * @see Update
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

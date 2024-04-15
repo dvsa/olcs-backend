@@ -8,13 +8,13 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as PermitWindowRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow as PermitWindowEntity;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\CloseExpiredWindows as CloseExpiredWindowsCmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\CloseExpiredWindows as CloseExpiredWindowsHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Close expired windows Test
  */
-class CloseExpiredWindowsTest extends CommandHandlerTestCase
+class CloseExpiredWindowsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

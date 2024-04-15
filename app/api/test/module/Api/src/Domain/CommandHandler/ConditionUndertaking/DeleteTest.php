@@ -12,7 +12,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking\Delete;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\Delete as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntit
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

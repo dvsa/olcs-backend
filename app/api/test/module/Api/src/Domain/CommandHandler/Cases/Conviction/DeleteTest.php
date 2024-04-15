@@ -13,13 +13,13 @@ use Dvsa\Olcs\Transfer\Command\Cases\Conviction\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction as ConvictionEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Create Conviction Test
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

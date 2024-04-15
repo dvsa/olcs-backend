@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\CreatePsvDiscs;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Transfer\Command\Variation\CreatePsvDiscs as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as LicenceCreatePsvDiscs;
 
 /**
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs as LicenceCreatePsvDiscs;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreatePsvDiscsTest extends CommandHandlerTestCase
+class CreatePsvDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

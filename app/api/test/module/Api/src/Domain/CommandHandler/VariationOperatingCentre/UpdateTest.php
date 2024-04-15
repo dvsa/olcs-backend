@@ -14,7 +14,7 @@ use Mockery as m;
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Transfer\Command\VariationOperatingCentre\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\VariationOperatingCentre\Update as CommandHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVa
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

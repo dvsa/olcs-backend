@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Workshop;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\InspectionRequest\SendInspectionRequest as Cmd;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\Team;
@@ -33,7 +33,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\Result as QueryResult;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class SendInspectionRequestTest extends CommandHandlerTestCase
+class SendInspectionRequestTest extends AbstractCommandHandlerTestCase
 {
     private $stubLicenceData = [
         'id' => 77,

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TmEmployment\Create as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Transfer\Command\TmEmployment\Create as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

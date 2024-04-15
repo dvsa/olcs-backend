@@ -6,7 +6,7 @@ use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Replacement\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Replacement as ReplacementRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Replacement\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\System\Replacement as ReplacementEntity;
 
@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\Replacement as ReplacementEntity;
  *
  * @author Andy Newton <andy@vitri.ltd
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

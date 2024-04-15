@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre as LicenceOperatingCentr
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Variation\UpdateTypeOfLicence as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -39,7 +39,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateTypeOfLicenceTest extends CommandHandlerTestCase
+class UpdateTypeOfLicenceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

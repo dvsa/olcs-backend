@@ -18,14 +18,14 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePsvVehicles as CommandHandler;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Application\UpdatePsvVehicles as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update Psv Vehicles Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdatePsvVehiclesTest extends CommandHandlerTestCase
+class UpdatePsvVehiclesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

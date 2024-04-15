@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertaking
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Transfer\Command\ConditionUndertaking\Update as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -17,7 +17,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

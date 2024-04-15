@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic\Activate;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspension as CommunityLicSuspensionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReason as CommunityLicSuspensionReasonRepo;
@@ -17,7 +17,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ActivateTest extends CommandHandlerTestCase
+class ActivateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

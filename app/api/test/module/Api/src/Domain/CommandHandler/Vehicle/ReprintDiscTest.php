@@ -17,14 +17,14 @@ use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\ReprintDisc;
 use Dvsa\Olcs\Transfer\Command\Vehicle\ReprintDisc as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Reprint Disc Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ReprintDiscTest extends CommandHandlerTestCase
+class ReprintDiscTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

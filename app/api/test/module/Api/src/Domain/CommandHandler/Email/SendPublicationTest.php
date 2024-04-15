@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendPublication;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class SendPublicationTest extends CommandHandlerTestCase
+class SendPublicationTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var CommandInterface

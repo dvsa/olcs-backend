@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermit\CreateReplacement as CreateReplacementHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as PermitRangeRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Create Replacement IRHP Permit Test
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class CreateReplacementTest extends CommandHandlerTestCase
+class CreateReplacementTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

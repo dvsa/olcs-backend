@@ -8,13 +8,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\CreateNoticePeriod as Handler;
 use Dvsa\Olcs\Transfer\Command\Bus\CreateNoticePeriod as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\BusNoticePeriod as BusNoticePeriodRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @see Handler
  */
-class CreateNoticePeriodTest extends CommandHandlerTestCase
+class CreateNoticePeriodTest extends AbstractCommandHandlerTestCase
 {
     private $repo = 'BusNoticePeriod';
 

@@ -17,13 +17,13 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaContextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationPath as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Submit Application Path test
  */
-class SubmitApplicationPathTest extends CommandHandlerTestCase
+class SubmitApplicationPathTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

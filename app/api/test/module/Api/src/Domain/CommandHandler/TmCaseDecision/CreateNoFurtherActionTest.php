@@ -12,12 +12,12 @@ use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\CreateNoFurtherAction as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Create NoFurtherAction Test
  */
-class CreateNoFurtherActionTest extends CommandHandlerTestCase
+class CreateNoFurtherActionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

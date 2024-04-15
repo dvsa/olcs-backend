@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Impounding;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Impounding\CreateImpounding;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Impounding\CreateImpounding as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Impounding as ImpoundingEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateImpoundingTest extends CommandHandlerTestCase
+class CreateImpoundingTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateGoodsVehicle as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsVehicle as VehicleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as CreateGoodsDiscsCmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
@@ -22,7 +22,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateGoodsVehicleTest extends CommandHandlerTestCase
+class CreateGoodsVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

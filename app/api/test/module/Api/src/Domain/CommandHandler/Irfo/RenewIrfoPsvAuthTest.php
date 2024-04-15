@@ -12,12 +12,12 @@ use Dvsa\Olcs\Api\Domain\Repository\IrfoPsvAuth;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuth as IrfoPsvAuthEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Irfo\RenewIrfoPsvAuth as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Renew IrfoPsvAuth Test
  */
-class RenewIrfoPsvAuthTest extends CommandHandlerTestCase
+class RenewIrfoPsvAuthTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

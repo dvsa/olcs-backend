@@ -11,13 +11,13 @@ use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
 use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
 
 /**
  * Update NonPi Test
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var UpdateCommandHandler

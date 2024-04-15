@@ -15,13 +15,13 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
 use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\SubmitApplicationStep as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Submit Application Step test
  */
-class SubmitApplicationStepTest extends CommandHandlerTestCase
+class SubmitApplicationStepTest extends AbstractCommandHandlerTestCase
 {
     public const IRHP_APPLICATION_ID = 23;
     public const IRHP_PERMIT_APPLICATION_ID = 457;

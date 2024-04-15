@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Dvsa\Olcs\Transfer\Command\Application\SubmitApplication as Cmd;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksServicesTrait;
 use Mockery as m;
@@ -34,7 +34,7 @@ use Mockery as m;
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Application\SubmitApplication
  */
-class SubmitApplicationTest extends CommandHandlerTestCase
+class SubmitApplicationTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

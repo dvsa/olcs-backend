@@ -12,14 +12,14 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Create Replacement IRHP Permit Test
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class CreateForIrhpApplicationTest extends CommandHandlerTestCase
+class CreateForIrhpApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

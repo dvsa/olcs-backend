@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\TransportManagerApplication\Generator;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -24,7 +24,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class SnapshotTest extends CommandHandlerTestCase
+class SnapshotTest extends AbstractCommandHandlerTestCase
 {
     protected $loggedInUser;
 

@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\WithdrawApplication as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\WithdrawApplication as Command;
 use Dvsa\Olcs\Api\Entity\Application\Application;
@@ -34,7 +34,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class WithdrawApplicationTest extends CommandHandlerTestCase
+class WithdrawApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

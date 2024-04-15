@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Disqualification;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Disqualification\Create as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Disqualification\Create as Command;
 use Dvsa\Olcs\Api\Entity\Organisation\Disqualification;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -10,7 +10,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -18,7 +18,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ProcessApplicationOperatingCentresTest extends CommandHandlerTestCase
+class ProcessApplicationOperatingCentresTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -12,7 +12,7 @@ use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulRemainingPermitApplicatio
     as MarkSuccessfulRemainingPermitApplicationsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulRemainingPermitApplications
     as MarkSuccessfulRemainingPermitApplicationsHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class MarkSuccessfulRemainingPermitApplicationsTest extends CommandHandlerTestCase
+class MarkSuccessfulRemainingPermitApplicationsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

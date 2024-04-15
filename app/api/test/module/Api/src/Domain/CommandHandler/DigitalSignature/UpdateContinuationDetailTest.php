@@ -10,10 +10,10 @@ use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo
 use Dvsa\Olcs\Api\Entity\DigitalSignature as DigitalSignatureEntity;
 use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class UpdateContinuationDetailTest extends CommandHandlerTestCase
+class UpdateContinuationDetailTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

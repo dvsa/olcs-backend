@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as DiscRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\CeaseGoodsDiscsForApplication;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication as Cmd;
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Discs\CeaseGoodsDiscsForApplication as Cmd;
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Discs\CeaseGoodsDiscsForApplication
  */
-class CeaseGoodsDiscsForApplicationTest extends CommandHandlerTestCase
+class CeaseGoodsDiscsForApplicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\DocTemplate\Create
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public const BODY = 'expect_body';
     public const IDENTIFIER = 'templates/fileName.rtf';

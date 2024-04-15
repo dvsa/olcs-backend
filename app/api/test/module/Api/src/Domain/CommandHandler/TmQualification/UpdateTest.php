@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TmQualification;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TmQualification\Update as TmQualificationUpdate;
 use Dvsa\Olcs\Api\Domain\Repository\TmQualification as TmQualificationRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TmQualification\Update as Cmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
 
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country as CountryEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

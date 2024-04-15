@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\System\InfoMessage\Update as Handler;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\System\InfoMessage\Update as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\System\InfoMessage\Update
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

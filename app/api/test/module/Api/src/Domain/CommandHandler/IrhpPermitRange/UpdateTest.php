@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitRange\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as PermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitRange\Update as UpdateCmd;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as PermitRangeEntity;
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     use ProcessDateTrait;
 

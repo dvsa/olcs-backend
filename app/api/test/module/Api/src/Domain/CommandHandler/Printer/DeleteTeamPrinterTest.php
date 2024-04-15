@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TeamPrinter;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TeamPrinter\DeleteTeamPrinter as DeleteTeamPrinter;
 use Dvsa\Olcs\Api\Domain\Repository\TeamPrinter as TeamPrinterRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TeamPrinter\DeleteTeamPrinter as Cmd;
 
 /**
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Transfer\Command\TeamPrinter\DeleteTeamPrinter as Cmd;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class DeleteTeamPrinterTest extends CommandHandlerTestCase
+class DeleteTeamPrinterTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

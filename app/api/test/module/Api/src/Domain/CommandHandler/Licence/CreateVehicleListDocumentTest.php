@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateVehicleListDocument;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVehicleListDocument as Cmd;
 use Dvsa\Olcs\Api\Entity\System\Category;
@@ -25,7 +25,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateVehicleListDocumentTest extends CommandHandlerTestCase
+class CreateVehicleListDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\QueuePacks as QueuePacksCmd;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 use LmcRbacMvc\Identity\IdentityInterface;
 use Mockery as m;
@@ -17,7 +17,7 @@ use Mockery as m;
 /**
  * QueuePacksTest
  */
-class QueuePacksTest extends CommandHandlerTestCase
+class QueuePacksTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

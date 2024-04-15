@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Cpms\RequestReport;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Cpms\RequestReport as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class RequestReportTest extends CommandHandlerTestCase
+class RequestReportTest extends AbstractCommandHandlerTestCase
 {
     protected $mockApi;
 

@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
 use Dvsa\Olcs\Transfer\Command\CompaniesHouse\CloseAlerts as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\CloseAlerts;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseAlert as AlertRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
 use Mockery as m;
 
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CloseAlertsTest extends CommandHandlerTestCase
+class CloseAlertsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePreviousConvictions;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\UpdatePreviousConvictions as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCommand;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as Upda
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class UpdatePreviousConvictionsTest extends CommandHandlerTestCase
+class UpdatePreviousConvictionsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

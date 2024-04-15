@@ -6,7 +6,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpCandidatePermit\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpCandidatePermit\Update as UpdateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit as IrhpCandidatePermitEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange as IrhpPermitRangeEntity;
@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

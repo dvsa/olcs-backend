@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Document;
 use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\UpdateDocumentLinks;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\UpdateDocumentLinks as Cmd;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateDocumentLinksTest extends CommandHandlerTestCase
+class UpdateDocumentLinksTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

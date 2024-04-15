@@ -7,13 +7,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateCompanySubsidiary;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateCompanySubsidiary
  */
-class CreateCompanySubsidiaryTest extends CommandHandlerTestCase
+class CreateCompanySubsidiaryTest extends AbstractCommandHandlerTestCase
 {
     public const ID = 666;
     public const APP_ID = 8888;

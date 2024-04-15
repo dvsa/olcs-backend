@@ -11,7 +11,7 @@ use Dvsa\Olcs\Transfer\Command\WithdrawApplicationInterface;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-abstract class AbstractWithdrawApplicationHandlerTest extends CommandHandlerTestCase
+abstract class AbstractWithdrawApplicationHandlerTest extends AbstractCommandHandlerTestCase
 {
     protected $repoServiceName = 'changeMe';
     protected $entityClass = 'changeMe';

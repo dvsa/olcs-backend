@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\InspectionRequest;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\InspectionRequest\Update;
 use Dvsa\Olcs\Api\Domain\Repository\InspectionRequest as InspectionRequestRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\Update as Cmd;
 use Dvsa\Olcs\Api\Entity\Inspection\InspectionRequest as InspectionRequestEntity;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\User\User;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

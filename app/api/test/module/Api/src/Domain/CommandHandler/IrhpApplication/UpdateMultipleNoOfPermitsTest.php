@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateApplicationFee;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\RegenerateIssueFee;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Transfer\Query\IrhpApplication\MaxStockPermitsByApplication;
 use Mockery as m;
 use RuntimeException;
 
-class UpdateMultipleNoOfPermitsTest extends CommandHandlerTestCase
+class UpdateMultipleNoOfPermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

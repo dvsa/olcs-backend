@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Update;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManager as TransportManagerRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Tm\Update as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as SaveAddressCmd;
 use Dvsa\Olcs\Api\Domain\Command\Person\UpdateFull as UpdatePersonCmd;
@@ -25,7 +25,7 @@ use Mockery\MockInterface;
 use Dvsa\OlcsTest\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

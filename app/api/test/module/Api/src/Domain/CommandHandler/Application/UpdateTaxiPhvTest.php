@@ -4,7 +4,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdateTaxiPhv as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateTaxiPhv as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\Application as EntityApplication;
 
@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as EntityApplication;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class UpdateTaxiPhvTest extends CommandHandlerTestCase
+class UpdateTaxiPhvTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

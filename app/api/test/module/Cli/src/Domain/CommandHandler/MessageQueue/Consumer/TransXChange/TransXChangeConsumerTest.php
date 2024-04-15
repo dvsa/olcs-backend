@@ -22,7 +22,7 @@ use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\TransXChange\Trans
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Exception;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\ServiceManager\ServiceLocatorInterface;
@@ -39,7 +39,7 @@ use RuntimeException;
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  */
-class TransXChangeConsumerTest extends CommandHandlerTestCase
+class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
 {
     protected array $config = [
         'message_queue' => [

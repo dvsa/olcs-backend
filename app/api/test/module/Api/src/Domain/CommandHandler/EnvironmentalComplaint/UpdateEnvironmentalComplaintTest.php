@@ -15,7 +15,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\EnvironmentalComplaint\UpdateEnvironmentalComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\UpdateEnvironmentalComplaint as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateEnvironmentalComplaintTest extends CommandHandlerTestCase
+class UpdateEnvironmentalComplaintTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

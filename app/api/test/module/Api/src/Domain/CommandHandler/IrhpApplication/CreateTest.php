@@ -20,13 +20,13 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Create as CreateCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Create Irhp Application test
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

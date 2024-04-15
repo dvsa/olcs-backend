@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrintScheduler\Enqueue as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -16,7 +16,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class EnqueueTest extends CommandHandlerTestCase
+class EnqueueTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

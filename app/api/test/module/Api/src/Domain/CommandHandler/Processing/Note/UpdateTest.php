@@ -11,12 +11,12 @@ use Dvsa\Olcs\Transfer\Command\Processing\Note\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Note;
 use Dvsa\Olcs\Api\Entity\Note\Note as NoteEntity;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update Note Test
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var UpdateCommandHandler

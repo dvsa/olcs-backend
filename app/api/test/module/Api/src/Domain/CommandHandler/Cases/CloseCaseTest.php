@@ -11,14 +11,14 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\CloseCase;
 use Dvsa\Olcs\Api\Domain\Repository\Cases as CasesRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\CloseCase as CloseCmd;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 
 /**
  * Close Case Test
  */
-class CloseCaseTest extends CommandHandlerTestCase
+class CloseCaseTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
 use Dvsa\Olcs\Transfer\Command\Surrender\Delete as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /** @var Sut */
     protected $sut;

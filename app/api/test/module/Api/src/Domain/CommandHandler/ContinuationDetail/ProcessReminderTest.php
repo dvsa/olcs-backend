@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Command\ContinuationDetail\ProcessReminder as Command;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ContinuationDetail\ProcessReminder as CommandHandler;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\ContinuationDetail as ContinuationDetailRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
 use Mockery as m;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail as ContinuationDetailEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class ProcessReminderTest extends CommandHandlerTestCase
+class ProcessReminderTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

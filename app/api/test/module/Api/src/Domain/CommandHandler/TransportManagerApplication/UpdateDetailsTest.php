@@ -20,14 +20,14 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateDetails as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerApplication\UpdateDetails
  */
-class UpdateDetailsTest extends CommandHandlerTestCase
+class UpdateDetailsTest extends AbstractCommandHandlerTestCase
 {
     protected $loggedInUser;
 

@@ -11,14 +11,14 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 use Dvsa\Olcs\Api\Domain\Repository\Template as TemplateRepo;
 use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Transfer\Command\Template\UpdateTemplateSource as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use RuntimeException;
 
 /**
  * Update Template Source Test
  */
-class UpdateTemplateSourceTest extends CommandHandlerTestCase
+class UpdateTemplateSourceTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

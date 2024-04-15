@@ -9,12 +9,12 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\UploadCsv as UploadCsvHandler;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * @see UploadCsvHandler
  */
-class UploadCsvTest extends CommandHandlerTestCase
+class UploadCsvTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

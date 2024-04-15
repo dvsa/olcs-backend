@@ -11,13 +11,13 @@ use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategory as SiCategoryEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiCategoryType as SiCategoryTypeEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Si\CreateSi as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * CreateSi Test
  */
-class CreateSiTest extends CommandHandlerTestCase
+class CreateSiTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

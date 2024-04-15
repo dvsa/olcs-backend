@@ -18,13 +18,13 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthType as IrfoPsvAuthTypeEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\GenerateIrfoPsvAuth as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Generate Irfo Psv Auth Test
  */
-class GenerateIrfoPsvAuthTest extends CommandHandlerTestCase
+class GenerateIrfoPsvAuthTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

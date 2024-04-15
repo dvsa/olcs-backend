@@ -12,10 +12,10 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class PostScoringEmailTest extends CommandHandlerTestCase
+class PostScoringEmailTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

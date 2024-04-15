@@ -17,13 +17,13 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Send Username Single Email Test
  */
-class SendUsernameSingleTest extends CommandHandlerTestCase
+class SendUsernameSingleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

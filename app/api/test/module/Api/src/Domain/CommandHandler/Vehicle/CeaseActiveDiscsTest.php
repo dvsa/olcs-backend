@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\CeaseActiveDiscs;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CeaseActiveDiscs as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 
 /**
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CeaseActiveDiscsTest extends CommandHandlerTestCase
+class CeaseActiveDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

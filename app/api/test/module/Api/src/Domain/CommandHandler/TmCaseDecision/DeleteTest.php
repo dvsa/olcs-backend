@@ -10,13 +10,13 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TmCaseDecision\Delete as DeleteCommandHa
 use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\Delete as DeleteCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Delete Test
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var DeleteCommandHandler

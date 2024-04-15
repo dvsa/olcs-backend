@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Trailer;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Trailer\CreateTrailer;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Transfer\Command\Trailer\CreateTrailer as Cmd;
  *
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class CreateTrailerTest extends CommandHandlerTestCase
+class CreateTrailerTest extends AbstractCommandHandlerTestCase
 {
     private $licence;
 

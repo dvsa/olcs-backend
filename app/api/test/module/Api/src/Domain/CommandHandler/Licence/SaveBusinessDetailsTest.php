@@ -9,14 +9,14 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Licence\SaveBusinessDetails
  */
-class SaveBusinessDetailsTest extends CommandHandlerTestCase
+class SaveBusinessDetailsTest extends AbstractCommandHandlerTestCase
 {
     public const ID = 1111;
     public const VERSION = 99;

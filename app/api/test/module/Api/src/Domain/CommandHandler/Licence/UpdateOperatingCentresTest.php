@@ -17,7 +17,7 @@ use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\OlcsTest\MocksServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
@@ -31,7 +31,7 @@ use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceRepositoryTrait;
 /**
  * @see \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres
  */
-class UpdateOperatingCentresTest extends CommandHandlerTestCase
+class UpdateOperatingCentresTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

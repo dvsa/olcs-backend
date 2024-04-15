@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerReadAudit;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -16,7 +16,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ReadTransportManagerTest extends CommandHandlerTestCase
+class ReadTransportManagerTest extends AbstractCommandHandlerTestCase
 {
     public const USER_ID = 9999;
 

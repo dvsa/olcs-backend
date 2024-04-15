@@ -10,10 +10,10 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitApplication as IrhpPermitApplicationRepo;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCheckAnswers as UpdateCheckAnswersCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class UpdateCheckAnswersTest extends CommandHandlerTestCase
+class UpdateCheckAnswersTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

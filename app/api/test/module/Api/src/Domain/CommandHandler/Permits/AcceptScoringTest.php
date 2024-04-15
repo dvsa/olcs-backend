@@ -27,10 +27,10 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as SystemParameterEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class AcceptScoringTest extends CommandHandlerTestCase
+class AcceptScoringTest extends AbstractCommandHandlerTestCase
 {
     private $issueFeeProductReference = 'ISSUE_FEE_PRODUCT_REFERENCE';
 

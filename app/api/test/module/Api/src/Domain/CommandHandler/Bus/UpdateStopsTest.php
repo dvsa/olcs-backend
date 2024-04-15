@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateStops;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateStops as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Update Stops Test
  */
-class UpdateStopsTest extends CommandHandlerTestCase
+class UpdateStopsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

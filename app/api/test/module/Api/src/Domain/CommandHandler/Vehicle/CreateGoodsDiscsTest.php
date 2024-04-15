@@ -13,7 +13,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 
 /**
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateGoodsDiscsTest extends CommandHandlerTestCase
+class CreateGoodsDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

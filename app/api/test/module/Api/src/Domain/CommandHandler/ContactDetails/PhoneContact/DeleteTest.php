@@ -6,14 +6,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\ContactDetails\PhoneContact\Delete as Ha
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\ContactDetail\PhoneContact\Delete as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\ContactDetails\PhoneContact\Delete
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\AbstractDeleteCommandHandler
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

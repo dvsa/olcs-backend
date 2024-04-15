@@ -10,7 +10,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\CreateHearing;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateHearing as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTarg
 /**
  * Create Hearing Test
  */
-class CreateHearingTest extends CommandHandlerTestCase
+class CreateHearingTest extends AbstractCommandHandlerTestCase
 {
     protected $cases;
 

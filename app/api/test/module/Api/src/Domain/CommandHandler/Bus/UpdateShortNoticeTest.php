@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateShortNotice;
 use Dvsa\Olcs\Api\Domain\Repository\BusShortNotice as BusShortNoticeRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateShortNotice as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusShortNotice as ShortNoticeEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Update Short Notice Test
  */
-class UpdateShortNoticeTest extends CommandHandlerTestCase
+class UpdateShortNoticeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

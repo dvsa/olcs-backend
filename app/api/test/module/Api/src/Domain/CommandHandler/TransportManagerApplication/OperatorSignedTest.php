@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\TransportManagerApplication\UpdateStatus as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\TransportManagerApplication\Snapshot;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class OperatorSignedTest extends CommandHandlerTestCase
+class OperatorSignedTest extends AbstractCommandHandlerTestCase
 {
     protected $loggedInUser;
 

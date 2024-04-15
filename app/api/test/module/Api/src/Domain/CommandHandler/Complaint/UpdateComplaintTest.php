@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Complaint\UpdateComplaint;
 use Dvsa\Olcs\Api\Domain\Repository\Complaint;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Complaint\UpdateComplaint as Cmd;
 use Dvsa\Olcs\Api\Entity\Cases\Complaint as ComplaintEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class UpdateComplaintTest extends CommandHandlerTestCase
+class UpdateComplaintTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

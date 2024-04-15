@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\EnvironmentalComplaint\CreateEnvironmentalComplaint as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
@@ -33,7 +33,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateEnvironmentalComplaintTest extends CommandHandlerTestCase
+class CreateEnvironmentalComplaintTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

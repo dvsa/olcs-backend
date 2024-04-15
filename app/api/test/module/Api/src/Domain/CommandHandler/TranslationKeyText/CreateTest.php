@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKeyText\Create as CreateHandl
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKey as TranslationKeyRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText as TranslationKeyTextRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Language as LanguageRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\TranslationKeyText\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\System\TranslationKey as TranslationKeyEntity;
 use Dvsa\Olcs\Api\Entity\System\TranslationKeyText as TranslationKeyTextEntity;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\Language as LanguageEntity;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

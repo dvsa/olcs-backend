@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Transfer\Command\Fee\RecommendWaive as RecommendWaiveCmd;
 use Dvsa\Olcs\Transfer\Command\Fee\ApproveWaive as ApproveWaiveCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -33,7 +33,7 @@ use Mockery as m;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateFeeTest extends CommandHandlerTestCase
+class CreateFeeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

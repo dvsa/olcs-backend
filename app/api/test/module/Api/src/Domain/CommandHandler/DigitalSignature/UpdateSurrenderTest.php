@@ -15,11 +15,11 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as HistoryCreator;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
 
-class UpdateSurrenderTest extends CommandHandlerTestCase
+class UpdateSurrenderTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

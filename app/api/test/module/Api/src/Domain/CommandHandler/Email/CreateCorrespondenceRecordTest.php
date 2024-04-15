@@ -16,7 +16,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\CreateCorrespondenceRecord as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Email\CreateCorrespondenceRecord as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox as CorrespondenceInboxRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
 
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateCorrespondenceRecordTest extends CommandHandlerTestCase
+class CreateCorrespondenceRecordTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

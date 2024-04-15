@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\PrintLicence;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant as CommonGrantCmd;
 
 /**
@@ -30,7 +30,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant as CommonGrantCmd
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CommonGrantTest extends CommandHandlerTestCase
+class CommonGrantTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -14,7 +14,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\DeleteLicenceVehicle;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceVehicle as LicenceVehicleRepo;
 use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
 
 /**
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle as LicenceVehicleEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteLicenceVehicleTest extends CommandHandlerTestCase
+class DeleteLicenceVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

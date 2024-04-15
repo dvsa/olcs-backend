@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CloseTexTask;
 
@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CloseTexTask;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CloseTexTaskTest extends CommandHandlerTestCase
+class CloseTexTaskTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

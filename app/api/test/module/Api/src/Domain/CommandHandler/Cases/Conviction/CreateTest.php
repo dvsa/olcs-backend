@@ -12,13 +12,13 @@ use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction as ConvictionEntity;
 use Dvsa\Olcs\Transfer\Command\Cases\Conviction\Create as CreateCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Create Conviction Test
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var CreateCommandHandler

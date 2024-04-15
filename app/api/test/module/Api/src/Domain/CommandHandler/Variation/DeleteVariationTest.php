@@ -17,10 +17,10 @@ use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocuments;
 use Dvsa\Olcs\Transfer\Command\PreviousConviction\DeletePreviousConviction;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteVariation;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class DeleteVariationTest extends CommandHandlerTestCase
+class DeleteVariationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ProcessContinuationNotSought as 
 use Dvsa\Olcs\Api\Domain\Repository\Licence as Repo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
 use Dvsa\Olcs\Api\Domain\Command\PrintScheduler\Enqueue as EnqueueFileCommand;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ProcessContinuationNotSoughtTest extends CommandHandlerTestCase
+class ProcessContinuationNotSoughtTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -12,7 +12,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\CloseSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Submission\CloseSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CloseSubmissionTest extends CommandHandlerTestCase
+class CloseSubmissionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

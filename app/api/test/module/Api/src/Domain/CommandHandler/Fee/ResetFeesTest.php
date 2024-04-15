@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -24,7 +24,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class ResetFeesTest extends CommandHandlerTestCase
+class ResetFeesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

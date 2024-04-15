@@ -5,7 +5,7 @@ namespace Dvsa\OlcsTest\Email\Domain\CommandHandler;
 use Dvsa\Olcs\Email\Service\Email;
 use Mockery as m;
 use Dvsa\Olcs\Email\Domain\CommandHandler\SendEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\I18n\Translator\Translator;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail as Cmd;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepo;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class SendEmailTest extends CommandHandlerTestCase
+class SendEmailTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var SendEmail

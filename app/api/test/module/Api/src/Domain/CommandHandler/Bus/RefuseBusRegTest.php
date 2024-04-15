@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\RefuseBusReg;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\RefuseBusReg as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrRefused;
 /**
  * Refuse BusReg Test
  */
-class RefuseBusRegTest extends CommandHandlerTestCase
+class RefuseBusRegTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

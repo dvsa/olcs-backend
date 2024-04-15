@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\ContinueLicence as Command;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
@@ -35,7 +35,7 @@ use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesT
 /**
  * @see \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\ContinueLicence
  */
-class ContinueLicenceTest extends CommandHandlerTestCase
+class ContinueLicenceTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

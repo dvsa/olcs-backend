@@ -10,7 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Variation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\TransportManagerDeleteDelta as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Variation\TransportManagerDeleteDelta as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportManagerApplicationRepo;
 use Mockery as m;
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class TransportManagerDeleteDeltaTest extends CommandHandlerTestCase
+class TransportManagerDeleteDeltaTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

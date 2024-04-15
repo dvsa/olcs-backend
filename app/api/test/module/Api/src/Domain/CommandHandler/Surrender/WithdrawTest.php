@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Surrender;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Withdraw as WithdrawHandler;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearCommand;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Transfer\Command\Task\CloseTasks;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-class WithdrawTest extends CommandHandlerTestCase
+class WithdrawTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var WithdrawHandler

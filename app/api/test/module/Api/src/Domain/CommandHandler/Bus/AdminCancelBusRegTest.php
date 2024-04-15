@@ -10,7 +10,7 @@ use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\AdminCancelBusReg;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\AdminCancelBusReg as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Admin Cancel BusReg Test
  */
-class AdminCancelBusRegTest extends CommandHandlerTestCase
+class AdminCancelBusRegTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

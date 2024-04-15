@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Transaction as TransactionEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\CpmsHelperInterface as CpmsHelper;
 use Dvsa\Olcs\Transfer\Command\Fee\RefundFee as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
@@ -30,7 +30,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class RefundFeeTest extends CommandHandlerTestCase
+class RefundFeeTest extends AbstractCommandHandlerTestCase
 {
     protected $mockCpmsService;
 

@@ -6,11 +6,11 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\InterimEndDateEnforcement;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
 
-class InterimEndDateEnforcementTest extends CommandHandlerTestCase
+class InterimEndDateEnforcementTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

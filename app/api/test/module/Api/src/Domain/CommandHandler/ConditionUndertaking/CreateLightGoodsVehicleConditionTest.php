@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ConditionUndertaking;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ConditionUndertaking\CreateLightGoodsVehicleCondition as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\ConditionUndertaking\CreateLightGoodsVehicleCondition as Command;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -19,7 +19,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CreateLightGoodsVehicleConditionTest extends CommandHandlerTestCase
+class CreateLightGoodsVehicleConditionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

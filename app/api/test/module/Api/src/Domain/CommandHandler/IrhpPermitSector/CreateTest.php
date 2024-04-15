@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\Sectors as SectorsEntity;
 use Dvsa\Olcs\Transfer\Query\Permits\Sectors;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\IrhpPermitSector\Create as CreateCmd;
 use Mockery as m;
 
@@ -20,7 +20,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

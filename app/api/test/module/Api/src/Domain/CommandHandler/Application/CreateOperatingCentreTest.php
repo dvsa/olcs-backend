@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreateOperatingCentre as Com
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Transfer\Command\Application\CreateOperatingCentre as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVa
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateOperatingCentreTest extends CommandHandlerTestCase
+class CreateOperatingCentreTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

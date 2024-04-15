@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateDocument as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Scan\CreateDocument;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -20,7 +20,7 @@ use Mockery as m;
  * @author Mat Evans <mat.evans@valtech.co.uk>
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreateDocumentTest extends CommandHandlerTestCase
+class CreateDocumentTest extends AbstractCommandHandlerTestCase
 {
     private $validPdf = '%PDF-1.2';
 

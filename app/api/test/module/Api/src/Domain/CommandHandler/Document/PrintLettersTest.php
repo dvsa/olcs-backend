@@ -6,9 +6,9 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\PrintLetters;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetters as PrintLettersCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
-class PrintLettersTest extends CommandHandlerTestCase
+class PrintLettersTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -19,7 +19,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\SaveAddresses;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\PhoneContact;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact as PhoneContactEntity;
@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class SaveAddressesTest extends CommandHandlerTestCase
+class SaveAddressesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

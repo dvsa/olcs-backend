@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Address as AddressRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
 use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as Cmd;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class SaveAddressTest extends CommandHandlerTestCase
+class SaveAddressTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

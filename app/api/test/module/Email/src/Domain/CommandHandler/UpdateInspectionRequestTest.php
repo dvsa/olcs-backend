@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Mockery as m;
 use Dvsa\Olcs\Email\Domain\CommandHandler\UpdateInspectionRequest;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Domain\Command\UpdateInspectionRequest as Cmd;
 use Dvsa\Olcs\Api\Domain\Repository;
 
@@ -27,7 +27,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class UpdateInspectionRequestTest extends CommandHandlerTestCase
+class UpdateInspectionRequestTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var UpdateInspectionRequest

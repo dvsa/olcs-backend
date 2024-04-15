@@ -3,7 +3,7 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use DateTime;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
@@ -23,7 +23,7 @@ use Mockery as m;
  *
  * @author Jonathan Thomas <jonathan@opalise.co.uk>
  */
-class CancelUnsubmittedBilateralTest extends CommandHandlerTestCase
+class CancelUnsubmittedBilateralTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

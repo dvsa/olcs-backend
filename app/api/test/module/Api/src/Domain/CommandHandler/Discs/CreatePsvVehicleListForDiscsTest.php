@@ -9,7 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Discs;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Discs\CreatePsvVehicleListForDiscs;
 use Dvsa\Olcs\Api\Domain\Command\Discs\CreatePsvVehicleListForDiscs as Cmd;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreatePsvVehicleListForDiscsTest extends CommandHandlerTestCase
+class CreatePsvVehicleListForDiscsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\CommunityLic\EditSuspention;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspension as CommunityLicSuspensionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReason as CommunityLicSuspensionReasonRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\CommunityLic\EditSuspension as Cmd;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic as CommunityLicEntity;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLicSuspension as CommunityLicSuspensionEntity;
@@ -21,7 +21,7 @@ use Doctrine\ORM\Query;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class EditSuspensionTest extends CommandHandlerTestCase
+class EditSuspensionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

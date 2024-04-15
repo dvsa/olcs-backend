@@ -11,13 +11,13 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\S4;
 use Dvsa\Olcs\Api\Entity\Application\S4 as S4Entity;
 use Dvsa\Olcs\Api\Domain\Command\Schedule41\ApproveS4 as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Class ResetS4Test
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Schedule41
  */
-class ResetS4Test extends CommandHandlerTestCase
+class ResetS4Test extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

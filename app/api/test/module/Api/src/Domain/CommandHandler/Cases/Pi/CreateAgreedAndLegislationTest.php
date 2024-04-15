@@ -11,7 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Pi\CreateAgreedAndLegislation;
 use Dvsa\Olcs\Api\Domain\Repository\Pi as PiRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Cases\Pi\CreateAgreedAndLegislation as Cmd;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
 use Dvsa\Olcs\Api\Entity\Pi\PresidingTc as PresidingTcEntity;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Pi\Reason as ReasonEntity;
 /**
  * Create Agreed And Legislation Test
  */
-class CreateAgreedAndLegislationTest extends CommandHandlerTestCase
+class CreateAgreedAndLegislationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

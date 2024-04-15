@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\Permits\PrintPermits as PrintPermitsCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Print Permits Test
  */
-class PrintPermitsTest extends CommandHandlerTestCase
+class PrintPermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

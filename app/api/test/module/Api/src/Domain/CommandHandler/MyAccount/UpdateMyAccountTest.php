@@ -22,13 +22,13 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Api\Entity\User\Team;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Update MyAccount Test
  */
-class UpdateMyAccountTest extends CommandHandlerTestCase
+class UpdateMyAccountTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

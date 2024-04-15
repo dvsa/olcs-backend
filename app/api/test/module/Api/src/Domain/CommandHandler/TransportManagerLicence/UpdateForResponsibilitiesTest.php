@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -17,7 +17,7 @@ use Mockery as m;
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerLicence\UpdateForResponsibilities
  */
-class UpdateForResponsibilitiesTest extends CommandHandlerTestCase
+class UpdateForResponsibilitiesTest extends AbstractCommandHandlerTestCase
 {
     /** @var CommandHandler\TransportManagerLicence\UpdateForResponsibilities   */
     protected $sut;

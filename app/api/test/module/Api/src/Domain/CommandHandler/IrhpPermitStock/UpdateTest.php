@@ -12,14 +12,14 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\System\IrhpPermitStock as PermitStockEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Update as UpdateCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update IrhpPermitStock Test
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

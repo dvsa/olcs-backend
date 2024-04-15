@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Entity\Fee\FeeType;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class CreateFeeTest extends CommandHandlerTestCase
+class CreateFeeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

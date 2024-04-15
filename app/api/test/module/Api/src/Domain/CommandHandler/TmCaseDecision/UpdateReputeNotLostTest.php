@@ -11,14 +11,14 @@ use Dvsa\Olcs\Api\Domain\Repository\TmCaseDecision;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Tm\TmCaseDecision as TmCaseDecisionEntity;
 use Dvsa\Olcs\Transfer\Command\TmCaseDecision\UpdateReputeNotLost as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Doctrine\ORM\Query;
 use Mockery as m;
 
 /**
  * Update ReputeNotLost Test
  */
-class UpdateReputeNotLostTest extends CommandHandlerTestCase
+class UpdateReputeNotLostTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

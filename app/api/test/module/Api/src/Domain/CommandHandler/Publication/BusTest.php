@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as Cmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -29,7 +29,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedBusReg as UnpublishedBusRegQr
 /**
  * BusTest
  */
-class BusTest extends CommandHandlerTestCase
+class BusTest extends AbstractCommandHandlerTestCase
 {
     //variables to hold traffic area entity references
     protected $ta1;

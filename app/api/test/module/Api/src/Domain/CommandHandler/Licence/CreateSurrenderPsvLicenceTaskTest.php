@@ -9,7 +9,7 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Domain\Command\Licence\CreateSurrenderPsvLicenceTasks as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\CreateSurrenderPsvLicenceTasks;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Mockery as m;
 
@@ -18,7 +18,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateSurrenderPsvLicenceTaskTest extends CommandHandlerTestCase
+class CreateSurrenderPsvLicenceTaskTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -4,14 +4,14 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TaskAllocationRule;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TaskAllocationRule\DeleteList as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\TaskAllocationRule\DeleteList as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * TaskAllocationRule DeleteListTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class DeleteListTest extends CommandHandlerTestCase
+class DeleteListTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

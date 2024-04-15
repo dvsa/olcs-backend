@@ -9,9 +9,9 @@ use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Precheck;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
-class PrecheckTest extends CommandHandlerTestCase
+class PrecheckTest extends AbstractCommandHandlerTestCase
 {
     private $mockedConnection;
 

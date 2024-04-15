@@ -11,7 +11,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TeamPrinter;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TeamPrinter\UpdateTeamPrinter as UpdateTeamPrinter;
 use Dvsa\Olcs\Api\Domain\Repository\TeamPrinter as TeamPrinterRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TeamPrinter\UpdateTeamPrinter as Cmd;
 use Dvsa\Olcs\Api\Entity\PrintScan\TeamPrinter as TeamPrinterEntity;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class UpdateTeamPrinterTest extends CommandHandlerTestCase
+class UpdateTeamPrinterTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

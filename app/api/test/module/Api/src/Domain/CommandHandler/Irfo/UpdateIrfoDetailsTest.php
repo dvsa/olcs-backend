@@ -20,12 +20,12 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Irfo\IrfoPartner as IrfoPartnerEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Irfo\UpdateIrfoDetails as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update IrfoDetails Test
  */
-class UpdateIrfoDetailsTest extends CommandHandlerTestCase
+class UpdateIrfoDetailsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

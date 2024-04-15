@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Application\UpdateAddresses as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -28,7 +28,7 @@ use Mockery as m;
  *
  * @author Nick Payne <nick.payne@valtech.co.uk>
  */
-class UpdateAddressesTest extends CommandHandlerTestCase
+class UpdateAddressesTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

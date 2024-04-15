@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitStock\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Country as CountryRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as PermitStockRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitStock\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as PermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

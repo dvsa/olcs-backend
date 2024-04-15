@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEn
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
 use Dvsa\Olcs\Transfer\Command\Operator\Create as CreateCmd;
 use Dvsa\Olcs\Transfer\Command\Operator\Update as UpdateCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -31,7 +31,7 @@ use Mockery as m;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class SaveOperatorTest extends CommandHandlerTestCase
+class SaveOperatorTest extends AbstractCommandHandlerTestCase
 {
     public const NATURE_OF_BUSINESS = 'testnob';
 

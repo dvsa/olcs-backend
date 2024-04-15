@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\RefreshTokens;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Auth\Service\AuthenticationServiceInterface;
 use Dvsa\Olcs\Transfer\Command\Auth\RefreshTokens as RefreshTokenCommand;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\Authentication\Result;
@@ -22,7 +22,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 /**
  * @see RefreshTokens
  */
-class RefreshTokenTest extends CommandHandlerTestCase
+class RefreshTokenTest extends AbstractCommandHandlerTestCase
 {
     use MocksServicesTrait;
     use MocksAbstractCommandHandlerServicesTrait;

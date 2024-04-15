@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Domain\Repository\ApplicationOrganisationPerson as AppOrgPerso
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\RestorePeople as CommandHandler;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Transfer\Command\Application\RestorePeople as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * RestorePeopleTest
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class RestorePeopleTest extends CommandHandlerTestCase
+class RestorePeopleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

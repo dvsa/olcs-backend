@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ChangeOfEntity\CreateChangeOfEntity as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ChangeOfEntity as ChangeOfEntityRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\ChangeOfEntity\CreateChangeOfEntity as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\ChangeOfEntity as ChangeOfEntityEntity;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class CreateChangeOfEntityTest extends CommandHandlerTestCase
+class CreateChangeOfEntityTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

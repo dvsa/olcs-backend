@@ -13,7 +13,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Opposition\CreateOpposition;
 use Dvsa\Olcs\Api\Domain\Repository\Opposition as OppositionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails as ContactDetailsRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Opposition\CreateOpposition as Cmd;
 use Dvsa\Olcs\Api\Entity\Opposition\Opposition as OppositionEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
  *
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
-class CreateOppositionTest extends CommandHandlerTestCase
+class CreateOppositionTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

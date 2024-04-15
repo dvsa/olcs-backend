@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Withdraw as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Licence\Withdraw as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 
 /**
@@ -20,7 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
  * @package Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
-class WithdrawTest extends CommandHandlerTestCase
+class WithdrawTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

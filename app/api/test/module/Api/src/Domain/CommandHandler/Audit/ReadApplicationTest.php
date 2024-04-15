@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Audit\ReadApplication;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationReadAudit;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository;
 use LmcRbacMvc\Service\AuthorizationService;
@@ -16,7 +16,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ReadApplicationTest extends CommandHandlerTestCase
+class ReadApplicationTest extends AbstractCommandHandlerTestCase
 {
     public const USER_ID = 9999;
 

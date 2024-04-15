@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\GoodsDisc;
 use Dvsa\Olcs\Transfer\Command\Application\PrintInterimDocument;
 use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as Cmd;
 
 /**
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\InForceInterim as Cmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class InForceInterimTest extends CommandHandlerTestCase
+class InForceInterimTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

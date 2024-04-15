@@ -15,7 +15,7 @@ use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\DeleteOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Variation\DeleteOperatingCentre as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Licence\DeleteOperatingCentres as LicenceDeleteOperatingCentres;
 use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVariationFeesCmd;
 
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Domain\Command\Application\HandleOcVariationFees as HandleOcVa
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteOperatingCentreTest extends CommandHandlerTestCase
+class DeleteOperatingCentreTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

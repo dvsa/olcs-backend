@@ -10,11 +10,11 @@ use Dvsa\Olcs\Transfer\Command\Application\DeletePeople;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation;
 use Dvsa\Olcs\Transfer\Command\Licence\DeletePeopleViaVariation as DeletePeopleViaVariationCommand;
 use Dvsa\Olcs\Transfer\Command\Variation\GrantDirectorChange;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use Laminas\Stdlib\ArraySerializableInterface;
 
-class DeletePeopleViaVariationTest extends CommandHandlerTestCase
+class DeletePeopleViaVariationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

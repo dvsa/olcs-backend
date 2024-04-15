@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Team\CreateTeam as CreateTeam;
 use Dvsa\Olcs\Api\Domain\Repository\Team as TeamRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Printer as PrinterRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Team\CreateTeam as Cmd;
 use Dvsa\Olcs\Api\Entity\User\Team as TeamEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

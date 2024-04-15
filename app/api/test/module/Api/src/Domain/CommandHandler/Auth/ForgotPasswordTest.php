@@ -14,14 +14,14 @@ use Dvsa\Olcs\Transfer\Command\Auth\ForgotPassword as ForgotPasswordCmd;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\User\UserPasswordReset as UserPasswordResetEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Mockery as m;
 
 /**
  * @see ForgotPassword
  */
-class ForgotPasswordTest extends CommandHandlerTestCase
+class ForgotPasswordTest extends AbstractCommandHandlerTestCase
 {
     private string $username = 'username';
     private string $realm = 'realm';

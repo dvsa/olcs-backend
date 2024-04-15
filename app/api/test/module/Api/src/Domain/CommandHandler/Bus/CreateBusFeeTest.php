@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
@@ -24,7 +24,7 @@ use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 /**
  * Create Bus Fee Test
  */
-class CreateBusFeeTest extends CommandHandlerTestCase
+class CreateBusFeeTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

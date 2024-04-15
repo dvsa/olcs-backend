@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Repository\Queue as Repo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
  *
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

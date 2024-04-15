@@ -9,10 +9,10 @@ use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class AcceptIrhpPermitsTest extends CommandHandlerTestCase
+class AcceptIrhpPermitsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

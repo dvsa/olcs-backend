@@ -18,10 +18,10 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdatePeriod as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class UpdatePeriodTest extends CommandHandlerTestCase
+class UpdatePeriodTest extends AbstractCommandHandlerTestCase
 {
     public $command;
 

@@ -8,7 +8,7 @@ use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TranslationKey\Create as CreateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKey as TranslationKeyRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TranslationKey\Update as UpdateCmd;
 use Dvsa\Olcs\Transfer\Command\TranslationKey\Create as CreateCmd;
 use Dvsa\Olcs\Api\Entity\System\TranslationKey as TranslationKeyEntity;
@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Entity\System\TranslationKey as TranslationKeyEntity;
  *
  * @author Andy Newton <andy@vitri.ltd>
  */
-class CreateTest extends CommandHandlerTestCase
+class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

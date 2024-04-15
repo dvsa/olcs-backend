@@ -8,14 +8,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateBusinessDetails;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Command as TransferCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateBusinessDetails
  */
-class UpdateBusinessDetailsTest extends CommandHandlerTestCase
+class UpdateBusinessDetailsTest extends AbstractCommandHandlerTestCase
 {
     public const ID = 111;
 

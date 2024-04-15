@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitSectorQuota;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitSector\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as PermitSectorQuotaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitSector\Update as UpdateCmd;
 
 /**
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\IrhpPermitSector\Update as UpdateCmd;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

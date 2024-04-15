@@ -15,13 +15,13 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoGvPermit as IrfoGvPermitEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\System\SubCategory as SubCategoryEntity;
 use Dvsa\Olcs\Transfer\Command\Irfo\GenerateIrfoGvPermit as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * Generate Irfo Gv Permit Test
  */
-class GenerateIrfoGvPermitTest extends CommandHandlerTestCase
+class GenerateIrfoGvPermitTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

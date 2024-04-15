@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Queue as QueueRepo;
 use Dvsa\Olcs\Api\Entity\Queue\Queue as QueueEntity;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Next Item Test
@@ -26,6 +27,11 @@ class NextItemTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+
         $this->sut = new NextItem();
         $this->mockRepo('Queue', QueueRepo::class);
 

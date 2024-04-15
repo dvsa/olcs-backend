@@ -16,14 +16,14 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\ProcessDuplicateVehicleWarnings;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Process Duplicate Vehicle Warnings Test
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class ProcessDuplicateVehicleWarningsTest extends CommandHandlerTestCase
+class ProcessDuplicateVehicleWarningsTest extends AbstractCommandHandlerTestCase
 {
     protected $dto;
 

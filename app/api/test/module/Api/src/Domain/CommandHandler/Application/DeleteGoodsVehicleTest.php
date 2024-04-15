@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\DeleteGoodsVehicle;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Application as ApplicationRepo;
 use Dvsa\Olcs\Transfer\Command\Application\DeleteGoodsVehicle as Cmd;
 use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Transfer\Command\Vehicle\DeleteLicenceVehicle as VehicleCmd;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteGoodsVehicleTest extends CommandHandlerTestCase
+class DeleteGoodsVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

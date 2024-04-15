@@ -8,10 +8,10 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Permits\QueueAcceptScoring;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock as IrhpPermitStockEntity;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class QueueAcceptScoringTest extends CommandHandlerTestCase
+class QueueAcceptScoringTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

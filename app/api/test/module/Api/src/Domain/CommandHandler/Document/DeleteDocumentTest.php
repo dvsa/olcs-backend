@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document;
 use Dvsa\Olcs\Api\Domain\Repository\CorrespondenceInbox;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Document\DeleteDocument;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Document\DeleteDocument as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\DeleteSubmission as DeleteSubmissionCmd;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox as CorrespondenceInboxEntity;
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class DeleteDocumentTest extends CommandHandlerTestCase
+class DeleteDocumentTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

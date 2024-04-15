@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitJurisdictionQuota;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpPermitJurisdiction\Update as UpdateHandler;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as PermitJurisdictionQuotaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\IrhpPermitJurisdiction\Update as UpdateCmd;
 
 /**
@@ -14,7 +14,7 @@ use Dvsa\Olcs\Transfer\Command\IrhpPermitJurisdiction\Update as UpdateCmd;
  *
  * @author Scott Callaway <scott.callaway@capgemini.com>
  */
-class UpdateTest extends CommandHandlerTestCase
+class UpdateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

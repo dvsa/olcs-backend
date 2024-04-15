@@ -15,10 +15,10 @@ use Dvsa\Olcs\GdsVerify;
 use Dvsa\Olcs\GdsVerify\Data\Attributes;
 use Dvsa\Olcs\GdsVerify\Service;
 use Dvsa\Olcs\Transfer\Command\GdsVerify\ProcessSignatureResponse as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
-class ProcessSignatureResponseTest extends CommandHandlerTestCase
+class ProcessSignatureResponseTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var ProcessSignatureResponse

@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\Suspend as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\SuspendLicence as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\RemoveLicenceStatusRulesForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class SuspendTest extends CommandHandlerTestCase
+class SuspendTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

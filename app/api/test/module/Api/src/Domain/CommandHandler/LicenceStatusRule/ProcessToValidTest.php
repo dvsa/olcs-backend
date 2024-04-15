@@ -12,7 +12,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as Repo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\ProcessToValid as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\ProcessToValid as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as LicenceStatusRule;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
 
@@ -21,7 +21,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
  *
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
-class ProcessToValidTest extends CommandHandlerTestCase
+class ProcessToValidTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

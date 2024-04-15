@@ -9,7 +9,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendEbsrAbstract;
 /**
  * Abstract for testing ebsr registered and cancelled emails
  */
-abstract class SendEbsrRegCancelEmailTestAbstract extends CommandHandlerTestCase
+abstract class SendEbsrRegCancelEmailTestAbstract extends AbstractCommandHandlerTestCase
 {
     protected $template = null;
     protected $sutClass = null;

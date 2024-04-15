@@ -7,11 +7,11 @@ use Dvsa\Olcs\Api\Domain\Command\Surrender\Clear as ClearCommand;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Surrender\Clear as ClearHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Surrender as SurrenderRepo;
 use Dvsa\Olcs\Api\Entity\Surrender as SurrenderEntity;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-class ClearTest extends CommandHandlerTestCase
+class ClearTest extends AbstractCommandHandlerTestCase
 {
     /**
      * @var WithdrawHandler

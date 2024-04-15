@@ -8,6 +8,7 @@ use Mockery as m;
 use Laminas\Http\Client as RestClient;
 use Laminas\Http\Request;
 use Laminas\Http\Response;
+use Olcs\Logging\Log\Logger;
 
 /**
  * Class InrClientTest
@@ -15,6 +16,14 @@ use Laminas\Http\Response;
  */
 class InrClientTest extends MockeryTestCase
 {
+    public function setUp(): void
+    {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+    }
+
     /**
      * Tests makeRequest
      */

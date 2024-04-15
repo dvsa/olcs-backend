@@ -13,13 +13,13 @@ use Dvsa\Olcs\Api\Domain\Exception;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Domain\Command\Publication\CreateNextPublication as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Doc\DocTemplate as DocTemplateEntity;
 
 /**
  * Create Next Publication Test
  */
-class CreateNextPublicationTest extends CommandHandlerTestCase
+class CreateNextPublicationTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

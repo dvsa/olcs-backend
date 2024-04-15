@@ -16,13 +16,13 @@ use Dvsa\Olcs\Transfer\Command\Task\CloseTasks as CloseTasksCmd;
 use Dvsa\Olcs\Transfer\Command\Bus\GrantBusReg as BusGrantBusRegCmd;
 use Dvsa\Olcs\Transfer\Command\Bus\PrintLetter as BusPrintLetterCmd;
 use Dvsa\Olcs\Transfer\Command\Publication\Bus as PublicationBusCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Bus\GrantBusReg
  */
-class GrantBusRegTest extends CommandHandlerTestCase
+class GrantBusRegTest extends AbstractCommandHandlerTestCase
 {
     public const BUS_REG_ID = 9999;
 

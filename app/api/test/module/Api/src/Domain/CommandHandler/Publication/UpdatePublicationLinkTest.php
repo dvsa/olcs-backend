@@ -13,12 +13,12 @@ use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
 use Dvsa\Olcs\Api\Entity\Publication\Publication as PublicationEntity;
 use Dvsa\Olcs\Transfer\Command\Publication\UpdatePublicationLink as UpdatePublicationLinkCmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Update Publication Link Test
  */
-class UpdatePublicationLinkTest extends CommandHandlerTestCase
+class UpdatePublicationLinkTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

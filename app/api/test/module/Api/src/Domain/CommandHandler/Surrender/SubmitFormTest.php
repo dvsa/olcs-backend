@@ -15,11 +15,11 @@ use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Command\Surrender\SubmitForm as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-class SubmitFormTest extends CommandHandlerTestCase
+class SubmitFormTest extends AbstractCommandHandlerTestCase
 {
     /** @var Sut */
     protected $sut;

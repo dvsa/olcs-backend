@@ -2,6 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Util\DoctrineExtension;
 
+use Olcs\Logging\Log\Logger;
+
 /**
  * Class LoggerTest
  * @package Dvsa\OlcsTest\Api\Domain\Util\DoctrineExtension
@@ -10,6 +12,11 @@ class LoggerTest extends \PHPUnit\Framework\TestCase
 {
     public function testStopQuery()
     {
+        $logWriter = new \Laminas\Log\Writer\Mock();
+        $logger = new \Laminas\Log\Logger();
+        $logger->addWriter($logWriter);
+        Logger::setLogger($logger);
+
         $sut = new \Dvsa\Olcs\Api\Domain\Util\DoctrineExtension\Logger();
 
         $sut->startQuery('SELECT * FROM FOO', ['params' => 1], ['types' => 2]);

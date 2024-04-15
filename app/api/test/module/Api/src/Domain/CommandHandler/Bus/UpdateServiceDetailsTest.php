@@ -11,7 +11,7 @@ use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\UpdateServiceDetails;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Domain\Repository\BusRegOtherService as BusRegOtherServiceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\Bus\UpdateServiceDetails as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CmdCreateBusFee;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
@@ -23,7 +23,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Update Service DetailsTest
  */
-class UpdateServiceDetailsTest extends CommandHandlerTestCase
+class UpdateServiceDetailsTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

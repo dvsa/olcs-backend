@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManagerLicence;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransportManagerLicence\Delete as DeleteHandler;
 use Dvsa\Olcs\Transfer\Command\TransportManagerLicence\Delete as DeleteCmd;
 use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
@@ -19,7 +19,7 @@ use Mockery as m;
  *
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-class DeleteTest extends CommandHandlerTestCase
+class DeleteTest extends AbstractCommandHandlerTestCase
 {
     /**
      * set up

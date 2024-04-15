@@ -6,9 +6,9 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendFailedOrganisationsList as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Email\SendFailedOrganisationsList;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
-class SendFailedOrganisationsListTest extends CommandHandlerTestCase
+class SendFailedOrganisationsListTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

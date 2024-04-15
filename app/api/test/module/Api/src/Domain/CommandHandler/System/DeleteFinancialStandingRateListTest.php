@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\System\DeleteFinancialStandingRateList a
 use Dvsa\Olcs\Api\Domain\Repository\FinancialStandingRate as Repo;
 use Dvsa\Olcs\Api\Entity\System\FinancialStandingRate as Entity;
 use Dvsa\Olcs\Transfer\Command\System\DeleteFinancialStandingRateList as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
@@ -14,7 +14,7 @@ use Mockery as m;
  *
  * @author Dan Eggleston <dan@stolenegg.com>
  */
-class DeleteFinancialStandingRateListTest extends CommandHandlerTestCase
+class DeleteFinancialStandingRateListTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

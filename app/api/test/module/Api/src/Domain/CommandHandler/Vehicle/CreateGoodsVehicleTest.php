@@ -14,14 +14,14 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle\CreateGoodsVehicle
  */
-class CreateGoodsVehicleTest extends CommandHandlerTestCase
+class CreateGoodsVehicleTest extends AbstractCommandHandlerTestCase
 {
     public const LIC_ID = 9001;
     public const APP_ID = 8001;

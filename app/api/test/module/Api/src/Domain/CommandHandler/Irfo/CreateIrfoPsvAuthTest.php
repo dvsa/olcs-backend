@@ -16,7 +16,7 @@ use Dvsa\Olcs\Api\Entity\Irfo\IrfoPsvAuthNumber as IrfoPsvAuthNumberEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\Irfo\CreateIrfoPsvAuth as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
@@ -26,7 +26,7 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 /**
  * Create IrfoPsvAuth Test
  */
-class CreateIrfoPsvAuthTest extends CommandHandlerTestCase
+class CreateIrfoPsvAuthTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

@@ -13,11 +13,11 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore as GenerateAndStoreCmd;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
 
-class LetterTest extends CommandHandlerTestCase
+class LetterTest extends AbstractCommandHandlerTestCase
 {
     private $mockFileUploader;
 

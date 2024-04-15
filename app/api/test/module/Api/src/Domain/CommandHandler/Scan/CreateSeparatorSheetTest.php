@@ -10,13 +10,13 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Transfer\Command\Scan\CreateSeparatorSheet as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**
  * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\Scan\CreateSeparatorSheet
  */
-class CreateSeparatorSheetTest extends CommandHandlerTestCase
+class CreateSeparatorSheetTest extends AbstractCommandHandlerTestCase
 {
     public const SUB_CAT_ID = 8001;
     public const SCAN_ID = 9999;

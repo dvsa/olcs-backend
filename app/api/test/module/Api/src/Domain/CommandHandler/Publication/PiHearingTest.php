@@ -12,7 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Publication as PublicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PublicationLink as PublicationLinkRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TrafficArea as TrafficAreaRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiHearing as PiHearingCmd;
 use Dvsa\Olcs\Api\Domain\Command\Publication\PiDecision as PiDecisionCmd;
 use Dvsa\Olcs\Api\Entity\Pi\PiHearing as PiHearingEntity;
@@ -31,7 +31,7 @@ use Dvsa\Olcs\Api\Domain\Query\Bookmark\UnpublishedPi as UnpublishedPiQry;
 /**
  * PiHearingTest
  */
-class PiHearingTest extends CommandHandlerTestCase
+class PiHearingTest extends AbstractCommandHandlerTestCase
 {
     //variables to hold traffic area entity references
     protected $ta1;

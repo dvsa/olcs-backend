@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Domain\Repository\LicenceNoGen;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\GenerateLicenceNumber;
 use Dvsa\Olcs\Api\Domain\Command\Application\GenerateLicenceNumber as Cmd;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -25,7 +25,7 @@ use Dvsa\Olcs\Api\Entity\Licence\LicenceNoGen as LicenceNoGenEntity;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class GenerateLicenceNumberTest extends CommandHandlerTestCase
+class GenerateLicenceNumberTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

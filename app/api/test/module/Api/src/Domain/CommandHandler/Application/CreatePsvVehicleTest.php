@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\CreatePsvVehicle as CommandHandler;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Transfer\Command\Application\CreatePsvVehicle as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
 
 /**
@@ -25,7 +25,7 @@ use LmcRbacMvc\Service\AuthorizationService;
  *
  * @author Rob Caiger <rob@clocal.co.uk>
  */
-class CreatePsvVehicleTest extends CommandHandlerTestCase
+class CreatePsvVehicleTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {

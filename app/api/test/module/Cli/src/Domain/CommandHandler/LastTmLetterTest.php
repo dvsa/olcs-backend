@@ -12,7 +12,7 @@ use Dvsa\Olcs\Email\Data\Message;
 use Dvsa\Olcs\Email\Domain\Command\SendEmail;
 use Dvsa\Olcs\Transfer\Command\Document\PrintLetter;
 use Dvsa\Olcs\Transfer\Command\Task\CreateTask;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\CommandHandlerTestCase;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Email\Service\TemplateRenderer;
 use Laminas\Mail\Transport\Sendmail;
 
-class LastTmLetterTest extends CommandHandlerTestCase
+class LastTmLetterTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {
