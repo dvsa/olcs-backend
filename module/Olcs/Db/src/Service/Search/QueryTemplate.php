@@ -14,6 +14,7 @@ use RuntimeException;
 class QueryTemplate extends Query
 {
     public const FILTER_TYPE_DYNAMIC = 'DYNAMIC';
+    public const FILTER_TYPE_FIXED = 'FIXED';
     public const FILTER_TYPE_BOOLEAN = 'BOOLEAN';
 
     public function __construct(
@@ -69,6 +70,16 @@ class QueryTemplate extends Query
             }
 
             switch ($filterTypes[$field]) {
+                case self::FILTER_TYPE_FIXED:
+                    $fields = explode('|', $field);
+                    foreach ($fields as $subField) {
+                        $this->_params['query']['bool']['must']['bool']['must']['bool']['should'][] = [
+                            'terms' => [
+                                $subField => explode('|', $value),
+                            ],
+                        ];
+                    }
+                    break;
                 case self::FILTER_TYPE_DYNAMIC:
                     $this->_params['query']['bool']['filter'][] = [
                         'term' => [
