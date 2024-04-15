@@ -20,6 +20,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as Entity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
@@ -132,15 +133,21 @@ class LicenceEntityTest extends EntityTester
             ->with(m::type(Criteria::class))
             ->andReturn($activeCollection);
 
-        $activeCollection->shouldReceive('count')
-            ->andReturn(6);
+        $lv = m::mock(LicenceVehicle::class);
+        $lv->shouldReceive('getApplication')
+            ->times(4)
+            ->andReturn(null);
+
+        $activeCollection->shouldReceive('toArray')
+            ->once()
+            ->andReturn([$lv, $lv, $lv, $lv]);
 
         $licence = $this->instantiate(Entity::class);
 
         $licence->setTotAuthVehicles(10);
         $licence->setLicenceVehicles($lvCollection);
 
-        $this->assertEquals(4, $licence->getRemainingSpaces());
+        $this->assertEquals(6, $licence->getRemainingSpaces());
     }
 
     public function testGetActiveVehiclesCount()
@@ -153,13 +160,19 @@ class LicenceEntityTest extends EntityTester
             ->with(m::type(Criteria::class))
             ->andReturn($activeCollection);
 
-        $activeCollection->shouldReceive('count')
-            ->andReturn(6);
+        $lv = m::mock(LicenceVehicle::class);
+        $lv->shouldReceive('getApplication')
+            ->once()
+            ->andReturnNull();
+
+        $activeCollection->shouldReceive('toArray')
+                         ->once()
+                         ->andReturn([$lv]);
 
         $licence = $this->instantiate(Entity::class);
         $licence->setLicenceVehicles($lvCollection);
 
-        $this->assertEquals(6, $licence->getActiveVehiclesCount());
+        $this->assertEquals(1, $licence->getActiveVehiclesCount());
     }
 
     public function testGetActiveVehicles()
@@ -172,10 +185,14 @@ class LicenceEntityTest extends EntityTester
             ->with(m::type(Criteria::class))
             ->andReturn($activeCollection);
 
+        $activeCollection->shouldReceive('toArray')
+                         ->once()
+                         ->andReturn([]);
+
         $licence = $this->instantiate(Entity::class);
         $licence->setLicenceVehicles($lvCollection);
 
-        $this->assertSame($activeCollection, $licence->getActiveVehicles());
+        $this->assertInstanceOf(ArrayCollection::class, $licence->getActiveVehicles());
     }
 
     public function testGetOtherActiveLicences()
