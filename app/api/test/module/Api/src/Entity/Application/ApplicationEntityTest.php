@@ -14,6 +14,7 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationCompletion;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -1168,8 +1169,14 @@ class ApplicationEntityTest extends EntityTester
             ->with(m::type(Criteria::class))
             ->andReturn($activeCollection);
 
-        $activeCollection->shouldReceive('count')
-            ->andReturn(6);
+        $lv = m::mock(LicenceVehicle::class);
+        $lv->shouldReceive('getApplication')
+           ->times(6)
+           ->andReturn(null);
+
+        $activeCollection->shouldReceive('toArray')
+                         ->once()
+                         ->andReturn([$lv, $lv, $lv, $lv, $lv, $lv]);
 
         $licence = m::mock(Licence::class)->makePartial();
         $licence->setLicenceVehicles($lvCollection);
