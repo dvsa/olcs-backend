@@ -1169,10 +1169,15 @@ class ApplicationEntityTest extends EntityTester
             ->with(m::type(Criteria::class))
             ->andReturn($activeCollection);
 
+
         $lv = m::mock(LicenceVehicle::class);
-        $lv->shouldReceive('getApplication')
+        $lv->shouldReceive('getRemovalDate')
            ->times(6)
-           ->andReturn(null);
+           ->andReturnNull();
+
+        $lv->shouldReceive('getSpecifiedDate')
+           ->times(6)
+           ->andReturn(new DateTime());
 
         $activeCollection->shouldReceive('toArray')
                          ->once()
