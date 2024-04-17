@@ -23,11 +23,7 @@ class SiPenalty extends AbstractSiPenalty
 {
     /**
      * SiPenalty constructor.
-     * @param SeriousInfringement $seriousInfringement
-     * @param SiPenaltyType $siPenaltyType
      * @param string $imposed
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
      * @param string $reasonNotImposed
      */
     public function __construct(
@@ -43,10 +39,7 @@ class SiPenalty extends AbstractSiPenalty
     }
 
     /**
-     * @param SiPenaltyType $siPenaltyType
      * @param string $imposed
-     * @param \DateTime $startDate
-     * @param \DateTime $endDate
      * @param string $reasonNotImposed
      */
     public function update(

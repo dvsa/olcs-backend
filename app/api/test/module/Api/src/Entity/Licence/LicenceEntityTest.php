@@ -2392,11 +2392,11 @@ class LicenceEntityTest extends EntityTester
             'licence' => [
                 'conditions' => [
                     [
-                        'notes' => 'lic cond 5',
+                        'notes' => 'lic cond 2',
                         'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00')
                     ],
                     [
-                        'notes' => 'lic cond 2',
+                        'notes' => 'lic cond 5',
                         'createdOn' => \DateTime::createFromFormat('Y-m-d H:i:s', '2017-01-03 00:00:00')
                     ],
                     [

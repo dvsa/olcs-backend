@@ -11,8 +11,6 @@ class IrhpPermitApplicationFactory
     /**
      * Create instance of IrhpPermitApplication
      *
-     * @param IrhpApplication $irhpApplication
-     * @param IrhpPermitWindow $irhpPermitWindow
      *
      * @return IrhpPermitApplication
      */

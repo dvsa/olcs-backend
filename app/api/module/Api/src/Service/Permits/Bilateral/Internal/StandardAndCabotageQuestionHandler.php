@@ -9,32 +9,14 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class StandardAndCabotageQuestionHandler implements QuestionHandlerInterface
 {
-    /** @var PermitUsageSelectionGenerator */
-    private $permitUsageSelectionGenerator;
-
-    /** @var BilateralRequiredGenerator */
-    private $bilateralRequiredGenerator;
-
-    /** @var StandardAndCabotageUpdater */
-    private $standardAndCabotageUpdater;
-
     /**
      * Create service instance
      *
-     * @param PermitUsageSelectionGenerator $permitUsageSelectionGenerator
-     * @param BilateralRequiredGenerator $bilateralRequiredGenerator
-     * @param StandardAndCabotageUpdater $standardAndCabotageUpdater
      *
      * @return StandardAndCabotageQuestionHandler
      */
-    public function __construct(
-        PermitUsageSelectionGenerator $permitUsageSelectionGenerator,
-        BilateralRequiredGenerator $bilateralRequiredGenerator,
-        StandardAndCabotageUpdater $standardAndCabotageUpdater
-    ) {
-        $this->permitUsageSelectionGenerator = $permitUsageSelectionGenerator;
-        $this->bilateralRequiredGenerator = $bilateralRequiredGenerator;
-        $this->standardAndCabotageUpdater = $standardAndCabotageUpdater;
+    public function __construct(private PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private BilateralRequiredGenerator $bilateralRequiredGenerator, private StandardAndCabotageUpdater $standardAndCabotageUpdater)
+    {
     }
 
     /**

@@ -59,7 +59,6 @@ class Approve extends AbstractSurrenderCommandHandler
     /**
      * Generate/store document and send notification email
      *
-     * @param int $licId
      *
      * @return Result
      */
@@ -115,7 +114,6 @@ class Approve extends AbstractSurrenderCommandHandler
     /**
      * Whether the specified licence type is valid for surrenders
      *
-     * @param int $licType
      *
      * @return bool
      */
@@ -133,7 +131,6 @@ class Approve extends AbstractSurrenderCommandHandler
     /**
      * Throw exception if ecms and signature checks not complete
      *
-     * @param int $licId
      *
      * @throws ForbiddenException
      */

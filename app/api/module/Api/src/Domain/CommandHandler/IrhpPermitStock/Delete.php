@@ -49,7 +49,7 @@ final class Delete extends AbstractCommandHandler
             $this->getRepo()->delete($stock);
             $this->result->addId('id', $id);
             $this->result->addMessage('Permit Stock Deleted');
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $this->result->addMessage(sprintf('Id %d not found', $id));
         }
 

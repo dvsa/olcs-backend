@@ -9,7 +9,6 @@ interface ReviewServiceInterface
     /**
      * Format the readonly config from the given record
      *
-     * @param Surrender $surrender
      * @return mixed
      */
     public function getConfigFromData(Surrender $surrender);

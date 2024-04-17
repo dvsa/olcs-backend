@@ -58,9 +58,6 @@ final class Schedule41 extends AbstractCommandHandler implements AuthAwareInterf
 
     /**
      * Delete any licenceOperatingCentres from the donor licence for an operating centre that has been moved
-     *
-     * @param Licence $licence
-     * @param OperatingCentre $operatingCentre
      */
     protected function deleteLicenceOperatingCentre(Licence $licence, OperatingCentre $operatingCentre)
     {
@@ -74,9 +71,6 @@ final class Schedule41 extends AbstractCommandHandler implements AuthAwareInterf
 
     /**
      * Delete any conditionsUndertakings from the donor licence for an operating centre that has been moved
-     *
-     * @param Licence         $licence
-     * @param OperatingCentre $operatingCentre
      */
     protected function deleteConditionUndertakings(Licence $licence, OperatingCentre $operatingCentre)
     {
@@ -91,7 +85,6 @@ final class Schedule41 extends AbstractCommandHandler implements AuthAwareInterf
     /**
      * Create a Task for a surrended donor licence
      *
-     * @param Licence $licence
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */

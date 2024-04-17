@@ -40,7 +40,7 @@ class ApplicationBundle extends AbstractBundle
                 $case = $this->getRepo('Cases')->fetchById($query->getCase());
                 $entity = $case->getApplication();
             }
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             return null;
         }
 

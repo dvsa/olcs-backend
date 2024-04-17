@@ -47,9 +47,6 @@ class ChangePasswordFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(ChangePassword::class, $result);
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->setUpAbstractCommandHandlerServices();

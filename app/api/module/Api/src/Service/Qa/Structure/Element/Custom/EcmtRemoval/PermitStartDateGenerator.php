@@ -14,19 +14,14 @@ class PermitStartDateGenerator implements ElementGeneratorInterface
 
     public const DATE_THRESHOLD = 'P60D';
 
-    /** @var DateWithThresholdGenerator */
-    private $dateWithThresholdGenerator;
-
     /**
      * Create service instance
      *
-     * @param DateWithThresholdGenerator $dateWithThresholdGenerator
      *
      * @return PermitStartDateGenerator
      */
-    public function __construct(DateWithThresholdGenerator $dateWithThresholdGenerator)
+    public function __construct(private DateWithThresholdGenerator $dateWithThresholdGenerator)
     {
-        $this->dateWithThresholdGenerator = $dateWithThresholdGenerator;
     }
 
     /**

@@ -11,24 +11,14 @@ class IntJourneysGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var IntJourneysFactory */
-    private $intJourneysFactory;
-
-    /** @var RadioGenerator */
-    private $radioGenerator;
-
     /**
      * Create service instance
      *
-     * @param IntJourneysFactory $intJourneysFactory
-     * @param RadioGenerator $radioGenerator
      *
      * @return IntJourneysGenerator
      */
-    public function __construct(IntJourneysFactory $intJourneysFactory, RadioGenerator $radioGenerator)
+    public function __construct(private IntJourneysFactory $intJourneysFactory, private RadioGenerator $radioGenerator)
     {
-        $this->intJourneysFactory = $intJourneysFactory;
-        $this->radioGenerator = $radioGenerator;
     }
 
     /**

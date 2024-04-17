@@ -9,7 +9,6 @@ interface FeeBreakdownGeneratorInterface
     /**
      * Get a presentation-neutral fee breakdown representation for this application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return array
      */

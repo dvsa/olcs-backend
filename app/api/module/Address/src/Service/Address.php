@@ -19,11 +19,6 @@ class Address implements AddressInterface
     public const ERR_INVALID_RESP_BY_POSTCODE = 'PostCode API not response or Address was not found by postcode';
     public const ERR_INVALID_RESP_BY_UPRN = 'PostCode API not response or Address was not found by uprn';
 
-    /**
-     * @var Client
-     */
-    private $client;
-
     private $taCache = [];
 
     /**
@@ -31,9 +26,8 @@ class Address implements AddressInterface
      *
      * @param Client $client Postcode Api Http Client
      */
-    public function __construct(Client $client)
+    public function __construct(private Client $client)
     {
-        $this->client = $client;
     }
 
     /**

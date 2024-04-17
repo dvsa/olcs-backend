@@ -64,11 +64,7 @@ class IrhpPermit extends AbstractIrhpPermit
     /**
      * Create new IrhpPermit
      *
-     * @param IrhpCandidatePermit   $irhpCandidatePermit
-     * @param DateTime              $issueDate
-     * @param RefData               $status
      * @param int                   $permitNumber
-     * @param DateTime|null         $expiryDate
      *
      * @return IrhpPermit
      */
@@ -94,9 +90,6 @@ class IrhpPermit extends AbstractIrhpPermit
     /**
      * Create new IrhpPermit
      *
-     * @param IrhpPermit $oldPermit
-     * @param IrhpPermitRange $irhpPermitRange
-     * @param RefData $status
      * @param int $permitNumber
      *
      * @return IrhpPermit
@@ -126,12 +119,7 @@ class IrhpPermit extends AbstractIrhpPermit
     /**
      * Create new IrhpPermit during irhp permit application allocation
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param IrhpPermitRange $irhpPermitRange
-     * @param DateTime $issueDate
-     * @param RefData $status
      * @param int $permitNumber
-     * @param DateTime|null $expiryDate
      *
      * @return IrhpPermit
      */
@@ -155,7 +143,6 @@ class IrhpPermit extends AbstractIrhpPermit
     }
 
     /**
-     * @param RefData $status
      * @return $this
      */
     public function cease(RefData $status)
@@ -224,25 +211,14 @@ class IrhpPermit extends AbstractIrhpPermit
      */
     public function proceedToStatus(RefData $status)
     {
-        switch ($status->getId()) {
-            case self::STATUS_AWAITING_PRINTING:
-                $this->proceedToAwaitingPrinting($status);
-                break;
-            case self::STATUS_PRINTING:
-                $this->proceedToPrinting($status);
-                break;
-            case self::STATUS_PRINTED:
-                $this->proceedToPrinted($status);
-                break;
-            case self::STATUS_ERROR:
-                $this->proceedToError($status);
-                break;
-            case self::STATUS_TERMINATED:
-                $this->proceedToTerminated($status);
-                break;
-            default:
-                throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId()));
-        }
+        match ($status->getId()) {
+            self::STATUS_AWAITING_PRINTING => $this->proceedToAwaitingPrinting($status),
+            self::STATUS_PRINTING => $this->proceedToPrinting($status),
+            self::STATUS_PRINTED => $this->proceedToPrinted($status),
+            self::STATUS_ERROR => $this->proceedToError($status),
+            self::STATUS_TERMINATED => $this->proceedToTerminated($status),
+            default => throw new ForbiddenException(sprintf('Action for status %s not defined.', $status->getId())),
+        };
     }
 
     /**

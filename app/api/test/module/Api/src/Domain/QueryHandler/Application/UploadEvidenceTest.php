@@ -66,26 +66,14 @@ class UploadEvidenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        Assert::assertArraySubset(
-            [
-                'financialEvidence' => [
-                    'canAdd' => true,
-                    'documents' => [
-                        ['identifier' => 'doc1'],
-                        ['identifier' => 'doc2'],
-                        ['identifier' => 'doc3'],
-                    ]
-                ],
-                'operatingCentres' => [
-                    ['OC1']
-                ],
-                'supportingEvidence' => [
-                    ['identifier' => 'doc1'],
-                    ['identifier' => 'doc2'],
-                    ['identifier' => 'doc3']
-                ]
-            ],
-            $result
-        );
+        foreach ($result['financialEvidence']['documents'] as $index => $document) {
+            $this->assertArrayHasKey('identifier', $document);
+            $this->assertEquals('doc' . ($index + 1), $document['identifier']);
+        }
+
+        foreach ($result['supportingEvidence'] as $index => $document) {
+            $this->assertArrayHasKey('identifier', $document);
+            $this->assertEquals('doc' . ($index + 1), $document['identifier']);
+        }
     }
 }

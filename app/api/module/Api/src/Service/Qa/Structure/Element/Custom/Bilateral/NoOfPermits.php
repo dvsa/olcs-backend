@@ -11,8 +11,6 @@ class NoOfPermits implements ElementInterface
 
     /**
      * Add an text element to the representation
-     *
-     * @param NoOfPermitsText $text
      */
     public function addText(NoOfPermitsText $text)
     {

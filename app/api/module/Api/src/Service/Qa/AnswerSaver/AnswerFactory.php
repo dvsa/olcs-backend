@@ -11,8 +11,6 @@ class AnswerFactory
     /**
      * Create an Answer entity instance referencing the supplied parameters
      *
-     * @param QuestionText $questionText
-     * @param QaEntityInterface $qaEntity
      *
      * @return Answer
      */

@@ -73,9 +73,6 @@ class CancelUnsubmittedBilateral extends AbstractCommandHandler
 
     /**
      * Update the countries as appropriate with an application using the provided open windows information
-     *
-     * @param IrhpApplication $irhpApplication
-     * @param array $openWindows
      */
     private function handleIrhpApplication(IrhpApplication $irhpApplication, array $openWindows)
     {
@@ -128,8 +125,6 @@ class CancelUnsubmittedBilateral extends AbstractCommandHandler
     /**
      * Whether the specified existing country should be retained within the application
      *
-     * @param IrhpApplication $irhpApplication
-     * @param array $openWindows
      * @param string $countryId
      */
     private function shouldIrhpApplicationRetainCountry(

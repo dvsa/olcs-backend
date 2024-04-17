@@ -11,19 +11,14 @@ class SectorsAnswerClearer implements AnswerClearerInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var IrhpApplicationRepository */
-    private $irhpApplicationRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpApplicationRepository $irhpApplicationRepo
      *
      * @return SectorsAnswerClearer
      */
-    public function __construct(IrhpApplicationRepository $irhpApplicationRepo)
+    public function __construct(private IrhpApplicationRepository $irhpApplicationRepo)
     {
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
     }
 
     /**

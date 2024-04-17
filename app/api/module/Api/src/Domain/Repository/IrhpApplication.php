@@ -21,8 +21,6 @@ class IrhpApplication extends AbstractRepository
     protected $alias = 'ia';
 
     /**
-     * @param int $licence
-     *
      * @return array
      */
     public function fetchByLicence(int $licence)
@@ -73,8 +71,6 @@ class IrhpApplication extends AbstractRepository
      * - excludes not yet submitted, cancelled and withdrawn
      * - only permit type id 6 & 7
      *
-     * @param string $startDate
-     * @param string $endDate
      *
      * @return array
      */
@@ -605,8 +601,6 @@ class IrhpApplication extends AbstractRepository
     /**
      * Fetch a summary of issued permits, customised in accordance with the supplied parameters
      *
-     * @param array $applicationStatuses
-     * @param array $orderBy
      * @param string $filterByColumnName
      * @param int $filterByColumnValue
      *
@@ -682,8 +676,6 @@ class IrhpApplication extends AbstractRepository
     /**
      * Fetch a summary of current applications, customised in accordance with the supplied parameters
      *
-     * @param array $applicationStatuses
-     * @param array $orderBy
      * @param string $filterByColumnName
      * @param int $filterByColumnValue
      *

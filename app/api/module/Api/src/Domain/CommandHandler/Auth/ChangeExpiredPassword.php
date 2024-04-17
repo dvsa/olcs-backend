@@ -28,19 +28,8 @@ class ChangeExpiredPassword extends AbstractCommandHandler
     public const MSG_NOT_AUTHORIZED = 'auth.change-password.not-authorized';
     public const MSG_INVALID = 'auth.change-password.invalid';
 
-    /**
-     * @var ValidatableAdapterInterface|CognitoAdapter
-     */
-    protected ValidatableAdapterInterface $adapter;
-    private UserRepository $userRepository;
-
-    /**
-     * @param ValidatableAdapterInterface $adapter
-     */
-    public function __construct(ValidatableAdapterInterface $adapter, \Dvsa\Olcs\Api\Domain\Repository\User $userRepository)
+    public function __construct(protected ValidatableAdapterInterface $adapter, private UserRepository $userRepository)
     {
-        $this->adapter = $adapter;
-        $this->userRepository = $userRepository;
     }
 
     /**
@@ -71,16 +60,11 @@ class ChangeExpiredPassword extends AbstractCommandHandler
         if (!$isValid) {
             $code = $changeResult->getCode();
 
-            switch ($code) {
-                case ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID:
-                    $message = self::MSG_INVALID;
-                    break;
-                case ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED:
-                    $message = self::MSG_NOT_AUTHORIZED;
-                    break;
-                default:
-                    $message = self::MSG_GENERIC_FAIL;
-            }
+            $message = match ($code) {
+                ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID => self::MSG_INVALID,
+                ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED => self::MSG_NOT_AUTHORIZED,
+                default => self::MSG_GENERIC_FAIL,
+            };
         }
 
         $this->result->setFlag('messages', [$message]);

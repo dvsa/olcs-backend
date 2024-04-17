@@ -19,9 +19,6 @@ use Dvsa\Olcs\Transfer\Query\Application\FinancialEvidence;
  */
 class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
 {
-    /** @var QueryHandlerManager */
-    private $queryHandlerManager;
-
     /**
      * Create service instance
      *
@@ -32,10 +29,9 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        QueryHandlerManager $queryHandlerManager
+        private QueryHandlerManager $queryHandlerManager
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->queryHandlerManager = $queryHandlerManager;
     }
 
     /**

@@ -14,8 +14,6 @@ class ApplicationStepFactory
      * @param string $shortName
      * @param string $slug
      * @param bool $enabled
-     * @param ElementInterface $element
-     * @param ValidatorList $validatorList
      *
      * @return ApplicationStep
      */

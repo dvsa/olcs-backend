@@ -34,14 +34,8 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
     ];
 
     /**
-     * @param Category $category
      * @param SubCategory $subCategory
-     * @param string $description
-     * @param Document $document
-     * @param string $isNi
-     * @param string $suppressFromOp
      * @param string $templateSlug
-     * @param User $createdBy
      * @return DocTemplate
      */
     public static function createNew(
@@ -69,11 +63,7 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
     }
 
     /**
-     * @param Category $category
      * @param SubCategory $subCategory
-     * @param string $description
-     * @param string $isNi
-     * @param string $suppressFromOp
      * @return DocTemplate
      */
     public function updateMeta(
@@ -93,7 +83,6 @@ class DocTemplate extends AbstractDocTemplate implements DeletableInterface
     }
 
     /**
-     * @param Document $document
      * @return DocTemplate
      */
     public function updateDocument(

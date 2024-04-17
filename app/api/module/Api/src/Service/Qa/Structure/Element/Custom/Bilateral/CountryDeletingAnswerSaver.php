@@ -9,40 +9,20 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
 
 class CountryDeletingAnswerSaver
 {
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var ClientReturnCodeHandler */
-    private $clientReturnCodeHandler;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param ClientReturnCodeHandler $clientReturnCodeHandler
      *
      * @return CountryDeletingAnswerSaver
      */
-    public function __construct(
-        GenericAnswerFetcher $genericAnswerFetcher,
-        GenericAnswerWriter $genericAnswerWriter,
-        ClientReturnCodeHandler $clientReturnCodeHandler
-    ) {
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->clientReturnCodeHandler = $clientReturnCodeHandler;
+    public function __construct(private GenericAnswerFetcher $genericAnswerFetcher, private GenericAnswerWriter $genericAnswerWriter, private ClientReturnCodeHandler $clientReturnCodeHandler)
+    {
     }
 
     /**
      * Save specified answer to persistent storage if yes, otherwise don't save answer and delete country from
      * application instead. Pass value back indicating what action needs to be taken by the client.
      *
-     * @param QaContext $qaContext
-     * @param array $postData
      * @param string $yesValue
      */
     public function save(QaContext $qaContext, array $postData, $yesValue)

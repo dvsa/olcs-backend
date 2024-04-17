@@ -305,8 +305,6 @@ abstract class AbstractUpdateInterim extends AbstractCommandHandler implements T
     /**
      * Validate
      *
-     * @param Cmd               $command
-     * @param ApplicationEntity $application
      *
      * @throws ValidationException
      * @return void

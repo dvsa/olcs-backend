@@ -10,8 +10,6 @@ class ElementGeneratorContextFactory
     /**
      * Create and return an ElementGeneratorContext instance
      *
-     * @param ValidatorList $validatorList
-     * @param QaContext $qaContext
      * @param string $elementContainer
      *
      * @return ElementGeneratorContext

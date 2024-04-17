@@ -178,11 +178,6 @@ class FeeType extends AbstractFeeType
     }
 
     /**
-     * @param string $effectiveFrom
-     * @param int $fixedValue
-     * @param int $annualValue
-     * @param int $fiveYearValue
-     * @param FeeType $existingFeeType
      *
      * @return FeeType
      */

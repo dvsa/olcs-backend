@@ -32,7 +32,6 @@ abstract class AbstractUserCommandHandler extends AbstractCommandHandler impleme
     /**
      * Validates username
      *
-     * @param string $username
      * @return void
      * @throws RuntimeException
      * @throws ValidationException

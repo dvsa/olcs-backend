@@ -15,11 +15,8 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\PublicHolidayDateProvider;
 
 class TimeProcessorBuilder implements TimeProcessorBuilderInterface
 {
-    private PublicHoliday $publicHolidayRepo;
-
-    public function __construct(PublicHoliday $publicHolidayRepo)
+    public function __construct(private PublicHoliday $publicHolidayRepo)
     {
-        $this->publicHolidayRepo = $publicHolidayRepo;
     }
 
     public function build(Sla $sla, ?TrafficArea $trafficArea): DateTimeCalculatorInterface

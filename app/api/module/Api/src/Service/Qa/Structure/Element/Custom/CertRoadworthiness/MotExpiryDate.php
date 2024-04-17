@@ -7,24 +7,15 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class MotExpiryDate implements ElementInterface
 {
-    /** @var bool */
-    private $enableFileUploads;
-
-    /** @var DateWithThreshold */
-    private $dateWithThreshold;
-
     /**
      * Create instance
      *
      * @param bool $enableFileUploads
-     * @param DateWithThreshold $dateWithThreshold
      *
      * @return MotExpiryDate
      */
-    public function __construct($enableFileUploads, DateWithThreshold $dateWithThreshold)
+    public function __construct(private $enableFileUploads, private DateWithThreshold $dateWithThreshold)
     {
-        $this->enableFileUploads = $enableFileUploads;
-        $this->dateWithThreshold = $dateWithThreshold;
     }
 
     /**

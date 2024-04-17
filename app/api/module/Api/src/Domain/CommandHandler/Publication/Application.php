@@ -89,9 +89,7 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Get the publication config section to use
      *
-     * @param ApplicationEntity $application
      * @param int $publicationSection
-     *
      * @return string
      */
     private function getPublicationConfig(ApplicationEntity $application, $publicationSection)
@@ -130,7 +128,6 @@ class Application extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Auto detect which section we should be publishing to
      *
-     * @param ApplicationEntity $application
      *
      * @return int publicationSection ID
      * @throws ForbiddenException

@@ -58,7 +58,6 @@ class UpdateOperatingCentreHelper implements FactoryInterface
     /**
      * @param Licence|Application $entity
      * @param UpdateLicenceOperatingCentres|UpdateApplicationOperatingCentres $command
-     * @param array $totals
      */
     public function validateTotalAuthHgvVehicles($entity, $command, array $totals)
     {

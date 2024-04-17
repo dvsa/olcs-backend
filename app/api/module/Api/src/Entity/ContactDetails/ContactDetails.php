@@ -87,30 +87,16 @@ class ContactDetails extends AbstractContactDetails
     public function update(array $contactParams, $allowUpdatePerson = true)
     {
         // each type may have different update
-        switch ($this->getContactType()->getId()) {
-            case self::CONTACT_TYPE_IRFO_OPERATOR:
-                $this->updateIrfoOperator($contactParams);
-                break;
-            case self::CONTACT_TYPE_PARTNER:
-                $this->updatePartner($contactParams);
-                break;
-            case self::CONTACT_TYPE_OBJECTOR:
-                $this->updateObjector($contactParams);
-                break;
-            case self::CONTACT_TYPE_STATEMENT_REQUESTOR:
-                $this->updateStatementRequestor($contactParams);
-                break;
-            case self::CONTACT_TYPE_TRANSPORT_MANAGER:
-            case self::CONTACT_TYPE_USER:
-                $this->updateUser($contactParams, $allowUpdatePerson);
-                break;
-            case self::CONTACT_TYPE_COMPLAINANT:
-                $this->updateComplainant($contactParams);
-                break;
-            case self::CONTACT_TYPE_CORRESPONDENCE_ADDRESS:
-                $this->updateCorrespondenceAddress($contactParams);
-                break;
-        }
+        match ($this->getContactType()->getId()) {
+            self::CONTACT_TYPE_IRFO_OPERATOR => $this->updateIrfoOperator($contactParams),
+            self::CONTACT_TYPE_PARTNER => $this->updatePartner($contactParams),
+            self::CONTACT_TYPE_OBJECTOR => $this->updateObjector($contactParams),
+            self::CONTACT_TYPE_STATEMENT_REQUESTOR => $this->updateStatementRequestor($contactParams),
+            self::CONTACT_TYPE_TRANSPORT_MANAGER, self::CONTACT_TYPE_USER => $this->updateUser($contactParams, $allowUpdatePerson),
+            self::CONTACT_TYPE_COMPLAINANT => $this->updateComplainant($contactParams),
+            self::CONTACT_TYPE_CORRESPONDENCE_ADDRESS => $this->updateCorrespondenceAddress($contactParams),
+            default => $this,
+        };
 
         return $this;
     }
@@ -374,7 +360,7 @@ class ContactDetails extends AbstractContactDetails
      *
      * @return mixed
      */
-    private function getDefaultParameter($params, $var, $default = null)
+    private function getDefaultParameter($params, $var, mixed $default = null)
     {
         return $params[$var] ?? $default;
     }

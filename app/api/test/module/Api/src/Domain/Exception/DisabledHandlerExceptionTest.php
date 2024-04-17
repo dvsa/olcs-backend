@@ -12,7 +12,7 @@ class DisabledHandlerExceptionTest extends \PHPUnit\Framework\TestCase
 {
     public function testMessageContainsClassName()
     {
-        $className = get_class(new \stdClass());
+        $className = (new \stdClass())::class;
         $sut = new DisabledHandlerException($className);
         $this->assertStringContainsString($className, $sut->getMessage());
     }

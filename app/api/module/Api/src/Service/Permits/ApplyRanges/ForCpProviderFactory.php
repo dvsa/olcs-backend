@@ -7,7 +7,6 @@ class ForCpProviderFactory
     /**
      * Create instance of ForCpProvider with the specified restricted countries list
      *
-     * @param array $restrictedCountryIds
      *
      * @return ForCpProvider
      */

@@ -62,9 +62,6 @@ class EntityAccessLoggerFactoryTest extends MockeryTestCase
         $this->sut = new EntityAccessLoggerFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     public function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->authorizationService();

@@ -90,7 +90,6 @@ final class GenerateIrfoPsvAuth extends AbstractCommandHandler implements Transa
     /**
      * Get templates
      *
-     * @param IrfoPsvAuthEntity $irfoPsvAuth
      *
      * @return array
      */
@@ -98,28 +97,17 @@ final class GenerateIrfoPsvAuth extends AbstractCommandHandler implements Transa
     {
         $templates = [];
 
-        switch ($irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()) {
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_17:
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_19A:
-                $templates = ['IRFO_eu_auth_pink_GV280'];
-                break;
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_18:
-                $templates = [
-                    'IRFO_uk_green_authorisation_INT_P17',
-                    'IRFO_non_eu_blue_authorisation_to_foreign_partner_INT_P18'
-                ];
-                break;
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_19:
-                $templates = ['IRFO_non_eu_blue_authorisation_foreign_operator_no_partner_INT_P18A'];
-                break;
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19:
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20:
-                $templates = ['IRFO_eu_auth_pink_special_regular_GV280'];
-                break;
-            case IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_OWN_AC_21:
-                $templates = ['IRFO_own_acc'];
-                break;
-        }
+        $templates = match ($irfoPsvAuth->getIrfoPsvAuthType()->getIrfoFeeType()->getId()) {
+            IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_17, IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_EU_REG_19A => ['IRFO_eu_auth_pink_GV280'],
+            IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_18 => [
+                'IRFO_uk_green_authorisation_INT_P17',
+                'IRFO_non_eu_blue_authorisation_to_foreign_partner_INT_P18'
+            ],
+            IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_REG_19 => ['IRFO_non_eu_blue_authorisation_foreign_operator_no_partner_INT_P18A'],
+            IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_NON_EU_OCCASIONAL_19, IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_SHUTTLE_OPERATOR_20 => ['IRFO_eu_auth_pink_special_regular_GV280'],
+            IrfoPsvAuthTypeEntity::IRFO_FEE_TYPE_OWN_AC_21 => ['IRFO_own_acc'],
+            default => $templates,
+        };
 
         return $templates;
     }

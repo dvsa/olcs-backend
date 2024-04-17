@@ -9,7 +9,6 @@ trait AlwaysIncludeSlugTrait
     /**
      * Whether this answer summary provider should include slug (always returns true)
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

@@ -55,12 +55,10 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Update
      *
-     * @param IrfoPsvAuthType $type
      * @param $validityPeriod
      * @param \DateTime $inForceDate
      * @param $serviceRouteFrom
      * @param $serviceRouteTo
-     * @param RefData $journeyFrequency
      * @param $copiesRequired
      * @param $copiesRequiredTotal
      * @return $this
@@ -168,8 +166,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Grant
      *
-     * @param RefData $status
-     * @param Fee $applicationFee
      * @return $this
      * @throws BadRequestException
      */
@@ -257,7 +253,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Approve
      *
-     * @param RefData $status
      * @param array $outstandingFees
      * @return $this
      * @throws BadRequestException
@@ -309,7 +304,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Refuse
      *
-     * @param RefData $status
      * @return $this
      * @throws BadRequestException
      */
@@ -367,7 +361,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Withdraw
      *
-     * @param RefData $status
      * @return $this
      * @throws BadRequestException
      */
@@ -411,7 +404,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Reset
      *
-     * @param RefData $status
      * @return $this
      * @throws BadRequestException
      */
@@ -455,7 +447,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Continuation Not Sought
      *
-     * @param RefData $status
      * @return $this
      * @throws BadRequestException
      */
@@ -509,7 +500,6 @@ class IrfoPsvAuth extends AbstractIrfoPsvAuth implements OrganisationProviderInt
     /**
      * Renew
      *
-     * @param RefData $status
      * @return $this
      * @throws BadRequestException
      */

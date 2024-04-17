@@ -31,8 +31,6 @@ class TranslationKey extends AbstractTranslationKey implements DeletableInterfac
     /**
      * Creates a translation key record
      *
-     * @param string $translationKey
-     * @param string $description
      * @return TranslationKey
      */
     public static function create(string $translationKey, string $description)

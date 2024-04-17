@@ -36,7 +36,6 @@ final class CreateSubmissionAction extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
      * @return SubmissionAction
      */
     private function createSubmissionAction(Cmd $command)

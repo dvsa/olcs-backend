@@ -9,7 +9,6 @@ class PermitUsageSelectionGenerator
     /**
      * Derive a value to be stored as the permit usage answer for the application
      *
-     * @param array $requiredPermits
      *
      * @throws RuntimeException
      */

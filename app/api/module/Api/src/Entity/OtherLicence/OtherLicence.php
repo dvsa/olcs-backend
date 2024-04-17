@@ -80,28 +80,15 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
         );
         $previousLicenceType = $this->getPreviousLicenceType()->getId();
         foreach ($this->requiredFields[$previousLicenceType] as $field) {
-            switch ($field) {
-                case 'licNo':
-                    $this->setLicNo($licNo);
-                    break;
-                case 'holderName':
-                    $this->setHolderName($holderName);
-                    break;
-                case 'willSurrender':
-                    $this->setWillSurrender($willSurrender);
-                    break;
-                case 'disqualificationDate':
-                    $this->setDisqualificationDate(new \DateTime($disqualificationDate));
-                    break;
-                case 'disqualificationLength':
-                    $this->setDisqualificationLength($disqualificationLength);
-                    break;
-                case 'purchaseDate':
-                    $this->setPurchaseDate(new \DateTime($purchaseDate));
-                    break;
-                default:
-                    throw new \RuntimeException("Unexpected field '${field}'");
-            }
+            match ($field) {
+                'licNo' => $this->setLicNo($licNo),
+                'holderName' => $this->setHolderName($holderName),
+                'willSurrender' => $this->setWillSurrender($willSurrender),
+                'disqualificationDate' => $this->setDisqualificationDate(new \DateTime($disqualificationDate)),
+                'disqualificationLength' => $this->setDisqualificationLength($disqualificationLength),
+                'purchaseDate' => $this->setPurchaseDate(new \DateTime($purchaseDate)),
+                default => throw new \RuntimeException("Unexpected field '${field}'"),
+            };
         }
         return true;
     }

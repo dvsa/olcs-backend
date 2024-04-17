@@ -6,21 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\FilteredTranslateableText;
 
 class QuestionText
 {
-    /** @var FilteredTranslateableText|null */
-    private $question;
-
-    /** @var FilteredTranslateableText|null */
-    private $questionSummary;
-
-    /** @var FilteredTranslateableText|null */
-    private $details;
-
-    /** @var FilteredTranslateableText|null */
-    private $guidance;
-
-    /** @var FilteredTranslateableText|null */
-    private $additionalGuidance;
-
     /**
      * Create instance
      *
@@ -32,18 +17,8 @@ class QuestionText
      *
      * @return QuestionText
      */
-    public function __construct(
-        ?FilteredTranslateableText $question = null,
-        ?FilteredTranslateableText $questionSummary = null,
-        ?FilteredTranslateableText $details = null,
-        ?FilteredTranslateableText $guidance = null,
-        ?FilteredTranslateableText $additionalGuidance = null
-    ) {
-        $this->question = $question;
-        $this->questionSummary = $questionSummary;
-        $this->details = $details;
-        $this->guidance = $guidance;
-        $this->additionalGuidance = $additionalGuidance;
+    public function __construct(private ?FilteredTranslateableText $question = null, private ?FilteredTranslateableText $questionSummary = null, private ?FilteredTranslateableText $details = null, private ?FilteredTranslateableText $guidance = null, private ?FilteredTranslateableText $additionalGuidance = null)
+    {
     }
 
     /**

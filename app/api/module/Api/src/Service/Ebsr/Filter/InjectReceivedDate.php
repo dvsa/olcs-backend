@@ -8,6 +8,7 @@ use Laminas\Filter\Exception;
 /**
  * Class InjectReceivedDate
  * @package Olcs\Ebsr\Filter
+ * @template-extends AbstractFilter<array>
  */
 class InjectReceivedDate extends AbstractFilter
 {

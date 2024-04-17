@@ -6,19 +6,14 @@ use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 
 class RepoQuerySource implements SourceInterface
 {
-    /** @var RepositoryServiceManager */
-    private $repoServiceManager;
-
     /**
      * Create service instance
      *
-     * @param RepositoryServiceManager $repoServiceManager
      *
      * @return RepoQuerySource
      */
-    public function __construct(RepositoryServiceManager $repoServiceManager)
+    public function __construct(private RepositoryServiceManager $repoServiceManager)
     {
-        $this->repoServiceManager = $repoServiceManager;
     }
 
     /**

@@ -76,12 +76,10 @@ class FeeTypeEntityTest extends EntityTester
     }
 
     /**
-     * @param mixed $isNi
      * @param boolean $expected
-     *
      * @dataProvider countryCodeProvider
      */
-    public function testGetCountryCode($isNi, $expected)
+    public function testGetCountryCode(mixed $isNi, $expected)
     {
         $this->sut->setIsNi($isNi);
 

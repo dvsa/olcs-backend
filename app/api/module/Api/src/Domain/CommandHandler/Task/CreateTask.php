@@ -242,7 +242,7 @@ final class CreateTask extends AbstractCommandHandler
             case Entity\Organisation\Organisation::ORG_TYPE_LLP:
             case Entity\Organisation\Organisation::ORG_TYPE_OTHER:
                 $companyName = strtoupper($organisation->getName());
-                if (strlen($companyName) > 4 && substr($companyName, 0, 4) === 'THE ') {
+                if (strlen($companyName) > 4 && str_starts_with($companyName, 'THE ')) {
                     $companyName = substr($companyName, 4);
                 }
                 $letter = substr($companyName, 0, 1);
@@ -270,7 +270,6 @@ final class CreateTask extends AbstractCommandHandler
     }
 
     /**
-     * @param \Dvsa\Olcs\Transfer\Command\Task\CreateTask|CommandInterface $command
      * @return Task
      * @throws ORMException
      * @throws RuntimeException

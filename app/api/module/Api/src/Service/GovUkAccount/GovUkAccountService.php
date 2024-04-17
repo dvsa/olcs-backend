@@ -19,14 +19,9 @@ class GovUkAccountService
     public const JWT_TIMESTAMP_LEEWAY_SECONDS = 30;
     public const ERR_MISSING_NAMES = 'No name data available to process';
 
-    protected GovUkAccount $provider;
-    protected array $config;
-
-    public function __construct(array $config, GovUkAccount $provider)
+    public function __construct(protected array $config, protected GovUkAccount $provider)
     {
         JWT::$leeway = static::JWT_TIMESTAMP_LEEWAY_SECONDS;
-        $this->config = $config;
-        $this->provider = $provider;
     }
 
     public function getAuthorisationUrl(string $state, bool $identityAssurance = false, array $scopes = [], string $nonce = null): GetAuthorisationUrlResponse
@@ -91,7 +86,6 @@ class GovUkAccountService
     /**
      * Parses and validates the state JWT and returns the claims if successful.
      *
-     * @param string $token
      * @return array
      */
     public function getStateClaimsFromToken(string $token): array
@@ -134,8 +128,6 @@ class GovUkAccountService
      *
      * @see https://docs.sign-in.service.gov.uk/integrate-with-integration-environment/choose-the-level-of-identity-confidence/
      * @see https://datatracker.ietf.org/doc/html/rfc8485#appendix-A.1
-     * @param string $actual
-     * @param string $minimumConfidence
      * @return bool
      */
     public static function meetsVectorOfTrust(string $actual, string $minimumConfidence): bool

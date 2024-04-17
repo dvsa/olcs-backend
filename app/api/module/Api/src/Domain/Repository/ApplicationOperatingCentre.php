@@ -95,7 +95,7 @@ class ApplicationOperatingCentre extends AbstractRepository
         $qb->addSelect('ocac');
         $qb->addSelect('occ');
 
-        if (method_exists($query, 'getSort') && $query->getSort()) {
+        if ($query !== null && method_exists($query, 'getSort') && $query->getSort()) {
             $qb->addSelect(
                 "concat(ifnull(oca.addressLine1,''),ifnull(oca.addressLine2,''),ifnull(oca.addressLine3,''),"
                 . "ifnull(oca.addressLine4,''),ifnull(oca.town,'')) as adr"

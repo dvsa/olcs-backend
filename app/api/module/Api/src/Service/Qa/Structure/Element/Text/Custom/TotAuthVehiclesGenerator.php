@@ -11,19 +11,14 @@ class TotAuthVehiclesGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var TextGenerator */
-    private $textGenerator;
-
     /**
      * Create service instance
      *
-     * @param TextGenerator $textGenerator
      *
      * @return TotAuthVehiclesGenerator
      */
-    public function __construct(TextGenerator $textGenerator)
+    public function __construct(private TextGenerator $textGenerator)
     {
-        $this->textGenerator = $textGenerator;
     }
 
     /**

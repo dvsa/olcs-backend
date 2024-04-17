@@ -51,7 +51,6 @@ final class RefuseIrfoPsvAuth extends AbstractCommandHandler implements Transact
     /**
      * Cancel all associated fees, but IRFOPSVAPP
      *
-     * @param CommandInterface $command
      * @return Result
      */
     private function cancelFees(CommandInterface $command)

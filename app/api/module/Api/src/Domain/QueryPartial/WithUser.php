@@ -14,14 +14,8 @@ use Doctrine\ORM\QueryBuilder;
  */
 final class WithUser implements QueryPartialInterface
 {
-    /**
-     * @var With
-     */
-    private $with;
-
-    public function __construct(With $with)
+    public function __construct(private With $with)
     {
-        $this->with = $with;
     }
 
     /**

@@ -20,49 +20,11 @@ use Dvsa\Olcs\Api\Entity\System\SubCategory;
 class NamingModel
 {
     /**
-     * @var DateTime
+     * @param string $description
+     * @param string $extension
      */
-    private $date;
-
-    /**
-     * @var Category
-     */
-    private $category;
-
-    /**
-     * @var SubCategory
-     */
-    private $subCategory;
-
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var string
-     */
-    private $extension;
-
-    /**
-     * @var ContextProviderInterface
-     */
-    private $entity;
-
-    public function __construct(
-        DateTime $date,
-        $description,
-        $extension,
-        Category $category = null,
-        SubCategory $subCategory = null,
-        ContextProviderInterface $entity = null
-    ) {
-        $this->date = $date;
-        $this->category = $category;
-        $this->subCategory = $subCategory;
-        $this->description = $description;
-        $this->extension = $extension;
-        $this->entity = $entity;
+    public function __construct(private DateTime $date, private $description, private $extension, private ?\Dvsa\Olcs\Api\Entity\System\Category $category = null, private ?\Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory = null, private ?\Dvsa\Olcs\Api\Service\Document\ContextProviderInterface $entity = null)
+    {
     }
 
     /**
@@ -74,7 +36,7 @@ class NamingModel
         /*
          * DateTime return zeros as a microseconds so we need to do the trick
          */
-        if (!empty($flag) && strpos($flag, 'u') !== false) {
+        if (!empty($flag) && str_contains($flag, 'u')) {
             [$usec, $sec] = explode(' ', microtime());
             $usec = substr($usec, 2, 6);
             $date = $this->date->format($flag);

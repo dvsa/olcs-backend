@@ -11,19 +11,14 @@ class NoOfPermitsAnswerClearer implements AnswerClearerInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
      *
      * @return NoOfPermitsAnswerClearer
      */
-    public function __construct(IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
+    public function __construct(private IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
     {
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
     }
 
     /**

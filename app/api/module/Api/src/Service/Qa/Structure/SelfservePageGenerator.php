@@ -7,38 +7,19 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class SelfservePageGenerator
 {
-    /** @var SelfservePageFactory */
-    private $selfservePageFactory;
-
-    /** @var ApplicationStepGenerator */
-    private $applicationStepGenerator;
-
-    /** @var FormControlServiceManager */
-    private $formControlServiceManager;
-
     /**
      * Create service instance
      *
-     * @param SelfservePageFactory $selfservePageFactory
-     * @param ApplicationStepGenerator $applicationStepGenerator
-     * @param FormControlServiceManager $formControlServiceManager
      *
      * @return SelfservePageGenerator
      */
-    public function __construct(
-        SelfservePageFactory $selfservePageFactory,
-        ApplicationStepGenerator $applicationStepGenerator,
-        FormControlServiceManager $formControlServiceManager
-    ) {
-        $this->selfservePageFactory = $selfservePageFactory;
-        $this->applicationStepGenerator = $applicationStepGenerator;
-        $this->formControlServiceManager = $formControlServiceManager;
+    public function __construct(private SelfservePageFactory $selfservePageFactory, private ApplicationStepGenerator $applicationStepGenerator, private FormControlServiceManager $formControlServiceManager)
+    {
     }
 
     /**
      * Build and return a Selfserve instance using the appropriate data sources
      *
-     * @param QaContext $qaContext
      *
      * @return SelfservePage
      */

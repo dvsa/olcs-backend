@@ -44,9 +44,9 @@ class TextTest extends MockeryTestCase
     public function testGetRepresentation()
     {
         $text = new Text(
+            $this->value,
             $this->labelTranslateableText,
-            $this->hintTranslateableText,
-            $this->value
+            $this->hintTranslateableText
         );
 
         $expectedRepresentation = [
@@ -64,9 +64,9 @@ class TextTest extends MockeryTestCase
     public function testGetRepresentationWithLabelOnly()
     {
         $text = new Text(
+            $this->value,
             $this->labelTranslateableText,
-            null,
-            $this->value
+            null
         );
 
         $expectedRepresentation = [
@@ -83,9 +83,9 @@ class TextTest extends MockeryTestCase
     public function testGetRepresentationWithHintOnly()
     {
         $text = new Text(
+            $this->value,
             null,
-            $this->hintTranslateableText,
-            $this->value
+            $this->hintTranslateableText
         );
 
         $expectedRepresentation = [
@@ -102,9 +102,9 @@ class TextTest extends MockeryTestCase
     public function testGetHint()
     {
         $text = new Text(
+            $this->value,
             $this->labelTranslateableText,
-            $this->hintTranslateableText,
-            $this->value
+            $this->hintTranslateableText
         );
 
         $this->assertSame(

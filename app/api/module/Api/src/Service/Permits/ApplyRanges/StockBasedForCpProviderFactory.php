@@ -6,26 +6,14 @@ use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 
 class StockBasedForCpProviderFactory
 {
-    /** @var StockBasedRestrictedCountryIdsProvider */
-    private $stockBasedRestrictedCountryIdsProvider;
-
-    /** @var ForCpProviderFactory */
-    private $forCpProviderFactory;
-
     /**
      * Create service instance
      *
-     * @param StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider
-     * @param ForCpProviderFactory $forCpProviderFactory
      *
      * @return StockBasedForCpProviderFactory
      */
-    public function __construct(
-        StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider,
-        ForCpProviderFactory $forCpProviderFactory
-    ) {
-        $this->stockBasedRestrictedCountryIdsProvider = $stockBasedRestrictedCountryIdsProvider;
-        $this->forCpProviderFactory = $forCpProviderFactory;
+    public function __construct(private StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider, private ForCpProviderFactory $forCpProviderFactory)
+    {
     }
 
     /**

@@ -134,7 +134,7 @@ final class Upload extends AbstractCommandHandler implements
             $this->result->addId('identifier', $file->getIdentifier());
 
             return $file;
-        } catch (MimeNotAllowedException $ex) {
+        } catch (MimeNotAllowedException) {
             throw new ValidationException([self::ERR_MIME => self::ERR_MIME]);
         } catch (\Exception $e) {
             throw $e;

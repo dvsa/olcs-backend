@@ -76,7 +76,6 @@ class Team extends AbstractTeam
      * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
      * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
      *
-     * @param array $excludedTeams
      *
      * @return array
      */
@@ -89,7 +88,6 @@ class Team extends AbstractTeam
      * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
      * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
      *
-     * @param array $excludedTeams
      *
      * @return array
      */
@@ -106,7 +104,6 @@ class Team extends AbstractTeam
      * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
      * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
      *
-     * @param array $excludedTeams
      *
      * @return array
      */
@@ -123,7 +120,6 @@ class Team extends AbstractTeam
      * Work out the traffic areas that the team is allowed to access - some teams are excluded based on a system param
      * (works off param DATA_SEPARATION_TEAMS_EXEMPT)
      *
-     * @param array $excludedTeams
      *
      * @throws \Exception
      * @return array
@@ -162,7 +158,6 @@ class Team extends AbstractTeam
     /**
      * Return the elasticsearch indexes internal users may access.
      *
-     * @param array $excludedTeams
      *
      * @throws \Exception
      * @return array

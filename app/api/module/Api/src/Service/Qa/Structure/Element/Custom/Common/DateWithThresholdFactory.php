@@ -10,8 +10,6 @@ class DateWithThresholdFactory
     /**
      * Create and return a DateWithThreshold instance
      *
-     * @param DateTime $dateThreshold
-     * @param DateElement $date
      *
      * @return DateWithThreshold
      */

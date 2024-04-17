@@ -8,38 +8,19 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 
 class IrhpPermitApplicationCreator
 {
-    /** @var IrhpPermitStockRepository */
-    private $irhpPermitStockRepo;
-
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
-    /** @var IrhpPermitApplicationFactory */
-    private $irhpPermitApplicationFactory;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
-     * @param IrhpPermitApplicationFactory $irhpPermitApplicationFactory
      *
      * @return IrhpPermitApplicationCreator
      */
-    public function __construct(
-        IrhpPermitStockRepository $irhpPermitStockRepo,
-        IrhpPermitApplicationRepository $irhpPermitApplicationRepo,
-        IrhpPermitApplicationFactory $irhpPermitApplicationFactory
-    ) {
-        $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
-        $this->irhpPermitApplicationFactory = $irhpPermitApplicationFactory;
+    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private IrhpPermitApplicationFactory $irhpPermitApplicationFactory)
+    {
     }
 
     /**
      * Handle the scenario where no irhp permit application exists for a country
      *
-     * @param IrhpApplication $irhpApplication
      * @param int $stockId
      */
     public function create(IrhpApplication $irhpApplication, $stockId)

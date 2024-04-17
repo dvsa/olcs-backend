@@ -44,7 +44,6 @@ class VariationTypeOfLicenceReviewService extends AbstractReviewService
      * Get the readonly config applicable to variations where both existing licence and variation have a licence
      * type of standard international
      *
-     * @param array $data
      *
      * @return array
      */
@@ -77,7 +76,6 @@ class VariationTypeOfLicenceReviewService extends AbstractReviewService
      * Get the readonly config applicable to variations where either the existing licence or variation (or both) have
      * a licence type other than standard international
      *
-     * @param array $data
      *
      * @return array
      */

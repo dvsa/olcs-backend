@@ -9,9 +9,6 @@ namespace Dvsa\Olcs\Api\Service\Document;
  */
 interface NamingServiceAwareInterface
 {
-    /**
-     * @param NamingService $service
-     */
     public function setNamingService(NamingService $service);
 
     /**

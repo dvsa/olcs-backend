@@ -11,9 +11,6 @@ trait CpmsAwareTrait
 {
     protected $cpmsService;
 
-    /**
-     * @param CpmsHelperInterface $service
-     */
     public function setCpmsService(CpmsHelperInterface $service)
     {
         $this->cpmsService = $service;

@@ -35,7 +35,6 @@ final class CreateReputeNotLost extends AbstractCommandHandler implements Transa
     }
 
     /**
-     * @param Cmd $command
      * @return Entity
      */
     private function createEntityObject(Cmd $command)

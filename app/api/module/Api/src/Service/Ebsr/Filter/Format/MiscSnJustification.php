@@ -8,6 +8,7 @@ use Laminas\Filter\AbstractFilter;
  * Class MiscSnJustification
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
+ * @template-extends AbstractFilter<array>
  */
 class MiscSnJustification extends AbstractFilter
 {

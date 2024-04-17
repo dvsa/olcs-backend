@@ -76,9 +76,6 @@ final class GrantConditionUndertaking extends AbstractCommandHandler implements
 
     /**
      * Create a licence CU record from the ADD delta
-     *
-     * @param ConditionUndertaking $deltaCu
-     * @param Licence $licence
      */
     protected function createConditionUndertaking(ConditionUndertaking $deltaCu, Licence $licence)
     {
@@ -92,8 +89,6 @@ final class GrantConditionUndertaking extends AbstractCommandHandler implements
 
     /**
      * Update a licence CU record from the UPDATE delta
-     *
-     * @param ConditionUndertaking $deltaCu
      */
     protected function updateConditionUndertaking(ConditionUndertaking $deltaCu)
     {
@@ -113,8 +108,6 @@ final class GrantConditionUndertaking extends AbstractCommandHandler implements
      * Delete condition undertaking during granting
      * @NOTE The AC specifies we need to set the approvalUser, so we need to make an UPDATE call before DELETE
      * which seems odd but as we are soft deleting, this gives us an audit trail
-     *
-     * @param ConditionUndertaking $deltaCu
      */
     protected function deleteConditionUndertaking(ConditionUndertaking $deltaCu)
     {

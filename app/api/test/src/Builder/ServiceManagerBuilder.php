@@ -14,9 +14,6 @@ class ServiceManagerBuilder implements BuilderInterface
      */
     protected $servicesProvider;
 
-    /**
-     * @param callable $servicesProvider
-     */
     public function __construct(callable $servicesProvider)
     {
         $this->servicesProvider = $servicesProvider;

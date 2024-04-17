@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class EmissionsStandards implements ElementInterface
 {
-    /** @var string|null */
-    private $yesNo;
-
     /**
      * Create instance
      *
@@ -16,9 +13,8 @@ class EmissionsStandards implements ElementInterface
      *
      * @return EmissionsStandards
      */
-    public function __construct($yesNo)
+    public function __construct(private $yesNo)
     {
-        $this->yesNo = $yesNo;
     }
 
     /**

@@ -66,8 +66,6 @@ class Schedule41Reset extends AbstractCommandHandler
 
     /**
      * Delete any unpublished links that are in Section 3
-     *
-     * @param ApplicationEntity $application
      */
     private function deleteUnpublishedLinks(ApplicationEntity $application)
     {

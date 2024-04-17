@@ -6,24 +6,14 @@ use RuntimeException;
 
 class Validator
 {
-    /** @var string */
-    private $rule;
-
-    /** @var array */
-    private $params;
-
     /**
      * Create instance
      *
-     * @param string $rule
-     * @param array $params
      *
      * @return Validator
      */
-    public function __construct(string $rule, array $params)
+    public function __construct(private string $rule, private array $params)
     {
-        $this->rule = $rule;
-        $this->params = $params;
     }
 
     /**

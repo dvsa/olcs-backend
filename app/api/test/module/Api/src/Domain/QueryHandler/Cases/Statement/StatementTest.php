@@ -8,7 +8,6 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Statement;
 
-use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Statement\Statement;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
@@ -41,13 +40,11 @@ class StatementTest extends QueryHandlerTestCase
         /** @var Result $result */
         $result = $this->sut->handleQuery($query);
         $this->assertInstanceOf(Result::class, $result);
-        Assert::assertArraySubset(
-            [
-                'DUMMY_STATEMENT_KEY' => 'DUMMY_STATEMENT_VALUE'
-            ],
-            $result->serialize(),
-            true
-        );
+        $serializedResult = $result->serialize();
+
+        $this->assertIsArray($serializedResult);
+        $this->assertArrayHasKey('DUMMY_STATEMENT_KEY', $serializedResult);
+        $this->assertSame('DUMMY_STATEMENT_VALUE', $serializedResult['DUMMY_STATEMENT_KEY']);
     }
 
     public function testHandleQueryWhenNoAssignedCaseworker()
@@ -79,11 +76,12 @@ class StatementTest extends QueryHandlerTestCase
         /** @var Result $result */
         $result = $this->sut->handleQuery($query);
 
-        Assert::assertArraySubset(
-            ['assignedCaseworker' => ['id' => 'DUMMY_USER_ID']],
-            $result->serialize(),
-            true
-        );
+        $serializedResult = $result->serialize();
+        $this->assertIsArray($serializedResult);
+        $this->assertArrayHasKey('assignedCaseworker', $serializedResult);
+        $this->assertIsArray($serializedResult['assignedCaseworker']);
+        $this->assertArrayHasKey('id', $serializedResult['assignedCaseworker']);
+        $this->assertSame('DUMMY_USER_ID', $serializedResult['assignedCaseworker']['id']);
     }
 
     protected function createMockStatement($query, $caseworker)

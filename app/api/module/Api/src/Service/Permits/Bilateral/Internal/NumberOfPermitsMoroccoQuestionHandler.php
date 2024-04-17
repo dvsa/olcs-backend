@@ -8,19 +8,14 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class NumberOfPermitsMoroccoQuestionHandler implements QuestionHandlerInterface
 {
-    /** @var NoOfPermitsConditionalUpdater */
-    private $noOfPermitsConditionalUpdater;
-
     /**
      * Create service instance
      *
-     * @param NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
      *
      * @return NumberOfPermitsMoroccoQuestionHandler
      */
-    public function __construct(NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
+    public function __construct(private NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
     {
-        $this->noOfPermitsConditionalUpdater = $noOfPermitsConditionalUpdater;
     }
 
     /**

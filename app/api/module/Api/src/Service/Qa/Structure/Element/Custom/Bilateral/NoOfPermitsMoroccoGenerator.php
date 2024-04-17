@@ -11,19 +11,14 @@ class NoOfPermitsMoroccoGenerator implements ElementGeneratorInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var NoOfPermitsMoroccoFactory */
-    private $noOfPermitsMoroccoFactory;
-
     /**
      * Create service instance
      *
-     * @param NoOfPermitsMoroccoFactory $noOfPermitsMoroccoFactory
      *
      * @return NoOfPermitsMoroccoGenerator
      */
-    public function __construct(NoOfPermitsMoroccoFactory $noOfPermitsMoroccoFactory)
+    public function __construct(private NoOfPermitsMoroccoFactory $noOfPermitsMoroccoFactory)
     {
-        $this->noOfPermitsMoroccoFactory = $noOfPermitsMoroccoFactory;
     }
 
     /**

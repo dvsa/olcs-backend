@@ -36,25 +36,9 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['ContactDetails', 'Licence', 'Organisation'];
 
-    /**
-     * @var ValidatableAdapterInterface
-     */
-    private $adapter;
 
-    /**
-     * @var PasswordService
-     */
-    private $passwordService;
-
-    /**
-     *
-     * @param ValidatableAdapterInterface|null $adapter
-     * @param PasswordService $passwordService
-     */
-    public function __construct(PasswordService $passwordService, ?ValidatableAdapterInterface $adapter)
+    public function __construct(private PasswordService $passwordService, private ?ValidatableAdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
-        $this->passwordService = $passwordService;
     }
 
     public function handleCommand(CommandInterface $command)
@@ -141,7 +125,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
                     )
                 );
             }
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // swallow any exception
         }
 
@@ -210,7 +194,6 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
     }
 
     /**
-     * @param string $loginId
      * @return string
      */
     private function generatePid(string $loginId)

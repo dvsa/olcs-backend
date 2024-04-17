@@ -28,8 +28,6 @@ class Answer extends AbstractAnswer
     /**
      * Create a new instance for use against an IRHP application
      *
-     * @param QuestionText $questionText
-     * @param IrhpApplication $irhpApplication
      *
      * @return Answer
      */
@@ -45,8 +43,6 @@ class Answer extends AbstractAnswer
     /**
      * Create a new instance for use against an IRHP permit application
      *
-     * @param QuestionText $questionText
-     * @param IrhpPermitApplication $irhpPermitApplication
      *
      * @return Answer
      */
@@ -65,11 +61,10 @@ class Answer extends AbstractAnswer
      * Store the answer using the provided type and value
      *
      * @param string $questionType
-     * @param mixed $answerValue
      *
      * @return void
      */
-    public function setValue($questionType, $answerValue)
+    public function setValue($questionType, mixed $answerValue)
     {
         $this->ansArray = null;
         $this->ansBoolean = null;
@@ -101,15 +96,18 @@ class Answer extends AbstractAnswer
     /**
      * Whether the value of this answer is equal to the provided value
      *
-     * @param mixed $value
      *
      * @return bool
      */
-    public function isEqualTo($value)
+    public function isEqualTo(mixed $value)
     {
         $fieldValue = $this->getValue();
 
         if (!is_null($fieldValue)) {
+            // Manually coerce types to integers when comparing to zero or empty string to maintain expected behaviour
+            if (($fieldValue === '' || $fieldValue === 0) && ($value === '' || $value === 0)) {
+                return (int)$fieldValue === (int)$value;
+            }
             return $fieldValue == $value;
         }
 

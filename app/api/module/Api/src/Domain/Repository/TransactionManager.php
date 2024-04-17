@@ -15,17 +15,8 @@ use Doctrine\ORM\EntityManagerInterface;
  */
 final class TransactionManager implements TransactionManagerInterface
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @param EntityManagerInterface $em
-     */
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(private EntityManagerInterface $em)
     {
-        $this->em = $em;
     }
 
     public function beginTransaction()

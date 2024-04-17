@@ -28,10 +28,6 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
     /**
      * Create IRHP Candidate Permit entity
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param RefData $requestedEmissionsCategory
-     * @param float $intensityOfUse
-     * @param float $applicationScore
      *
      * @return self
      */
@@ -55,8 +51,6 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
     /**
      * Create an instance for use in an APGG context
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param IrhpPermitRange $irhpPermitRange
      *
      * @return self
      */
@@ -138,7 +132,6 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
     /**
      * Marks this candidate permit as successful and sets the assigned emissions category
      *
-     * @param RefData $assignedEmissionsCategory
      *
      * @throws ForbiddenException
      */
@@ -155,7 +148,6 @@ class IrhpCandidatePermit extends AbstractIrhpCandidatePermit implements Deletab
     /**
      * Updates permit range against candidate permit
      *
-     * @param IrhpPermitRange $irhpPermitRange
      *
      * @throws ForbiddenException
      */

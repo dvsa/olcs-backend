@@ -20,8 +20,6 @@ class IrhpPermitWindow extends AbstractRepository
     /**
      * Returns an array of IrhpPermitWindow objects that are open as of the specified date and time
      *
-     * @param int $irhpPermitStock
-     * @param DateTime $currentDateTime
      *
      * @return mixed
      */
@@ -91,7 +89,6 @@ class IrhpPermitWindow extends AbstractRepository
     }
 
     /**
-     * @param int $irhpPermitStockId
      * @param int $hydrationMode
      * @return Entity
      * @throws NotFoundException
@@ -126,7 +123,6 @@ class IrhpPermitWindow extends AbstractRepository
      * @param int $irhpPermitTypeId Irhp Permit Type Id
      * @param DateTime $now Current datetime
      * @param int $hydrationMode Hydration mode
-     * @param int|null $year
      * @return Entity
      * @throws NotFoundException
      */

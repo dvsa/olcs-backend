@@ -63,9 +63,7 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
     /**
      * Update the TrafficAre
      *
-     * @param Licence $licence
      * @param string $trafficAreaId traffic area ID
-     *
      * @return Result
      */
     private function updateTrafficArea(Licence $licence, $trafficAreaId)
@@ -83,7 +81,6 @@ final class UpdateTaxiPhv extends AbstractCommandHandler implements Transactione
     /**
      * Update the ApplicationCompletion
      *
-     * @param Application $application
      *
      * @return Result
      */

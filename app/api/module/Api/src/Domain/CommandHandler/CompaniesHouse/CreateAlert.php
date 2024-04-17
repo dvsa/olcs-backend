@@ -33,7 +33,7 @@ final class CreateAlert extends DomainAbstractCommandHandler
 
         try {
             $organisations = $this->getOrganisation($companyNumber);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $result->addMessage("Organisation(s) not found for company $companyNumber, no alert created");
             return $result;
         }

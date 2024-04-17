@@ -20,9 +20,6 @@ trait NationalRegisterAwareTrait
         return $this->nationalRegisterConfig;
     }
 
-    /**
-     * @param array $nationalRegisterConfig
-     */
     public function setNationalRegisterConfig(array $nationalRegisterConfig)
     {
         $this->nationalRegisterConfig = $nationalRegisterConfig;

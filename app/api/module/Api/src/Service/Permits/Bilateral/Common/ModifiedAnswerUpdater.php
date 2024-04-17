@@ -8,33 +8,20 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class ModifiedAnswerUpdater
 {
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var ApplicationAnswersClearer */
-    private $applicationAnswersClearer;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param ApplicationAnswersClearer $applicationAnswersClearer
      *
      * @return ModifiedAnswerUpdater
      */
-    public function __construct(
-        GenericAnswerWriter $genericAnswerWriter,
-        ApplicationAnswersClearer $applicationAnswersClearer
-    ) {
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->applicationAnswersClearer = $applicationAnswersClearer;
+    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private ApplicationAnswersClearer $applicationAnswersClearer)
+    {
     }
 
     /**
      * Update the answer value relating to a specific country within a bilateral application, clearing answers to
      * subsequent questions if the answer has been changed
      *
-     * @param QaContext $qaContext
      * @param string $existingAnswer
      * @param string $newAnswer
      */

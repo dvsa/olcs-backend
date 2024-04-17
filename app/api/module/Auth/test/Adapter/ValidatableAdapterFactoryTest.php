@@ -219,9 +219,6 @@ class ValidatableAdapterFactoryTest extends MockeryTestCase
         $this->sut = new ValidatableAdapterFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->configService();

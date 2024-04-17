@@ -16,21 +16,16 @@ class SubmissionGenerator
 {
     public const MAX_GENERATE_SUBMISSION_TIME = 90;
 
-    private $submissionConfig;
-    private $sectionGeneratorPluginManager;
-
     /**
      * Construct the submission generator
      *
-     * @param array                         $config                        Submission Config
+     * @param array $submissionConfig Submission Config
      * @param SectionGeneratorPluginManager $sectionGeneratorPluginManager Generators Plugin manager
      *
      * @return void
      */
-    public function __construct(array $config, SectionGeneratorPluginManager $sectionGeneratorPluginManager)
+    public function __construct(private array $submissionConfig, private SectionGeneratorPluginManager $sectionGeneratorPluginManager)
     {
-        $this->submissionConfig = $config;
-        $this->sectionGeneratorPluginManager = $sectionGeneratorPluginManager;
     }
 
     /**

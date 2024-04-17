@@ -46,10 +46,6 @@ class SeriousInfringement extends AbstractSeriousInfringement
     /**
      * Update
      *
-     * @param \DateTime $checkDate
-     * @param \DateTime $infringementDate
-     * @param SiCategoryEntity $siCategory
-     * @param SiCategoryTypeEntity $siCategoryType
      * @return void
      */
     public function update(

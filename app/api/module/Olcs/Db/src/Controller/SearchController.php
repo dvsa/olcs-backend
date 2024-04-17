@@ -13,15 +13,8 @@ use Olcs\Db\Service\Search\Search;
  */
 class SearchController extends AbstractController
 {
-    private Search $elasticSearchService;
-
-    /**
-     * @param Search $elasticSearchService
-     */
-    public function __construct(
-        Search $elasticSearchService
-    ) {
-        $this->elasticSearchService = $elasticSearchService;
+    public function __construct(private Search $elasticSearchService)
+    {
     }
     /**
      * Get list from search

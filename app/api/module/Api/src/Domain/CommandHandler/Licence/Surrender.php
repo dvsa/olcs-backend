@@ -147,7 +147,6 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
     /**
      * Publish the licence
      *
-     * @param Licence $licence
      *
      * @return Result
      */

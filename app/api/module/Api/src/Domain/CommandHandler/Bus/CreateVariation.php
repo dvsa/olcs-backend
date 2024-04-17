@@ -35,7 +35,6 @@ final class CreateVariation extends AbstractCommandHandler
     }
 
     /**
-     * @param CreateVariationCmd $command
      * @return BusReg
      */
     private function createBusRegObject(CreateVariationCmd $command)

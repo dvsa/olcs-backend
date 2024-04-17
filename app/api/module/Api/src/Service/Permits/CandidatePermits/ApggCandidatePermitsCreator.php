@@ -7,25 +7,18 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class ApggCandidatePermitsCreator
 {
-    /** @var ApggEmissionsCatCandidatePermitsCreator */
-    private $apggEmissionsCatCandidatePermitsCreator;
-
     /**
      * Create service instance
      *
-     * @param ApggEmissionsCatCandidatePermitsCreator $apggEmissionsCatCandidatePermitsCreator
      *
      * @return ApggCandidatePermitsCreator
      */
-    public function __construct(ApggEmissionsCatCandidatePermitsCreator $apggEmissionsCatCandidatePermitsCreator)
+    public function __construct(private ApggEmissionsCatCandidatePermitsCreator $apggEmissionsCatCandidatePermitsCreator)
     {
-        $this->apggEmissionsCatCandidatePermitsCreator = $apggEmissionsCatCandidatePermitsCreator;
     }
 
     /**
      * Create apgg candidate permits as required for the specified application
-     *
-     * @param IrhpApplication $irhpApplication
      */
     public function create(IrhpApplication $irhpApplication)
     {

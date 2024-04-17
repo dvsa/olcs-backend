@@ -48,7 +48,7 @@ class Result
      *
      * @return void
      */
-    public function setValue($key, $value)
+    public function setValue($key, mixed $value)
     {
         $this->values[$key] = $value;
     }

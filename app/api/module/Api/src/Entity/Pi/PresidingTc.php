@@ -15,8 +15,6 @@ use Dvsa\Olcs\Api\Entity\User\User;
 class PresidingTc extends AbstractPresidingTc implements DeletableInterface
 {
     /**
-     * @param string $name
-     * @param User $user
      * @return PresidingTc
      */
     public static function create(string $name, User $user)
@@ -28,8 +26,6 @@ class PresidingTc extends AbstractPresidingTc implements DeletableInterface
     }
 
     /**
-     * @param string $name
-     * @param User $user
      * @return $this
      */
     public function update(string $name, User $user)

@@ -40,7 +40,7 @@ final class RestorePeople extends AbstractCommandHandler implements Transactione
                 $result->addMessage("ApplicationOrganisationPerson ID {$appOrgPerson->getId()} deleted");
 
                 $this->getRepo('ApplicationOrganisationPerson')->delete($appOrgPerson);
-            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
+            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException) {
                 // attempt to restore an updated person
                 $appOrgPerson = $this->getRepo('ApplicationOrganisationPerson')
                     ->fetchForApplicationAndOriginalPerson($application->getId(), $personId);

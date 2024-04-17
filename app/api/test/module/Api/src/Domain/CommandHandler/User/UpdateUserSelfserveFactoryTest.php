@@ -75,9 +75,6 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
         $this->sut = new UpdateUserSelfserveFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->setUpAbstractCommandHandlerServices();

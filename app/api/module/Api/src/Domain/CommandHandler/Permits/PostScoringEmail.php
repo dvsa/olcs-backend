@@ -69,7 +69,6 @@ final class PostScoringEmail extends AbstractCommandHandler implements UploaderA
     /**
      * Attempt to process a row from the CSV and return a human-readable message indicating the outcome
      *
-     * @param array $row
      *
      * @return string
      */
@@ -83,7 +82,7 @@ final class PostScoringEmail extends AbstractCommandHandler implements UploaderA
 
         try {
             $irhpApplication = $this->getRepo()->fetchById($irhpApplicationId);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $irhpApplication = null;
         }
 

@@ -31,11 +31,10 @@ trait PermitEmailTrait
     /**
      * Get subject variables
      *
-     * @param mixed $recordObject
      *
      * @return array
      */
-    protected function getSubjectVariables($recordObject): array
+    protected function getSubjectVariables(mixed $recordObject): array
     {
         return [
             'applicationRef' => $recordObject->getApplicationRef(),
@@ -45,12 +44,9 @@ trait PermitEmailTrait
     /**
      * Generate task appropriate for the type of email being sent
      *
-     * @param mixed $recordObject
-     * @param Result $result
-     * @param MissingEmailException $exception
      * @return Result
      */
-    protected function createMissingEmailTask($recordObject, Result $result, MissingEmailException $exception): Result
+    protected function createMissingEmailTask(mixed $recordObject, Result $result, MissingEmailException $exception): Result
     {
         $taskData = [
             'category' => Category::CATEGORY_PERMITS,

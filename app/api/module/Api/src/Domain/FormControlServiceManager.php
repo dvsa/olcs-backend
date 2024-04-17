@@ -17,7 +17,6 @@ class FormControlServiceManager extends AbstractPluginManager
     /**
      * Get the form control strategy corresponding to the provided application step
      *
-     * @param ApplicationStep $applicationStep
      *
      * @return FormControlStrategyInterface
      */

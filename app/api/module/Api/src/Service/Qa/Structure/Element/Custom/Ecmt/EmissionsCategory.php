@@ -4,15 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 class EmissionsCategory
 {
-    /** @var string */
-    private $type;
-
-    /** @var int|null */
-    private $value;
-
-    /** @var int */
-    private $permitsRemaining;
-
     /**
      * Create instance
      *
@@ -22,11 +13,8 @@ class EmissionsCategory
      *
      * @return EmissionsCategory
      */
-    public function __construct($type, $value, $permitsRemaining)
+    public function __construct(private $type, private $value, private $permitsRemaining)
     {
-        $this->type = $type;
-        $this->value = $value;
-        $this->permitsRemaining = $permitsRemaining;
     }
 
     /**

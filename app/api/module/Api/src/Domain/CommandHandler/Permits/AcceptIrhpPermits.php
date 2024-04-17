@@ -41,7 +41,7 @@ final class AcceptIrhpPermits extends AbstractCommandHandler
             $irhpApplication->proceedToIssuing(
                 $this->refData(IrhpInterface::STATUS_ISSUING)
             );
-        } catch (ForbiddenException $e) {
+        } catch (ForbiddenException) {
             $this->result->addMessage('Unable to issue permit for application');
             return $this->result;
         }

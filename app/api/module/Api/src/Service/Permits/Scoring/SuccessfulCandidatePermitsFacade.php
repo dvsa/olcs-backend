@@ -6,41 +6,21 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 
 class SuccessfulCandidatePermitsFacade
 {
-    /** @var SuccessfulCandidatePermitsGenerator */
-    private $successfulCandidatePermitsGenerator;
-
-    /** @var SuccessfulCandidatePermitsWriter */
-    private $successfulCandidatePermitsWriter;
-
-    /** @var SuccessfulCandidatePermitsLogger */
-    private $successfulCandidatePermitsLogger;
-
     /**
      * Create service instance
      *
-     * @param SuccessfulCandidatePermitsGenerator $successfulCandidatePermitsGenerator
-     * @param SuccessfulCandidatePermitsWriter $successfulCandidatePermitsWriter
-     * @param SuccessfulCandidatePermitsLogger $successfulCandidatePermitsLogger
      *
      * @return SuccessfulCandidatePermitsFacade
      */
-    public function __construct(
-        SuccessfulCandidatePermitsGenerator $successfulCandidatePermitsGenerator,
-        SuccessfulCandidatePermitsWriter $successfulCandidatePermitsWriter,
-        SuccessfulCandidatePermitsLogger $successfulCandidatePermitsLogger
-    ) {
-        $this->successfulCandidatePermitsGenerator = $successfulCandidatePermitsGenerator;
-        $this->successfulCandidatePermitsWriter = $successfulCandidatePermitsWriter;
-        $this->successfulCandidatePermitsLogger = $successfulCandidatePermitsLogger;
+    public function __construct(private SuccessfulCandidatePermitsGenerator $successfulCandidatePermitsGenerator, private SuccessfulCandidatePermitsWriter $successfulCandidatePermitsWriter, private SuccessfulCandidatePermitsLogger $successfulCandidatePermitsLogger)
+    {
     }
 
     /**
      * Get an array containing successful candidate permit ids and the emissions categories assigned to them
      *
-     * @param array $candidatePermits
      * @param int $stockId
      * @param int $quotaRemaining
-     *
      * @return array
      */
     public function generate(array $candidatePermits, $stockId, $quotaRemaining)
@@ -50,8 +30,6 @@ class SuccessfulCandidatePermitsFacade
 
     /**
      * Marks a series of candidate permits as successful and records the emissions category assigned to each
-     *
-     * @param array $candidatePermits
      */
     public function write(array $candidatePermits)
     {
@@ -60,9 +38,6 @@ class SuccessfulCandidatePermitsFacade
 
     /**
      * Logs a list of successful candidate permits to a CQRS result object
-     *
-     * @param array $candidatePermits
-     * @param Result $result
      */
     public function log(array $candidatePermits, Result $result)
     {

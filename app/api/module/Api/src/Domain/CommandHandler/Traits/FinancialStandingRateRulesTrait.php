@@ -18,7 +18,6 @@ trait FinancialStandingRateRulesTrait
      * Verify that the specified vehicle type logically matches other inputs, and throw a ValidationException if
      * this is not the case
      *
-     * @param CommandInterface $command
      *
      * @throws ValidationException
      */

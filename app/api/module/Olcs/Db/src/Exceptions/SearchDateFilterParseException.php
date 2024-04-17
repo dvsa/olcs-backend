@@ -30,7 +30,7 @@ class SearchDateFilterParseException extends \Exception
      *
      * @return void
      */
-    public function setDateField($dateField)
+    public function setDateField(mixed $dateField)
     {
         $this->dateField = $dateField;
     }

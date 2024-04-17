@@ -190,7 +190,6 @@ class CommunityLic extends AbstractRepository
     /**
      * Counts the number of active community licences that relate to a licence which is identified by a given id.
      *
-     * @param int $licenceId
      * @return int
      * @throws NoResultException
      * @throws NonUniqueResultException

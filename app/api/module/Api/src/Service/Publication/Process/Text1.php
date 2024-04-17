@@ -60,8 +60,6 @@ class Text1 implements ProcessInterface
     }
 
     /**
-     * @param PublicationLink $publication
-     * @param ImmutableArrayObject $context
      * @return String
      */
     private function getOpeningText(PublicationLink $publication, ImmutableArrayObject $context)
@@ -85,7 +83,6 @@ class Text1 implements ProcessInterface
     }
 
     /**
-     * @param LicenceEntity $licence
      * @return string
      */
     public function getLicenceInfo(LicenceEntity $licence)
@@ -118,16 +115,11 @@ class Text1 implements ProcessInterface
         $orgType = $organisation->getType()->getId();
         $persons = [];
 
-        switch ($orgType) {
-            case OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY:
-                $prefix = 'Director(s): ';
-                break;
-            case OrganisationEntity::ORG_TYPE_LLP:
-                $prefix = 'Partner(s): ';
-                break;
-            default:
-                $prefix = '';
-        }
+        $prefix = match ($orgType) {
+            OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY => 'Director(s): ',
+            OrganisationEntity::ORG_TYPE_LLP => 'Partner(s): ',
+            default => '',
+        };
 
         /**
          * @var PersonEntity $person

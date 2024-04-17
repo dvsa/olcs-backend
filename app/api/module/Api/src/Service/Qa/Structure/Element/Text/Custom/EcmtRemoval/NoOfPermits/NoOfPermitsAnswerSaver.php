@@ -11,32 +11,14 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
-    /** @var AnswerWriter */
-    private $answerWriter;
-
-    /** @var FeeCreator */
-    private $feeCreator;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param AnswerWriter $answerWriter
-     * @param FeeCreator $feeCreator
      *
      * @return NoOfPermitsAnswerSaver
      */
-    public function __construct(
-        GenericAnswerFetcher $genericAnswerFetcher,
-        AnswerWriter $answerWriter,
-        FeeCreator $feeCreator
-    ) {
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->answerWriter = $answerWriter;
-        $this->feeCreator = $feeCreator;
+    public function __construct(private GenericAnswerFetcher $genericAnswerFetcher, private AnswerWriter $answerWriter, private FeeCreator $feeCreator)
+    {
     }
 
     /**

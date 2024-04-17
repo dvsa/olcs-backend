@@ -108,7 +108,7 @@ final class Result
      *
      * @return $this
      */
-    public function setFlag($name, $value)
+    public function setFlag($name, mixed $value)
     {
         $this->flags[$name] = $value;
         return $this;

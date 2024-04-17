@@ -23,7 +23,7 @@ class HearingBundle extends AbstractBundle
     {
         try {
             $entity = $this->getRepo()->fetchOneByCase($query->getCase());
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             return null;
         }
 

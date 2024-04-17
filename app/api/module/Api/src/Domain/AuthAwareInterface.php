@@ -10,9 +10,6 @@ use Dvsa\Olcs\Api\Domain\Repository\User as UserRepoService;
  */
 interface AuthAwareInterface
 {
-    /**
-     * @param AuthorizationService $service
-     */
     public function setAuthService(AuthorizationService $service);
 
     /**
@@ -20,9 +17,6 @@ interface AuthAwareInterface
      */
     public function getAuthService();
 
-    /**
-     * @param UserRepoService $service
-     */
     public function setUserRepository(UserRepoService $service);
 
     /**

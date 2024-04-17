@@ -377,7 +377,7 @@ class RepositoryTestCase extends MockeryTestCase
         }
 
         if (is_object($value)) {
-            $value = get_class($value);
+            $value = $value::class;
         }
 
         if (is_bool($value)) {
@@ -416,7 +416,6 @@ class RepositoryTestCase extends MockeryTestCase
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
      * @return array
      */
     public function setUpDefaultServices(ServiceLocatorInterface $serviceLocator): array
@@ -451,7 +450,6 @@ class RepositoryTestCase extends MockeryTestCase
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
      * @return MockInterface|EntityManager
      */
     protected function setUpEntityManager(ServiceLocatorInterface $serviceLocator): MockInterface
@@ -463,8 +461,6 @@ class RepositoryTestCase extends MockeryTestCase
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string $key
      * @return MockInterface
      */
     protected function resolveMockService(ServiceLocatorInterface $serviceLocator, string $key): MockInterface
@@ -473,8 +469,6 @@ class RepositoryTestCase extends MockeryTestCase
     }
 
     /**
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param string $class
      * @return AbstractRepository
      */
     protected function setUpRepository(ServiceLocatorInterface $serviceLocator, string $class): AbstractRepository

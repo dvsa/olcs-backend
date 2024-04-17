@@ -12,32 +12,18 @@ use RuntimeException;
 
 class ApplicationAnswersClearer
 {
-    /** @var SupplementedApplicationStepsProvider */
-    private $supplementedApplicationStepsProvider;
-
-    /** @var QaContextFactory */
-    private $qaContextFactory;
-
     /**
      * Create service instance
      *
-     * @param SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider
-     * @param QaContextFactory $qaContextFactory
      *
      * @return ApplicationAnswersClearer
      */
-    public function __construct(
-        SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider,
-        QaContextFactory $qaContextFactory
-    ) {
-        $this->supplementedApplicationStepsProvider = $supplementedApplicationStepsProvider;
-        $this->qaContextFactory = $qaContextFactory;
+    public function __construct(private SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider, private QaContextFactory $qaContextFactory)
+    {
     }
 
     /**
      * Remove or reset to the default state all answers for this application
-     *
-     * @param QaEntityInterface $qaEntity
      */
     public function clear(QaEntityInterface $qaEntity)
     {
@@ -52,7 +38,6 @@ class ApplicationAnswersClearer
      * Remove or reset to the default state all answers for this application that follow the application step
      * contained in the specified qa entity
      *
-     * @param QaContext $qaContext
      *
      * @throws RuntimeException
      */
@@ -86,9 +71,6 @@ class ApplicationAnswersClearer
 
     /**
      * Clear the answer corresponding to the specified qa entity and supplemented application step
-     *
-     * @param QaEntityInterface $qaEntity
-     * @param SupplementedApplicationStep $supplementedApplicationStep
      */
     private function clearAnswer(QaEntityInterface $qaEntity, SupplementedApplicationStep $supplementedApplicationStep)
     {

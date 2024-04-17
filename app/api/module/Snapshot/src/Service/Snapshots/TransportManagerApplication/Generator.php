@@ -30,30 +30,6 @@ use Laminas\View\Model\ViewModel;
  */
 class Generator extends AbstractGenerator
 {
-    /** @var NiTextTranslation */
-    private $niTextTranslation;
-
-    /** @var TransportManagerMainReviewService */
-    private $transportManagerMainReviewService;
-
-    /** @var TransportManagerResponsibilityReviewService */
-    private $transportManagerResponsibilityReviewService;
-
-    /** @var TransportManagerOtherEmploymentReviewService */
-    private $transportManagerOtherEmploymentReviewService;
-
-    /** @var TransportManagerPreviousConvictionReviewService */
-    private $transportManagerPreviousConvictionReviewService;
-
-    /** @var TransportManagerPreviousLicenceReviewService */
-    private $transportManagerPreviousLicenceReviewService;
-
-    /** @var TransportManagerDeclarationReviewService */
-    private $transportManagerDeclarationReviewService;
-
-    /** @var TransportManagerSignatureReviewService */
-    private $transportManagerSignatureReviewService;
-
     /**
      * Create service instance
      *
@@ -71,24 +47,16 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        NiTextTranslation $niTextTranslation,
-        TransportManagerMainReviewService $transportManagerMainReviewService,
-        TransportManagerResponsibilityReviewService $transportManagerResponsibilityReviewService,
-        TransportManagerOtherEmploymentReviewService $transportManagerOtherEmploymentReviewService,
-        TransportManagerPreviousConvictionReviewService $transportManagerPreviousConvictionReviewService,
-        TransportManagerPreviousLicenceReviewService $transportManagerPreviousLicenceReviewService,
-        TransportManagerDeclarationReviewService $transportManagerDeclarationReviewService,
-        TransportManagerSignatureReviewService $transportManagerSignatureReviewService
+        private NiTextTranslation $niTextTranslation,
+        private TransportManagerMainReviewService $transportManagerMainReviewService,
+        private TransportManagerResponsibilityReviewService $transportManagerResponsibilityReviewService,
+        private TransportManagerOtherEmploymentReviewService $transportManagerOtherEmploymentReviewService,
+        private TransportManagerPreviousConvictionReviewService $transportManagerPreviousConvictionReviewService,
+        private TransportManagerPreviousLicenceReviewService $transportManagerPreviousLicenceReviewService,
+        private TransportManagerDeclarationReviewService $transportManagerDeclarationReviewService,
+        private TransportManagerSignatureReviewService $transportManagerSignatureReviewService
     ) {
         parent::__construct($abstractGeneratorServices);
-        $this->niTextTranslation = $niTextTranslation;
-        $this->transportManagerMainReviewService = $transportManagerMainReviewService;
-        $this->transportManagerResponsibilityReviewService = $transportManagerResponsibilityReviewService;
-        $this->transportManagerOtherEmploymentReviewService = $transportManagerOtherEmploymentReviewService;
-        $this->transportManagerPreviousConvictionReviewService = $transportManagerPreviousConvictionReviewService;
-        $this->transportManagerPreviousLicenceReviewService = $transportManagerPreviousLicenceReviewService;
-        $this->transportManagerDeclarationReviewService = $transportManagerDeclarationReviewService;
-        $this->transportManagerSignatureReviewService = $transportManagerSignatureReviewService;
     }
 
     public function generate(TransportManagerApplication $tma, $isInternalUser = false)

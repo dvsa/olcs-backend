@@ -16,9 +16,6 @@ trait FileProcessorAwareTrait
      */
     protected $fileProcessor;
 
-    /**
-     * @param FileProcessor $fileProcessor
-     */
     public function setFileProcessor(FileProcessor $fileProcessor)
     {
         $this->fileProcessor = $fileProcessor;

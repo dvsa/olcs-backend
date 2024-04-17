@@ -62,7 +62,6 @@ class AnswerEntityTest extends EntityTester
     public function testValueGetterAndSetter($questionType, $answerValue)
     {
         $this->assertNull($this->entity->getValue());
-
         $this->entity->setValue($questionType, $answerValue);
 
         $this->assertEquals($answerValue, $this->entity->getValue());

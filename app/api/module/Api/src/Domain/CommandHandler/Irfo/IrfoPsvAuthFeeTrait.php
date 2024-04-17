@@ -20,7 +20,6 @@ trait IrfoPsvAuthFeeTrait
     /**
      * Generates application fee
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -39,7 +38,6 @@ trait IrfoPsvAuthFeeTrait
     /**
      * Creates outstanding application fee
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -67,7 +65,6 @@ trait IrfoPsvAuthFeeTrait
     /**
      * Creates exempt fee for 0 amount. Marked as PAID
      *
-     * @param IrfoPsvAuth $irfoPsvAuth
      * @return Result
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

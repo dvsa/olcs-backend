@@ -4,19 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 class JsonDecodingFilteredTranslateableTextGenerator
 {
-    /** @var FilteredTranslateableTextGenerator */
-    private $filteredTranslateableTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param FilteredTranslateableTextGenerator $filteredTranslateableTextGenerator
      *
      * @return JsonDecodingFilteredTranslateableTextGenerator
      */
-    public function __construct(FilteredTranslateableTextGenerator $filteredTranslateableTextGenerator)
+    public function __construct(private FilteredTranslateableTextGenerator $filteredTranslateableTextGenerator)
     {
-        $this->filteredTranslateableTextGenerator = $filteredTranslateableTextGenerator;
     }
 
     /**

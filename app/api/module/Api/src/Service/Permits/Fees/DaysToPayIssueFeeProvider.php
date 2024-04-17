@@ -7,19 +7,14 @@ use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 
 class DaysToPayIssueFeeProvider
 {
-    /** @var SystemParameterRepository */
-    private $systemParameterRepo;
-
     /**
      * Create service instance
      *
-     * @param SystemParameterRepository $systemParameterRepo
      *
      * @return DaysToPayIssueFeeProvider
      */
-    public function __construct(SystemParameterRepository $systemParameterRepo)
+    public function __construct(private SystemParameterRepository $systemParameterRepo)
     {
-        $this->systemParameterRepo = $systemParameterRepo;
     }
 
     /**

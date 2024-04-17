@@ -20,7 +20,7 @@ class LicencePsvDiscCountNotCeased extends AbstractQueryHandler
         try {
             /* @var $entity \Dvsa\Olcs\Api\Entity\Licence\Licence */
             $entity = $this->getRepo()->fetchUsingId($query);
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             return null;
         }
 

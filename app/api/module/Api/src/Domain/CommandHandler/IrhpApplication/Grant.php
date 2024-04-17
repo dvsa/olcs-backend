@@ -88,8 +88,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     }
 
     /**
-     * @param IrhpApplication $irhpApplication
-     *
      * @return CreateQueue
      */
     private function getEmailCommand(IrhpApplication $irhpApplication)
@@ -105,8 +103,6 @@ final class Grant extends AbstractCommandHandler implements TransactionedInterfa
     }
 
     /**
-     * @param IrhpApplication $irhpApplication
-     *
      * @return CreateFee
      */
     private function getCreateFeeCommand(IrhpApplication $irhpApplication)

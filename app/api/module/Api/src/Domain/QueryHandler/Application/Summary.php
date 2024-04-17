@@ -232,7 +232,7 @@ class Summary extends AbstractQueryHandler
                 return false;
             }
             return $isUnderConsideration;
-        } catch (\Exception $nfe) {
+        } catch (\Exception) {
             return $isUnderConsideration;
         }
     }

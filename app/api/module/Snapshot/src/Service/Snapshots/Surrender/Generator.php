@@ -15,24 +15,6 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\Surrender\Section\SignatureReviewServic
 
 class Generator extends AbstractGenerator
 {
-    /** @var LicenceDetailsService */
-    private $licenceDetailsService;
-
-    /** @var CurrentDiscsReviewService */
-    private $currentDiscsReviewService;
-
-    /** @var OperatorLicenceReviewService */
-    private $operatorLicenceReviewService;
-
-    /** @var CommunityLicenceReviewService */
-    private $communityLicenceReviewService;
-
-    /** @var DeclarationReviewService */
-    private $declarationReviewService;
-
-    /** @var SignatureReviewService */
-    private $signatureReviewService;
-
     /**
      * Create service instance
      *
@@ -48,20 +30,14 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        LicenceDetailsService $licenceDetailsService,
-        CurrentDiscsReviewService $currentDiscsReviewService,
-        OperatorLicenceReviewService $operatorLicenceReviewService,
-        CommunityLicenceReviewService $communityLicenceReviewService,
-        DeclarationReviewService $declarationReviewService,
-        SignatureReviewService $signatureReviewService
+        private LicenceDetailsService $licenceDetailsService,
+        private CurrentDiscsReviewService $currentDiscsReviewService,
+        private OperatorLicenceReviewService $operatorLicenceReviewService,
+        private CommunityLicenceReviewService $communityLicenceReviewService,
+        private DeclarationReviewService $declarationReviewService,
+        private SignatureReviewService $signatureReviewService
     ) {
         parent::__construct($abstractGeneratorServices);
-        $this->licenceDetailsService = $licenceDetailsService;
-        $this->currentDiscsReviewService = $currentDiscsReviewService;
-        $this->operatorLicenceReviewService = $operatorLicenceReviewService;
-        $this->communityLicenceReviewService = $communityLicenceReviewService;
-        $this->declarationReviewService = $declarationReviewService;
-        $this->signatureReviewService = $signatureReviewService;
     }
 
     public function generate(Surrender $surrender)

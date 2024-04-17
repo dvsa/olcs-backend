@@ -12,12 +12,6 @@ class BilateralCriteria implements RangeMatchingCriteriaInterface
         IrhpPermitApplication::BILATERAL_CABOTAGE_REQUIRED => true,
     ];
 
-    /** @var string */
-    private $standardOrCabotage;
-
-    /** @var string */
-    private $journey;
-
     /**
      * Create instance
      *
@@ -26,10 +20,8 @@ class BilateralCriteria implements RangeMatchingCriteriaInterface
      *
      * @return BilateralCriteria
      */
-    public function __construct($standardOrCabotage, $journey)
+    public function __construct(private $standardOrCabotage, private $journey)
     {
-        $this->standardOrCabotage = $standardOrCabotage;
-        $this->journey = $journey;
     }
 
     /**

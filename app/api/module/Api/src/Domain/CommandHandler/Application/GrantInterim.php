@@ -95,7 +95,6 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
     /**
      * Get existing grant fees
      *
-     * @param ApplicationEntity $application
      *
      * @return array
      */
@@ -107,7 +106,6 @@ final class GrantInterim extends AbstractCommandHandler implements Transactioned
     /**
      * Get paid grant fees
      *
-     * @param ApplicationEntity $application
      *
      * @return array
      */

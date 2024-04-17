@@ -89,7 +89,7 @@ class EntityAccessLogger
 
         foreach (static::PERMISSION_ENTITIES_MAP as $permission => $entitiesEnabledForPermission) {
             if ($this->authService->isGranted($permission)) {
-                $entityClassRef = get_class($entity);
+                $entityClassRef = $entity::class;
                 $entityLogCommandRef = static::ENTITY_AUDIT_LOG_COMMAND_MAP[$entityClassRef] ?? null;
                 if (! in_array($entityClassRef, $entitiesEnabledForPermission, true)) {
                     throw new RuntimeException('Cannot create audit read for entity, no DTO is defined');

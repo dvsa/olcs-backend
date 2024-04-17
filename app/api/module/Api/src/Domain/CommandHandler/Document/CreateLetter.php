@@ -95,8 +95,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
     }
 
     /**
-     * @param CreateLetterCommand $command
-     * @param DocTemplate $template
      * @throws \Exception
      */
     protected function handleFollowUpTasks(DocTemplate $template, CreateLetterCommand $command)
@@ -108,8 +106,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
     /**
      * Generates a task for an application or variation when a 1ST letter is created.
      *
-     * @param CreateLetterCommand $command
-     * @param DocTemplate $template
      * @throws \Exception
      */
     protected function handleFollowUpTaskForApplicationOrVariationFirstLetter(DocTemplate $template, CreateLetterCommand $command)
@@ -154,8 +150,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
     /**
      * Generated a task for an application or variation when a FINAL letter is created.
      *
-     * @param CreateLetterCommand $command
-     * @param DocTemplate $template
      * @throws \Exception
      */
     protected function handleFollowUpTaskForApplicationFinalLetter(DocTemplate $template, CreateLetterCommand $command)
@@ -199,8 +193,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
 
     /**
      * Creates a task.
-     *
-     * @param array $arrayDto
      */
     protected function createTask(array $arrayDto)
     {
@@ -212,7 +204,6 @@ final class CreateLetter extends AbstractCommandHandler implements Transactioned
      * Resolves template identifier.
      *  - Ignores prefixed forward slash
      *
-     * @param string $template
      * @return string
      */
     private function resolveTemplateIdentifier(string $template): string

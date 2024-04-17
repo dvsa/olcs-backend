@@ -23,7 +23,7 @@ abstract class AbstractBundle extends AbstractQueryHandler
     {
         try {
             $entity = $this->getRepo()->fetchUsingId($query);
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             return null;
         }
 

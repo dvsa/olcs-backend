@@ -88,7 +88,6 @@ final class UpdateAddresses extends AbstractCommandHandler implements Transactio
     /**
      * Is address populated
      *
-     * @param array $address
      *
      * @return bool
      */

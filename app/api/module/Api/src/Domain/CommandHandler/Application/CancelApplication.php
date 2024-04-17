@@ -49,8 +49,6 @@ class CancelApplication extends AbstractCommandHandler implements TransactionedI
 
     /**
      * Cancel outstanding fees on the application
-     *
-     * @param Application $application
      */
     private function cancelOutstandingFees(Application $application)
     {

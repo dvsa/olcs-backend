@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 interface ToggleAwareInterface
 {
     /**
-     * @param ToggleService $toggleService
-     *
      * @return void
      */
     public function setToggleService(ToggleService $toggleService): void;

@@ -6,39 +6,19 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 
 class ForCpWithCountriesProvider
 {
-    /** @var RestrictedWithMostMatchingCountriesProvider */
-    private $restrictedWithMostMatchingCountriesProvider;
-
-    /** @var ForCpWithCountriesAndNoMatchingRangesProvider */
-    private $forCpWithCountriesAndNoMatchingRangesProvider;
-
-    /** @var ForCpWithCountriesAndMultipleMatchingRangesProvider */
-    private $forCpWithCountriesAndMultipleMatchingRangesProvider;
-
     /**
      * Create service instance
      *
-     * @param RestrictedWithMostMatchingCountriesProvider $restrictedWithMostMatchingCountriesProvider
-     * @param ForCpWithCountriesAndNoMatchingRangesProvider $forCpWithCountriesAndNoMatchingRangesProvider
-     * @param ForCpWithCountriesAndMultipleMatchingRangesProvider $forCpWithCountriesAndMultipleMatchingRangesProvider
      *
      * @return ForCpWithCountriesProvider
      */
-    public function __construct(
-        RestrictedWithMostMatchingCountriesProvider $restrictedWithMostMatchingCountriesProvider,
-        ForCpWithCountriesAndNoMatchingRangesProvider $forCpWithCountriesAndNoMatchingRangesProvider,
-        ForCpWithCountriesAndMultipleMatchingRangesProvider $forCpWithCountriesAndMultipleMatchingRangesProvider
-    ) {
-        $this->restrictedWithMostMatchingCountriesProvider = $restrictedWithMostMatchingCountriesProvider;
-        $this->forCpWithCountriesAndNoMatchingRangesProvider = $forCpWithCountriesAndNoMatchingRangesProvider;
-        $this->forCpWithCountriesAndMultipleMatchingRangesProvider = $forCpWithCountriesAndMultipleMatchingRangesProvider;
+    public function __construct(private RestrictedWithMostMatchingCountriesProvider $restrictedWithMostMatchingCountriesProvider, private ForCpWithCountriesAndNoMatchingRangesProvider $forCpWithCountriesAndNoMatchingRangesProvider, private ForCpWithCountriesAndMultipleMatchingRangesProvider $forCpWithCountriesAndMultipleMatchingRangesProvider)
+    {
     }
 
     /**
      * Returns the best fitting range for an application that specifies one or more countries
      *
-     * @param Result $result
-     * @param array $ranges
      * @param array $applicationCountryIds The country ids specified in the application
      *
      * @return array

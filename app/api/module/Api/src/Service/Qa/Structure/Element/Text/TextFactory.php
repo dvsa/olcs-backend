@@ -15,8 +15,8 @@ class TextFactory
      *
      * @return Text
      */
-    public function create(?TranslateableText $label = null, ?TranslateableText $hint = null, $value)
+    public function create($value, ?TranslateableText $label = null, ?TranslateableText $hint = null)
     {
-        return new Text($label, $hint, $value);
+        return new Text($value, $label, $hint);
     }
 }

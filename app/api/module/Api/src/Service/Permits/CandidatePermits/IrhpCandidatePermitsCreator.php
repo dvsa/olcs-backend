@@ -8,32 +8,18 @@ use Dvsa\Olcs\Api\Service\Permits\Scoring\CandidatePermitsCreator as ScoringCand
 
 class IrhpCandidatePermitsCreator
 {
-    /** @var ScoringCandidatePermitsCreator */
-    private $scoringCandidatePermitsCreator;
-
-    /** @var ApggCandidatePermitsCreator */
-    private $apggCandidatePermitsCreator;
-
     /**
      * Create service instance
      *
-     * @param ScoringCandidatePermitsCreator $scoringCandidatePermitsCreator
-     * @param ApggCandidatePermitsCreator $apggCandidatePermitsCreator
      *
      * @return IrhpCandidatePermitsCreator
      */
-    public function __construct(
-        ScoringCandidatePermitsCreator $scoringCandidatePermitsCreator,
-        ApggCandidatePermitsCreator $apggCandidatePermitsCreator
-    ) {
-        $this->scoringCandidatePermitsCreator = $scoringCandidatePermitsCreator;
-        $this->apggCandidatePermitsCreator = $apggCandidatePermitsCreator;
+    public function __construct(private ScoringCandidatePermitsCreator $scoringCandidatePermitsCreator, private ApggCandidatePermitsCreator $apggCandidatePermitsCreator)
+    {
     }
 
     /**
      * Create candidate permits as required for the specified application
-     *
-     * @param IrhpApplication $irhpApplication
      */
     public function createIfRequired(IrhpApplication $irhpApplication)
     {

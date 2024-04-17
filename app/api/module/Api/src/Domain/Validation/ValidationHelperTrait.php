@@ -112,7 +112,7 @@ trait ValidationHelperTrait
     public function __call($method, $params)
     {
         if ($this->getValidatorManager()->has($method) === false) {
-            throw new \RuntimeException(get_class($this) . '::' . $method . ' doesn\'t exist');
+            throw new \RuntimeException($this::class . '::' . $method . ' doesn\'t exist');
         }
 
         $validator = $this->getValidatorManager()->get($method);

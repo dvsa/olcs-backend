@@ -9,9 +9,6 @@ namespace Dvsa\Olcs\Api\Domain;
  */
 interface ConfigAwareInterface
 {
-    /**
-     * @param array $config
-     */
     public function setConfig(array $config = []);
 
     /**

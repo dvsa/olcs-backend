@@ -42,7 +42,7 @@ final class DisableFileUpload extends AbstractCommandHandler implements ToggleRe
                 [
                     'organisation_id' => $organisation->getId(),
                     'exception' => [
-                        'class' => get_class($e),
+                        'class' => $e::class,
                         'message' => $e->getMessage(),
                         'trace' => $e->getTraceAsString(),
                     ],

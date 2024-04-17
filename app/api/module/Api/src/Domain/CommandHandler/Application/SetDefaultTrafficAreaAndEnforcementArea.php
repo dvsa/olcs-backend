@@ -95,7 +95,7 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
                 try {
                     $trafficArea = $this->getAddressService()
                         ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Address service is down, just continue without saving
                     return $this->result;
                 }
@@ -109,7 +109,7 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
                 try {
                     $enforcementArea = $this->getAddressService()
                         ->fetchEnforcementAreaByPostcode($postcode, $this->getRepo('PostcodeEnforcementArea'));
-                } catch (\Exception $e) {
+                } catch (\Exception) {
                     // Address service is down, just continue without saving
                     return $this->result;
                 }

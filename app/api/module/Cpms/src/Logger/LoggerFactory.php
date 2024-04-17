@@ -14,19 +14,8 @@ use Monolog\Logger;
  */
 class LoggerFactory
 {
-    /**
-     * @var string
-     */
-    private $logPath;
-    /**
-     * @var int
-     */
-    private $zendLogLevel;
-
-    public function __construct(string $logPath, int $zendLogLevel)
+    public function __construct(private string $logPath, private int $zendLogLevel)
     {
-        $this->logPath = $logPath;
-        $this->zendLogLevel = $zendLogLevel;
     }
 
     public function createLogger(): Logger

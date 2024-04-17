@@ -13,24 +13,14 @@ class CheckboxAnswerSaver implements AnswerSaverInterface
 {
     use AnyTrait;
 
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param GenericAnswerFetcher $genericAnswerFetcher
      *
      * @return CheckboxAnswerSaver
      */
-    public function __construct(GenericAnswerWriter $genericAnswerWriter, GenericAnswerFetcher $genericAnswerFetcher)
+    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private GenericAnswerFetcher $genericAnswerFetcher)
     {
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
     }
 
     /**
@@ -44,7 +34,7 @@ class CheckboxAnswerSaver implements AnswerSaverInterface
                 $qaContext->getApplicationStepEntity(),
                 $postData
             );
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $answerValue = false;
         }
 

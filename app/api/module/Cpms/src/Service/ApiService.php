@@ -71,9 +71,6 @@ class ApiService
     }
 
     /**
-     * @param string $endPoint
-     * @param string $scope
-     * @param array  $data
      *
      * @return array|mixed
      */
@@ -84,9 +81,6 @@ class ApiService
 
 
     /**
-     * @param string $endPoint
-     * @param string $scope
-     * @param array  $data
      *
      * @return array|mixed
      */
@@ -96,9 +90,6 @@ class ApiService
     }
 
     /**
-     * @param string $endPoint
-     * @param string $scope
-     * @param array  $data
      *
      * @return array|mixed
      */
@@ -134,10 +125,8 @@ class ApiService
     /**
      * Process API request
      *
-     * @param string     $endPoint
      * @param string     $scope  (CARD, DIRECT_DEBIT)
      * @param string     $method HTTP Method (GET, POST, PUT)
-     * @param null|array $params
      *
      * @return array|mixed
      */
@@ -187,8 +176,6 @@ class ApiService
     }
 
     /**
-     * @param string      $scope
-     * @param string|null $salesReference
      *
      * @return AccessToken|mixed
      */
@@ -234,8 +221,6 @@ class ApiService
     }
 
     /**
-     * @param array|null $params
-     *
      * @return string|null
      */
     private function getSalesReferenceFromParams(?array $params): ?string

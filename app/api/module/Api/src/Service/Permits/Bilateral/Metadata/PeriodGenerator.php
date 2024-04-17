@@ -8,22 +8,17 @@ use RuntimeException;
 
 class PeriodGenerator
 {
-    /** @var IrhpPermitStockRepository */
-    private $irhpPermitStockRepo;
-
     /** @var array */
     private $fieldsGenerators = [];
 
     /**
      * Create service instance
      *
-     * @param IrhpPermitStockRepository $irhpPermitStockRepo
      *
      * @return PeriodGenerator
      */
-    public function __construct(IrhpPermitStockRepository $irhpPermitStockRepo)
+    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo)
     {
-        $this->irhpPermitStockRepo = $irhpPermitStockRepo;
     }
 
     /**

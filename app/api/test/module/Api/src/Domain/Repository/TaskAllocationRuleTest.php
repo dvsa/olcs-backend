@@ -127,8 +127,6 @@ class TaskAllocationRuleTest extends RepositoryTestCase
 
     /**
      * @dataProvider fetchByParametersAttemptsLookupWithoutSubCategoryWhenCallReturnsNoResultsDataProvider
-     * @param array $returnValues
-     * @param bool $expectSubsequentCall
      */
     public function testFetchByParametersAttemptsLookupWithoutSubCategoryWhenCallReturnsNoResults(array $returnValues, bool $expectSubsequentCall)
     {

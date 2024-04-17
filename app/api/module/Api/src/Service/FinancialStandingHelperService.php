@@ -120,7 +120,6 @@ class FinancialStandingHelperService implements FactoryInterface
      * -----------
      *       27300
      *
-     * @param array $auths
      * @return int
      */
     public function getFinanceCalculation(array $auths)
@@ -201,7 +200,6 @@ class FinancialStandingHelperService implements FactoryInterface
     /**
      * Return metadata regarding the first vehicle given an array of auths
      *
-     * @param array $auths
      *
      * @return array
      */
@@ -274,7 +272,6 @@ class FinancialStandingHelperService implements FactoryInterface
      * Should this auth be associated with rates with a vehicle type of HGV/LGV rather than a vehicle type of
      * "not applicable"?
      *
-     * @param array $auth
      *
      * @return float
      */
@@ -491,7 +488,6 @@ class FinancialStandingHelperService implements FactoryInterface
      * Get all active applications belonging to the organisation associated with the provided application, with the
      * exception of the provided application and any applications that are variations
      *
-     * @param ApplicationEntity $application
      *
      * @return array
      */

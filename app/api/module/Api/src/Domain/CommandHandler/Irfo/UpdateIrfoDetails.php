@@ -77,8 +77,6 @@ final class UpdateIrfoDetails extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * @param Organisation $org
-     * @param array $tradingNames
      * @return array
      */
     private function processTradingNames(Organisation $org, array $tradingNames)
@@ -94,8 +92,6 @@ final class UpdateIrfoDetails extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * @param Organisation $org
-     * @param array $irfoPartners
      * @return array
      */
     private function processIrfoPartners(Organisation $org, array $irfoPartners)

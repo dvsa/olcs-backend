@@ -42,7 +42,6 @@ class ContinuationDetail extends AbstractQueryHandler
     /**
      * Get a Continuation Detail for the marker
      *
-     * @param \Dvsa\Olcs\Api\Entity\Licence\Licence $licence
      *
      * @return \Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail|null
      */

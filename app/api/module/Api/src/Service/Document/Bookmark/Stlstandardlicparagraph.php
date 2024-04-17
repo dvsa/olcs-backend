@@ -72,11 +72,6 @@ class Stlstandardlicparagraph extends DynamicBookmark
             return $this->data['licenceType']['id'];
         }
 
-        // look on application before licence, for under consideration new applications
-        if (isset($this->data['application']['licenceType']['id'])) {
-            return $this->data['application']['licenceType']['id'];
-        }
-
-        return $this->data['licence']['licenceType']['id'] ?? null;
+        return $this->data['application']['licenceType']['id'] ?? $this->data['licence']['licenceType']['id'] ?? null;
     }
 }

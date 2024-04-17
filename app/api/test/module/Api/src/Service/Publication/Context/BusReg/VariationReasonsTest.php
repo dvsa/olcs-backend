@@ -22,7 +22,6 @@ class VariationReasonsTest extends MockeryTestCase
      * @group publicationFilter
      * @dataProvider dpProvideDataProvider
      *
-     * @param ArrayCollection $variationReasons
      * @param string $expectedString
      */
     public function testProvide(ArrayCollection $variationReasons, $expectedString)

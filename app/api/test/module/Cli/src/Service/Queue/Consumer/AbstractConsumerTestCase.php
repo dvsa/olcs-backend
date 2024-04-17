@@ -55,9 +55,8 @@ abstract class AbstractConsumerTestCase extends MockeryTestCase
     /**
      * @param string $class
      * @param array $expectedDtoData
-     * @param mixed $result
      */
-    protected function expectCommand($class, $expectedDtoData, $result, $validate = true)
+    protected function expectCommand($class, $expectedDtoData, mixed $result, $validate = true)
     {
         if ($validate) {
             $this->chm

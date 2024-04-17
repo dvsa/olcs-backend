@@ -26,7 +26,7 @@ class SystemParameter extends AbstractRepository
     {
         try {
             return $this->fetchById($key)->getParamValue();
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             return null;
         }
     }

@@ -15,9 +15,6 @@ trait SlaCalculatorAwareTrait
      */
     protected $slaCalculator;
 
-    /**
-     * @param SlaCalculatorInterface $service
-     */
     public function setSlaCalculator(SlaCalculatorInterface $service)
     {
         $this->slaCalculator = $service;

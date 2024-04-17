@@ -22,10 +22,8 @@ class ValidatorList
     /**
      * Find the first validator by rule name within the list
      *
-     * @param string $rule
      *
      * @return Validator
-     *
      * @throws RuntimeException
      */
     public function getValidatorByRule(string $rule)
@@ -46,8 +44,6 @@ class ValidatorList
 
     /**
      * Add a validator to the end of the list
-     *
-     * @param Validator $validator
      */
     public function addValidator(Validator $validator)
     {

@@ -13,11 +13,10 @@ trait ApplicationResetTrait
     /**
      * Normalise the received date into a format suitable to be passed to the create application/variation command
      *
-     * @param mixed $receivedDate
      *
      * @return string|null
      */
-    private function processReceivedDate($receivedDate)
+    private function processReceivedDate(mixed $receivedDate)
     {
         if ($receivedDate !== null) {
             if ($receivedDate instanceof DateTime) {

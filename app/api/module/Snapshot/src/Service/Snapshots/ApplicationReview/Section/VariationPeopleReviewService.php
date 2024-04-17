@@ -17,9 +17,6 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
  */
 class VariationPeopleReviewService extends AbstractReviewService
 {
-    /** @var PeopleReviewService */
-    private $peopleReviewService;
-
     /**
      * Create service instance
      *
@@ -30,10 +27,9 @@ class VariationPeopleReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        PeopleReviewService $peopleReviewService
+        private PeopleReviewService $peopleReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->peopleReviewService = $peopleReviewService;
     }
 
     /**

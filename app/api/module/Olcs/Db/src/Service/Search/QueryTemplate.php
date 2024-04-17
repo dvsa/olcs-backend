@@ -126,7 +126,7 @@ class QueryTemplate extends Query
         foreach ($dates as $fieldName => $value) {
             $lcFieldName = strtolower($fieldName);
 
-            if (substr($lcFieldName, -11) === 'from_and_to') {
+            if (str_ends_with($lcFieldName, 'from_and_to')) {
                 /* from_and_to allows a single date field to be used as a terms filter whilst keeping the
                  * individual Day/Month/Year input fields. The 'from_and_to' is identified and a single date is
                  * added as a query match rather than a range (for efficiency)
@@ -138,7 +138,7 @@ class QueryTemplate extends Query
                         $fieldName => $value
                     ]
                 ];
-            } elseif (substr($lcFieldName, -4) === 'from') {
+            } elseif (str_ends_with($lcFieldName, 'from')) {
                 $criteria = [];
 
                 $fieldName = substr($fieldName, 0, -5);

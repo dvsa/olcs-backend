@@ -37,6 +37,6 @@ abstract class AbstractBrRegOrVary extends DynamicBookmark
             return $this->data['variationNo'] > 0 ? $this->renderVary : $this->renderReg;
         }
 
-        throw new \Exception('Failed to generate bookmark ' . get_class($this));
+        throw new \Exception('Failed to generate bookmark ' . static::class);
     }
 }

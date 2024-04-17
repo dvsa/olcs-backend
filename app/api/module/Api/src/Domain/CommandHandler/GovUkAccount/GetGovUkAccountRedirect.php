@@ -12,17 +12,11 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
  */
 class GetGovUkAccountRedirect extends AbstractCommandHandler
 {
-    /** @var GovUkAccountService */
-    private GovUkAccountService $govUkAccountService;
-
     /**
      * Constructor.
-     *
-     * @param GovUkAccountService $govUkAccountService
      */
-    public function __construct(GovUkAccountService $govUkAccountService)
+    public function __construct(private GovUkAccountService $govUkAccountService)
     {
-        $this->govUkAccountService = $govUkAccountService;
     }
 
     /**

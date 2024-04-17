@@ -11,18 +11,12 @@ use LmcRbacMvc\Identity\IdentityInterface;
 class Identity implements IdentityInterface
 {
     /**
-     * @var User
-     */
-    private $user;
-
-    /**
      * @var array
      */
     private $roles;
 
-    public function __construct(User $user)
+    public function __construct(private User $user)
     {
-        $this->user = $user;
     }
 
     /**

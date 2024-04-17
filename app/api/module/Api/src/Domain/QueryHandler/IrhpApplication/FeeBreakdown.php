@@ -46,7 +46,6 @@ class FeeBreakdown extends AbstractQueryHandler
      * Register a service to generate the fee breakdown for a specific permit type
      *
      * @param int $irhpPermitTypeId
-     * @param FeeBreakdownGeneratorInterface $feeBreakdownGenerator
      */
     private function registerGenerator($irhpPermitTypeId, FeeBreakdownGeneratorInterface $feeBreakdownGenerator)
     {

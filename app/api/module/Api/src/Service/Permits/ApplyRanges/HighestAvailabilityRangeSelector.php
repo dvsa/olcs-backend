@@ -10,9 +10,7 @@ class HighestAvailabilityRangeSelector
      * Returns the single range from the provided set with most permits remaining, or if there are multiple ranges
      * all with the most permits remaining, returns the range from this set with the lowest range id
      *
-     * @param Result $result
      * @param array $matchingRanges an array of the multiple matching ranges
-     *
      * @return array
      */
     public function getRange(Result $result, array $matchingRanges)
@@ -88,7 +86,6 @@ class HighestAvailabilityRangeSelector
     /**
      * Returns an array of range ids given an array of ranges
      *
-     * @param array $ranges
      *
      * @return array
      */

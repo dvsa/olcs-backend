@@ -7,7 +7,6 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUserSelfserve;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
 use Dvsa\Olcs\Auth\Exception\DeleteUserException;
@@ -49,7 +48,7 @@ class DeleteUserSelfserveTest extends AbstractCommandHandlerTestCase
             AuthorizationService::class => $this->mockAuth,
         ];
 
-        $adminUserEntity = (new UserEntity(9999, new RefData()))
+        $adminUserEntity = (new UserEntity(9999, UserEntity::USER_TYPE_OPERATOR))
             ->setId(self::ADMIN_USER_ID);
         $this->mockAuth->shouldReceive('getIdentity->getUser')->once()->andReturn($adminUserEntity);
 
@@ -64,7 +63,7 @@ class DeleteUserSelfserveTest extends AbstractCommandHandlerTestCase
 
         $command = Cmd::create($data);
 
-        $userEntity = new UserEntity(self::USER_ID, new RefData());
+        $userEntity = new UserEntity(self::USER_ID, UserEntity::USER_TYPE_OPERATOR);
         $userEntity->setId(self::USER_ID);
         $userEntity->setLoginId(self::LOGIN_ID);
 

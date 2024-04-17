@@ -44,22 +44,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      */
     protected $fetchJoinCollection = true;
 
-    /**
-     * @var EntityManagerInterface
-     */
-    private $em;
-
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\QueryBuilder
-     */
-    private $queryBuilder;
-
     private $references = [];
-
-    /**
-     * @var DbQueryServiceManager
-     */
-    private $dbQueryManager;
     /** @var  QueryInterface */
     protected $query;
 
@@ -70,14 +55,8 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      * @param QueryBuilderInterface  $queryBuilder   Doctrine Query Builder
      * @param DbQueryServiceManager  $dbQueryManager Olcs Query manager
      */
-    public function __construct(
-        EntityManagerInterface $em,
-        QueryBuilderInterface $queryBuilder,
-        DbQueryServiceManager $dbQueryManager
-    ) {
-        $this->em = $em;
-        $this->queryBuilder = $queryBuilder;
-        $this->dbQueryManager = $dbQueryManager;
+    public function __construct(private EntityManagerInterface $em, private QueryBuilderInterface $queryBuilder, private DbQueryServiceManager $dbQueryManager)
+    {
     }
 
     /**
@@ -202,7 +181,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
         try {
             return $qb->getQuery()->getSingleResult($hydrateMode);
-        } catch (\Exception $ex) {
+        } catch (\Exception) {
             throw new Exception\NotFoundException(
                 sprintf('Resource not found (%s %s %s)', $this->entity, $fetchBy, (string)$args[0])
             );
@@ -232,23 +211,18 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
         $qb = $this->createQueryBuilder();
 
-        switch (true) {
-            case is_array($value):
-                $qb->andWhere(
-                    $qb->expr()->in($this->alias . '.' . $fetchBy, $value)
-                );
-                break;
-            case is_int($value):
-                $qb->andWhere(
-                    $qb->expr()->eq($this->alias . '.' . $fetchBy, $value)
-                );
-                break;
-            case is_string($value):
-                $qb->andWhere(
-                    $qb->expr()->eq($this->alias . '.' . $fetchBy, ':' . $fetchBy)
-                )->setParameter($fetchBy, $value);
-                break;
-        }
+        match (true) {
+            is_array($value) => $qb->andWhere(
+                $qb->expr()->in($this->alias . '.' . $fetchBy, $value)
+            ),
+            is_int($value) => $qb->andWhere(
+                $qb->expr()->eq($this->alias . '.' . $fetchBy, $value)
+            ),
+            is_string($value) => $qb->andWhere(
+                $qb->expr()->eq($this->alias . '.' . $fetchBy, ':' . $fetchBy)
+            )->setParameter($fetchBy, $value),
+            default => $qb,
+        };
 
         return $qb;
     }
@@ -522,7 +496,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
 
         try {
             $this->getEntityManager()->lock($entity, LockMode::OPTIMISTIC, $version);
-        } catch (OptimisticLockException $ex) {
+        } catch (OptimisticLockException) {
             throw new Exception\VersionConflictException();
         }
     }
@@ -718,7 +692,6 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
     /**
      * Builds a string identifier for a column.
      *
-     * @param string $columnName
      * @return string
      */
     protected function getColumnIdentifier(string $columnName): string

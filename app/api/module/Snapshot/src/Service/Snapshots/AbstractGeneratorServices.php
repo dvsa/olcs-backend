@@ -11,9 +11,6 @@ use Laminas\View\Renderer\RendererInterface;
  */
 class AbstractGeneratorServices
 {
-    /** @var RendererInterface */
-    private $renderer;
-
     /**
      * Create service instance
      *
@@ -21,9 +18,8 @@ class AbstractGeneratorServices
      *
      * @return AbstractGeneratorServices
      */
-    public function __construct(RendererInterface $renderer)
+    public function __construct(private RendererInterface $renderer)
     {
-        $this->renderer = $renderer;
     }
 
     /**

@@ -12,19 +12,14 @@ class EmissionsStandardsAnswerSaver implements AnswerSaverInterface
 
     public const EURO3_OR_EURO4_ANSWER = 'qanda.bilaterals.emissions-standards.euro3-or-euro4';
 
-    /** @var CountryDeletingAnswerSaver */
-    private $countryDeletingAnswerSaver;
-
     /**
      * Create service instance
      *
-     * @param CountryDeletingAnswerSaver $countryDeletingAnswerSaver
      *
      * @return EmissionsStandardsAnswerSaver
      */
-    public function __construct(CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
+    public function __construct(private CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
     {
-        $this->countryDeletingAnswerSaver = $countryDeletingAnswerSaver;
     }
 
     /**

@@ -293,9 +293,6 @@ final class UpdateUser extends AbstractUserCommandHandler implements
     }
 
     /**
-     * @param User $newUser
-     * @param string|null $previousEmailAddress
-     * @param bool $previouslyDisabled
      * @return void
      * @throws ClientException
      */

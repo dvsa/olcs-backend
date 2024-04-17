@@ -15,38 +15,14 @@ class PermitUsageGenerator implements ElementGeneratorInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var RadioFactory */
-    private $radioFactory;
-
-    /** @var TranslateableTextGenerator */
-    private $translateableTextGenerator;
-
-    /** @var OptionFactory */
-    private $optionFactory;
-
-    /** @var OptionListFactory */
-    private $optionListFactory;
-
     /**
      * Create service instance
      *
-     * @param RadioFactory $radioFactory
-     * @param TranslateableTextGenerator $translateableTextGenerator
-     * @param OptionFactory $optionFactory
-     * @param OptionListFactory $optionListFactory
      *
      * @return PermitUsageGenerator
      */
-    public function __construct(
-        RadioFactory $radioFactory,
-        TranslateableTextGenerator $translateableTextGenerator,
-        OptionFactory $optionFactory,
-        OptionListFactory $optionListFactory
-    ) {
-        $this->radioFactory = $radioFactory;
-        $this->translateableTextGenerator = $translateableTextGenerator;
-        $this->optionFactory = $optionFactory;
-        $this->optionListFactory = $optionListFactory;
+    public function __construct(private RadioFactory $radioFactory, private TranslateableTextGenerator $translateableTextGenerator, private OptionFactory $optionFactory, private OptionListFactory $optionListFactory)
+    {
     }
 
     /**

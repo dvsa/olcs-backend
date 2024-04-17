@@ -2,7 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Repository;
 
-use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\QueryBuilder;
@@ -571,7 +571,7 @@ class IrhpPermitTest extends RepositoryTestCase
                     $licenceId
                 ],
                 [
-                    ArrayParameterType::STRING,
+                    Types::STRING,
                     PDO::PARAM_INT
                 ]
             )

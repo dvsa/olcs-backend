@@ -14,24 +14,14 @@ class DateAnswerSaver implements AnswerSaverInterface
 {
     use AnyTrait;
 
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param GenericAnswerFetcher $genericAnswerFetcher
      *
      * @return DateAnswerSaver
      */
-    public function __construct(GenericAnswerWriter $genericAnswerWriter, GenericAnswerFetcher $genericAnswerFetcher)
+    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private GenericAnswerFetcher $genericAnswerFetcher)
     {
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
     }
 
     /**

@@ -10,7 +10,6 @@ trait IrhpPermitApplicationOnlyTrait
     /**
      * Whether the passed entity is of type IrhpPermitApplication
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

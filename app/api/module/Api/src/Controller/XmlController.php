@@ -13,18 +13,8 @@ use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response as ResponsePlugin;
  */
 class XmlController extends AbstractRestfulController
 {
-    /**
-     * @var CommandHandlerManager
-     */
-    private CommandHandlerManager $commandHandlerManager;
-
-    /**
-     * @param CommandHandlerManager $commandHandlerManager
-     */
-    public function __construct(
-        CommandHandlerManager $commandHandlerManager
-    ) {
-        $this->commandHandlerManager = $commandHandlerManager;
+    public function __construct(private CommandHandlerManager $commandHandlerManager)
+    {
     }
     /**
      * @inheritdoc
@@ -36,7 +26,7 @@ class XmlController extends AbstractRestfulController
         try {
             $this->handleCommand($dto);
             return $this->response()->xmlAccepted();
-        } catch (Exception\Exception $ex) {
+        } catch (Exception\Exception) {
             return $this->response()->xmlBadRequest();
         }
     }

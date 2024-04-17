@@ -60,13 +60,10 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
             $maxPermits = $maxStockPermits[$stockId];
 
             if ($maxPermits > 0) {
-                switch ($irhpApplicationTypeId) {
-                    case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
-                        $permitsRequired = $this->deriveMultilateralPermitsRequired($row, $permitsRequiredData);
-                        break;
-                    default:
-                        throw new RuntimeException('Unsupported permit type ' . $irhpApplicationTypeId);
-                }
+                $permitsRequired = match ($irhpApplicationTypeId) {
+                    IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL => $this->deriveMultilateralPermitsRequired($row, $permitsRequiredData),
+                    default => throw new RuntimeException('Unsupported permit type ' . $irhpApplicationTypeId),
+                };
 
                 if (($permitsRequired < 0) || ($permitsRequired > $maxPermits)) {
                     throw new RuntimeException(
@@ -114,8 +111,6 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
     /**
      * Retrieve the number of permits required from the multilateral form data array
      *
-     * @param array $row
-     * @param array $permitsRequiredData
      *
      * @return int
      *

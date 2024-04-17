@@ -44,7 +44,6 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
     /**
      * Do the delete
      *
-     * @param array $ids
      *
      * @return Result
      * @throws ValidationException
@@ -61,7 +60,7 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
                 $entity = $repo->fetchById($id);
                 $this->checkDeletable($id, $entity);
                 $entities[$id] = $entity;
-            } catch (NotFoundException $e) {
+            } catch (NotFoundException) {
                 $result->addMessage(sprintf('Id %d not found', $id));
             }
         }
@@ -85,7 +84,7 @@ abstract class AbstractDeleteCommandHandler extends AbstractCommandHandler imple
      * @return void
      * @throws ValidationException
      */
-    protected function checkDeletable($id, $entity): void
+    protected function checkDeletable($id, mixed $entity): void
     {
         /** for BC reasons we need to check the interface, not everything has a canDelete method */
         if ($entity instanceof DeletableInterface && !$entity->canDelete()) {

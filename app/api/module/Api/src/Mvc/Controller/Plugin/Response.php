@@ -93,7 +93,7 @@ class Response extends AbstractPlugin
         }
 
         if (!is_array($result) && $result instanceof \JsonSerializable) {
-            Logger::info('Using legacy jsonSerialize on ' . get_class($result));
+            Logger::info('Using legacy jsonSerialize on ' . $result::class);
             $result = $result->jsonSerialize();
         }
 

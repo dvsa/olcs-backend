@@ -74,7 +74,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Create Contact Details entity
      *
-     * @param CreateCommand $command
      *
      * @return Result
      */

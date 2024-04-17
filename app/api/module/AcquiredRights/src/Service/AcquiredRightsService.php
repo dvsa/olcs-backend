@@ -16,17 +16,8 @@ use Laminas\Log\LoggerInterface;
 
 class AcquiredRightsService
 {
-    protected AcquiredRightsClient $acquiredRightsClient;
-    protected DateTimeImmutable $acquiredRightsExpiry;
-    protected LoggerInterface $logger;
-    protected bool $enableCheck;
-
-    public function __construct(LoggerInterface $logger, AcquiredRightsClient $acquiredRightsClient, DateTimeImmutable $acquiredRightsExpiry, bool $enableCheck = false)
+    public function __construct(protected LoggerInterface $logger, protected AcquiredRightsClient $acquiredRightsClient, protected DateTimeImmutable $acquiredRightsExpiry, protected bool $enableCheck = false)
     {
-        $this->logger = $logger;
-        $this->acquiredRightsClient = $acquiredRightsClient;
-        $this->acquiredRightsExpiry = $acquiredRightsExpiry;
-        $this->enableCheck = $enableCheck;
     }
 
     /**

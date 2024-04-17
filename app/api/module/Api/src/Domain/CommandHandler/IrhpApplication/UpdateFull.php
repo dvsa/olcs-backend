@@ -103,9 +103,7 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
     /**
      * Creates and saves instances of IrhpPermitApplication as required to accompany the IrhpApplication
      *
-     * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitTypeId
-     * @param CommandInterface $command
      */
     private function updateCountries(IrhpApplicationEntity $irhpApplication, $permitTypeId, CommandInterface $command)
     {
@@ -126,32 +124,25 @@ final class UpdateFull extends AbstractCommandHandler implements TransactionedIn
     /**
      * Update the permit counts against the specified application
      *
-     * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitTypeId
-     * @param CommandInterface $command
      */
     private function updatePermitCounts(IrhpApplicationEntity $irhpApplication, $permitTypeId, CommandInterface $command)
     {
-        switch ($permitTypeId) {
-            case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL:
-                $this->bilateralApplicationUpdater->update(
-                    $irhpApplication,
-                    $command->getPermitsRequired()
-                );
-                break;
-            case IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
-                $this->result->merge(
-                    $this->handleSideEffect(
-                        UpdateMultipleNoOfPermits::create([
-                            'id' => $irhpApplication->getId(),
-                            'permitsRequired' => $command->getPermitsRequired()
-                        ])
-                    )
-                );
-                break;
-            default:
-                throw new RuntimeException('Unsupported permit type ' . $permitTypeId);
-        }
+        match ($permitTypeId) {
+            IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_BILATERAL => $this->bilateralApplicationUpdater->update(
+                $irhpApplication,
+                $command->getPermitsRequired()
+            ),
+            IrhpPermitTypeEntity::IRHP_PERMIT_TYPE_ID_MULTILATERAL => $this->result->merge(
+                $this->handleSideEffect(
+                    UpdateMultipleNoOfPermits::create([
+                        'id' => $irhpApplication->getId(),
+                        'permitsRequired' => $command->getPermitsRequired()
+                    ])
+                )
+            ),
+            default => throw new RuntimeException('Unsupported permit type ' . $permitTypeId),
+        };
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {

@@ -77,9 +77,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
         ]);
 
         $correspondences = $this->getRepo(Repository\Correspondence::class)->fetchList($query);
-        $correspondencesDocumentIds = array_map(function ($element) {
-            return $element['document']['id'] ?? null;
-        }, iterator_to_array($correspondences));
+        $correspondencesDocumentIds = array_map(fn($element) => $element['document']['id'] ?? null, iterator_to_array($correspondences));
 
         return in_array($documentId, $correspondencesDocumentIds);
     }

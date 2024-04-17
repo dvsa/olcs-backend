@@ -6,19 +6,13 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 
 class GenericAnswerFetcher
 {
-    /** @var NamedAnswerFetcher */
-    private $namedAnswerFetcher;
-
-    public function __construct(NamedAnswerFetcher $namedAnswerFetcher)
+    public function __construct(private NamedAnswerFetcher $namedAnswerFetcher)
     {
-        $this->namedAnswerFetcher = $namedAnswerFetcher;
     }
 
     /**
      * Retrieve an answer from the appropriate location within the post data
      *
-     * @param ApplicationStepEntity $applicationStep
-     * @param array $postData
      *
      * @return mixed
      */

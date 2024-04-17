@@ -7,31 +7,19 @@ use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 
 class BaseAnswerSaver
 {
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param GenericAnswerFetcher $genericAnswerFetcher
      *
      * @return BaseAnswerSaver
      */
-    public function __construct(GenericAnswerWriter $genericAnswerWriter, GenericAnswerFetcher $genericAnswerFetcher)
+    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private GenericAnswerFetcher $genericAnswerFetcher)
     {
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
     }
 
     /**
      * Save an answer to persistent storage, optionally specifying the type of data being stored
      *
-     * @param QaContext $qaContext
-     * @param array $postData
      * @param string|null $forceQuestionType
      */
     public function save(

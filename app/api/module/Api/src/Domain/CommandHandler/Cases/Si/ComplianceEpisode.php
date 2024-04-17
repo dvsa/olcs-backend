@@ -383,7 +383,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
                 /** @var SiCategoryTypeRepo $categoryTypeRepo */
                 $categoryTypeRepo = $this->getRepo('SiCategoryType');
                 $this->siCategoryType[$categoryType] = $categoryTypeRepo->fetchById($categoryType);
-            } catch (NotFoundException $e) {
+            } catch (NotFoundException) {
                 $this->errors[] = sprintf(self::MISSING_SI_CATEGORY_ERROR, $categoryType);
             }
         }
@@ -424,7 +424,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             if (!isset($this->imposedPen[$imposedKey][$imposedValue])) {
                 try {
                     $this->imposedPen[$imposedKey][$imposedValue] = $imposedRepo->fetchById($imposedValue);
-                } catch (NotFoundException $e) {
+                } catch (NotFoundException) {
                     $this->errors[] = sprintf(self::MISSING_IMPOSED_PENALTY_ERROR, $imposedValue);
                 }
             }
@@ -437,7 +437,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
             if (!isset($this->requestedPen[$requestedKey][$requestedValue])) {
                 try {
                     $this->requestedPen[$requestedKey][$requestedValue] = $requestedRepo->fetchById($requestedValue);
-                } catch (NotFoundException $e) {
+                } catch (NotFoundException) {
                     $this->errors[] = sprintf(self::MISSING_REQUESTED_PENALTY_ERROR, $requestedValue);
                 }
             }
@@ -534,7 +534,7 @@ final class ComplianceEpisode extends AbstractCommandHandler implements Transact
      * @throws Exception
      * @return mixed
      */
-    private function validateInput($filter, $value, $context = [])
+    private function validateInput($filter, mixed $value, $context = [])
     {
         $inputFilter = $filter . 'Input';
         $this->$inputFilter->setValue($value);

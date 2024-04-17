@@ -172,8 +172,6 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
 
     /**
      * @param PresidingTcEntity    $decidedByTc
-     * @param RefData              $decidedByTcRole
-     * @param ArrayCollection      $decisions
      * @param $licenceRevokedAtPi
      * @param $licenceSuspendedAtPi
      * @param $licenceCurtailedAtPi
@@ -253,7 +251,6 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param RefData                   $writtenOutcome
      * @param                           $callUpLetterDate
      * @param                           $briefToTcDate
      * @param                           $writtenDecisionLetterDate
@@ -282,7 +279,6 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param RefData $writtenOutcome
      * @param string  $callUpLetterDate
      * @param string  $briefToTcDate
      * @param string  $tcWrittenDecisionDate
@@ -313,7 +309,6 @@ class Pi extends AbstractPi implements CloseableInterface, ReopenableInterface
     }
 
     /**
-     * @param RefData $writtenOutcome
      * @param string  $callUpLetterDate
      * @param string  $briefToTcDate
      * @param string  $tcWrittenReasonDate

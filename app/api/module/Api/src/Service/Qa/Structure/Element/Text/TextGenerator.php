@@ -11,26 +11,14 @@ class TextGenerator implements ElementGeneratorInterface
 {
     use AnyTrait;
 
-    /** @var TextFactory */
-    private $textFactory;
-
-    /** @var TranslateableTextGenerator */
-    private $translateableTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param TextFactory $textFactory
-     * @param TranslateableTextGenerator $translateableTextGenerator
      *
      * @return Text
      */
-    public function __construct(
-        TextFactory $textFactory,
-        TranslateableTextGenerator $translateableTextGenerator
-    ) {
-        $this->textFactory = $textFactory;
-        $this->translateableTextGenerator = $translateableTextGenerator;
+    public function __construct(private TextFactory $textFactory, private TranslateableTextGenerator $translateableTextGenerator)
+    {
     }
 
     /**
@@ -52,9 +40,9 @@ class TextGenerator implements ElementGeneratorInterface
         }
 
         return $this->textFactory->create(
+            $context->getAnswerValue(),
             $label,
-            $hint,
-            $context->getAnswerValue()
+            $hint
         );
     }
 }

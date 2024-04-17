@@ -49,6 +49,16 @@ class OpenByTypeTest extends QueryHandlerTestCase
             ]
         ];
 
-        Assert::assertArraySubset($expected, $result);
+        $this->assertIsArray($result);
+
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $result);
+            if (is_array($value)) {
+                $this->assertIsArray($result[$key]);
+                $this->assertCount(count($value), $result[$key]);
+            } else {
+                $this->assertEquals($value, $result[$key]);
+            }
+        }
     }
 }

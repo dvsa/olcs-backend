@@ -75,7 +75,6 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
     }
 
     /**
-     * @param LicenceEntity $licence
      * @return void
      */
     private function sendEmailToOperator(LicenceEntity $licence)
@@ -116,7 +115,6 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
     }
 
     /**
-     * @param LicenceEntity $licence
      * @return array|null
      */
     private function generateDocuments(LicenceEntity $licence)
@@ -244,7 +242,6 @@ final class LastTmLetter extends AbstractCommandHandler implements EmailAwareInt
     }
 
     /**
-     * @param LicenceEntity $licence
      * @return array
      */
     private function selectTemplate(LicenceEntity $licence)

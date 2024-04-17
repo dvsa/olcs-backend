@@ -99,7 +99,6 @@ final class Create extends AbstractCommandHandler implements
      * Check and possible update the licence traffic area
      *
      * @param string $postcode
-     * @param PrivateHireLicence $phl
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
     protected function checkTrafficArea($postcode, PrivateHireLicence $phl)

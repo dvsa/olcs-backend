@@ -66,8 +66,6 @@ final class UpdateInspectionRequest extends AbstractCommandHandler
     /**
      * Create task using business service
      *
-     * @param InspectionRequest $inspectionRequest
-     * @param RefData $resultType
      * @return boolean success
      */
     protected function createTask(InspectionRequest $inspectionRequest, RefData $resultType)

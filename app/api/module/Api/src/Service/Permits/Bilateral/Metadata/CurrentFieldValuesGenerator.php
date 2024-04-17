@@ -11,9 +11,7 @@ class CurrentFieldValuesGenerator
     /**
      * Get the requested permits from the database in a normalised format
      *
-     * @param IrhpPermitStock $irhpPermitStock
      * @param IrhpPermitApplication $irhpPermitApplication (optional)
-     *
      * @return array
      */
     public function generate(IrhpPermitStock $irhpPermitStock, ?IrhpPermitApplication $irhpPermitApplication)

@@ -29,14 +29,6 @@ class Generator extends AbstractGenerator
     public const CONDITIONS_UNDERTAKINGS_SECTION = 'conditions_undertakings';
     public const OPERATING_CENTRES_SECTION = 'operating_centres';
 
-    /** @var SectionAccessService */
-    private $sectionAccessService;
-
-    /** @var NiTextTranslation */
-    private $niTextTranslation;
-
-    private ContainerInterface $services;
-
     /**
      * Create service instance
      *
@@ -51,14 +43,11 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        SectionAccessService $sectionAccessService,
-        NiTextTranslation $niTextTranslation,
-        ContainerInterface $services
+        private SectionAccessService $sectionAccessService,
+        private NiTextTranslation $niTextTranslation,
+        private ContainerInterface $services
     ) {
         parent::__construct($abstractGeneratorServices);
-        $this->sectionAccessService = $sectionAccessService;
-        $this->niTextTranslation = $niTextTranslation;
-        $this->services = $services;
     }
 
     /**

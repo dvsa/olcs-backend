@@ -18,6 +18,7 @@ use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\OlcsTest\Api\Entity\Abstracts\EntityTester;
 use Mockery as m;
 
@@ -439,7 +440,7 @@ class FeeEntityTest extends EntityTester
         $this->assertNull($this->sut->getChequePoNumber());
         $this->assertNull($this->sut->getWaiveReason());
 
-        $ft1 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:56');
+        $ft1 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:35:56');
         $ft2 = $this->getStubFeeTransaction('1234.56', '2015-08-01', '2015-09-02 12:34:56');
         $ft3 = $this->getStubFeeTransaction('1234.56', '2015-09-01', '2015-09-02 12:34:55');
         $ft4 = $this->getStubFeeTransaction(
@@ -456,7 +457,7 @@ class FeeEntityTest extends EntityTester
         $paymentMethod = m::mock(RefData::class);
         $transaction->setPaymentMethod($paymentMethod);
 
-        $user = m::mock()
+        $user = m::mock(User::class)
             ->shouldReceive('getLoginId')
             ->andReturn('bob')
             ->getMock();

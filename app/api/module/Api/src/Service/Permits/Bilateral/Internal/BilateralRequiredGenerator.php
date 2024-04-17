@@ -9,9 +9,7 @@ class BilateralRequiredGenerator
     /**
      * Generate an array to pass to IrhpPermitApplication::updateBilateralRequired using the supplied post data
      *
-     * @param array $postData
      * @param string $permitUsageSelection
-     *
      * @return array
      */
     public function generate(array $postData, $permitUsageSelection)
@@ -38,10 +36,8 @@ class BilateralRequiredGenerator
     /**
      * Retrieve a value from the post data for use in the bilateralRequired array
      *
-     * @param array $postData
      * @param string $permitUsageSelection
      * @param string $standardOrCabotage
-     *
      * @return int|null
      */
     private function generateStandardOrCabotageRequired(

@@ -18,7 +18,6 @@ abstract class AbstractGenerator
     /**
      * Create service instance
      *
-     * @param AbstractGeneratorServices $abstractGeneratorServices
      *
      * @return AbstractGenerator
      */

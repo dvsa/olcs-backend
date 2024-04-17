@@ -2,13 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 
 /**
  * Class IsExecuted
  * @package Dvsa\Olcs\Api\Service\Nr\Filter\Format
+ * @template-extends AbstractFilter<array>
  */
-class IsExecuted extends LaminasAbstractFilter
+class IsExecuted extends AbstractFilter
 {
     public const YES_EXECUTED_KEY = 'pen_erru_imposed_executed_yes';
     public const NO_EXECUTED_KEY = 'pen_erru_imposed_executed_no';
@@ -30,16 +31,11 @@ class IsExecuted extends LaminasAbstractFilter
             //lowercase the value to make sure we always get a match
             $executed = strtolower($erru['executed']);
 
-            switch ($executed) {
-                case 'yes':
-                    $newValue = self::YES_EXECUTED_KEY;
-                    break;
-                case 'no':
-                    $newValue = self::NO_EXECUTED_KEY;
-                    break;
-                default:
-                    $newValue = self::UNKNOWN_EXECUTED_KEY;
-            }
+            $newValue = match ($executed) {
+                'yes' => self::YES_EXECUTED_KEY,
+                'no' => self::NO_EXECUTED_KEY,
+                default => self::UNKNOWN_EXECUTED_KEY,
+            };
 
             $value['imposedErrus'][$key]['executed'] = $newValue;
         }

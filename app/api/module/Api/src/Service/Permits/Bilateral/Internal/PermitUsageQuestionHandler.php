@@ -7,26 +7,14 @@ use Dvsa\Olcs\Api\Service\Qa\QaContext;
 
 class PermitUsageQuestionHandler implements QuestionHandlerInterface
 {
-    /** @var PermitUsageSelectionGenerator */
-    private $permitUsageSelectionGenerator;
-
-    /** @var PermitUsageUpdater */
-    private $permitUsageUpdater;
-
     /**
      * Create service instance
      *
-     * @param PermitUsageSelectionGenerator $permitUsageSelectionGenerator
-     * @param PermitUsageUpdater $permitUsageUpdater
      *
      * @return PermitUsageQuestionHandler
      */
-    public function __construct(
-        PermitUsageSelectionGenerator $permitUsageSelectionGenerator,
-        PermitUsageUpdater $permitUsageUpdater
-    ) {
-        $this->permitUsageSelectionGenerator = $permitUsageSelectionGenerator;
-        $this->permitUsageUpdater = $permitUsageUpdater;
+    public function __construct(private PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private PermitUsageUpdater $permitUsageUpdater)
+    {
     }
 
     /**

@@ -51,7 +51,7 @@ class ById extends AbstractQueryHandler
         try {
             $totalPermitsRequired = $irhpApplication->calculateTotalPermitsRequired();
             $totalPermitsAwarded = $irhpApplication->getPermitsAwarded();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $totalPermitsRequired = null;
             $totalPermitsAwarded = null;
         }

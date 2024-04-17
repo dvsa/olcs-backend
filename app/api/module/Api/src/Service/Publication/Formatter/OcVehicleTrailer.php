@@ -14,9 +14,7 @@ class OcVehicleTrailer
     /**
      * Return a string representing the vehicle and/or trailer count relating to the provided operating centre
      *
-     * @param ApplicationOperatingCentre $aoc
      * @param bool $useHgvCaption (defaults to false)
-     *
      * @return string
      */
     public static function format(ApplicationOperatingCentre $aoc, $useHgvCaption = false)

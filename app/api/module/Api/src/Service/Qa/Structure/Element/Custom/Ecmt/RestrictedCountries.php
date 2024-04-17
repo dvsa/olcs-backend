@@ -6,12 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class RestrictedCountries implements ElementInterface
 {
-    /** @var bool|null */
-    private $yesNo;
-
-    /** @var string */
-    private $questionKey;
-
     /** @var array */
     private $restrictedCountries = [];
 
@@ -23,10 +17,8 @@ class RestrictedCountries implements ElementInterface
      *
      * @return RestrictedCountries
      */
-    public function __construct($yesNo, $questionKey)
+    public function __construct(private $yesNo, private $questionKey)
     {
-        $this->yesNo = $yesNo;
-        $this->questionKey = $questionKey;
     }
 
     /**
@@ -49,8 +41,6 @@ class RestrictedCountries implements ElementInterface
 
     /**
      * Add a restricted country to the representation
-     *
-     * @param RestrictedCountry $restrictedCountry
      */
     public function addRestrictedCountry(RestrictedCountry $restrictedCountry)
     {

@@ -11,206 +11,102 @@ namespace Dvsa\Olcs\Api\Service\DvlaSearch\Model;
  */
 class DvlaVehicle
 {
-    /**
-     * Registration number of the vehicle
-     *
-     * @var string
-     */
-    private $registrationNumber;
-
-    /**
-     * Tax status of the vehicle
-     * Enum:
-     *      Not Taxed for on Road Use
-     *      SORN
-     *      Taxed
-     *      Untaxed
-     *
-     * @var string|null
-     */
-    private $taxStatus;
-
-    /**
-     * Date of tax liability, used in calculating licence information presented to user
-     *
-     * @var \DateTime|null
-     */
-    private $taxDueDate;
-
-    /**
-     * Additional Rate of Tax End Date
-     *
-     * @var \DateTime|null
-     */
-    private $artEndDate;
-
-    /**
-     * MOT Status of the vehicle
-     * Enum:
-     *      No details held by DVLA
-     *      No results returned
-     *      Not valid
-     *      Valid
-     *
-     * @var string|null
-     */
-    private $motStatus;
-
-    /**
-     * Mot Expiry Date
-     *
-     * @var \DateTime|null
-     */
-    private $motExpiryDate;
-
-    /**
-     * Vehicle make
-     *
-     * @var string|null
-     */
-    private $make;
-
-    /**
-     * Month of First DVLA Registration
-     *
-     * @var \DateTime|null
-     */
-    private $monthOfFirstDvlaRegistration;
-
-    /**
-     * Month of First Registration
-     *
-     * @var \DateTime|null
-     */
-    private $monthOfFirstRegistration;
-
-    /**
-     * Year of Manufacture
-     *
-     * @var integer|null
-     */
-    private $yearOfManufacture;
-
-    /**
-     * Engine capacity in cubic centimetres
-     *
-     * @var integer|null
-     */
-    private $engineCapacity;
-
-    /**
-     * Carbon Dioxide emissions in grams per kilometre
-     *
-     * @var integer|null
-     */
-    private $co2Emissions;
-
-    /**
-     * Fuel type (Method of Propulsion)
-     *
-     * @var string|null
-     */
-    private $fuelType;
-
-    /**
-     * True only if vehicle has been export marked
-     *
-     * @var boolean|null
-     */
-    private $markedForExport;
-
-    /**
-     * Vehicle colour
-     * @var string|null
-     */
-    private $colour;
-
-    /**
-     * Vehicle Type Approval Category
-     *
-     * @var string|null
-     */
-    private $typeApproval;
-
-    /**
-     * Vehicle wheel plan
-     *
-     * @var string|null
-     */
-    private $wheelplan;
-
-    /**
-     * Revenue weight in kilograms
-     *
-     * @var integer|null
-     */
-    private $revenueWeight;
-
-    /**
-     * Real Driving Emissions value
-     *
-     * @var string|null
-     */
-    private $realDrivingEmissions;
-
-    /**
-     * Date of last V5C issued
-     *
-     * @var \DateTime|null
-     */
-    private $dateOfLastV5CIssued;
-
-    /**
-     * Euro Status (Dealer / Customer Provided (new vehicles))
-     *
-     * @var string|null
-     */
-    private $euroStatus;
-
     public function __construct(
-        string $registrationNumber,
-        ?string $taxStatus,
-        ?\DateTime $taxDueDate,
-        ?\DateTime $artEndDate,
-        ?string $motStatus,
-        ?\DateTime $motExpiryDate,
-        ?string $make,
-        ?\DateTime $monthOfFirstDvlaRegistration,
-        ?\DateTime $monthOfFirstRegistration,
-        ?int $yearOfManufacture,
-        ?int $engineCapacity,
-        ?int $co2Emissions,
-        ?string $fuelType,
-        ?bool $markedForExport,
-        ?string $colour,
-        ?string $typeApproval,
-        ?string $wheelplan,
-        ?int $revenueWeight,
-        ?string $realDrivingEmissions,
-        ?\DateTime $dateOfLastV5CIssued,
-        ?string $euroStatus
+        /**
+         * Registration number of the vehicle
+         */
+        private string $registrationNumber,
+        /**
+         * Tax status of the vehicle
+         * Enum:
+         *      Not Taxed for on Road Use
+         *      SORN
+         *      Taxed
+         *      Untaxed
+         */
+        private ?string $taxStatus,
+        /**
+         * Date of tax liability, used in calculating licence information presented to user
+         */
+        private ?\DateTime $taxDueDate,
+        /**
+         * Additional Rate of Tax End Date
+         */
+        private ?\DateTime $artEndDate,
+        /**
+         * MOT Status of the vehicle
+         * Enum:
+         *      No details held by DVLA
+         *      No results returned
+         *      Not valid
+         *      Valid
+         */
+        private ?string $motStatus,
+        /**
+         * Mot Expiry Date
+         */
+        private ?\DateTime $motExpiryDate,
+        /**
+         * Vehicle make
+         */
+        private ?string $make,
+        /**
+         * Month of First DVLA Registration
+         */
+        private ?\DateTime $monthOfFirstDvlaRegistration,
+        /**
+         * Month of First Registration
+         */
+        private ?\DateTime $monthOfFirstRegistration,
+        /**
+         * Year of Manufacture
+         */
+        private ?int $yearOfManufacture,
+        /**
+         * Engine capacity in cubic centimetres
+         */
+        private ?int $engineCapacity,
+        /**
+         * Carbon Dioxide emissions in grams per kilometre
+         */
+        private ?int $co2Emissions,
+        /**
+         * Fuel type (Method of Propulsion)
+         */
+        private ?string $fuelType,
+        /**
+         * True only if vehicle has been export marked
+         */
+        private ?bool $markedForExport,
+        /**
+         * Vehicle colour
+         */
+        private ?string $colour,
+        /**
+         * Vehicle Type Approval Category
+         */
+        private ?string $typeApproval,
+        /**
+         * Vehicle wheel plan
+         */
+        private ?string $wheelplan,
+        /**
+         * Revenue weight in kilograms
+         */
+        private ?int $revenueWeight,
+        /**
+         * Real Driving Emissions value
+         */
+        private ?string $realDrivingEmissions,
+        /**
+         * Date of last V5C issued
+         */
+        private ?\DateTime $dateOfLastV5CIssued,
+        /**
+         * Euro Status (Dealer / Customer Provided (new vehicles))
+         */
+        private ?string $euroStatus
     ) {
-        $this->registrationNumber = $registrationNumber;
-        $this->taxStatus = $taxStatus;
-        $this->taxDueDate = $taxDueDate;
-        $this->artEndDate = $artEndDate;
-        $this->motStatus = $motStatus;
-        $this->motExpiryDate = $motExpiryDate;
-        $this->make = $make;
-        $this->monthOfFirstDvlaRegistration = $monthOfFirstDvlaRegistration;
-        $this->monthOfFirstRegistration = $monthOfFirstRegistration;
-        $this->yearOfManufacture = $yearOfManufacture;
-        $this->engineCapacity = $engineCapacity;
-        $this->co2Emissions = $co2Emissions;
-        $this->fuelType = $fuelType;
-        $this->markedForExport = $markedForExport;
-        $this->colour = $colour;
-        $this->typeApproval = $typeApproval;
-        $this->wheelplan = $wheelplan;
-        $this->revenueWeight = $revenueWeight;
-        $this->realDrivingEmissions = $realDrivingEmissions;
-        $this->dateOfLastV5CIssued = $dateOfLastV5CIssued;
-        $this->euroStatus = $euroStatus;
     }
 
     public function getRegistrationNumber(): string

@@ -6,50 +6,17 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 
 class SelfservePage
 {
-    /** @var string */
-    private $title;
-
-    /** @var array */
-    private $additionalViewData;
-
-    /** @var ApplicationStep */
-    private $applicationStep;
-
-    /** @var QuestionText */
-    private $questionText;
-
-    /** @var string */
-    private $submitOptionsName;
-
-    /** @var string */
-    private $nextStepSlug;
-
     /**
      * Create instance
      *
      * @param string $title
-     * @param array $additionalViewData
-     * @param ApplicationStep $applicationStep
-     * @param QuestionText $questionText
      * @param string $submitOptionsName
      * @param string $nextStepSlug
      *
      * @return SelfservePage
      */
-    public function __construct(
-        $title,
-        array $additionalViewData,
-        ApplicationStep $applicationStep,
-        QuestionText $questionText,
-        $submitOptionsName,
-        $nextStepSlug
-    ) {
-        $this->title = $title;
-        $this->additionalViewData = $additionalViewData;
-        $this->applicationStep = $applicationStep;
-        $this->questionText = $questionText;
-        $this->submitOptionsName = $submitOptionsName;
-        $this->nextStepSlug = $nextStepSlug;
+    public function __construct(private $title, private array $additionalViewData, private ApplicationStep $applicationStep, private QuestionText $questionText, private $submitOptionsName, private $nextStepSlug)
+    {
     }
 
     /**

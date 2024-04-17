@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 /**
  * Class InjectIsTxcApp
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter
+ * @template-extends AbstractFilter<array>
  */
 class InjectIsTxcApp extends AbstractFilter
 {

@@ -59,7 +59,6 @@ class Text3Test extends MockeryTestCase
     }
 
     /**
-     * @param Organisation $organisation
      * @param string $foreName
      * @param string $familyName
      */

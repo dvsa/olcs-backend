@@ -60,9 +60,6 @@ class Search implements AuthAwareInterface
 
     /**
      * Search constructor.
-     * @param Client $client
-     * @param AuthorizationService $authService
-     * @param SysParamRepo $sysParamRepo
      *
      */
     public function __construct(Client $client, AuthorizationService $authService, SysParamRepo $sysParamRepo)
@@ -358,7 +355,7 @@ class Search implements AuthAwareInterface
         // Build a query to search where vehicle id is one of the IDs
         $queryBool = new Query\BoolQuery();
         foreach ($ids as $id) {
-            $match = new Query\Match();
+            $match = new MatchQuery();
             $match->setField('veh_id', $id);
             $queryBool->addShould($match);
         }

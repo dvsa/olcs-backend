@@ -9,9 +9,6 @@ use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
  */
 interface SubmissionGeneratorAwareInterface
 {
-    /**
-     * @param SubmissionGenerator $service
-     */
     public function setSubmissionGenerator(SubmissionGenerator $service);
 
     /**
@@ -19,9 +16,6 @@ interface SubmissionGeneratorAwareInterface
      */
     public function getSubmissionGenerator();
 
-    /**
-     * @param array $submissionConfig
-     */
     public function setSubmissionConfig(array $submissionConfig);
 
     /**

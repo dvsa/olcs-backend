@@ -14,9 +14,6 @@ use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 trait TieredProductReference
 {
     /**
-     * @param DateTime $validityStart
-     * @param DateTime $validityEnd
-     * @param DateTime $now
      * @param array $tieredProductReferenceArray Associative array mappping Jan-Dec with Product References
      * @return string
      * @throws BadRequestException

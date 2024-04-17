@@ -208,9 +208,6 @@ class JWTIdentityProviderTest extends MockeryTestCase
         );
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->userRepository();

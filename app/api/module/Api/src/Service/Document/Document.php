@@ -19,32 +19,14 @@ class Document
 {
     public const DOCUMENT_TIMESTAMP_FORMAT = 'YmdHi';
 
-    /** @var DateService */
-    private $dateSrvHlpr;
-
-    /** @var DocumentStoreInterface */
-    private $documentStore;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
     /**
      * Create service instance
      *
-     * @param DateService $dateSrvHlpr
-     * @param DocumentStoreInterface $documentStore
-     * @param TranslatorInterface $translator
      *
      * @return Document
      */
-    public function __construct(
-        DateService $dateSrvHlpr,
-        DocumentStoreInterface $documentStore,
-        TranslatorInterface $translator
-    ) {
-        $this->dateSrvHlpr = $dateSrvHlpr;
-        $this->documentStore = $documentStore;
-        $this->translator = $translator;
+    public function __construct(private DateService $dateSrvHlpr, private DocumentStoreInterface $documentStore, private TranslatorInterface $translator)
+    {
     }
 
     /**

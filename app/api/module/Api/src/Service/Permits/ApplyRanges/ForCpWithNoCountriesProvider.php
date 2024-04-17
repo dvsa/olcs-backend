@@ -7,39 +7,19 @@ use RuntimeException;
 
 class ForCpWithNoCountriesProvider
 {
-    /** @var UnrestrictedWithLowestStartNumberProvider */
-    private $unrestrictedWithLowestStartNumberProvider;
-
-    /** @var RestrictedWithFewestCountriesProvider */
-    private $restrictedWithFewestCountriesProvider;
-
-    /** @var HighestAvailabilityRangeSelector */
-    private $highestAvailabilityRangeSelector;
-
     /**
      * Create service instance
      *
-     * @param UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider
-     * @param RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider
-     * @param HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
      *
      * @return ForCpWithNoCountriesProvider
      */
-    public function __construct(
-        UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider,
-        RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider,
-        HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
-    ) {
-        $this->unrestrictedWithLowestStartNumberProvider = $unrestrictedWithLowestStartNumberProvider;
-        $this->restrictedWithFewestCountriesProvider = $restrictedWithFewestCountriesProvider;
-        $this->highestAvailabilityRangeSelector = $highestAvailabilityRangeSelector;
+    public function __construct(private UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider, private RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider, private HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector)
+    {
     }
 
     /**
      * Returns the best fitting range for an candidate permit that requests no countries
      *
-     * @param Result $result
-     * @param array $ranges
      *
      * @return array
      */

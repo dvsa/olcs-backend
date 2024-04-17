@@ -88,7 +88,6 @@ final class Cases extends AbstractQueryHandler
      * Logic is to query the notes table by the foreign key determined by the case type and not use the note
      * type except in the event of no foreign key's present.
      *
-     * @param CasesEntity $case
      * @return string
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

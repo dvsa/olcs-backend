@@ -11,8 +11,6 @@ class SelfservePageFactory
      *
      * @param string $title
      * @param string $applicationReference
-     * @param ApplicationStep $applicationStep
-     * @param QuestionText $questionText
      * @param string $submitOptionsName
      * @param string $nextStepSlug
      *

@@ -25,7 +25,7 @@ final class Delete extends AbstractSurrenderCommandHandler
 
             $this->result->addId('id' . $id, $id);
             $this->result->addMessage(sprintf('surrender for licence Id %d deleted', $id));
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $this->result->addMessage(sprintf('surrender for licence Id %d not found', $id));
         }
 

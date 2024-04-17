@@ -58,7 +58,7 @@ class EventHistory extends AbstractQueryHandler
         try {
             $eventHistoryDetails = $this->getRepo()
                 ->fetchEventHistoryDetails($entityPk, $entityVersion, $entityType . '_hist');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             $eventHistoryDetails = [];
         }
         return $eventHistoryDetails;

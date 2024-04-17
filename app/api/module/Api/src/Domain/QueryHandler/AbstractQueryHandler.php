@@ -161,8 +161,6 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
     }
 
     /**
-     * @param string $cacheIdentifier
-     * @param string $uniqueId
      *
      * @return Result
      */
@@ -200,7 +198,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      *
      * @return array
      */
-    protected function resultList($objects, array $bundle = [])
+    protected function resultList(mixed $objects, array $bundle = [])
     {
         return (new ResultList($objects, $bundle))->serialize();
     }
@@ -214,7 +212,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
      *
      * @return Result
      */
-    protected function result($object, array $bundle = [], $values = [])
+    protected function result(mixed $object, array $bundle = [], $values = [])
     {
         return new Result($object, $bundle, $values);
     }
@@ -317,7 +315,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         $rethrow = $e;
 
         do {
-            Logger::warn(get_class($this) . ': ' . $e->getMessage());
+            Logger::warn(static::class . ': ' . $e->getMessage());
             $e = $e->getPrevious();
         } while ($e);
 

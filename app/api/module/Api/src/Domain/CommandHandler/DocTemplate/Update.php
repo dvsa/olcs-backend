@@ -74,10 +74,6 @@ class Update extends AbstractCommandHandler implements
         return $this->result;
     }
 
-    /**
-     * @param DocTemplate $docTemplate
-     * @param CommandInterface $command
-     */
     public function updateDocTemplate(DocTemplate $docTemplate, CommandInterface $command)
     {
         $docTemplate->updateMeta(
@@ -89,9 +85,6 @@ class Update extends AbstractCommandHandler implements
         );
     }
 
-    /**
-     * @param DocTemplate $docTemplate
-     */
     public function updateDocTemplateWithFile(DocTemplate $docTemplate)
     {
         $docTemplate->updateDocument(
@@ -102,8 +95,6 @@ class Update extends AbstractCommandHandler implements
     /**
      * Deletes existing document being replaced by this edit
      *
-     * @param CommandInterface $command
-     * @param Document $oldDocument
      * @return void
      * @throws ValidationException
      */

@@ -11,19 +11,14 @@ use Laminas\I18n\Translator\TranslatorInterface;
  */
 class AbstractReviewServiceServices
 {
-    /** @var TranslatorInterface */
-    private $translator;
-
     /**
      * Create service instance
      *
-     * @param TranslatorInterface $translator
      *
      * @return AbstractReviewServiceServices
      */
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
     /**

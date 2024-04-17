@@ -132,7 +132,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
      *
      * @return void
      */
-    protected function clearViFlags($repo, $results, $key)
+    protected function clearViFlags(mixed $repo, $results, $key)
     {
         $params = [];
         foreach ($results as $result) {
