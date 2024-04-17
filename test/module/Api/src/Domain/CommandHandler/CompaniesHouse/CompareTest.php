@@ -227,9 +227,6 @@ class CompareTest extends AbstractCommandHandlerTestCase
         $expectedAlertData,
         $expectedSaveData = []
     ) {
-        // $alertSaveResult = ['id' => 123];
-        // $companySaveResult = ['id' => 99];
-
         // expectations
         $this->mockApi
             ->shouldReceive('getCompanyProfile')

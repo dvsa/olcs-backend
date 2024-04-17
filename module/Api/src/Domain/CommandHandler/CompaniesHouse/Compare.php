@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseCompany as CompanyEntity;
 use Dvsa\Olcs\CompaniesHouse\Service\Exception\NotFoundException as ChNotFoundException;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Laminas\I18n\Validator\Alnum;
+use Olcs\Logging\Log\Logger;
 
 /**
  * @author Dan Eggleston <dan@stolenegg.com>
@@ -98,8 +99,20 @@ final class Compare extends AbstractCommandHandler
         $changes = [];
 
         if ($this->statusHasChanged($old, $new)) {
-            $this->result->setFlag('isInsolvent', $this->isInsolvent($new));
+            $isInsolvent = $this->isInsolvent($new);
+            $this->result->setFlag('isInsolvent', $isInsolvent);
             $changes[] = AlertEntity::REASON_STATUS_CHANGE;
+
+            if ($isInsolvent) {
+                $logData = [
+                    'oldStatus' => $old['companyStatus'],
+                    'newStatus' => $new['companyStatus'],
+                    'oldData' => $old,
+                    'newData' => $old
+                ];
+
+                Logger::info('insolvent company found', $logData);
+            }
         }
 
         if ($this->nameHasChanged($old, $new)) {
@@ -282,7 +295,7 @@ final class Compare extends AbstractCommandHandler
         return $validator->isValid($companyNumber);
     }
 
-    private function isInsolvent(array $data)
+    private function isInsolvent(array $data): bool
     {
         $insolvencyStatuses = [
             'administration',
