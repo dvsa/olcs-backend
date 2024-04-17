@@ -224,11 +224,13 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     'field_1' => 'value1',
                     'field_2' => 'value2',
                     'field_3' => '0',
+                    'field_4|field_5' => 'value3|value4',
                 ],
                 [
                     'field_1' => 'DYNAMIC',
                     'field_2' => 'DYNAMIC',
                     'field_3' => 'BOOLEAN',
+                    'field_4|field_5' => 'FIXED'
                 ],
                 [],
                 [
@@ -241,7 +243,23 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                                             'field_1' => 'SMITH'
                                         ]
                                     ]
-                                ]
+                                ],
+                                'must' => [
+                                    'bool' => [
+                                        'should' => [
+                                            [
+                                                'terms' => [
+                                                    'field_4' => ['value3', 'value4'],
+                                                ]
+                                            ],
+                                            [
+                                                'terms' => [
+                                                    'field_5' => ['value3', 'value4'],
+                                                ]
+                                            ],
+                                        ],
+                                    ],
+                                ],
                             ]
                         ],
                         'filter' => [
