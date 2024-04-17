@@ -10,14 +10,8 @@ use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
  */
 abstract class AbstractContext implements ContextInterface
 {
-    /**
-     * @var QueryHandlerManager
-     */
-    private $queryHandler;
-
-    public function __construct(QueryHandlerManager $queryHandler)
+    public function __construct(private QueryHandlerManager $queryHandler)
     {
-        $this->queryHandler = $queryHandler;
     }
 
     protected function handleQuery($query)

@@ -6,36 +6,22 @@ use Dvsa\Olcs\Api\Domain\Command\Result;
 
 class ForCpWithCountriesAndMultipleMatchingRangesProvider
 {
-    /** @var WithFewestNonRequestedCountriesProvider */
-    private $withFewestNonRequestedCountriesProvider;
-
-    /** @var HighestAvailabilityRangeSelector */
-    private $highestAvailabilityRangeSelector;
-
     /**
      * Create service instance
      *
-     * @param WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider
-     * @param HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
      *
      * @return ForCpWithCountriesAndMultipleMatchingRangesProvider
      */
-    public function __construct(
-        WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider,
-        HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector
-    ) {
-        $this->withFewestNonRequestedCountriesProvider = $withFewestNonRequestedCountriesProvider;
-        $this->highestAvailabilityRangeSelector = $highestAvailabilityRangeSelector;
+    public function __construct(private WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider, private HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector)
+    {
     }
 
     /**
      * Selects the appropriate irhp_permit_range for a candidate permit with associated countries
      * and multiple matching ranges.
      *
-     * @param Result $result
      * @param array $ranges an array of the multiple matching ranges
      * @param array $applicationCountryIds The country ids specified in the application
-     *
      * @return array the single range identified as suitable
      */
     public function selectRange(Result $result, array $ranges, array $applicationCountryIds)

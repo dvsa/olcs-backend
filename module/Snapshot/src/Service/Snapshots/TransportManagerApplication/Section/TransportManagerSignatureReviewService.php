@@ -57,7 +57,6 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
     /**
      * getReplaceData
      *
-     * @param TransportManagerApplication $tma
      *
      * @return array
      */
@@ -84,45 +83,34 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
                 null;
         }
 
-        switch ($partial) {
-            case self::SIGNATURE:
-                // no digital signature
-                $replaceData = [
-                    $ownerLabel,
-                    $returnAddress,
-                ];
-                break;
-            case self::SIGNATURE_DIGITAL:
-                // only the TM signed digitally
-                $replaceData = [
-                    $tmFullName,
-                    $tmDateOfBirth,
-                    $tmSignatureDate,
-                    $ownerLabel,
-                    $returnAddress,
-                ];
-                break;
-            case self::SIGNATURE_DIGITAL_BOTH:
-                // Both TM and Operator signed digitally
-                $replaceData = [
-                    $tmFullName,
-                    $tmDateOfBirth,
-                    $tmSignatureDate,
-                    $ownerLabel,
-                    $opFullName,
-                    $opDateOfBirth,
-                    $opSignatureDate,
-                ];
-                break;
-            case self::SIGNATURE_DIGITAL_OPERATOR_TM:
-                // The Operator is also the TM an signed digitally
-                $replaceData = [
-                    $opFullName,
-                    $opDateOfBirth,
-                    $opSignatureDate,
-                ];
-                break;
-        }
+        $replaceData = match ($partial) {
+            self::SIGNATURE => [
+                $ownerLabel,
+                $returnAddress,
+            ],
+            self::SIGNATURE_DIGITAL => [
+                $tmFullName,
+                $tmDateOfBirth,
+                $tmSignatureDate,
+                $ownerLabel,
+                $returnAddress,
+            ],
+            self::SIGNATURE_DIGITAL_BOTH => [
+                $tmFullName,
+                $tmDateOfBirth,
+                $tmSignatureDate,
+                $ownerLabel,
+                $opFullName,
+                $opDateOfBirth,
+                $opSignatureDate,
+            ],
+            self::SIGNATURE_DIGITAL_OPERATOR_TM => [
+                $opFullName,
+                $opDateOfBirth,
+                $opSignatureDate,
+            ],
+            default => [],
+        };
 
         return $replaceData;
     }
@@ -130,7 +118,6 @@ class TransportManagerSignatureReviewService extends AbstractReviewService
     /**
      * Get the the label for the owner signature box
      *
-     * @param TransportManagerApplication $tma
      *
      * @return string
      */

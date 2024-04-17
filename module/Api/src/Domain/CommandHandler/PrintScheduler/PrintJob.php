@@ -40,18 +40,9 @@ class PrintJob extends AbstractCommandHandler
 
     /** @var int */
     private $stubPrintToLicenceId;
-    private array $config;
-    private ContentStoreFileUploader $fileUploader;
-    private WebServiceClient $convertToPdfService;
 
-    public function __construct(
-        array $config,
-        ContentStoreFileUploader $fileUploader,
-        WebServiceClient $convertToPdfService
-    ) {
-        $this->config = $config;
-        $this->fileUploader = $fileUploader;
-        $this->convertToPdfService = $convertToPdfService;
+    public function __construct(private array $config, private ContentStoreFileUploader $fileUploader, private WebServiceClient $convertToPdfService)
+    {
     }
 
     /**
@@ -323,7 +314,7 @@ class PrintJob extends AbstractCommandHandler
 
             // if the destination (queue name) is TESTING-STUB-LICENCE:n then attach it to a licence
             // This allows testing without have to actually connect to multiple printers/queues
-            if (strpos($this->destination, 'TESTING-STUB-LICENCE:') === 0) {
+            if (str_starts_with($this->destination, 'TESTING-STUB-LICENCE:')) {
                 $this->stubPrintToLicenceId = (int) substr($this->destination, strlen('TESTING-STUB-LICENCE:'));
             }
         }

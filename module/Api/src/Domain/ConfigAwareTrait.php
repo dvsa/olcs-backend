@@ -11,9 +11,6 @@ trait ConfigAwareTrait
 {
     protected $config;
 
-    /**
-     * @param array $config
-     */
     public function setConfig(array $config = [])
     {
         $this->config = $config;

@@ -129,7 +129,6 @@ class SectionAccessService implements FactoryInterface, AuthAwareInterface
      * Check if the licence has access to the section
      *
      * @param string $section
-     * @param array $access
      * @return boolean
      */
     public function doesHaveAccess($section, array $access = [])

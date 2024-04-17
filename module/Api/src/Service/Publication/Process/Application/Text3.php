@@ -36,17 +36,12 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
 
     /**
      * Add the licence address to the internally stored collection of text lines
-     *
-     * @param ImmutableArrayObject $context
      */
     private function addLicenceAddressText(ImmutableArrayObject $context)
     {
         $this->addTextLine($context->offsetGet('licenceAddress'));
     }
 
-    /**
-     * @param PublicationLink $publicationLink
-     */
     private function addOperatingCentreText(PublicationLink $publicationLink)
     {
         $useHgvCaption = $publicationLink->getApplication()->isVehicleTypeMixedWithLgv();
@@ -59,9 +54,6 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
         }
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addAuthorisationText(ImmutableArrayObject $context, PublicationLink $publicationLink)
     {
         if ($context->offsetExists('authorisation')) {
@@ -72,9 +64,6 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
         }
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addTransportManagerText(ImmutableArrayObject $context)
     {
         if ($context->offsetExists('applicationTransportManagers')) {
@@ -87,9 +76,6 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
         }
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addConditionsAndUndertakingsText(ImmutableArrayObject $context)
     {
         $textLines = $context->offsetGet('conditionUndertaking');
@@ -101,7 +87,6 @@ final class Text3 extends \Dvsa\Olcs\Api\Service\Publication\Process\AbstractTex
     /**
      * Return a list of the operating centres that need to be listed within the publication summary
      *
-     * @param PublicationLink $publicationLink
      *
      * @return array
      */

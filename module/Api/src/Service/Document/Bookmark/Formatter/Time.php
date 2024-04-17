@@ -22,7 +22,7 @@ class Time implements FormatterInterface
     {
         try {
             $dateTime = new DateTime(reset($data));
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If cannot parse the datatime then return null
             return null;
         }

@@ -48,9 +48,6 @@ class DeleteUserSelfserveFactoryTest extends MockeryTestCase
         $this->assertInstanceOf(TransactioningCommandHandler::class, $result);
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->setUpAbstractCommandHandlerServices();

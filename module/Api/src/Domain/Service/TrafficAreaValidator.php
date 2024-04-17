@@ -56,7 +56,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
                 $postcode,
                 $this->adminAreaTrafficAreaRepo
             );
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // If address service is not available then we can skip validation
             return;
         }
@@ -83,9 +83,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
     /**
      * Check that the operator does not have other licences/application in the same traffic area
      *
-     * @param Application $application
      * @param string $postcode
-     *
      * @return true|array
      */
     public function validateForSameTrafficAreasWithPostcode(Application $application, $postcode)
@@ -101,9 +99,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
     /**
      * Check that the operator does not have other licences/application in the same traffic area
      *
-     * @param Application $application
      * @param string      $trafficAreaId
-     *
      * @return true|array
      */
     public function validateForSameTrafficAreas(Application $application, $trafficAreaId)

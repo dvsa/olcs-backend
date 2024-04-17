@@ -56,7 +56,6 @@ final class UpdatePrivateHireLicence extends AbstractCommandHandler implements T
      * Create PrivateHireLicence entity
      *
      * @param Application $application
-     * @param Command $command
      *
      * @return Result
      */
@@ -78,7 +77,6 @@ final class UpdatePrivateHireLicence extends AbstractCommandHandler implements T
     /**
      * Update the ApplicationCompletion
      *
-     * @param Application $application
      *
      * @return Result
      */

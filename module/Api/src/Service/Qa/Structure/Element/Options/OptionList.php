@@ -7,19 +7,14 @@ class OptionList
     /** @var array */
     private $options = [];
 
-    /** @var OptionFactory */
-    private $optionFactory;
-
     /**
      * Create instance
      *
-     * @param OptionFactory $optionFactory
      *
      * @return OptionList
      */
-    public function __construct(OptionFactory $optionFactory)
+    public function __construct(private OptionFactory $optionFactory)
     {
-        $this->optionFactory = $optionFactory;
     }
 
     /**

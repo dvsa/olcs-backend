@@ -6,25 +6,18 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRe
 
 class SuccessfulCandidatePermitsWriter
 {
-    /** @var IrhpCandidatePermitRepository */
-    private $irhpCandidatePermitRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpCandidatePermitRepository $irhpCandidatePermitRepo
      *
      * @return SuccessfulCandidatePermitsWriter
      */
-    public function __construct(IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
+    public function __construct(private IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
     {
-        $this->irhpCandidatePermitRepo = $irhpCandidatePermitRepo;
     }
 
     /**
      * Marks a series of candidate permits as successful and records the emissions category assigned to each
-     *
-     * @param array $candidatePermits
      */
     public function write(array $candidatePermits)
     {

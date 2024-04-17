@@ -12,27 +12,20 @@ class StockLicenceMaxPermittedCounter
     public const ECMT_SHORT_TERM_MULTIPLIER = 2;
     public const ERR_INVALID_TYPE = 'LicenceMaxPermittedCounter is only applicable to short terms and annuals';
 
-    /** @var IrhpPermitRepository */
-    private $irhpPermitRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitRepository $irhpPermitRepo
      *
      * @return StockLicenceMaxPermittedCounter
      */
-    public function __construct(IrhpPermitRepository $irhpPermitRepo)
+    public function __construct(private IrhpPermitRepository $irhpPermitRepo)
     {
-        $this->irhpPermitRepo = $irhpPermitRepo;
     }
 
     /**
      * Return a count of the maximum number of permits that can be applied for in the context of the specified stock
      * and licence
      *
-     * @param IrhpPermitStock $irhpPermitStock
-     * @param Licence $licence
      *
      * @return int
      *

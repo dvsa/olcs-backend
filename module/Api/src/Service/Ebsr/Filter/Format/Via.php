@@ -2,13 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 
 /**
  * Class Via
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
+ * @template-extends AbstractFilter<array>
  */
-class Via extends LaminasAbstractFilter
+class Via extends AbstractFilter
 {
     /**
      * Returns the result of filtering $value

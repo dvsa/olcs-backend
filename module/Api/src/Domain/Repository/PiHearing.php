@@ -71,8 +71,6 @@ class PiHearing extends AbstractRepository
     /**
      * Applies list filters for report
      *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
      * @return void
      */
     private function applyListFiltersForReport(QueryBuilder $qb, QueryInterface $query)

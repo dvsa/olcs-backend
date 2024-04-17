@@ -80,22 +80,15 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
     /**
      * getSnapshotStatus
      *
-     * @param TransportManagerApplication $tmApplication
      *
      * @return string
      */
     private function getSnapshotStatus(TransportManagerApplication $tmApplication): string
     {
-        switch ($tmApplication->getTmApplicationStatus()->getId()) {
-            case TransportManagerApplication::STATUS_RECEIVED:
-            case TransportManagerApplication::STATUS_OPERATOR_SIGNED:
-                $status = 'at submission';
-                break;
-
-            default:
-                $status = 'at grant';
-                break;
-        }
+        $status = match ($tmApplication->getTmApplicationStatus()->getId()) {
+            TransportManagerApplication::STATUS_RECEIVED, TransportManagerApplication::STATUS_OPERATOR_SIGNED => 'at submission',
+            default => 'at grant',
+        };
         return $status;
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)

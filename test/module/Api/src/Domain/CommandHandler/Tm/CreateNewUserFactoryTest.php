@@ -70,9 +70,6 @@ class CreateNewUserFactoryTest extends MockeryTestCase
         $this->sut = new CreateNewUserFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->setUpAbstractCommandHandlerServices();

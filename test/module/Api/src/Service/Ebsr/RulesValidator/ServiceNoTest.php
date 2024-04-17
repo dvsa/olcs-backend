@@ -17,7 +17,7 @@ class ServiceNoTest extends \PHPUnit\Framework\TestCase
      *
      * @dataProvider isValidProvider
      */
-    public function testIsValid($serviceNo, $isValid)
+    public function testIsValid(mixed $serviceNo, $isValid)
     {
         $value = ['serviceNo' => $serviceNo];
 

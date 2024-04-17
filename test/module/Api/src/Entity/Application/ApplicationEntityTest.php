@@ -4156,10 +4156,9 @@ class ApplicationEntityTest extends EntityTester
 
     /**
      * @param RefData $appliedVia
-     * @param mixed $expected
      * @dataProvider createdInternallyProvider
      */
-    public function testCreatedInternally($appliedVia, $expected)
+    public function testCreatedInternally($appliedVia, mixed $expected)
     {
         $application = $this->instantiate(Entity::class);
 

@@ -28,12 +28,6 @@ class AccessToken
 
     /**
      * AccessToken constructor.
-     * @param string $accessToken
-     * @param int $expiresIn
-     * @param int $issuedAt
-     * @param string $scope
-     * @param string $tokenType
-     * @param string|null $salesReference
      */
     public function __construct(string $accessToken, int $expiresIn, int $issuedAt, string $scope, string $tokenType, ?string $salesReference = null)
     {

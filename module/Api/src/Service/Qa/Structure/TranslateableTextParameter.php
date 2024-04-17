@@ -4,12 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 class TranslateableTextParameter
 {
-    /** @var string */
-    private $value;
-
-    /** @var string|null */
-    private $formatter;
-
     /**
      * Create instance
      *
@@ -18,10 +12,8 @@ class TranslateableTextParameter
      *
      * @return TranslateableText
      */
-    public function __construct($value, $formatter)
+    public function __construct(private $value, private $formatter)
     {
-        $this->value = $value;
-        $this->formatter = $formatter;
     }
 
     /**

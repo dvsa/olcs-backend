@@ -91,8 +91,6 @@ class IrfoPsvAuth extends AbstractRepository
     /**
      * Applies list filters for continuation
      *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
      * @return void
      */
     private function applyListFiltersForContinuation(QueryBuilder $qb, QueryInterface $query)

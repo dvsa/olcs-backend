@@ -33,18 +33,12 @@ class QueryBuilder implements QueryBuilderInterface
     private $qb;
 
     /**
-     * @var ServiceLocatorInterface
-     */
-    private $queryPartialServiceManager;
-
-    /**
      * QueryBuilder constructor.
      *
      * @param QueryPartialServiceManager $queryPartialServiceManager Service manager
      */
-    public function __construct(ServiceLocatorInterface $queryPartialServiceManager)
+    public function __construct(private ServiceLocatorInterface $queryPartialServiceManager)
     {
-        $this->queryPartialServiceManager = $queryPartialServiceManager;
     }
 
     /**

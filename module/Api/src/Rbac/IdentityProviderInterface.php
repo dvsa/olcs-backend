@@ -21,7 +21,6 @@ interface IdentityProviderInterface extends LmcRbacMvcIdentityProviderInterface
     /**
      * Set masqueraded as system user flag
      *
-     * @param bool $masqueradedAsSystemUser
      *
      * @return void
      */

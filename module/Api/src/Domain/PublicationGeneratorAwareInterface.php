@@ -9,9 +9,6 @@ use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
  */
 interface PublicationGeneratorAwareInterface
 {
-    /**
-     * @param PublicationGenerator $service
-     */
     public function setPublicationGenerator(PublicationGenerator $service);
 
     /**

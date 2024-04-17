@@ -46,7 +46,6 @@ abstract class AbstractImpounding extends AbstractCommandHandler implements Tran
     }
 
     /**
-     * @param ImpoundingEntity $impounding
      * @return PublishImpoundingCmd
      */
     protected function createPublishCommand(ImpoundingEntity $impounding)
@@ -109,7 +108,6 @@ abstract class AbstractImpounding extends AbstractCommandHandler implements Tran
     /**
      * Determine the publication traffic area, derived from the licence
      *
-     * @param CasesEntity $case
      * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
      */
     protected function determinePubTrafficArea(CasesEntity $case)
@@ -123,7 +121,6 @@ abstract class AbstractImpounding extends AbstractCommandHandler implements Tran
 
     /**
      * Return Public Inquiry Id
-     * @param CasesEntity $case
      * @return mixed
      */
     protected function determinePublicInquiry(CasesEntity $case)

@@ -22,9 +22,6 @@ trait AddressFormatterAwareTrait
         return $this->addressFormatter;
     }
 
-    /**
-     * @param FormatAddress $addressFormatter
-     */
     public function setAddressFormatter(FormatAddress $addressFormatter)
     {
         $this->addressFormatter = $addressFormatter;

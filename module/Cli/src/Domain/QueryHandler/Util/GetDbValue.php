@@ -96,7 +96,6 @@ class GetDbValue extends AbstractQueryHandler
     }
 
     /**
-     * @param GetDbValueQuery $query
      * @throws \Exception
      */
     private function validate(GetDbValueQuery $query): void

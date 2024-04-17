@@ -21,7 +21,6 @@ class ApplicationPath extends AbstractApplicationPath
      * Get the answer value corresponding to the specified question id
      *
      * @param int $id
-     * @param QaEntityInterface $qaEntity
      *
      * @return mixed|null
      */

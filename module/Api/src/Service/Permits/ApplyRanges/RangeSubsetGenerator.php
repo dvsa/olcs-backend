@@ -9,8 +9,6 @@ class RangeSubsetGenerator
     /**
      * Derive an subset of a range array based upon characteristics of a candidate permit
      *
-     * @param IrhpCandidatePermit $candidatePermit
-     * @param array $ranges
      *
      * @return array
      */

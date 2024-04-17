@@ -60,7 +60,7 @@ class WebDavClient implements DocumentStoreInterface
             if ($file->getSize() !== 0) {
                 return $file;
             }
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
             return false;
         } finally {
             if (is_file($tmpFileName)) {
@@ -84,7 +84,7 @@ class WebDavClient implements DocumentStoreInterface
     {
         try {
             return $this->filesystem->delete($path);
-        } catch (FileNotFoundException $e) {
+        } catch (FileNotFoundException) {
             return false;
         }
     }
@@ -104,7 +104,7 @@ class WebDavClient implements DocumentStoreInterface
         try {
             $fh = fopen($file->getResource(), 'rb');
             $response->setResponse($this->filesystem->writeStream($path, $fh));
-        } catch (FileExistsException $e) {
+        } catch (FileExistsException) {
             $response->setResponse(false);
         } finally {
             @fclose($fh);

@@ -51,7 +51,6 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
     /**
      * Get the OperatingCentre text
      *
-     * @param ApplicationOperatingCentre $aoc
      *
      * @return string
      */
@@ -90,8 +89,6 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
     }
 
     /**
-     * @param ApplicationOperatingCentre $aoc
-     *
      * @return string
      */
     private function getVehicleTrailerText(ApplicationOperatingCentre $aoc)
@@ -114,7 +111,6 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
     /**
      * Calculate if the update is an increase or a decrease and return the string to insert into text
      *
-     * @param ApplicationOperatingCentre $aoc
      *
      * @return string|null null returned if no change
      */
@@ -144,7 +140,6 @@ final class OperatingCentres extends AbstractContext implements AddressFormatter
     /**
      * Get the Licence Operating Centre, that the ApplicationOperatingCentre is an update to
      *
-     * @param ApplicationOperatingCentre $aoc
      *
      * @return LicenceOperatingCentre
      */

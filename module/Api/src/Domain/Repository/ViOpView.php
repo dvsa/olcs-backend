@@ -53,7 +53,7 @@ class ViOpView extends AbstractRepository
                             'licenceId' => $recordParams['licId']
                         ]
                     );
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 throw new RuntimeException('Error clearing VI flags for Operating Centres');
             }
         }

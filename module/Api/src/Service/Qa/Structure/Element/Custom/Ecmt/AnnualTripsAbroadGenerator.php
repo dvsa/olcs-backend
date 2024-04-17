@@ -11,24 +11,14 @@ class AnnualTripsAbroadGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var AnnualTripsAbroadFactory */
-    private $annualTripsAbroadFactory;
-
-    /** @var TextGenerator */
-    private $textGenerator;
-
     /**
      * Create service instance
      *
-     * @param AnnualTripsAbroadFactory $annualTripsAbroadFactory
-     * @param TextGenerator $textGenerator
      *
      * @return AnnualTripsAbroadGenerator
      */
-    public function __construct(AnnualTripsAbroadFactory $annualTripsAbroadFactory, TextGenerator $textGenerator)
+    public function __construct(private AnnualTripsAbroadFactory $annualTripsAbroadFactory, private TextGenerator $textGenerator)
     {
-        $this->annualTripsAbroadFactory = $annualTripsAbroadFactory;
-        $this->textGenerator = $textGenerator;
     }
 
     /**

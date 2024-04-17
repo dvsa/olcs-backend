@@ -4,9 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 class TranslateableTextParameterGenerator
 {
-    /** @var TranslateableTextParameterFactory */
-    private $translateableTextParameterFactory;
-
     /**
      * Create service instance
      *
@@ -14,15 +11,13 @@ class TranslateableTextParameterGenerator
      *
      * @return TranslateableTextParameterGenerator
      */
-    public function __construct(TranslateableTextParameterFactory $translateableTextParameterFactory)
+    public function __construct(private TranslateableTextParameterFactory $translateableTextParameterFactory)
     {
-        $this->translateableTextParameterFactory = $translateableTextParameterFactory;
     }
 
     /**
      * Build and return a TranslateableTextParameter instance using the appropriate data sources
      *
-     * @param array $options
      *
      * @return TranslateableTextParameter
      */

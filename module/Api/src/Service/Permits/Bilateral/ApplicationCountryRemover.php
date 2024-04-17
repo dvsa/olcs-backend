@@ -9,30 +9,18 @@ use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries;
 
 class ApplicationCountryRemover
 {
-    /** @var CommandCreator */
-    private $commandCreator;
-
-    /** @var CommandHandlerManager */
-    private $commandHandlerManager;
-
     /**
      * Create service instance
      *
-     * @param CommandCreator $commandCreator
-     * @param CommandHandlerManager $commandHandlerManager
      *
      * @return ApplicationCountryRemover
      */
-    public function __construct(CommandCreator $commandCreator, CommandHandlerManager $commandHandlerManager)
+    public function __construct(private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager)
     {
-        $this->commandCreator = $commandCreator;
-        $this->commandHandlerManager = $commandHandlerManager;
     }
 
     /**
      * Remove all traces of a country from an application
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     public function remove(IrhpPermitApplication $irhpPermitApplication)
     {

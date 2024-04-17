@@ -16,50 +16,14 @@ class EmissionsCategoryAvailabilityCounter
 {
     public const ERR_BAD_ISOLATION_LEVEL = 'Transaction isolation level must be set to REPEATABLE_READ';
 
-    /** @var Connection */
-    private $connection;
-
-    /** @var IrhpPermitRangeRepository */
-    private $irhpPermitRangeRepo;
-
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
-    /** @var IrhpPermitRepository */
-    private $irhpPermitRepo;
-
-    /** @var IrhpPermitStockRepository */
-    private $irhpPermitStockRepo;
-
-    /** @var IrhpCandidatePermitRepository */
-    private $irhpCandidatePermitRepo;
-
     /**
      * Create service instance
      *
-     * @param Connection $connection
-     * @param IrhpPermitRangeRepository $irhpPermitRangeRepo
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
-     * @param IrhpPermitRepository $irhpPermitRepo
-     * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param IrhpCandidatePermitRepository $irhpCandidatePermitRepo
      *
      * @return EmissionsCategoryAvailabilityCounter
      */
-    public function __construct(
-        Connection $connection,
-        IrhpPermitRangeRepository $irhpPermitRangeRepo,
-        IrhpPermitApplicationRepository $irhpPermitApplicationRepo,
-        IrhpPermitRepository $irhpPermitRepo,
-        IrhpPermitStockRepository $irhpPermitStockRepo,
-        IrhpCandidatePermitRepository $irhpCandidatePermitRepo
-    ) {
-        $this->connection = $connection;
-        $this->irhpPermitRangeRepo = $irhpPermitRangeRepo;
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
-        $this->irhpPermitRepo = $irhpPermitRepo;
-        $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->irhpCandidatePermitRepo = $irhpCandidatePermitRepo;
+    public function __construct(private Connection $connection, private IrhpPermitRangeRepository $irhpPermitRangeRepo, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private IrhpPermitRepository $irhpPermitRepo, private IrhpPermitStockRepository $irhpPermitStockRepo, private IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
+    {
     }
 
     /**
@@ -108,22 +72,17 @@ class EmissionsCategoryAvailabilityCounter
         $irhpPermitStock = $this->irhpPermitStockRepo->fetchById($irhpPermitStockId);
         $allocationMode = $irhpPermitStock->getAllocationMode();
 
-        switch ($allocationMode) {
-            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
-                $permitsGranted = $this->irhpPermitApplicationRepo->getRequiredPermitCountWhereApplicationAwaitingPayment(
-                    $irhpPermitStockId,
-                    $emissionsCategoryId
-                );
-                break;
-            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
-                $permitsGranted = $this->irhpCandidatePermitRepo->fetchCountInStockWhereApplicationAwaitingFee(
-                    $irhpPermitStockId,
-                    $emissionsCategoryId
-                );
-                break;
-            default:
-                throw new RuntimeException('Unsupported allocation mode: ' . $allocationMode);
-        }
+        $permitsGranted = match ($allocationMode) {
+            IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES => $this->irhpPermitApplicationRepo->getRequiredPermitCountWhereApplicationAwaitingPayment(
+                $irhpPermitStockId,
+                $emissionsCategoryId
+            ),
+            IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS => $this->irhpCandidatePermitRepo->fetchCountInStockWhereApplicationAwaitingFee(
+                $irhpPermitStockId,
+                $emissionsCategoryId
+            ),
+            default => throw new RuntimeException('Unsupported allocation mode: ' . $allocationMode),
+        };
 
         $permitsAllocated = $this->irhpPermitRepo->getPermitCount($irhpPermitStockId, $emissionsCategoryId);
 

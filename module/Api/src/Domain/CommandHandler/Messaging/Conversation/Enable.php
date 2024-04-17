@@ -47,7 +47,7 @@ final class Enable extends AbstractCommandHandler implements ToggleRequiredInter
                 [
                     'organisation_id' => $organisation->getId(),
                     'exception' => [
-                        'class' => get_class($e),
+                        'class' => $e::class,
                         'message' => $e->getMessage(),
                         'trace' => $e->getTraceAsString(),
                     ],

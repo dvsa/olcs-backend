@@ -26,7 +26,7 @@ class RepositoryServiceManagerTest extends MockeryTestCase
         $message = sprintf(
             RepositoryServiceManager::VALIDATE_ERROR,
             RepositoryServiceManager::class,
-            get_class($invalidClass)
+            $invalidClass::class
         );
         $this->expectException(InvalidServiceException::class);
         $this->expectExceptionMessage($message);

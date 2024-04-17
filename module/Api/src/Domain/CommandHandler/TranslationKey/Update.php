@@ -66,8 +66,6 @@ final class Update extends AbstractCommandHandler
 
     /**
      * @param int $parentEntityId
-     * @param int $languageId
-     * @param string $translatedText
      */
     protected function updateOrCreate($parentEntityId, int $languageId, string $translatedText)
     {

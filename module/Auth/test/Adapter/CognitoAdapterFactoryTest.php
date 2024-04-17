@@ -59,9 +59,6 @@ class CognitoAdapterFactoryTest extends MockeryTestCase
         $this->sut = new CognitoAdapterFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $serviceManager->setService(Client::class, m::mock(Client::class));

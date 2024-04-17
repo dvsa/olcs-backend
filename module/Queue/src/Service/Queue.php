@@ -26,7 +26,6 @@ class Queue
     /**
      * Sends message to sqs queue and returns the response code
      *
-     * @param array $message
      *
      */
     public function sendMessage(array $message): void
@@ -41,9 +40,7 @@ class Queue
 
     /**
      *
-     * @param string $queueUrl
      * @param int $maxMessages Number of messages to fetch. No more than 10
-     * @param int $visibilityTimeout
      *
      * @return array|null
      */
@@ -70,8 +67,6 @@ class Queue
     }
 
     /**
-     * @param string $queueUrl
-     * @param string $receiptHandle
      * @return array
      */
     public function deleteMessage(string $queueUrl, string $receiptHandle): array
@@ -102,8 +97,6 @@ class Queue
     }
 
     /**
-     * @param AwsException $exception
-     * @param string $action
      * @return void
      */
     private function logAwsException(AwsException $exception, string $action): void

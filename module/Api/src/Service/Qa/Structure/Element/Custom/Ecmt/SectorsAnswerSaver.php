@@ -13,26 +13,14 @@ class SectorsAnswerSaver implements AnswerSaverInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var IrhpApplicationRepository */
-    private $irhpApplicationRepo;
-
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
     /**
      * Create service instance
      *
-     * @param IrhpApplicationRepository $irhpApplicationRepo
-     * @param GenericAnswerFetcher $genericAnswerFetcher
      *
      * @return SectorsAnswerSaver
      */
-    public function __construct(
-        IrhpApplicationRepository $irhpApplicationRepo,
-        GenericAnswerFetcher $genericAnswerFetcher
-    ) {
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
+    public function __construct(private IrhpApplicationRepository $irhpApplicationRepo, private GenericAnswerFetcher $genericAnswerFetcher)
+    {
     }
 
     /**

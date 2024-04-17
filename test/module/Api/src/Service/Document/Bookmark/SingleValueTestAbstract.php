@@ -42,13 +42,13 @@ abstract class SingleValueTestAbstract extends \PHPUnit\Framework\TestCase
         $bookmark = new $sutClassName();
 
         $key = $sutClassName::FIELD;
-        $value = get_class($bookmark);
+        $value = $bookmark::class;
 
         $bookmark->setData($this->getData($key, $value));
 
         $formatter = $this->getFormatter();
         if ($formatter instanceof FormatterInterface) {
-            $formatterName = get_class($formatter);
+            $formatterName = $formatter::class;
 
             $this->assertEquals(
                 $formatterName::format((array)$value),

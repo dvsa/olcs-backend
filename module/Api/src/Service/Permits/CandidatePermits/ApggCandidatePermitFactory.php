@@ -11,8 +11,6 @@ class ApggCandidatePermitFactory
     /**
      * Create an instance for use in an APGG context
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param IrhpPermitRange $irhpPermitRange
      *
      * @return IrhpCandidatePermit
      */

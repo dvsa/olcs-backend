@@ -6,19 +6,14 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class StockAvailabilityCounter
 {
-    /** @var EmissionsCategoryAvailabilityCounter */
-    private $emissionsCategoryAvailabilityCounter;
-
     /**
      * Create service instance
      *
-     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
      *
      * @return StockAvailabilityCounter
      */
-    public function __construct(EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
-        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
     }
 
     /**

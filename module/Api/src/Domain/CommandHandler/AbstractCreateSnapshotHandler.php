@@ -61,7 +61,7 @@ abstract class AbstractCreateSnapshotHandler extends AbstractCommandHandler
      *
      * @return string
      */
-    protected function getDocumentDescription($entity): string
+    protected function getDocumentDescription(mixed $entity): string
     {
         return $this->documentDescription;
     }
@@ -74,7 +74,7 @@ abstract class AbstractCreateSnapshotHandler extends AbstractCommandHandler
      *
      * @return Upload
      */
-    private function getUploadCmd(string $snapshot, $entity): Upload
+    private function getUploadCmd(string $snapshot, mixed $entity): Upload
     {
         $documentDescription = $this->getDocumentDescription($entity);
 

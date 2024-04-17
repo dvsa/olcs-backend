@@ -72,7 +72,6 @@ final class CreateSlaTargetDate extends AbstractCommandHandler
     /**
      * Fetches the required entity that the SLA target date relates to.
      *
-     * @param Cmd $command
      * @return mixed
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */

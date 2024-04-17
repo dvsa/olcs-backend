@@ -10,28 +10,21 @@ class SuccessfulCandidatePermitsGenerator
     public const ID_KEY = 'id';
     public const EMISSIONS_CATEGORY_KEY = 'emissions_category';
 
-    /** @var EmissionsCategoryAvailabilityCounter */
-    private $emissionsCategoryAvailabilityCounter;
-
     /**
      * Create service instance
      *
-     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
      *
      * @return SuccessfulCandidatePermitsGenerator
      */
-    public function __construct(EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
-        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
     }
 
     /**
      * Get an array containing successful candidate permit ids and the emissions categories assigned to them
      *
-     * @param array $candidatePermits
      * @param int $stockId
      * @param int $quotaRemaining
-     *
      * @return array
      */
     public function generate(array $candidatePermits, $stockId, $quotaRemaining)

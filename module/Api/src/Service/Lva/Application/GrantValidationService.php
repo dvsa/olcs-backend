@@ -32,7 +32,6 @@ class GrantValidationService implements FactoryInterface
     /**
      * Validate the application
      *
-     * @param ApplicationEntity $application
      *
      * @return array of validation error messages
      */
@@ -167,7 +166,6 @@ class GrantValidationService implements FactoryInterface
     /**
      * Validate S4
      *
-     * @param ApplicationEntity $application
      *
      * @return array of validation messages
      */
@@ -191,7 +189,6 @@ class GrantValidationService implements FactoryInterface
     /**
      * Validate Oppossition
      *
-     * @param ApplicationEntity $application
      *
      * @return array of validation messages
      */

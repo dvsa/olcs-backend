@@ -31,7 +31,7 @@ class DownloadGuide extends AbstractDownload
         }
 
         // make sure that the file identifier cannot go up directory structure to secure documents
-        if (strpos($identifier, '..') !== false) {
+        if (str_contains($identifier, '..')) {
             throw new NotFoundException();
         }
 
@@ -41,7 +41,6 @@ class DownloadGuide extends AbstractDownload
     /**
      * Lookup document store identifier for doc template slug
      *
-     * @param string $slug
      * @return string
      * @throws NotFoundException
      */

@@ -44,7 +44,6 @@ class ApplicationCompletionBuilder implements BuilderInterface
     }
 
     /**
-     * @param Application $application
      * @param int|null $id
      * @return static
      */

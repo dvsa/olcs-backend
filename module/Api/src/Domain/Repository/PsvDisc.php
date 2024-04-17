@@ -190,7 +190,7 @@ class PsvDisc extends AbstractRepository
 
         try {
             $count = $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $exception) {
+        } catch (NoResultException) {
             $count = 0;
         } catch (\Exception $exception) {
             throw $exception;

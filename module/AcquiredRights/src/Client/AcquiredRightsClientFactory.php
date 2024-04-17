@@ -37,7 +37,6 @@ class AcquiredRightsClientFactory implements FactoryInterface
     /**
      * Checks that the array path to base_url exists, and is not empty. Required for AcquiredRightsClient.
      *
-     * @param array $config
      * @return array
      */
     protected function getAcquiredRightsClientConfiguration(array $config): array

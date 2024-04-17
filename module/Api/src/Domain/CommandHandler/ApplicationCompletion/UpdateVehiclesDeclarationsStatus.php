@@ -40,7 +40,7 @@ final class UpdateVehiclesDeclarationsStatus extends AbstractUpdateStatus
             $this->validate15g($application);
             $this->validate8bi($application);
             $this->validate8bii($application);
-        } catch (\Exception $ex) {
+        } catch (\Exception) {
             return false;
         }
 

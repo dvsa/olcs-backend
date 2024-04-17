@@ -288,16 +288,11 @@ class TransXChangeConsumer extends AbstractConsumer
         } else {
             $status = $busRegistration->getStatus()->getId();
 
-            switch ($status) {
-                case BusRegEntity::STATUS_CANCEL:
-                    $state = 'cancellation';
-                    break;
-                case BusRegEntity::STATUS_VAR:
-                    $state = 'variation';
-                    break;
-                default:
-                    $state = 'application';
-            }
+            $state = match ($status) {
+                BusRegEntity::STATUS_CANCEL => 'cancellation',
+                BusRegEntity::STATUS_VAR => 'variation',
+                default => 'application',
+            };
         }
 
         $message[] = sprintf('New %s created: %s', $state, $busRegistration->getRegNo());

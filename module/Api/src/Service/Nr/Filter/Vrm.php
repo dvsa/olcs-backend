@@ -2,14 +2,15 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter;
 
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 use Dvsa\Olcs\Transfer\Filter\Vrm as VrmFilter;
 
 /**
  * Class Vrm
  * @package Dvsa\Olcs\Api\Service\Nr\Filter
+ * @template-extends AbstractFilter<array>
  */
-class Vrm extends LaminasAbstractFilter
+class Vrm extends AbstractFilter
 {
     /**
      * @var VrmFilter

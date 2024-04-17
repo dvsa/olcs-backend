@@ -28,7 +28,6 @@ class ClientFactory implements FactoryInterface
     /**
      * Create service
      *
-     * @param ContainerInterface $container
      *
      * @return HttpClient
      * @throws \RuntimeException
@@ -76,8 +75,6 @@ class ClientFactory implements FactoryInterface
     }
 
     /**
-     * @param ContainerInterface $container
-     *
      * @return string
      */
     private function getClientType(ContainerInterface $container): string

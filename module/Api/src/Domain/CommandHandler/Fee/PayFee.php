@@ -193,7 +193,7 @@ final class PayFee extends AbstractCommandHandler implements TransactionedInterf
         // or the status is not Complete and it has been completed online
         try {
             $this->getRepo('ContinuationDetail')->fetchOngoingForLicence($licenceId);
-        } catch (\Doctrine\ORM\UnexpectedResultException $e) {
+        } catch (\Doctrine\ORM\UnexpectedResultException) {
             return;
         }
 

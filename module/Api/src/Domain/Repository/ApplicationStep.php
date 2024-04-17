@@ -38,7 +38,7 @@ class ApplicationStep extends AbstractRepository
                 ->setParameter(2, $slug)
                 ->getQuery()
                 ->getSingleResult();
-        } catch (NoResultException $e) {
+        } catch (NoResultException) {
             throw new NotFoundException(
                 sprintf(
                     'Unable to find application step with path id %s and slug %s',

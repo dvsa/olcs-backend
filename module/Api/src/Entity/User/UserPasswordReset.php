@@ -19,8 +19,6 @@ use Doctrine\ORM\Mapping as ORM;
 class UserPasswordReset extends AbstractUserPasswordReset
 {
     /**
-     * @param User   $user
-     * @param string $confirmation
      *
      * @return self
      */
@@ -40,8 +38,6 @@ class UserPasswordReset extends AbstractUserPasswordReset
     }
 
     /**
-     * @param string $username
-     *
      * @return bool
      */
     public function isValid(string $username): bool

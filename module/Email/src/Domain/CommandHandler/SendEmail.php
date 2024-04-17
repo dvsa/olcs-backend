@@ -118,9 +118,6 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
         return $this->translator;
     }
 
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function setTranslator(TranslatorInterface $translator)
     {
         $this->translator = $translator;
@@ -166,9 +163,6 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
         return $this->emailService;
     }
 
-    /**
-     * @param EmailService $emailService
-     */
     public function setEmailService(EmailService $emailService)
     {
         $this->emailService = $emailService;
@@ -269,9 +263,6 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
      * @param string $html
      * @param string $fromEmail
      * @param string $fromName
-     * @param array $cc
-     * @param array $bcc
-     * @param array $docs
      *
      * @return void
      * @throws EmailNotSentException

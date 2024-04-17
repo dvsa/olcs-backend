@@ -32,7 +32,7 @@ class Publication extends AbstractRepository
      *
      * @throws NotFoundException
      */
-    public function fetchLatestForTrafficAreaAndType($trafficArea, $pubType)
+    public function fetchLatestForTrafficAreaAndType(mixed $trafficArea, mixed $pubType)
     {
         $qb = $this->createQueryBuilder();
 

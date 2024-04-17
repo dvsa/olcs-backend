@@ -36,15 +36,11 @@ class CognitoAdapter extends AbstractAdapter
     public const EXCEPTION_NOT_AUTHORIZED = 'NotAuthorizedException';
     public const EXCEPTION_USER_NOT_FOUND = 'UserNotFoundException';
 
-    protected Client $client;
-
     /**
      * CognitoAdapter constructor.
-     * @param Client $client
      */
-    public function __construct(Client $client)
+    public function __construct(protected Client $client)
     {
-        $this->client = $client;
     }
 
     /**
@@ -118,14 +114,11 @@ class CognitoAdapter extends AbstractAdapter
             Logger::debug('Cognito client: change password ClientException: ' . $e->getMessage());
             $previousException = $e->getPrevious();
             assert($previousException instanceof AwsException);
-            switch ($previousException->getAwsErrorCode()) {
-                case 'InvalidPasswordException':
-                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID, ChangePasswordResult::MESSAGE_NEW_PASSWORD_INVALID);
-                case 'NotAuthorizedException':
-                    return new ChangePasswordResult(ChangePasswordResult::FAILURE_NOT_AUTHORIZED, ChangePasswordResult::MESSAGE_GENERIC_FAIL);
-                default:
-                    return new ChangePasswordResult(ChangePasswordResult::FAILURE, ChangePasswordResult::MESSAGE_GENERIC_FAIL);
-            }
+            return match ($previousException->getAwsErrorCode()) {
+                'InvalidPasswordException' => new ChangePasswordResult(ChangePasswordResult::FAILURE_NEW_PASSWORD_INVALID, ChangePasswordResult::MESSAGE_NEW_PASSWORD_INVALID),
+                'NotAuthorizedException' => new ChangePasswordResult(ChangePasswordResult::FAILURE_NOT_AUTHORIZED, ChangePasswordResult::MESSAGE_GENERIC_FAIL),
+                default => new ChangePasswordResult(ChangePasswordResult::FAILURE, ChangePasswordResult::MESSAGE_GENERIC_FAIL),
+            };
         }
     }
 
@@ -146,9 +139,6 @@ class CognitoAdapter extends AbstractAdapter
     }
 
     /**
-     * @param string $identifier
-     * @param string $password
-     * @param string $email
      * @param array|null $attributes
      * @throws ClientException
      */
@@ -159,8 +149,6 @@ class CognitoAdapter extends AbstractAdapter
     }
 
     /**
-     * @param string $newPassword
-     * @param string $challengeToken
      * @return Result
      */
     public function changeExpiredPassword(string $newPassword, string $challengeToken, string $username): ChangeExpiredPasswordResult
@@ -208,22 +196,17 @@ class CognitoAdapter extends AbstractAdapter
                 ]
             );
         } catch (ClientException $e) {
-            switch ($e->getPrevious()->getAwsErrorCode()) {
-                case 'InvalidPasswordException':
-                    return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID, [], [$e->getMessage()]);
-                case 'NotAuthorizedException':
-                    return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED, [], [$e->getMessage()]);
-                default:
-                    return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE, [], [$e->getMessage()]);
-            }
+            return match ($e->getPrevious()->getAwsErrorCode()) {
+                'InvalidPasswordException' => new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NEW_PASSWORD_INVALID, [], [$e->getMessage()]),
+                'NotAuthorizedException' => new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE_NOT_AUTHORIZED, [], [$e->getMessage()]),
+                default => new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE, [], [$e->getMessage()]),
+            };
         } catch (InvalidTokenException $e) {
             return new ChangeExpiredPasswordResult(ChangeExpiredPasswordResult::FAILURE, [], [$e->getMessage()]);
         }
     }
 
     /**
-     * @param string $refreshToken
-     * @param string $identifier
      * @return Result
      */
     public function refreshToken(string $refreshToken, string $identifier): Result
@@ -345,7 +328,6 @@ class CognitoAdapter extends AbstractAdapter
     }
 
     /**
-     * @param AccessTokenInterface $token
      * @return array
      * @throws InvalidTokenException
      */

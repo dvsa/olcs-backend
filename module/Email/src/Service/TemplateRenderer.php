@@ -25,8 +25,6 @@ class TemplateRenderer
     }
 
     /**
-     * @param StrategySelectingViewRenderer $viewRenderer
-     *
      * @return StrategySelectingViewRenderer
      */
     public function setViewRenderer(StrategySelectingViewRenderer $viewRenderer)
@@ -38,7 +36,6 @@ class TemplateRenderer
     /**
      * Render a template into the message body
      *
-     * @param Message $message
      * @param string|array $templates
      * @param array $variables
      * @param string|bool $layout
@@ -74,7 +71,6 @@ class TemplateRenderer
      * @param string $locale
      * @param string|array $templates
      * @param string $format
-     * @param array $variables
      * @return string
      */
     private function getEmailContent($locale, $templates, $format, array $variables = [])
@@ -89,14 +85,13 @@ class TemplateRenderer
             $templateViews[] = $this->getTemplateView($locale, $template, $format, $variables);
         }
 
-        return implode($templateViews);
+        return implode('', $templateViews);
     }
 
     /**
      * @param string $locale
      * @param string $template
      * @param string $format
-     * @param array $variables
      * @return string
      */
     private function getTemplateView($locale, $template, $format, array $variables = [])

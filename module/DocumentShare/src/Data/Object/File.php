@@ -186,12 +186,22 @@ class File
      */
     public function setContentFromDsStream($streamFileName)
     {
+        if (empty($streamFileName)) {
+            throw new \Exception("File path cannot be empty.");
+        }
+
         $fhTrg = null;
+        $fhSrc = null;
         try {
             //  get content from stream
             $fhSrc = @fopen($streamFileName, 'rb');
             if ($fhSrc === false) {
                 throw new \Exception(self::ERR_CANT_OPEN_DOWNLOAD_STREAM);
+            }
+
+            // Check if the target resource path is set
+            if (empty($this->file)) {
+                throw new \Exception("Resource file path cannot be empty.");
             }
 
             //  get resouce file
@@ -237,8 +247,12 @@ class File
 
             stream_filter_remove($filter);
         } finally {
-            @fclose($fhTrg);
-            @fclose($fhSrc);
+            if (is_resource($fhTrg)) {
+                @fclose($fhTrg);
+            }
+            if (is_resource($fhSrc)) {
+                @fclose($fhSrc);
+            }
         }
     }
 }

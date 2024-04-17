@@ -36,23 +36,15 @@ class DvlaSearchService
     protected $httpClient;
 
     /**
-     * @var Logger|null
-     */
-    private $logger;
-
-    /**
      * Client constructor.
-     * @param HttpClient $httpClient
      * @param Logger|null $logger
      */
-    public function __construct(HttpClient $httpClient, Logger $logger = null)
+    public function __construct(HttpClient $httpClient, private ?Logger $logger = null)
     {
         $this->httpClient = $httpClient;
-        $this->logger = $logger;
     }
 
     /**
-     * @param string $vrn
      * @return DvlaVehicle
      * @throws BadResponseException
      * @throws GuzzleException
@@ -73,7 +65,7 @@ class DvlaSearchService
 
         try {
             $responseArray = json_decode($json, true);
-        } catch (InvalidArgumentException $e) {
+        } catch (InvalidArgumentException) {
             throw new BadResponseException($this->generateBrokerExceptionMessage("JSON response cannot be parsed"));
         }
 
@@ -81,8 +73,6 @@ class DvlaSearchService
     }
 
     /**
-     * @param string $method
-     * @param string $route
      * @param array<string, mixed> $options
      * @return ResponseInterface
      * @throws GuzzleException
@@ -108,7 +98,6 @@ class DvlaSearchService
     }
 
     /**
-     * @param GuzzleBadResponseException $exception
      * @return ServiceException
      */
     protected function generateServiceException(GuzzleBadResponseException $exception): ServiceException
@@ -123,37 +112,31 @@ class DvlaSearchService
             );
         }
 
-        switch ($response->getStatusCode() ?? 500) {
-            case 400:
-                return new BadRequestException(
-                    $this->generateBrokerExceptionMessage("Bad request"),
-                    $exception->getCode(),
-                    $exception
-                );
-            case 403:
-                return new ForbiddenException(
-                    $this->generateBrokerExceptionMessage("API key is invalid or not defined"),
-                    $exception->getCode(),
-                    $exception
-                );
-            case 404:
-                return new NotFoundException(
-                    $this->generateBrokerExceptionMessage("URI Not Found"),
-                    $exception->getCode(),
-                    $exception
-                );
-            default:
-                return new ServiceException(
-                    $this->generateBrokerExceptionMessage("Server Error"),
-                    $exception->getCode(),
-                    $exception
-                );
-        }
+        return match ($response->getStatusCode() ?? 500) {
+            400 => new BadRequestException(
+                $this->generateBrokerExceptionMessage("Bad request"),
+                $exception->getCode(),
+                $exception
+            ),
+            403 => new ForbiddenException(
+                $this->generateBrokerExceptionMessage("API key is invalid or not defined"),
+                $exception->getCode(),
+                $exception
+            ),
+            404 => new NotFoundException(
+                $this->generateBrokerExceptionMessage("URI Not Found"),
+                $exception->getCode(),
+                $exception
+            ),
+            default => new ServiceException(
+                $this->generateBrokerExceptionMessage("Server Error"),
+                $exception->getCode(),
+                $exception
+            ),
+        };
     }
 
     /**
-     * @param ResponseInterface $response
-     * @param string $uri
      * @param array<mixed> $options
      */
     protected function logResponse(ResponseInterface $response, string $uri, array $options): void
@@ -177,7 +160,6 @@ class DvlaSearchService
     }
 
     /**
-     * @param string $message
      * @return string
      */
     private function generateBrokerExceptionMessage(string $message): string

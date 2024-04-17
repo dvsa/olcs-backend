@@ -13,27 +13,20 @@ use RuntimeException;
 
 class IrhpPermitAllocator
 {
-    /** @var IrhpPermitRepository */
-    private $irhpPermitRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitRepository $irhpPermitRepo
      *
      * @return IrhpPermitAllocator
      */
-    public function __construct(IrhpPermitRepository $irhpPermitRepo)
+    public function __construct(private IrhpPermitRepository $irhpPermitRepo)
     {
-        $this->irhpPermitRepo = $irhpPermitRepo;
     }
 
     /**
      * Allocate a permit number in accordance with the provided data and populate the provided result with a status
      * message
      *
-     * @param Result $result
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param RangeMatchingCriteriaInterface $criteria (optional)
      * @param DateTime $expiryDate (optional)
      *
@@ -76,12 +69,6 @@ class IrhpPermitAllocator
 
     /**
      * Derive an IrhpPermit entity and save it to the repository, adding a status message to the provided result
-     *
-     * @param Result $result
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param IrhpPermitRange $irhpPermitRange
-     * @param array $assignedPermitNumbers
-     * @param DateTime|null $expiryDate
      */
     private function addIrhpPermit(
         Result $result,
@@ -116,8 +103,6 @@ class IrhpPermitAllocator
     /**
      * Get the first available permit number from the specified range
      *
-     * @param IrhpPermitRange $irhpPermitRange
-     * @param array $assignedPermitNumbers
      *
      * @return int
      */

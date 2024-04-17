@@ -49,8 +49,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add correspondance address
-     *
-     * @param ImmutableArrayObject $context
      */
     private function addCorrespondanceText(ImmutableArrayObject $context)
     {
@@ -59,8 +57,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add operting centre text
-     *
-     * @param PublicationLink $publicationLink
      */
     private function addOperatingCentreText(PublicationLink $publicationLink)
     {
@@ -76,8 +72,6 @@ final class Text3 implements ProcessInterface
     }
     /**
      * Add TC text
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4
      */
     private function addTcText(\Dvsa\Olcs\Api\Entity\Application\S4 $s4)
     {
@@ -92,8 +86,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add the closing text
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4
      */
     private function addClosingText(\Dvsa\Olcs\Api\Entity\Application\S4 $s4)
     {
@@ -106,8 +98,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add Licence upgrade text
-     *
-     * @param PublicationLink $publicationLink
      */
     private function addUpgradeText(PublicationLink $publicationLink)
     {
@@ -124,8 +114,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add Transport Manager text
-     *
-     * @param ImmutableArrayObject $context
      */
     private function addTransportManagersText(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {

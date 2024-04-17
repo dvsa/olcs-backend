@@ -12,12 +12,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractOlcsCommand extends Command
 {
     protected OutputInterface $output;
-    protected CommandHandlerManager $commandHandlerManager;
 
     public function __construct(
-        CommandHandlerManager $commandHandlerManager
+        protected CommandHandlerManager $commandHandlerManager
     ) {
-        $this->commandHandlerManager = $commandHandlerManager;
         parent::__construct();
     }
 
@@ -29,14 +27,13 @@ abstract class AbstractOlcsCommand extends Command
     /**
      * Handle an array of command DTOs
      *
-     * @param array $dto
      * @return int
      */
     protected function handleCommand(array $dto): int
     {
         try {
             foreach ($dto as $count => $dtoCommand) {
-                $logMessage = "Handling command " . ($count + 1) . ': ' . get_class($dtoCommand);
+                $logMessage = "Handling command " . ($count + 1) . ': ' . $dtoCommand::class;
                 $this->logAndWriteVerboseMessage($logMessage);
 
                 if ($this->isVerbose()) {
@@ -61,9 +58,6 @@ abstract class AbstractOlcsCommand extends Command
     /**
      * Log messages, output to console if verbose mode is enabled.
      *
-     * @param string $message
-     * @param int $logPriority
-     * @param bool $isError
      * @return void
      */
     protected function logAndWriteVerboseMessage(string $message, int $logPriority = \Laminas\Log\Logger::DEBUG, bool $isError = false)
@@ -90,7 +84,6 @@ abstract class AbstractOlcsCommand extends Command
     /**
      * Has user requested dry run
      *
-     * @param InputInterface $input
      * @return bool
      */
     protected function isDryRun(InputInterface $input): bool
@@ -101,9 +94,6 @@ abstract class AbstractOlcsCommand extends Command
     /**
      * Output the result of an operation with the appropriate message.
      *
-     * @param int $result
-     * @param string $successMessage
-     * @param string $failureMessage
      * @return int The status code
      */
     protected function outputResult(int $result, string $successMessage, string $failureMessage): int

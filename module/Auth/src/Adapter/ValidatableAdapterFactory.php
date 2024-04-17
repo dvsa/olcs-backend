@@ -49,7 +49,6 @@ class ValidatableAdapterFactory implements FactoryInterface
     /**
      * Returns the configuration from the default adapter
      *
-     * @param array $config
      * @return array
      */
     protected function getAdapterConfig(array $config): array

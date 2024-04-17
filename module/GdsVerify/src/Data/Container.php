@@ -14,11 +14,6 @@ class Container extends \SAML2\Compat\AbstractContainer
     /**
      * @var LoggerInterface
      */
-    private $logger;
-
-    /**
-     * @var LoggerInterface
-     */
     private $debugLogger;
 
     /**
@@ -26,9 +21,8 @@ class Container extends \SAML2\Compat\AbstractContainer
      *
      * @param LoggerInterface $logger Logger
      */
-    public function __construct(LoggerInterface $logger)
+    public function __construct(private LoggerInterface $logger)
     {
-        $this->logger = $logger;
     }
 
     /**
@@ -53,7 +47,7 @@ class Container extends \SAML2\Compat\AbstractContainer
     {
         if ($this->debugLogger instanceof LoggerInterface) {
             if (is_object($message)) {
-                $message = get_class($message);
+                $message = $message::class;
             }
             $this->debugLogger->debug($type . ' - ' . $message);
         }

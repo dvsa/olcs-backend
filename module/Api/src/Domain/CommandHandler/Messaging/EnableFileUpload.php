@@ -42,7 +42,7 @@ final class EnableFileUpload extends AbstractCommandHandler implements ToggleReq
                 [
                     'organisation_id' => $organisation->getId(),
                     'exception' => [
-                        'class' => get_class($e),
+                        'class' => $e::class,
                         'message' => $e->getMessage(),
                         'trace' => $e->getTraceAsString(),
                     ],

@@ -7,26 +7,20 @@ use Dvsa\Olcs\Api\Entity\Task\Task;
 
 class CheckedValueUpdater
 {
-    /** @var TaskRepository */
-    private $taskRepo;
-
     /**
      * Create service instance
      *
-     * @param TaskRepository $taskRepo
      *
      * @return CheckedValueUpdater
      */
-    public function __construct(TaskRepository $taskRepo)
+    public function __construct(private TaskRepository $taskRepo)
     {
-        $this->taskRepo = $taskRepo;
     }
 
     /**
      * Update the checked value for the specified application if required, and close and save the associated task if one
      * exists
      *
-     * @param CheckableApplicationInterface $application
      * @param bool|null $checked
      */
     public function updateIfRequired(CheckableApplicationInterface $application, $checked)

@@ -19,18 +19,12 @@ class ManageUserSelfserve implements AssertionInterface
             // and the current user has a role which can manage users (otherwise it should never get that far)
             return true;
         }
-
-        switch ($context->getUserType()) {
-            case User::USER_TYPE_PARTNER:
-                return $this->canManagePartner($authorizationService, $context);
-            case User::USER_TYPE_LOCAL_AUTHORITY:
-                return $this->canManageLocalAuthority($authorizationService, $context);
-            case User::USER_TYPE_OPERATOR:
-            case User::USER_TYPE_TRANSPORT_MANAGER:
-                return $this->canManageOperator($authorizationService, $context);
-        }
-
-        return false;
+        return match ($context->getUserType()) {
+            User::USER_TYPE_PARTNER => $this->canManagePartner($authorizationService, $context),
+            User::USER_TYPE_LOCAL_AUTHORITY => $this->canManageLocalAuthority($authorizationService, $context),
+            User::USER_TYPE_OPERATOR, User::USER_TYPE_TRANSPORT_MANAGER => $this->canManageOperator($authorizationService, $context),
+            default => false,
+        };
     }
 
     private function canManagePartner(AuthorizationService $authorizationService, User $context)

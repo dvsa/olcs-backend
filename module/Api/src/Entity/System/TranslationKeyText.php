@@ -22,9 +22,6 @@ use Dvsa\Olcs\Api\Entity\DeletableInterface;
 class TranslationKeyText extends AbstractTranslationKeyText implements DeletableInterface
 {
     /**
-     * @param Language $language
-     * @param TranslationKey $translationKey
-     * @param string $translatedText
      * @return TranslationKeyText
      */
     public static function create(Language $language, TranslationKey $translationKey, string $translatedText)
@@ -39,7 +36,6 @@ class TranslationKeyText extends AbstractTranslationKeyText implements Deletable
     }
 
     /**
-     * @param string $translatedText
      * @return $this
      */
     public function update(string $translatedText)

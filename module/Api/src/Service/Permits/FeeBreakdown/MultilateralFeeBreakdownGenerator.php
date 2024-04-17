@@ -46,8 +46,6 @@ class MultilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterfac
 
     /**
      * Populates a key/value lookup array of product references to fee types
-     *
-     * @param array $issueFees
      */
     private function populateIssueFeeMappings(array $issueFees)
     {
@@ -60,7 +58,6 @@ class MultilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterfac
     /**
      * Returns an array representing a table row within the fee breakdown
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      *
      * @return array
      */

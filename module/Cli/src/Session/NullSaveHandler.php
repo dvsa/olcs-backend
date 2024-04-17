@@ -44,9 +44,8 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      * Write Session - commit data to resource
      *
      * @param string $id
-     * @param mixed $data
      */
-    public function write($id, $data)
+    public function write($id, mixed $data)
     {
         return true;
     }

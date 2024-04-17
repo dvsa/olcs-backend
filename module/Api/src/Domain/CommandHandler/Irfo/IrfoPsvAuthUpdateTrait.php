@@ -17,7 +17,6 @@ trait IrfoPsvAuthUpdateTrait
     /**
      * Common IRFO PSV Auth update
      *
-     * @param UpdateIrfoPsvAuthCmd $command
      * @return IrfoPsvAuth
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -73,8 +72,6 @@ trait IrfoPsvAuthUpdateTrait
     }
 
     /**
-     * @param IrfoPsvAuth $irfoPsvAuth
-     * @param array $irfoPsvAuthNumbers
      * @return array
      */
     private function processIrfoPsvAuthNumbers(IrfoPsvAuth $irfoPsvAuth, array $irfoPsvAuthNumbers)

@@ -48,16 +48,11 @@ final class Delete extends AbstractCommandHandler implements TransactionedInterf
             $last = ($licence->getTmLicences()->count() === 1 ? true : false);
             $optOut = $command->getYesNo();
             if ($last) {
-                switch ($optOut) {
-                    case 'Y':
-                        $optOutTmLetterValue = 0;
-                        break;
-                    case 'N':
-                        $optOutTmLetterValue = 1;
-                        break;
-                    default:
-                        $optOutTmLetterValue = 0;
-                }
+                $optOutTmLetterValue = match ($optOut) {
+                    'Y' => 0,
+                    'N' => 1,
+                    default => 0,
+                };
 
                 $licence->setOptOutTmLetter($optOutTmLetterValue);
                 $result->addMessage("optOutTmLetter flag set to {$optOutTmLetterValue} for licence {$tmlId}");

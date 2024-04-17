@@ -13,8 +13,6 @@ use Dvsa\Olcs\Transfer\Command\TaskAllocationRule;
 trait UpdateTaskAllocationRuleTrait
 {
     /**
-     * @param Entity\Task\TaskAllocationRule $entity
-     * @param Repository\TaskAllocationRule $repository
      * @param TaskAllocationRule\Create|TaskAllocationRule\Update $command
      * @return Entity\Task\TaskAllocationRule
      * @throws ORMException
@@ -59,7 +57,7 @@ trait UpdateTaskAllocationRuleTrait
             TaskAllocationRule\Create::class,
             TaskAllocationRule\Update::class,
         ];
-        if (!in_array(get_class($command), $expectedCommands)) {
+        if (!in_array($command::class, $expectedCommands)) {
             throw new \RuntimeException(sprintf(
                 'Expected instance of: %s',
                 implode('" or "', $expectedCommands)

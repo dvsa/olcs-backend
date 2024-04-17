@@ -66,7 +66,6 @@ class Licence extends AbstractCommandHandler implements TransactionedInterface, 
     /**
      * Auto detect which section we should be publishing to
      *
-     * @param LicenceEntity $licence
      *
      * @return int publicationSection ID
      * @throws ForbiddenException

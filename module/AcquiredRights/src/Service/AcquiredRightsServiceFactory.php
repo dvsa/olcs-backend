@@ -36,7 +36,6 @@ class AcquiredRightsServiceFactory implements FactoryInterface
     }
 
     /**
-     * @param array $config
      * @return \DateTimeImmutable
      */
     protected function getAcquiredRightsExpiryFromConfig(array $config): \DateTimeImmutable
@@ -64,7 +63,6 @@ class AcquiredRightsServiceFactory implements FactoryInterface
     }
 
     /**
-     * @param array $config
      * @return bool
      */
     protected function getAcquiredRightsCheckEnabledFromConfig(array $config): bool

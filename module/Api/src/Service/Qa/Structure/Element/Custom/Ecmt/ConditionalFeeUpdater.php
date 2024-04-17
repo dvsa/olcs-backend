@@ -6,19 +6,14 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 
 class ConditionalFeeUpdater
 {
-    /** @var FeeUpdater */
-    private $feeUpdater;
-
     /**
      * Create service instance
      *
-     * @param FeeUpdater $feeUpdater
      *
      * @return ConditionalFeeUpdater
      */
-    public function __construct(FeeUpdater $feeUpdater)
+    public function __construct(private FeeUpdater $feeUpdater)
     {
-        $this->feeUpdater = $feeUpdater;
     }
 
     /**

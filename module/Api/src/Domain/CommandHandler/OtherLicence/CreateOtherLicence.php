@@ -46,7 +46,6 @@ final class CreateOtherLicence extends AbstractCommandHandler
     }
 
     /**
-     * @param Cmd $command
      * @return OtherLicence
      */
     private function createOtherLicenceObject(Cmd $command)

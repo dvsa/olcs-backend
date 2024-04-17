@@ -69,9 +69,6 @@ class JWTIdentityProviderFactoryTest extends MockeryTestCase
         $this->sut = new JWTIdentityProviderFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->repositoryServiceManager();

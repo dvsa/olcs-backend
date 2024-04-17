@@ -18,8 +18,6 @@ use Olcs\Logging\Log\Logger;
 
 class ResetPassword extends AbstractCommandHandler
 {
-    private ValidatableAdapterInterface $adapter;
-    private EventHistoryCreator $eventHistoryCreator;
     protected $repoServiceName = 'UserPasswordReset';
 
     public const MSG_EXPIRED_LINK = 'auth.forgot-password-expired';
@@ -30,10 +28,8 @@ class ResetPassword extends AbstractCommandHandler
     public const MSG_FAIL_DEBUG_LOG = '%s failed to reset password using cognito';
     public const MSG_FAIL_COGNITO_EXCEPTION = '%s failed to reset password due to cognito exception: %s';
 
-    public function __construct(ValidatableAdapterInterface $adapter, EventHistoryCreator $eventHistoryCreator)
+    public function __construct(private ValidatableAdapterInterface $adapter, private EventHistoryCreator $eventHistoryCreator)
     {
-        $this->adapter = $adapter;
-        $this->eventHistoryCreator = $eventHistoryCreator;
     }
 
     /**

@@ -20,7 +20,6 @@ interface MessageConsumerInterface
     /**
      * Process the message item
      *
-     * @param QueueEntity $item
      * @return boolean
      */
     public function processMessage(QueueEntity $item);
@@ -28,9 +27,7 @@ interface MessageConsumerInterface
     /**
      * Mark the item as failed
      *
-     * @param QueueEntity $item
      * @param string $reason
-     *
      * @return string
      */
     public function failed(QueueEntity $item, $reason = null);

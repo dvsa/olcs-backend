@@ -10,19 +10,14 @@ class EmissionsStandardsGenerator implements ElementGeneratorInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var EmissionsStandardsFactory */
-    private $emissionsStandardsFactory;
-
     /**
      * Create service instance
      *
-     * @param EmissionsStandardsFactory $emissionsStandardsFactory
      *
      * @return EmissionsStandardsGenerator
      */
-    public function __construct(EmissionsStandardsFactory $emissionsStandardsFactory)
+    public function __construct(private EmissionsStandardsFactory $emissionsStandardsFactory)
     {
-        $this->emissionsStandardsFactory = $emissionsStandardsFactory;
     }
 
     /**

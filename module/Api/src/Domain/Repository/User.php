@@ -414,9 +414,6 @@ class User extends AbstractRepository
     }
 
     /**
-     * @param Entity $user
-     * @param DateTime $lastLoginAt
-     * @param Entity $lastModifiedBy
      * @return mixed
      * @throws \Exception
      */

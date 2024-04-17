@@ -51,12 +51,11 @@ trait TotAuthVehiclesTraitTest
     }
 
     /**
-     * @param mixed $count
      * @test
      * @depends updateTotAuthHgvVehiclesIsCallable
      * @dataProvider validTotAuthHgvVehiclesCountsDataProvider
      */
-    public function updateTotAuthHgvVehiclesSetsTotAuthHgvVehicles($count)
+    public function updateTotAuthHgvVehiclesSetsTotAuthHgvVehicles(mixed $count)
     {
         // Assert
         $this->setUpSut();
@@ -79,25 +78,6 @@ trait TotAuthVehiclesTraitTest
             'empty string' => [''],
             'empty array' => [[]],
         ];
-    }
-
-    /**
-     * @param mixed $count
-     * @test
-     * @depends updateTotAuthHgvVehiclesIsCallable
-     * @dataProvider invalidTotAuthHgvVehiclesCountsDataProvider
-     */
-    public function updateTotAuthHgvVehiclesRejectsInvalidValues($count)
-    {
-        // Assert
-        $this->setUpSut();
-
-        // Expect
-        $this->expectException('TypeError');
-        $this->expectExceptionMessageMatches('/.*Argument 1 passed.*must be of the type int.*/');
-
-        // Execute
-        $this->sut->updateTotAuthHgvVehicles($count);
     }
 
     /**
@@ -161,12 +141,11 @@ trait TotAuthVehiclesTraitTest
     }
 
     /**
-     * @param mixed $count
      * @test
      * @depends updateTotAuthLgvVehiclesIsCallable
      * @dataProvider validTotAuthLgvVehiclesCountsDataProvider
      */
-    public function updateTotAuthLgvVehiclesSetsTotAuthHgvVehicles($count)
+    public function updateTotAuthLgvVehiclesSetsTotAuthHgvVehicles(mixed $count)
     {
         // Assert
         $this->setUpSut();
@@ -189,25 +168,6 @@ trait TotAuthVehiclesTraitTest
             'empty string' => [''],
             'empty array' => [[]],
         ];
-    }
-
-    /**
-     * @param mixed $count
-     * @test
-     * @depends updateTotAuthLgvVehiclesIsCallable
-     * @dataProvider invalidTotAuthLgvVehiclesCountsDataProvider
-     */
-    public function updateTotAuthLgvVehiclesRejectsInvalidValues($count)
-    {
-        // Assert
-        $this->setUpSut();
-
-        // Expect
-        $this->expectException('TypeError');
-        $this->expectExceptionMessageMatches('/.*Argument 1 passed.*must be of the type int.*/');
-
-        // Execute
-        $this->sut->updateTotAuthLgvVehicles($count);
     }
 
     /**

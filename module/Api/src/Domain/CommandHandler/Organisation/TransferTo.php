@@ -46,7 +46,7 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
         try {
             /* @var Organisation $organisationTo */
             $organisationTo = $this->getRepo()->fetchById($command->getReceivingOrganisation());
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             throw new ValidationException(['Target organisation is not found']);
         }
 
@@ -109,8 +109,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer Licence
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */
@@ -178,8 +176,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer Note, IrfoGvPermit, IrfoPsvAuth and Task
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */
@@ -231,8 +227,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer Disqualification
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */
@@ -253,8 +247,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer EbsrSubmission and TxcInbox
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */
@@ -284,8 +276,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer EventHistory
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */
@@ -307,8 +297,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer OrganisationUser
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */
@@ -329,8 +317,6 @@ final class TransferTo extends AbstractCommandHandler implements TransactionedIn
     /**
      * Transfer OrganisationPersons
      *
-     * @param Organisation $organisationFrom
-     * @param Organisation $organisationTo
      *
      * @return Result
      */

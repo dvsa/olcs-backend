@@ -129,7 +129,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         $rethrow = $e;
 
         do {
-            Logger::warn(get_class($this) . ': ' . $e->getMessage());
+            Logger::warn(static::class . ': ' . $e->getMessage());
             $e = $e->getPrevious();
         } while ($e);
 
@@ -496,7 +496,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
      *
      * @return mixed
      */
-    protected function extractCommandVariable($command, $variableName, $defaultValue = null)
+    protected function extractCommandVariable($command, $variableName, mixed $defaultValue = null)
     {
         $commandVariable = $defaultValue;
 
@@ -527,7 +527,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
     /**
      * For required fields we can skip the null refdata check
      *
-     * @param string $refDataKey
      *
      * @return RefDataEntity|null
      */
@@ -570,9 +569,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         return $this;
     }
 
-    /**
-     * @param NamingService $service
-     */
     public function setNamingService(NamingService $service)
     {
         $this->documentNamingService = $service;

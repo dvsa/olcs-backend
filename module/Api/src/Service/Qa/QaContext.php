@@ -6,24 +6,14 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 
 class QaContext
 {
-    /** @var ApplicationStepEntity */
-    private $applicationStepEntity;
-
-    /** @var QaEntityInterface */
-    private $qaEntity;
-
     /**
      * Create instance
      *
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param QaEntityInterface $qaEntity
      *
      * @return QaContext
      */
-    public function __construct(ApplicationStepEntity $applicationStepEntity, QaEntityInterface $qaEntity)
+    public function __construct(private ApplicationStepEntity $applicationStepEntity, private QaEntityInterface $qaEntity)
     {
-        $this->applicationStepEntity = $applicationStepEntity;
-        $this->qaEntity = $qaEntity;
     }
 
     /**

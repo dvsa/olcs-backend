@@ -248,7 +248,7 @@ class EventHistory extends AbstractRepository
 
         try {
             $eventType = $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $exception) {
+        } catch (NoResultException) {
             $eventType = 75;
         } catch (\Exception $exception) {
             throw $exception;

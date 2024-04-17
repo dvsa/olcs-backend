@@ -14,57 +14,18 @@ use Dvsa\Olcs\Api\Service\Common\CurrentDateTimeFactory;
 
 class NoOfPermitsUpdater
 {
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
-    /** @var CommandCreator */
-    private $commandCreator;
-
-    /** @var CommandHandlerManager */
-    private $commandHandlerManager;
-
-    /** @var ApplicationFeesClearer */
-    private $applicationFeesClearer;
-
-    /** @var CurrentDateTimeFactory */
-    private $currentDateTimeFactory;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
-     * @param FeeTypeRepository $feeTypeRepo
-     * @param CommandCreator $commandCreator
-     * @param CommandHandlerManager $commandHandlerManager
-     * @param ApplicationFeesClearer $applicationFeesClearer
-     * @param CurrentDateTimeFactory $currentDateTimeFactory
      *
      * @return NoOfPermitsUpdater
      */
-    public function __construct(
-        IrhpPermitApplicationRepository $irhpPermitApplicationRepo,
-        FeeTypeRepository $feeTypeRepo,
-        CommandCreator $commandCreator,
-        CommandHandlerManager $commandHandlerManager,
-        ApplicationFeesClearer $applicationFeesClearer,
-        CurrentDateTimeFactory $currentDateTimeFactory
-    ) {
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
-        $this->feeTypeRepo = $feeTypeRepo;
-        $this->commandCreator = $commandCreator;
-        $this->commandHandlerManager = $commandHandlerManager;
-        $this->applicationFeesClearer = $applicationFeesClearer;
-        $this->currentDateTimeFactory = $currentDateTimeFactory;
+    public function __construct(private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private FeeTypeRepository $feeTypeRepo, private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private ApplicationFeesClearer $applicationFeesClearer, private CurrentDateTimeFactory $currentDateTimeFactory)
+    {
     }
 
     /**
      * Update the number of permits answer and fees relating to a specific country within a bilateral application
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param array $updatedAnswers
      */
     public function update(IrhpPermitApplication $irhpPermitApplication, array $updatedAnswers)
     {

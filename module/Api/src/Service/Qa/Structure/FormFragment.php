@@ -9,8 +9,6 @@ class FormFragment
 
     /**
      * Add an application step to this form fragment
-     *
-     * @param ApplicationStep $applicationStep
      */
     public function addApplicationStep(ApplicationStep $applicationStep)
     {

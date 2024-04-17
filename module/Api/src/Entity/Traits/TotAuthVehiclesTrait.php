@@ -17,7 +17,6 @@ trait TotAuthVehiclesTrait
      * Update the total number of hgv vehicles authorized and refresh the property containing the total of hgv and lgv
      * vehicles authorized.
      *
-     * @param int|null $totAuthHgvVehicles
      * @return self
      */
     public function updateTotAuthHgvVehicles(?int $totAuthHgvVehicles): self
@@ -30,7 +29,6 @@ trait TotAuthVehiclesTrait
      * Update the total number of lgv vehicles authorized and refresh the property containing the total of hgv and lgv
      * vehicles authorized.
      *
-     * @param int|null $totAuthLgvVehicles
      * @return self
      */
     public function updateTotAuthLgvVehicles(?int $totAuthLgvVehicles): self

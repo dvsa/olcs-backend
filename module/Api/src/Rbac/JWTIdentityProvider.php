@@ -27,30 +27,12 @@ class JWTIdentityProvider implements IdentityProviderInterface
     public const MESSAGE_MALFORMED_BEARER = 'Malformed Bearer token';
 
     /**
-     * @var UserRepository
-     */
-    private $repository;
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
      * @var Identity;
      */
     private $identity;
 
-    /**
-     * @var OAuthClientInterface
-     */
-    private $client;
-
-    public function __construct(UserRepository $repository, RequestInterface $request, OAuthClientInterface $client)
+    public function __construct(private UserRepository $repository, private RequestInterface $request, private OAuthClientInterface $client)
     {
-        $this->repository = $repository;
-        $this->request = $request;
-        $this->client = $client;
     }
 
     /**
@@ -105,7 +87,6 @@ class JWTIdentityProvider implements IdentityProviderInterface
     }
 
     /**
-     * @param HeaderInterface $header
      * @return array
      * @throws BadRequestException
      * @throws InvalidTokenException

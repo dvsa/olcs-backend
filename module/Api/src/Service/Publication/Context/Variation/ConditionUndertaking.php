@@ -48,40 +48,34 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
     /**
      * Get the ConditionUndertaking text
      *
-     * @param ConditionUndertakingEntity $conditionUndertaking
      *
      * @return string
      */
     private function getConditionUndertakingText(ConditionUndertakingEntity $conditionUndertaking)
     {
         $text = null;
-        switch ($conditionUndertaking->getAction()) {
-            case 'A':
-                $text = sprintf(
-                    'New %s %s. %s',
-                    $conditionUndertaking->getConditionType()->getDescription(),
-                    $conditionUndertaking->getNotes(),
-                    $this->getAttachedToText($conditionUndertaking)
-                );
-                break;
-            case 'U':
-                $text = sprintf(
-                    'Current %s %s. %s. Amended to: %s',
-                    $conditionUndertaking->getLicConditionVariation()->getConditionType()->getDescription(),
-                    $conditionUndertaking->getLicConditionVariation()->getNotes(),
-                    $this->getAttachedToText($conditionUndertaking->getLicConditionVariation()),
-                    $conditionUndertaking->getNotes()
-                );
-                break;
-            case 'D':
-                $text = sprintf(
-                    '%s to be removed: %s. %s',
-                    $conditionUndertaking->getConditionType()->getDescription(),
-                    $conditionUndertaking->getNotes(),
-                    $this->getAttachedToText($conditionUndertaking)
-                );
-                break;
-        }
+        $text = match ($conditionUndertaking->getAction()) {
+            'A' => sprintf(
+                'New %s %s. %s',
+                $conditionUndertaking->getConditionType()->getDescription(),
+                $conditionUndertaking->getNotes(),
+                $this->getAttachedToText($conditionUndertaking)
+            ),
+            'U' => sprintf(
+                'Current %s %s. %s. Amended to: %s',
+                $conditionUndertaking->getLicConditionVariation()->getConditionType()->getDescription(),
+                $conditionUndertaking->getLicConditionVariation()->getNotes(),
+                $this->getAttachedToText($conditionUndertaking->getLicConditionVariation()),
+                $conditionUndertaking->getNotes()
+            ),
+            'D' => sprintf(
+                '%s to be removed: %s. %s',
+                $conditionUndertaking->getConditionType()->getDescription(),
+                $conditionUndertaking->getNotes(),
+                $this->getAttachedToText($conditionUndertaking)
+            ),
+            default => $text,
+        };
 
         return $text;
     }
@@ -89,7 +83,6 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
     /**
      * Get the Attached to text
      *
-     * @param ConditionUndertakingEntity $conditionUndertaking
      *
      * @return string
      */

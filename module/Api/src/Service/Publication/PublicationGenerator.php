@@ -11,15 +11,8 @@ use Dvsa\Olcs\Api\Entity\Publication\PublicationLink as PublicationLinkEntity;
  */
 class PublicationGenerator
 {
-    private $publicationConfig;
-    private $publicationContextManager;
-    private $publicationProcessManager;
-
-    public function __construct($config, ServiceLocatorInterface $context, ServiceLocatorInterface $process)
+    public function __construct(private $publicationConfig, private ServiceLocatorInterface $publicationContextManager, private ServiceLocatorInterface $publicationProcessManager)
     {
-        $this->publicationConfig = $config;
-        $this->publicationContextManager = $context;
-        $this->publicationProcessManager = $process;
     }
 
     public function createPublication($publicationConfigKey, $publication, $context)

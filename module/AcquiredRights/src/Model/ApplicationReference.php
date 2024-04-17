@@ -20,24 +20,16 @@ final class ApplicationReference
         ApplicationReference::APPLICATION_STATUS_APPROVED_AFTER_APPEAL,
         ApplicationReference::APPLICATION_STATUS_DECLINED_AFTER_APPEAL,
     ];
-
-    protected string $id;
-    protected string $reference;
     protected string $status;
-    protected DateTimeImmutable $submittedAt;
-    protected DateTimeImmutable $dateOfBirth;
-    protected ?DateTimeImmutable $statusUpdateAt;
 
     public function __construct(
-        string $id,
-        string $reference,
+        protected string $id,
+        protected string $reference,
         string $status,
-        DateTimeImmutable $submittedAt,
-        DateTimeImmutable $dateOfBirth,
-        ?DateTimeImmutable $statusUpdateAt = null
+        protected DateTimeImmutable $submittedAt,
+        protected DateTimeImmutable $dateOfBirth,
+        protected ?DateTimeImmutable $statusUpdateAt = null
     ) {
-        $this->id = $id;
-        $this->reference = $reference;
         if (!ApplicationReference::isValidApplicationStatus($status)) {
             throw new \InvalidArgumentException(
                 sprintf(
@@ -48,9 +40,6 @@ final class ApplicationReference
             );
         }
         $this->status = $status;
-        $this->submittedAt = $submittedAt;
-        $this->dateOfBirth = $dateOfBirth;
-        $this->statusUpdateAt = $statusUpdateAt;
 
         return $this;
     }

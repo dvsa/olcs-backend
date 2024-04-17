@@ -653,26 +653,19 @@ class Fee extends AbstractRepository
      */
     private function filterByStatus(\Doctrine\ORM\QueryBuilder $qb, $status)
     {
-        switch ($status) {
-            case 'historical':
-                $feeStatus = [
-                    Entity::STATUS_PAID,
-                    Entity::STATUS_CANCELLED,
-                    Entity::STATUS_REFUNDED,
-                    Entity::STATUS_REFUND_FAILED,
-                    Entity::STATUS_REFUND_PENDING,
-                ];
-                break;
-            case 'all':
-                $feeStatus = [];
-                break;
-            case 'current':
-            default:
-                $feeStatus = [
-                    Entity::STATUS_OUTSTANDING,
-                ];
-                break;
-        }
+        $feeStatus = match ($status) {
+            'historical' => [
+                Entity::STATUS_PAID,
+                Entity::STATUS_CANCELLED,
+                Entity::STATUS_REFUNDED,
+                Entity::STATUS_REFUND_FAILED,
+                Entity::STATUS_REFUND_PENDING,
+            ],
+            'all' => [],
+            default => [
+                Entity::STATUS_OUTSTANDING,
+            ],
+        };
 
         if (!empty($feeStatus)) {
             $qb

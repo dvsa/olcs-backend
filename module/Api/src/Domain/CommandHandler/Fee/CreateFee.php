@@ -66,7 +66,6 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
     }
 
     /**
-     * @param Cmd $command
      * @return Fee
      */
     private function createFeeObject(Cmd $command)
@@ -231,7 +230,6 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
     }
 
     /**
-     * @param Cmd $command
      * @throws ValidationException
      * @return bool
      */

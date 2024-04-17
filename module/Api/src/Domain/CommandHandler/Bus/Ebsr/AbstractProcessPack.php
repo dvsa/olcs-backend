@@ -142,7 +142,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
         DocumentEntity $doc,
         $messages,
         $xmlName,
-        $inputValue
+        mixed $inputValue
     ) {
         $this->addErrorMessages($doc, $messages, $xmlName);
 
@@ -163,7 +163,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      *
      * @return array
      */
-    protected function getSubmissionResultData(array $errorMessages, $rawData, EbsrSubmissionEntity $ebsrSub)
+    protected function getSubmissionResultData(array $errorMessages, mixed $rawData, EbsrSubmissionEntity $ebsrSub)
     {
         $input = [
             'rawData' => $rawData,
@@ -247,19 +247,12 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
     protected function createBusReg(array $ebsrData, $previousBusReg, LicenceEntity $licence)
     {
         //decide what to do based on txcAppType
-        switch ($ebsrData['txcAppType']) {
-            case BusRegEntity::TXC_APP_NEW: //new application
-                $busReg = $this->createNew($ebsrData, $licence);
-                break;
-            case BusRegEntity::TXC_APP_CANCEL: //cancellation
-                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL);
-                break;
-            case BusRegEntity::TXC_APP_NON_CHARGEABLE: //data refresh
-                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_REGISTERED);
-                break;
-            default: //variation
-                $busReg = $this->createVariation($previousBusReg, BusRegEntity::STATUS_VAR);
-        }
+        $busReg = match ($ebsrData['txcAppType']) {
+            BusRegEntity::TXC_APP_NEW => $this->createNew($ebsrData, $licence),
+            BusRegEntity::TXC_APP_CANCEL => $this->createVariation($previousBusReg, BusRegEntity::STATUS_CANCEL),
+            BusRegEntity::TXC_APP_NON_CHARGEABLE => $this->createVariation($previousBusReg, BusRegEntity::STATUS_REGISTERED),
+            default => $this->createVariation($previousBusReg, BusRegEntity::STATUS_VAR),
+        };
 
         $busReg->fromData($this->prepareBusRegData($ebsrData));
         $this->processServiceNumbers($busReg, $ebsrData['otherServiceNumbers']);

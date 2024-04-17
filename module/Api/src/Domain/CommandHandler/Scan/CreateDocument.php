@@ -83,7 +83,7 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
     {
         try {
             return $this->getRepo()->fetchById($scanId);
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             throw new ValidationException([self::SCAN_NOT_FOUND => self::SCAN_NOT_FOUND]);
         }
     }
@@ -145,7 +145,6 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
     /**
      * Get the CreateTask command
      *
-     * @param \Dvsa\Olcs\Api\Entity\PrintScan\Scan $scan
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Task\CreateTask
      */

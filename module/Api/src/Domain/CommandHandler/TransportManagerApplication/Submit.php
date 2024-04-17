@@ -163,7 +163,6 @@ final class Submit extends AbstractCommandHandler implements TransactionedInterf
     /**
      *
      *
-     * @param Application $application
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      */

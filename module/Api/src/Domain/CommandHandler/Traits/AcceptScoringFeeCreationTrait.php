@@ -14,9 +14,7 @@ trait AcceptScoringFeeCreationTrait
     /**
      * Get issue fee creation command for an application
      *
-     * @param IrhpApplication $irhpApplication
      * @param int $permitsWanted
-     *
      * @return CreateFee
      */
     public function getCreateIssueFeeCommand(IrhpApplication $irhpApplication, $permitsWanted)

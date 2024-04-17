@@ -43,7 +43,7 @@ class IsLicenceSurrenderable extends AbstractValidator implements AuthAwareInter
             if ($existingSurrender->getStatus()->getId() !== RefData::SURRENDER_STATUS_WITHDRAWN) {
                 throw new ForbiddenException('A surrender record already exists for this licence');
             }
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException) {
             return true;
         } catch (ForbiddenException $exception) {
             throw $exception;

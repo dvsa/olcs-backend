@@ -52,7 +52,7 @@ final class UpdatePeople extends AbstractCommandHandler implements Transactioned
 
                 $result->addId('applicationOrganisationPerson', $appOrgPerson->getId());
                 $result->addMessage("ApplicationOrganisationPerson updated");
-            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
+            } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException) {
                 // applicationOrganisationPerson was not found
                 $newPerson = new \Dvsa\Olcs\Api\Entity\Person\Person();
                 $this->updatePersonFromCommand($newPerson, $command);
@@ -104,9 +104,6 @@ final class UpdatePeople extends AbstractCommandHandler implements Transactioned
 
     /**
      * Update a person entity with values from the command
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Person\Person $person
-     * @param \Dvsa\Olcs\Transfer\Command\Application\UpdatePeople $command
      */
     private function updatePersonFromCommand(
         \Dvsa\Olcs\Api\Entity\Person\Person $person,

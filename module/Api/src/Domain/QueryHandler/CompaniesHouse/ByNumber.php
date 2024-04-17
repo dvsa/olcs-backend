@@ -40,7 +40,7 @@ class ByNumber extends AbstractQueryHandler
 
         try {
             $companyProfile = $this->companiesHouseApi->getCompanyProfile($companyNumber);
-        } catch (CompanyNotFoundException $exception) {
+        } catch (CompanyNotFoundException) {
             throw new NotFoundException();
         } catch (ServiceException $exception) {
             throw new \Exception($exception->getMessage(), 0, $exception);
@@ -53,7 +53,7 @@ class ByNumber extends AbstractQueryHandler
 
     private function formatCompanyNumber(string $companyNumber): string
     {
-        if (substr($companyNumber, 0, 1) !== '0' && strlen($companyNumber) < self::MAX_COMPANY_NUMBER_LENGTH) {
+        if (!str_starts_with($companyNumber, '0') && strlen($companyNumber) < self::MAX_COMPANY_NUMBER_LENGTH) {
             $companyNumber = str_pad($companyNumber, self::MAX_COMPANY_NUMBER_LENGTH, "0", STR_PAD_LEFT);
         }
         return $companyNumber;

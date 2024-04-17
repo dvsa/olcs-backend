@@ -67,7 +67,6 @@ class Federation
 
     /**
      * Make sure certificate 64 character line length OLCS-24826
-     * @param string $certificateString
      *
      * @return string
      */

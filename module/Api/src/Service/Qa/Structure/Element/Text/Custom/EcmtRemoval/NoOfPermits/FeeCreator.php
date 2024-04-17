@@ -14,44 +14,19 @@ use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 
 class FeeCreator
 {
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
-    /** @var CommandCreator */
-    private $commandCreator;
-
-    /** @var CommandHandlerManager */
-    private $commandHandlerManager;
-
-    /** @var CurrentDateTimeFactory */
-    private $currentDateTimeFactory;
-
     /**
      * Create service instance
      *
-     * @param FeeTypeRepository $feeTypeRepo
-     * @param CommandCreator $commandCreator
-     * @param CommandHandlerManager $commandHandlerManager
-     * @param CurrentDateTimeFactory $currentDateTimeFactory
      *
      * @return FeeCreator
      */
-    public function __construct(
-        FeeTypeRepository $feeTypeRepo,
-        CommandCreator $commandCreator,
-        CommandHandlerManager $commandHandlerManager,
-        CurrentDateTimeFactory $currentDateTimeFactory
-    ) {
-        $this->feeTypeRepo = $feeTypeRepo;
-        $this->commandCreator = $commandCreator;
-        $this->commandHandlerManager = $commandHandlerManager;
-        $this->currentDateTimeFactory = $currentDateTimeFactory;
+    public function __construct(private FeeTypeRepository $feeTypeRepo, private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private CurrentDateTimeFactory $currentDateTimeFactory)
+    {
     }
 
     /**
      * Cancel any existing fees as appropriate and create new fees
      *
-     * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitsRequired
      */
     public function create(IrhpApplicationEntity $irhpApplication, $permitsRequired)

@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 interface TranslationLoaderAwareInterface
 {
     /**
-     * @param TranslationLoader $translationLoader
-     *
      * @return void
      */
     public function setTranslationLoader(TranslationLoader $translationLoader): void;

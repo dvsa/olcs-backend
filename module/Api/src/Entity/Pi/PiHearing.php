@@ -34,10 +34,6 @@ class PiHearing extends AbstractPiHearing
     public const PUBLISH_AFTER_DAYS = 5;
 
     /**
-     * @param PiEntity          $pi
-     * @param PresidingTcEntity $presidingTc
-     * @param RefData           $presidedByRole
-     * @param \DateTime         $hearingDate
      * @param VenueEntity|null  $venue
      * @param string            $venueOther
      * @param int               $witnesses
@@ -87,10 +83,6 @@ class PiHearing extends AbstractPiHearing
     }
 
     /**
-     * @param Pi               $pi
-     * @param PresidingTc      $presidingTc
-     * @param RefData          $presidedByRole
-     * @param \DateTime        $hearingDate
      * @param VenueEntity|null $venue
      * @param string           $venueOther
      * @param int              $witnesses
@@ -155,9 +147,6 @@ class PiHearing extends AbstractPiHearing
     }
 
     /**
-     * @param PresidingTc      $presidingTc
-     * @param RefData          $presidedByRole
-     * @param \DateTime        $hearingDate
      * @param VenueEntity|null $venue
      * @param string           $venueOther
      * @param int              $witnesses

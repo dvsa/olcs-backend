@@ -15,9 +15,6 @@ use Dvsa\Olcs\Snapshot\Service\Snapshots\SnapshotGeneratorInterface;
  */
 class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterface
 {
-    /** @var AnswersSummaryGenerator */
-    private $answersSummaryGenerator;
-
     /** @var array */
     private $data;
 
@@ -31,10 +28,9 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        AnswersSummaryGenerator $answersSummaryGenerator
+        private AnswersSummaryGenerator $answersSummaryGenerator
     ) {
         parent::__construct($abstractGeneratorServices);
-        $this->answersSummaryGenerator = $answersSummaryGenerator;
     }
 
     /**

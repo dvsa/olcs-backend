@@ -15,7 +15,6 @@ use Olcs\XmlTools\Xml\Specification\RecursionValue;
  */
 class ComplianceEpisodeXml
 {
-    protected $xmlNs;
     protected $nsPrefix;
     protected $mapXmlFile;
 
@@ -25,10 +24,9 @@ class ComplianceEpisodeXml
      * @param MapXmlFile $mapXmlFile olcs-xmltools xml mapper
      * @param string     $xmlNs      address of xml namespace
      */
-    public function __construct(MapXmlFile $mapXmlFile, $xmlNs)
+    public function __construct(MapXmlFile $mapXmlFile, protected $xmlNs)
     {
         $this->mapXmlFile = $mapXmlFile;
-        $this->xmlNs = $xmlNs;
     }
 
     /**

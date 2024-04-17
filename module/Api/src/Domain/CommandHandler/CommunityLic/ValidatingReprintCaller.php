@@ -103,7 +103,7 @@ final class ValidatingReprintCaller extends AbstractCommandHandler
     {
         try {
             $communityLicence = $this->getRepo()->fetchById($communityLicenceId);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $this->result->addMessage(
                 sprintf(
                     'No community licence exists with id %s',

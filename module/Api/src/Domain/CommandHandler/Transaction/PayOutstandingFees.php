@@ -383,41 +383,34 @@ final class PayOutstandingFees extends AbstractCommandHandler implements
      */
     protected function recordPaymentInCpms($command, $fees, $extraParams = [])
     {
-        switch ($command->getPaymentMethod()) {
-            case FeeEntity::METHOD_CASH:
-                $response = $this->getCpmsService()->recordCashPayment(
-                    $fees,
-                    $command->getReceived(),
-                    $command->getReceiptDate(),
-                    $command->getSlipNo(),
-                    $extraParams
-                );
-                break;
-            case FeeEntity::METHOD_CHEQUE:
-                $response = $this->getCpmsService()->recordChequePayment(
-                    $fees,
-                    $command->getReceived(),
-                    $command->getReceiptDate(),
-                    $command->getPayer(),
-                    $command->getSlipNo(),
-                    $command->getChequeNo(),
-                    $command->getChequeDate(),
-                    $extraParams
-                );
-                break;
-            case FeeEntity::METHOD_POSTAL_ORDER:
-                $response = $this->getCpmsService()->recordPostalOrderPayment(
-                    $fees,
-                    $command->getReceived(),
-                    $command->getReceiptDate(),
-                    $command->getSlipNo(),
-                    $command->getPoNo(),
-                    $extraParams
-                );
-                break;
-            default:
-                throw new BadRequestException('invalid payment method: ' . $command->getPaymentMethod());
-        }
+        $response = match ($command->getPaymentMethod()) {
+            FeeEntity::METHOD_CASH => $this->getCpmsService()->recordCashPayment(
+                $fees,
+                $command->getReceived(),
+                $command->getReceiptDate(),
+                $command->getSlipNo(),
+                $extraParams
+            ),
+            FeeEntity::METHOD_CHEQUE => $this->getCpmsService()->recordChequePayment(
+                $fees,
+                $command->getReceived(),
+                $command->getReceiptDate(),
+                $command->getPayer(),
+                $command->getSlipNo(),
+                $command->getChequeNo(),
+                $command->getChequeDate(),
+                $extraParams
+            ),
+            FeeEntity::METHOD_POSTAL_ORDER => $this->getCpmsService()->recordPostalOrderPayment(
+                $fees,
+                $command->getReceived(),
+                $command->getReceiptDate(),
+                $command->getSlipNo(),
+                $command->getPoNo(),
+                $extraParams
+            ),
+            default => throw new BadRequestException('invalid payment method: ' . $command->getPaymentMethod()),
+        };
 
         return $response;
     }

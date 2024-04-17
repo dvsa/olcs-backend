@@ -15,16 +15,6 @@ use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
  */
 abstract class AbstractSection implements SectionGeneratorInterface
 {
-    /**
-     * @var QueryHandlerManager
-     */
-    private $queryHandler;
-
-    /**
-     * @var /Laminas\View\Renderer\PhpRenderer
-     */
-    private $viewRenderer;
-
     private $repos = [];
 
     /**
@@ -35,9 +25,6 @@ abstract class AbstractSection implements SectionGeneratorInterface
         return $this->repos;
     }
 
-    /**
-     * @param array $repos
-     */
     public function setRepos(array $repos): void
     {
         $this->repos = $repos;
@@ -56,10 +43,10 @@ abstract class AbstractSection implements SectionGeneratorInterface
         return $this->repos[$name];
     }
 
-    public function __construct(QueryHandlerManager $queryHandler, PhpRenderer $viewRenderer)
-    {
-        $this->queryHandler = $queryHandler;
-        $this->viewRenderer = $viewRenderer;
+    public function __construct(
+        private QueryHandlerManager $queryHandler,
+        private PhpRenderer $viewRenderer
+    ) {
     }
 
     protected function handleQuery($query)

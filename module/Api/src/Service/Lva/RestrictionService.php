@@ -28,13 +28,10 @@ class RestrictionService
     /**
      * Check restriction
      *
-     * @param mixed $restrictions
-     * @param array $accessKeys
      * @param boolean $strict
-     * @param mixed $reference
      * @return boolean
      */
-    private function checkRestriction($restrictions, array $accessKeys = [], $strict = true, $reference = null)
+    private function checkRestriction(mixed $restrictions, array $accessKeys = [], $strict = true, mixed $reference = null)
     {
         // Check for a callable first
         if (is_callable($restrictions)) {

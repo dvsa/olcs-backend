@@ -72,7 +72,6 @@ final class UpdateSafety extends AbstractCommandHandler implements Transactioned
     /**
      * Update safety details on the licence
      *
-     * @param Application $application
      * @param array       $data        Data to update the licence with
      */
     protected function updateLicenceSafetyDetails(Application $application, array $data)

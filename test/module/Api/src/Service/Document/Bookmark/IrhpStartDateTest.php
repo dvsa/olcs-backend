@@ -25,7 +25,7 @@ class IrhpStartDateTest extends SingleValueTestAbstract
         $bookmark->setData([$key => $value]);
 
         $formatter = parent::getFormatter();
-        $class = get_class($formatter);
+        $class = $formatter::class;
         $valueExpected = $class::format((array)$value);
 
         $this->assertEquals($valueExpected, $bookmark->render());
@@ -43,7 +43,7 @@ class IrhpStartDateTest extends SingleValueTestAbstract
         $bookmark->setData([$key => $value]);
 
         $formatter = parent::getFormatter();
-        $class = get_class($formatter);
+        $class = $formatter::class;
         $valueToday = date('Y-m-d H:i:s', strtotime('today midnight'));
         $valueExpected = $class::format((array)$valueToday);
 

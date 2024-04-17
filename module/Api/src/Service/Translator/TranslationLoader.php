@@ -21,30 +21,11 @@ class TranslationLoader implements RemoteLoaderInterface
     public const ERR_CACHE_LOAD = 'Translation cache load failure: %s';
     public const DEFAULT_TEXT_DOMAIN = 'default';
 
-    /** @var CacheEncryption $cache */
-    private $cache;
-
-    /** @var TranslationKeyTextRepo $translationKeyRepo */
-    private $translationKeyRepo;
-
-    /** @var ReplacementRepo $replacementRepo */
-    private $replacementRepo;
-
     /**
      * TranslationLoader constructor.
-     *
-     * @param CacheEncryption $cache
-     * @param TranslationKeyTextRepo $translationKeyRepo
-     * @param ReplacementRepo $replacementRepo
      */
-    public function __construct(
-        CacheEncryption $cache,
-        TranslationKeyTextRepo $translationKeyRepo,
-        ReplacementRepo $replacementRepo
-    ) {
-        $this->cache = $cache;
-        $this->translationKeyRepo = $translationKeyRepo;
-        $this->replacementRepo = $replacementRepo;
+    public function __construct(private CacheEncryption $cache, private TranslationKeyTextRepo $translationKeyRepo, private ReplacementRepo $replacementRepo)
+    {
     }
 
     /**
@@ -67,8 +48,6 @@ class TranslationLoader implements RemoteLoaderInterface
     /**
      * Get translation messages, try the cache first, fall back to the DB
      *
-     * @param string $locale
-     * @param string $textDomain
      *
      * @return array
      */
@@ -93,8 +72,6 @@ class TranslationLoader implements RemoteLoaderInterface
     /**
      * Get translation messages from the database
      *
-     * @param string $locale
-     * @param string $textDomain
      *
      * @return array
      */

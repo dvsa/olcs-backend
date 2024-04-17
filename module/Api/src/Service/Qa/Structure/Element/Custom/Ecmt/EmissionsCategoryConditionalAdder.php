@@ -6,33 +6,20 @@ use Dvsa\Olcs\Api\Service\Permits\Availability\EmissionsCategoryAvailabilityCoun
 
 class EmissionsCategoryConditionalAdder
 {
-    /** @var EmissionsCategoryFactory */
-    private $emissionsCategoryFactory;
-
-    /** @var EmissionsCategoryAvailabilityCounter */
-    private $emissionsCategoryAvailabilityCounter;
-
     /**
      * Create service instance
      *
-     * @param EmissionsCategoryFactory $emissionsCategoryFactory
-     * @param EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
      *
      * @return EmissionsCategoryConditionalAdder
      */
-    public function __construct(
-        EmissionsCategoryFactory $emissionsCategoryFactory,
-        EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter
-    ) {
-        $this->emissionsCategoryFactory = $emissionsCategoryFactory;
-        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
+    public function __construct(private EmissionsCategoryFactory $emissionsCategoryFactory, private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    {
     }
 
     /**
      * Add an emissions category to the specified number of permits form representation if the associated ranges are
      * present and contain sufficient free stock
      *
-     * @param NoOfPermits $noOfPermits
      * @param string $type
      * @param string|null $value
      * @param string $emissionsCategoryId

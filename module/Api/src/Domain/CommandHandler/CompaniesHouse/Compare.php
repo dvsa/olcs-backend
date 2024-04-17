@@ -59,7 +59,7 @@ final class Compare extends AbstractCommandHandler
 
         try {
             $stored = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             // Company not previously stored, save new data and return
             $company = new CompanyEntity($data);
             $this->getRepo()->save($company);

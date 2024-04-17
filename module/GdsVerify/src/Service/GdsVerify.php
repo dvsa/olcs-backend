@@ -154,7 +154,7 @@ class GdsVerify implements FactoryInterface
         while ($encryptionKey = $this->getEncryptionKey($keyNumber)) {
             try {
                 return $assertion->getAssertion($encryptionKey);
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 // Swallow the exception, and try the next key
             }
             $keyNumber++;

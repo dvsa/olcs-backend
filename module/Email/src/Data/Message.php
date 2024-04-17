@@ -199,9 +199,6 @@ class Message
         return $this->highPriority;
     }
 
-    /**
-     * @param bool $highPriority
-     */
     public function setHighPriority(bool $highPriority = true): void
     {
         $this->highPriority = $highPriority;

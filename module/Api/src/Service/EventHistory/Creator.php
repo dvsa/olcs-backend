@@ -17,40 +17,27 @@ class Creator
 {
     use AuthAwareTrait;
 
-    /** @var EventHistoryRepo */
-    private $eventHistoryRepo;
-
-    /** @var EventHistoryTypeRepo */
-    private $eventHistoryTypeRepo;
-
     /**
      * Create service instance
      *
-     * @param AuthorizationService $authService
-     * @param EventHistoryRepo $eventHistoryRepo
-     * @param EventHistoryTypeRepo $eventHistoryTypeRepo
      *
      * @return Creator
      */
     public function __construct(
         AuthorizationService $authService,
-        EventHistoryRepo $eventHistoryRepo,
-        EventHistoryTypeRepo $eventHistoryTypeRepo
+        private EventHistoryRepo $eventHistoryRepo,
+        private EventHistoryTypeRepo $eventHistoryTypeRepo
     ) {
         $this->authService = $authService;
-        $this->eventHistoryRepo = $eventHistoryRepo;
-        $this->eventHistoryTypeRepo = $eventHistoryTypeRepo;
     }
 
     /**
      * Create and save event history record
      *
-     * @param mixed $entity
      * @param string $eventHistoryType
-     *
      * @return void
      */
-    public function create($entity, $eventHistoryType, $eventData = null)
+    public function create(mixed $entity, $eventHistoryType, $eventData = null)
     {
         // create event history record
         $eventHistory = new EventHistoryEntity(

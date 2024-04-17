@@ -50,7 +50,6 @@ final class CreateAppeal extends AbstractCommandHandler implements Transactioned
     /**
      * Create the appeal object
      *
-     * @param Cmd $command
      * @return Appeal
      */
     private function createAppealObject(Cmd $command)

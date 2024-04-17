@@ -48,11 +48,6 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates Application publication entry
      *
-     * @param ApplicationEntity        $application
-     * @param LicenceEntity            $licence
-     * @param PublicationEntity        $publication
-     * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity        $trafficArea
      *
      * @return void
      * @throws ForbiddenException
@@ -78,11 +73,6 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates a Bus Registration publication entry
      *
-     * @param BusRegEntity             $busReg
-     * @param LicenceEntity            $licence
-     * @param PublicationEntity        $publication
-     * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity        $trafficArea
      * @param string                   $text1
      *
      * @return void
@@ -111,11 +101,6 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates a Pi hearing publication entry
      *
-     * @param LicenceEntity            $licence
-     * @param PiEntity                 $pi
-     * @param PublicationEntity        $publication
-     * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity        $trafficArea
      *
      * @return void
      * @throws ForbiddenException
@@ -141,11 +126,6 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Creates a Tm Pi Hearing publication entry
      *
-     * @param TransportManagerEntity   $transportManager
-     * @param PiEntity                 $pi
-     * @param PublicationEntity        $publication
-     * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity        $trafficArea
      *
      * @return void
      * @throws ForbiddenException
@@ -171,10 +151,6 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Create a publication link for a licence
      *
-     * @param LicenceEntity            $licence
-     * @param PublicationEntity        $publication
-     * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity        $trafficArea
      *
      * @return void
      * @throws ForbiddenException
@@ -198,12 +174,6 @@ class PublicationLink extends AbstractPublicationLink
     /**
      * Create a publication link for an Impounding
      *
-     * @param ImpoundingEntity         $impounding
-     * @param PublicationEntity        $publication
-     * @param PublicationSectionEntity $publicationSection
-     * @param TrafficAreaEntity        $trafficArea
-     * @param LicenceEntity            $licence
-     * @param ApplicationEntity        $application
      *
      * @return void
      * @throws ForbiddenException

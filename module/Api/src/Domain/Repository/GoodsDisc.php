@@ -242,7 +242,6 @@ class GoodsDisc extends AbstractRepository
     /**
      * Update existing discs for an application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
@@ -279,7 +278,7 @@ class GoodsDisc extends AbstractRepository
 
         try {
             $count = $qb->getQuery()->getSingleScalarResult();
-        } catch (NoResultException $exception) {
+        } catch (NoResultException) {
             $count = 0;
         } catch (\Exception $exception) {
             throw $exception;

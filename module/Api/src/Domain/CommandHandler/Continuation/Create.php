@@ -79,7 +79,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Create continuation details for licences
      *
-     * @param ContinuationEntity $continuation
      * @param array              $licences
      */
     protected function createContinuationDetails(ContinuationEntity $continuation, $licences)

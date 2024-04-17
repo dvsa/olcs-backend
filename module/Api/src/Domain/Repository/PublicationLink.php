@@ -67,7 +67,6 @@ class PublicationLink extends AbstractRepository
     }
 
     /**
-     * @param QueryInterface $query
      * @return array
      */
     public function fetchSingleUnpublished(QueryInterface $query)
@@ -117,7 +116,6 @@ class PublicationLink extends AbstractRepository
     }
 
     /**
-     * @param QueryInterface $query
      * @return array
      */
     public function fetchPreviousPublicationNo(QueryInterface $query)

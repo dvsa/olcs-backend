@@ -10,9 +10,7 @@ interface FieldsGeneratorInterface
     /**
      * Generate the fields part of the response
      *
-     * @param IrhpPermitStock $irhpPermitStock
      * @param IrhpPermitApplication $irhpPermitApplication (optional)
-     *
      * @return array
      */
     public function generate(IrhpPermitStock $irhpPermitStock, ?IrhpPermitApplication $irhpPermitApplication);

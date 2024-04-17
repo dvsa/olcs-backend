@@ -152,7 +152,6 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
     }
 
     /**
-     * @param Cmd $command
      * @return Licence
      */
     private function createLicenceObject(Cmd $command)
@@ -177,8 +176,6 @@ final class CreateApplication extends AbstractCommandHandler implements AuthAwar
     }
 
     /**
-     * @param Cmd $command
-     * @param Licence $licence
      * @return Application
      */
     private function createApplicationObject(Cmd $command, Licence $licence)

@@ -39,9 +39,6 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
         return $this->mailbox;
     }
 
-    /**
-     * @param Mailbox $mailbox
-     */
     public function setMailbox(Mailbox $mailbox)
     {
         $this->mailbox = $mailbox;
@@ -173,10 +170,10 @@ final class ProcessInspectionRequestEmail extends AbstractCommandHandler
         try {
             $this->handleSideEffect(UpdateInspectionRequestCmd::create($data));
             return true;
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             Logger::warn('==Unable to find the inspection request from the email subject line: ' . $emailSubject);
             return false;
-        } catch (\Exception $ex) {
+        } catch (\Exception) {
             return false;
         }
     }

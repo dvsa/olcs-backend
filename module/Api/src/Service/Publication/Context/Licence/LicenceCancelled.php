@@ -31,17 +31,12 @@ final class LicenceCancelled extends AbstractContext
     {
         $publicationSection = $publication->getPublicationSection()->getId();
 
-        switch ($publicationSection) {
-            case PublicationSectionEntity::LIC_SURRENDERED_SECTION:
-                $context->offsetSet('licenceCancelled', self::LIC_SURRENDERED . $this->createDate());
-                break;
-            case PublicationSectionEntity::LIC_TERMINATED_SECTION:
-                $context->offsetSet('licenceCancelled', self::LIC_TERMINATED . $this->createDate());
-                break;
-            case PublicationSectionEntity::LIC_CNS_SECTION:
-                $context->offsetSet('licenceCancelled', self::LIC_CNS . $this->createDate());
-                break;
-        }
+        match ($publicationSection) {
+            PublicationSectionEntity::LIC_SURRENDERED_SECTION => $context->offsetSet('licenceCancelled', self::LIC_SURRENDERED . $this->createDate()),
+            PublicationSectionEntity::LIC_TERMINATED_SECTION => $context->offsetSet('licenceCancelled', self::LIC_TERMINATED . $this->createDate()),
+            PublicationSectionEntity::LIC_CNS_SECTION => $context->offsetSet('licenceCancelled', self::LIC_CNS . $this->createDate()),
+            default => $context,
+        };
 
         return $context;
     }

@@ -6,37 +6,23 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationE
 
 class IpaAnswersSummaryGenerator
 {
-    /** @var AnswersSummaryFactory */
-    private $answersSummaryFactory;
-
-    /** @var AnswersSummaryRowsAdderInterface */
-    private $defaultAnswersSummaryRowsAdder;
-
     /** @var array */
     private $customRowsAdders = [];
 
     /**
      * Create service instance
      *
-     * @param AnswersSummaryFactory $answersSummaryFactory
-     * @param AnswersSummaryRowsAdderInterface $defaultAnswersSummaryRowsAdder
      *
      * @return AnswersSummaryGenerator
      */
-    public function __construct(
-        AnswersSummaryFactory $answersSummaryFactory,
-        AnswersSummaryRowsAdderInterface $defaultAnswersSummaryRowsAdder
-    ) {
-        $this->answersSummaryFactory = $answersSummaryFactory;
-        $this->defaultAnswersSummaryRowsAdder = $defaultAnswersSummaryRowsAdder;
+    public function __construct(private AnswersSummaryFactory $answersSummaryFactory, private AnswersSummaryRowsAdderInterface $defaultAnswersSummaryRowsAdder)
+    {
     }
 
     /**
      * Build and return a AnswersSummary instance using the appropriate data sources
      *
-     * @param IrhpPermitApplicationEntity $irhpPermitApplicationEntity
      * @param bool $isSnapshot
-     *
      * @return AnswersSummary
      */
     public function generate(IrhpPermitApplicationEntity $irhpPermitApplicationEntity, $isSnapshot = false)
@@ -59,7 +45,6 @@ class IpaAnswersSummaryGenerator
      * Register a custom rows adder to accommodate old non-q&a types
      *
      * @param int $irhpPermitTypeId
-     * @param AnswersSummaryRowsAdderInterface $rowsAdder
      */
     public function registerCustomRowsAdder($irhpPermitTypeId, AnswersSummaryRowsAdderInterface $rowsAdder)
     {

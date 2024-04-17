@@ -91,7 +91,7 @@ class DeletePeopleViaVariationTest extends AbstractCommandHandlerTestCase
 
     private function assertDtoSame(ArraySerializableInterface $expected, ArraySerializableInterface $actual)
     {
-        $this->assertInstanceOf(get_class($expected), $actual);
+        $this->assertInstanceOf($expected::class, $actual);
         $this->assertEquals($expected->getArrayCopy(), $actual->getArrayCopy());
     }
 }

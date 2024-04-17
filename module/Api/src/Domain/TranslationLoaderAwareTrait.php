@@ -17,7 +17,6 @@ trait TranslationLoaderAwareTrait
     /**
      * set translation loader
      *
-     * @param TranslationLoader $translationLoader
      *
      * @return void
      */

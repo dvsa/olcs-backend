@@ -31,16 +31,13 @@ trait MocksRepositoriesTrait
         return $this->serviceManager()->get('RepositoryServiceManager');
     }
 
-    /**
-     * @param object ...$entities
-     */
     protected function injectEntities(object ...$entities): void
     {
         while ($entity = array_pop($entities)) {
             if ($entity instanceof BuilderInterface) {
                 $entity = $entity->build();
             }
-            $repository = $this->repositoryServiceManager()->get('RepositoryFor__' . get_class($entity));
+            $repository = $this->repositoryServiceManager()->get('RepositoryFor__' . $entity::class);
             assert($repository, 'Cannot inject the entity provided: repository is not registered with the repository manager');
             assert(is_callable([$repository, 'injectEntity']), 'Injecting this types of entity is not yet supported. Feel free to add it quickly! :)');
             $repository->injectEntity($entity);

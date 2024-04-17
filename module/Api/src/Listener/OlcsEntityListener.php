@@ -47,7 +47,7 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
         $object = $args->getEntity();
         $om = $args->getEntityManager();
 
-        $meta = $om->getClassMetadata(get_class($object));
+        $meta = $om->getClassMetadata($object::class);
 
         $this->updateField($object, $om, $meta, 'lastModifiedBy', $this->getModifiedByUser());
     }
@@ -63,7 +63,7 @@ class OlcsEntityListener implements EventSubscriber, AuthAwareInterface, Factory
      *
      * @return void
      */
-    private function updateField($object, $om, $meta, $field, $value)
+    private function updateField($object, $om, $meta, $field, mixed $value)
     {
         if (!method_exists($object, 'set' . ucfirst($field))) {
             return;

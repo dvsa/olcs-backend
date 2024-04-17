@@ -15,9 +15,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationLicenceHistoryReviewService extends AbstractReviewService
 {
-    /** @var ApplicationLicenceHistoryReviewService */
-    private $applicationLicenceHistoryReviewService;
-
     /**
      * Create service instance
      *
@@ -28,10 +25,9 @@ class VariationLicenceHistoryReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        ApplicationLicenceHistoryReviewService $applicationLicenceHistoryReviewService
+        private ApplicationLicenceHistoryReviewService $applicationLicenceHistoryReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->applicationLicenceHistoryReviewService = $applicationLicenceHistoryReviewService;
     }
 
     /**

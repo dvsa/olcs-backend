@@ -34,7 +34,7 @@ class NotReadyException extends Exception
      *
      * @return self
      */
-    public function setRetryAfter($retryAfter)
+    public function setRetryAfter(mixed $retryAfter)
     {
         $this->retryAfter = $retryAfter;
 

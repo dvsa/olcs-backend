@@ -37,7 +37,7 @@ class SlaTargetDate extends AbstractSlaTargetDate
      * @param mixed $agreedDate      Agreed Date
      * @param mixed $underDelegation Under Delegation
      */
-    public function __construct($entity, $agreedDate, $underDelegation = null)
+    public function __construct(mixed $entity, mixed $agreedDate, mixed $underDelegation = null)
     {
         if ($entity instanceof Document) {
             $this->setDocument($entity);

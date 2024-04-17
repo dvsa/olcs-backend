@@ -109,9 +109,6 @@ class CommunityLicencesTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     public function setUpDefaultServices(ServiceManager $serviceManager)
     {
         $this->repositoryServiceManager();

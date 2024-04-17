@@ -11,40 +11,20 @@ use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 
 class EcmtApplicationFeeCommandCreator
 {
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
-    /** @var CommandCreator */
-    private $commandCreator;
-
-    /** @var CurrentDateTimeFactory */
-    private $currentDateTimeFactory;
-
     /**
      * Create service instance
      *
-     * @param FeeTypeRepository $feeTypeRepo
-     * @param CommandCreator $commandCreator
-     * @param CurrentDateTimeFactory $currentDateTimeFactory
      *
      * @return CreateFee
      */
-    public function __construct(
-        FeeTypeRepository $feeTypeRepo,
-        CommandCreator $commandCreator,
-        CurrentDateTimeFactory $currentDateTimeFactory
-    ) {
-        $this->feeTypeRepo = $feeTypeRepo;
-        $this->commandCreator = $commandCreator;
-        $this->currentDateTimeFactory = $currentDateTimeFactory;
+    public function __construct(private FeeTypeRepository $feeTypeRepo, private CommandCreator $commandCreator, private CurrentDateTimeFactory $currentDateTimeFactory)
+    {
     }
 
     /**
      * Return a CreateFee command representing an application fee for the specified number of permits
      *
-     * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitsRequired
-     *
      * @return CreateFee
      */
     public function create(IrhpApplicationEntity $irhpApplication, $permitsRequired)

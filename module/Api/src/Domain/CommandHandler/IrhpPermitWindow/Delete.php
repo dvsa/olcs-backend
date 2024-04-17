@@ -36,7 +36,7 @@ final class Delete extends AbstractCommandHandler
             $this->getRepo()->delete($window);
             $this->result->addId('id', $id);
             $this->result->addMessage('Permit Window Deleted');
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $this->result->addMessage(sprintf('Id %d not found', $id));
         }
 

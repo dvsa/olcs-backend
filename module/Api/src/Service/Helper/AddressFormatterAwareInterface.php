@@ -15,7 +15,6 @@ interface AddressFormatterAwareInterface
     public function getAddressFormatter();
 
     /**
-     * @param FormatAddress $addressFormatter
      * @return mixed
      */
     public function setAddressFormatter(FormatAddress $addressFormatter);

@@ -57,18 +57,11 @@ class SignatureReviewService extends AbstractReviewService
 
     private function getSignatureLabel(Organisation $organisation)
     {
-        switch ($organisation->getType()->getId()) {
-            case Organisation::ORG_TYPE_REGISTERED_COMPANY:
-            case Organisation::ORG_TYPE_LLP:
-                return 'undertakings_directors_signature';
-            case Organisation::ORG_TYPE_PARTNERSHIP:
-                return 'undertakings_partners_signature';
-            case Organisation::ORG_TYPE_SOLE_TRADER:
-                return 'undertakings_owners_signature';
-            case Organisation::ORG_TYPE_OTHER:
-            case Organisation::ORG_TYPE_IRFO:
-            default:
-                return 'undertakings_responsiblepersons_signature';
-        }
+        return match ($organisation->getType()->getId()) {
+            Organisation::ORG_TYPE_REGISTERED_COMPANY, Organisation::ORG_TYPE_LLP => 'undertakings_directors_signature',
+            Organisation::ORG_TYPE_PARTNERSHIP => 'undertakings_partners_signature',
+            Organisation::ORG_TYPE_SOLE_TRADER => 'undertakings_owners_signature',
+            default => 'undertakings_responsiblepersons_signature',
+        };
     }
 }

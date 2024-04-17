@@ -24,9 +24,6 @@ class BusNoticePeriod extends AbstractBusNoticePeriod
     /**
      * Create a new bus notice period
      *
-     * @param string $noticeArea
-     * @param int    $standardPeriod
-     * @param int    $cancellationPeriod
      *
      * @return self
      */

@@ -110,8 +110,6 @@ class CreateFull extends AbstractCommandHandler implements TransactionedInterfac
     /**
      * Creates new instance of IrhpApplication
      *
-     * @param IrhpPermitTypeEntity $permitType
-     * @param LicenceEntity $licence
      * @param string $dateReceived
      */
     protected function createNewIrhpApplication(IrhpPermitTypeEntity $permitType, LicenceEntity $licence, $dateReceived)
@@ -128,7 +126,6 @@ class CreateFull extends AbstractCommandHandler implements TransactionedInterfac
     /**
      * Creates and saves instances of IrhpPermitApplication as required to accompany the IrhpApplication
      *
-     * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitTypeId
      */
     private function updateCountries(IrhpApplicationEntity $irhpApplication, $permitTypeId, $command)
@@ -150,7 +147,6 @@ class CreateFull extends AbstractCommandHandler implements TransactionedInterfac
     /**
      * Creates and saves instances of IrhpPermitApplication as required to accompany the IrhpApplication
      *
-     * @param IrhpApplicationEntity $irhpApplication
      * @param int $permitTypeId
      */
     private function createIrhpPermitApplications(IrhpApplicationEntity $irhpApplication, $permitTypeId)

@@ -39,40 +39,33 @@ final class UpdateSla extends AbstractCommandHandler implements TransactionedInt
         /** @var PiEntity $pi */
         $pi = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        switch ($writtenOutcome) {
-            case SlaEntity::VERBAL_DECISION_ONLY:
-                $pi->updateWrittenOutcomeVerbal(
-                    $this->getRepo()->getRefdataReference($writtenOutcome),
-                    $command->getCallUpLetterDate(),
-                    $command->getBriefToTcDate(),
-                    $command->getDecisionLetterSentDate()
-                );
-                break;
-            case SlaEntity::WRITTEN_OUTCOME_DECISION:
-                $pi->updateWrittenOutcomeDecision(
-                    $this->getRepo()->getRefdataReference($writtenOutcome),
-                    $command->getCallUpLetterDate(),
-                    $command->getBriefToTcDate(),
-                    $command->getTcWrittenDecisionDate(),
-                    $command->getWrittenDecisionLetterDate()
-                );
-                break;
-            case SlaEntity::WRITTEN_OUTCOME_REASON:
-                $pi->updateWrittenOutcomeReason(
-                    $this->getRepo()->getRefdataReference($writtenOutcome),
-                    $command->getCallUpLetterDate(),
-                    $command->getBriefToTcDate(),
-                    $command->getTcWrittenReasonDate(),
-                    $command->getWrittenReasonLetterDate()
-                );
-                break;
-            default:
-                $pi->updateWrittenOutcomeNone(
-                    null,
-                    $command->getCallUpLetterDate(),
-                    $command->getBriefToTcDate()
-                );
-        }
+        match ($writtenOutcome) {
+            SlaEntity::VERBAL_DECISION_ONLY => $pi->updateWrittenOutcomeVerbal(
+                $this->getRepo()->getRefdataReference($writtenOutcome),
+                $command->getCallUpLetterDate(),
+                $command->getBriefToTcDate(),
+                $command->getDecisionLetterSentDate()
+            ),
+            SlaEntity::WRITTEN_OUTCOME_DECISION => $pi->updateWrittenOutcomeDecision(
+                $this->getRepo()->getRefdataReference($writtenOutcome),
+                $command->getCallUpLetterDate(),
+                $command->getBriefToTcDate(),
+                $command->getTcWrittenDecisionDate(),
+                $command->getWrittenDecisionLetterDate()
+            ),
+            SlaEntity::WRITTEN_OUTCOME_REASON => $pi->updateWrittenOutcomeReason(
+                $this->getRepo()->getRefdataReference($writtenOutcome),
+                $command->getCallUpLetterDate(),
+                $command->getBriefToTcDate(),
+                $command->getTcWrittenReasonDate(),
+                $command->getWrittenReasonLetterDate()
+            ),
+            default => $pi->updateWrittenOutcomeNone(
+                null,
+                $command->getCallUpLetterDate(),
+                $command->getBriefToTcDate()
+            ),
+        };
 
         $this->getRepo()->save($pi);
         $result->addMessage('Sla updated');

@@ -18,20 +18,14 @@ class NysiisRestClient
     public const NYSIIS_RESPONSE_INCORRECT = 'Nysiis REST service returned incorrect response';
 
     /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
      * Nysiis client constructor
      *
      * @param RestClient $restClient Laminas rest client
      *
      * @return void
      */
-    public function __construct(RestClient $restClient)
+    public function __construct(private RestClient $restClient)
     {
-        $this->restClient = $restClient;
     }
 
     /**
@@ -83,7 +77,7 @@ class NysiisRestClient
     public function cleanJson($text)
     {
         //if there isn't a character matched then our string is invalid, but we can't do anything about it
-        if (strstr($text, '{') !== false) {
+        if (str_contains($text, '{')) {
             $text = strstr($text, '{');
         }
 

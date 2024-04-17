@@ -100,7 +100,7 @@ class Email implements FactoryInterface
                 //olcs-14825 we no longer pass in the name, as this occasionally caused problems with postfix
                 $address = new LaminasAddress($email);
                 $addressList->add($address);
-            } catch (LaminasAddressException $e) {
+            } catch (LaminasAddressException) {
                 //address is invalid in some way, right now these addresses are ignored
             }
         }

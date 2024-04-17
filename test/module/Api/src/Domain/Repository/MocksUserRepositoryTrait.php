@@ -29,7 +29,6 @@ trait MocksUserRepositoryTrait
     abstract protected function repositoryServiceManager(): RepositoryServiceManager;
 
     /**
-     * @param string $class
      * @return MockInterface
      */
     abstract protected function setUpMockService(string $class): MockInterface;

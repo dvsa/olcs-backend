@@ -16,50 +16,15 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
 {
     public const FRONTEND_DESTINATION_NEXT_STEP = 'NEXT_STEP';
 
-    /** @var string */
-    private $frontendType;
-
-    /** @var ElementGeneratorInterface */
-    private $elementGenerator;
-
-    /** @var AnswerSaverInterface */
-    private $answerSaver;
-
-    /** @var AnswerClearerInterface */
-    private $answerClearer;
-
-    /** @var QuestionTextGeneratorInterface */
-    private $questionTextGenerator;
-
-    /** @var AnswerSummaryProviderInterface */
-    private $answerSummaryProvider;
-
     /**
      * Create service instance
      *
      * @param string $frontendType
-     * @param ElementGeneratorInterface $elementGenerator
-     * @param AnswerSaverInterface $answerSaver
-     * @param AnswerClearerInterface $answerClearer
-     * @param QuestionTextGeneratorInterface $questionTextGenerator
-     * @param AnswerSummaryProviderInterface $answerSummaryProvider
      *
      * @return BaseFormControlStrategy
      */
-    public function __construct(
-        $frontendType,
-        ElementGeneratorInterface $elementGenerator,
-        AnswerSaverInterface $answerSaver,
-        AnswerClearerInterface $answerClearer,
-        QuestionTextGeneratorInterface $questionTextGenerator,
-        AnswerSummaryProviderInterface $answerSummaryProvider
-    ) {
-        $this->frontendType = $frontendType;
-        $this->elementGenerator = $elementGenerator;
-        $this->answerSaver = $answerSaver;
-        $this->answerClearer = $answerClearer;
-        $this->questionTextGenerator = $questionTextGenerator;
-        $this->answerSummaryProvider = $answerSummaryProvider;
+    public function __construct(private $frontendType, private ElementGeneratorInterface $elementGenerator, private AnswerSaverInterface $answerSaver, private AnswerClearerInterface $answerClearer, private QuestionTextGeneratorInterface $questionTextGenerator, private AnswerSummaryProviderInterface $answerSummaryProvider)
+    {
     }
 
     /**

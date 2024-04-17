@@ -12,11 +12,8 @@ use Doctrine\DBAL\Result;
  */
 class CompaniesHouseVsOlcsDiffs
 {
-    private Connection $conn;
-
-    public function __construct(Connection $conn)
+    public function __construct(private Connection $conn)
     {
-        $this->conn = $conn;
     }
 
     public function __destruct()

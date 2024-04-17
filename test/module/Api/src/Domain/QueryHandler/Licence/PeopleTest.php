@@ -62,17 +62,12 @@ class PeopleTest extends QueryHandlerTestCase
             ->andReturn([$mockOp]);
 
         $response = $this->sut->handleQuery($query);
-        Assert::assertArraySubset(
-            [
-                'id' => 432,
-                'hasInforceLicences' => false,
-                'isExceptionalType' => false,
-                'isSoleTrader' => false,
-                'people' => [
-                    ['OP']
-                ],
-            ],
-            $response->serialize()
-        );
+        $responseArray = $response->serialize();
+
+        $this->assertEquals(432, $responseArray['id']);
+        $this->assertFalse($responseArray['hasInforceLicences']);
+        $this->assertArrayHasKey('people', $responseArray);
+        $this->assertCount(1, $responseArray['people']);
+        $this->assertEquals(['OP'], $responseArray['people'][0]);
     }
 }

@@ -116,24 +116,18 @@ class User extends AbstractUser implements OrganisationProviderInterface
     ];
 
     /**
-     * User type
-     *
-     * @var string
-     */
-    protected $userType = null;
-
-    /**
      * User constructor.
      *
      * @param string $pid      pid
-     * @param string $userType user type
+     * @param string|null $userType user type
      *
      * @return void
      */
-    public function __construct($pid, $userType)
-    {
+    public function __construct(
+        $pid,
+        protected ?string $userType = null
+    ) {
         parent::__construct();
-        $this->userType = $userType;
         $this->pid = $pid;
     }
 
@@ -224,23 +218,14 @@ class User extends AbstractUser implements OrganisationProviderInterface
         }
 
         // each type may have different update
-        switch ($this->getUserType()) {
-            case self::USER_TYPE_INTERNAL:
-                $this->updateInternal($data);
-                break;
-            case self::USER_TYPE_TRANSPORT_MANAGER:
-                $this->updateTransportManager($data);
-                break;
-            case self::USER_TYPE_PARTNER:
-                $this->updatePartner($data);
-                break;
-            case self::USER_TYPE_LOCAL_AUTHORITY:
-                $this->updateLocalAuthority($data);
-                break;
-            case self::USER_TYPE_OPERATOR:
-                $this->updateOperator($data);
-                break;
-        }
+        match ($this->getUserType()) {
+            self::USER_TYPE_INTERNAL => $this->updateInternal($data),
+            self::USER_TYPE_TRANSPORT_MANAGER => $this->updateTransportManager($data),
+            self::USER_TYPE_PARTNER => $this->updatePartner($data),
+            self::USER_TYPE_LOCAL_AUTHORITY => $this->updateLocalAuthority($data),
+            self::USER_TYPE_OPERATOR => $this->updateOperator($data),
+            default => $this,
+        };
 
         return $this;
     }

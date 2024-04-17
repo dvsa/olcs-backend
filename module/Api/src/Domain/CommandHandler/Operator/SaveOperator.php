@@ -171,26 +171,15 @@ final class SaveOperator extends AbstractCommandHandler implements Transactioned
     protected function validateOrganisation($command)
     {
         $type = $command->getBusinessType();
-        switch ($type) {
-            case OrganisationEntity::ORG_TYPE_PARTNERSHIP:
-            case OrganisationEntity::ORG_TYPE_OTHER:
-                $this->validatePartnershipOrOther($command);
-                break;
-            case OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY:
-            case OrganisationEntity::ORG_TYPE_LLP:
-                $this->validateRegOrLlp($command);
-                break;
-            case OrganisationEntity::ORG_TYPE_SOLE_TRADER:
-                $this->validateSoleTrader($command);
-                break;
-            case OrganisationEntity::ORG_TYPE_IRFO:
-                $this->validateIrfo($command);
-                break;
-            default:
-                throw new ValidationException(
-                    [self::ERROR_UNKNOWN_TYPE => 'Unknown business type']
-                );
-        }
+        match ($type) {
+            OrganisationEntity::ORG_TYPE_PARTNERSHIP, OrganisationEntity::ORG_TYPE_OTHER => $this->validatePartnershipOrOther($command),
+            OrganisationEntity::ORG_TYPE_REGISTERED_COMPANY, OrganisationEntity::ORG_TYPE_LLP => $this->validateRegOrLlp($command),
+            OrganisationEntity::ORG_TYPE_SOLE_TRADER => $this->validateSoleTrader($command),
+            OrganisationEntity::ORG_TYPE_IRFO => $this->validateIrfo($command),
+            default => throw new ValidationException(
+                [self::ERROR_UNKNOWN_TYPE => 'Unknown business type']
+            ),
+        };
     }
 
     protected function validatePartnershipOrOther($command)

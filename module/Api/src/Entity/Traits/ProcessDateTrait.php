@@ -38,7 +38,7 @@ trait ProcessDateTrait
      *
      * @return \DateTime|null
      */
-    public function asDateTime($datetime)
+    public function asDateTime(mixed $datetime)
     {
         if ($datetime instanceof \DateTime) {
             return $datetime;

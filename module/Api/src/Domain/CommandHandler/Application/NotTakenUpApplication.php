@@ -146,8 +146,6 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
     /**
      * Cancel any S4's attached to the application
-     *
-     * @param Application $application
      */
     protected function cancelS4(Application $application)
     {
@@ -162,8 +160,6 @@ class NotTakenUpApplication extends AbstractCommandHandler implements Transactio
 
     /**
      * Cancel outstanding fees on the application
-     *
-     * @param Application $application
      */
     private function cancelOutstandingFees(Application $application)
     {

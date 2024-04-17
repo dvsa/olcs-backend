@@ -10,38 +10,18 @@ use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 
 class ApplicationFeesClearer
 {
-    /** @var CommandCreator */
-    private $commandCreator;
-
-    /** @var CommandHandlerManager */
-    private $commandHandlerManager;
-
-    /** @var FeeRepository */
-    private $feeRepo;
-
     /**
      * Create service instance
      *
-     * @param CommandCreator $commandCreator
-     * @param CommandHandlerManager $commandHandlerManager
-     * @param FeeRepository $feeRepo
      *
      * @return ApplicationFeesClearer
      */
-    public function __construct(
-        CommandCreator $commandCreator,
-        CommandHandlerManager $commandHandlerManager,
-        FeeRepository $feeRepo
-    ) {
-        $this->commandCreator = $commandCreator;
-        $this->commandHandlerManager = $commandHandlerManager;
-        $this->feeRepo = $feeRepo;
+    public function __construct(private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private FeeRepository $feeRepo)
+    {
     }
 
     /**
      * Cancel all outstanding fees associated with this application
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     public function clear(IrhpPermitApplication $irhpPermitApplication)
     {

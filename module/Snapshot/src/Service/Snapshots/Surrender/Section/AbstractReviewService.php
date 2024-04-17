@@ -15,7 +15,6 @@ abstract class AbstractReviewService implements ReviewServiceInterface
     /**
      * Create service instance
      *
-     * @param AbstractReviewServiceServices $abstractReviewServiceServices
      *
      * @return AbstractReviewService
      */

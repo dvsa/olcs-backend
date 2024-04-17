@@ -13,26 +13,14 @@ class EcmtRemovalNoOfPermitsGenerator implements QuestionTextGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var QuestionTextGenerator */
-    private $questionTextGenerator;
-
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
     /**
      * Create service instance
      *
-     * @param QuestionTextGenerator $questionTextGenerator
-     * @param FeeTypeRepository $feeTypeRepo
      *
      * @return EcmtRemovalNoOfPermitsGenerator
      */
-    public function __construct(
-        QuestionTextGenerator $questionTextGenerator,
-        FeeTypeRepository $feeTypeRepo
-    ) {
-        $this->questionTextGenerator = $questionTextGenerator;
-        $this->feeTypeRepo = $feeTypeRepo;
+    public function __construct(private QuestionTextGenerator $questionTextGenerator, private FeeTypeRepository $feeTypeRepo)
+    {
     }
 
     /**

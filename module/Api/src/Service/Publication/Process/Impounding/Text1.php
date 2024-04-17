@@ -39,7 +39,6 @@ final class Text1 extends AbstractText
 
     /**
      * @param PublicationLink $publication
-     * @param ImmutableArrayObject $context
      * @return String
      */
     private function getImpoundingDetailsText(PublicationLink $publicationLink, ImmutableArrayObject $context)
@@ -55,7 +54,6 @@ final class Text1 extends AbstractText
 
     /**
      * @param PublicationLink $publication
-     * @param ImmutableArrayObject $context
      * @return string|void
      */
     private function getOrganisationOfficersText(PublicationLink $publicationLink, ImmutableArrayObject $context)

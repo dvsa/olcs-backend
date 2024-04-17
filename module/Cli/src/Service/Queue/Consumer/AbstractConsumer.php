@@ -23,7 +23,6 @@ abstract class AbstractConsumer implements MessageConsumerInterface
     /**
      * Create service instance
      *
-     * @param AbstractConsumerServices $abstractConsumerServices
      *
      * @return AbstractConsumer
      */

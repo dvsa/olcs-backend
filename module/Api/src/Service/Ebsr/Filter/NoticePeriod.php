@@ -9,6 +9,7 @@ use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 /**
  * Class NoticePeriod
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter
+ * @template-extends AbstractFilter<array>
  */
 class NoticePeriod extends AbstractFilter
 {

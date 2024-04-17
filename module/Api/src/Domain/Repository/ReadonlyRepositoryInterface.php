@@ -20,8 +20,6 @@ interface ReadonlyRepositoryInterface
 {
     /**
      * Called from the factory to allow additional services to be injected
-     *
-     * @param RepositoryServiceManager $serviceManager
      */
     public function initService(RepositoryServiceManager $serviceManager);
 
@@ -32,7 +30,6 @@ interface ReadonlyRepositoryInterface
     public function fetchByIds(array $ids, $hydrateMode = Query::HYDRATE_OBJECT);
 
     /**
-     * @param QueryInterface $query
      * @param int $hydrateMode
      * @return array|\ArrayIterator|\Traversable
      */
@@ -41,7 +38,6 @@ interface ReadonlyRepositoryInterface
     public function fetchPaginatedList(QueryBuilder $qb, $hydrateMode = Query::HYDRATE_ARRAY, QueryInterface $originalQuery = null);
 
     /**
-     * @param QueryInterface $query
      * @param int $hydrateMode
      * @return int
      */

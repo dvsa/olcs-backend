@@ -9,24 +9,14 @@ class OptionListGenerator
     /** @var array */
     private $sources = [];
 
-    /** @var OptionListFactory */
-    private $optionListFactory;
-
-    /** @var OptionFactory */
-    private $optionFactory;
-
     /**
      * Create service instance
      *
-     * @param OptionListFactory $optionListFactory
-     * @param OptionFactory $optionFactory
      *
      * @return OptionListGenerator
      */
-    public function __construct(OptionListFactory $optionListFactory, OptionFactory $optionFactory)
+    public function __construct(private OptionListFactory $optionListFactory, private OptionFactory $optionFactory)
     {
-        $this->optionListFactory = $optionListFactory;
-        $this->optionFactory = $optionFactory;
     }
 
     /**
@@ -54,7 +44,6 @@ class OptionListGenerator
      * Registers an implementation of SourceInterface corresponding to the provided name
      *
      * @param string $name
-     * @param SourceInterface $source
      */
     public function registerSource($name, SourceInterface $source)
     {

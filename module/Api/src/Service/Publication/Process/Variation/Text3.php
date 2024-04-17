@@ -45,8 +45,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add licence correspondance address
-     *
-     * @param ImmutableArrayObject $context
      */
     private function addCorrespondanceAddress(ImmutableArrayObject $context)
     {
@@ -56,8 +54,6 @@ final class Text3 implements ProcessInterface
     }
 
     /**
-     * @param ImmutableArrayObject $context
-     *
      * @return bool
      */
     private function hasOneOrMoreOperatingCentreLines(ImmutableArrayObject $context)
@@ -67,9 +63,6 @@ final class Text3 implements ProcessInterface
             !empty($context->offsetGet('operatingCentres'));
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addOperatingCentreText(ImmutableArrayObject $context)
     {
         if ($this->hasOneOrMoreOperatingCentreLines($context)) {
@@ -79,9 +72,6 @@ final class Text3 implements ProcessInterface
         }
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addAuthorisationText(ImmutableArrayObject $context)
     {
         if ($context->offsetExists('authorisation')) {
@@ -91,9 +81,6 @@ final class Text3 implements ProcessInterface
         }
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addTransportManagerText(ImmutableArrayObject $context)
     {
         if ($context->offsetExists('applicationTransportManagers')) {
@@ -106,9 +93,6 @@ final class Text3 implements ProcessInterface
         }
     }
 
-    /**
-     * @param ImmutableArrayObject $context
-     */
     private function addConditionUndertakingText(ImmutableArrayObject $context)
     {
         if ($context->offsetExists('conditionUndertaking') && is_array($context->offsetGet('conditionUndertaking'))) {
@@ -120,8 +104,6 @@ final class Text3 implements ProcessInterface
 
     /**
      * Add Licence upgrade text
-     *
-     * @param PublicationLink $publicationLink
      */
     private function addUpgradeText(PublicationLink $publicationLink)
     {

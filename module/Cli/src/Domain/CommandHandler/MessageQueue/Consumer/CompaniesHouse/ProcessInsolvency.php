@@ -127,7 +127,6 @@ class ProcessInsolvency extends AbstractConsumer
     /**
      * Fetch the insolvencyPractitioners for the company
      *
-     * @param array $insolvencyDetails
      *
      * @return ArrayCollection
      */
@@ -147,7 +146,6 @@ class ProcessInsolvency extends AbstractConsumer
     /**
      * Map practitioner from API result to CompaniesHouseInsolvencyPractitioner entity
      *
-     * @param array $practitioner
      *
      * @return CompaniesHouseInsolvencyPractitioner
      */
@@ -169,8 +167,6 @@ class ProcessInsolvency extends AbstractConsumer
 
 
     /**
-     * @param Organisation $organisation
-     *
      * @throws \Exception
      */
     protected function handleGenerations(Organisation $organisation): void
@@ -184,9 +180,6 @@ class ProcessInsolvency extends AbstractConsumer
         }
     }
 
-    /**
-     * @param Licence $licence
-     */
     private function generateLetters(Licence $licence): void
     {
         $template = $this->selectTemplate($licence);
@@ -216,7 +209,6 @@ class ProcessInsolvency extends AbstractConsumer
     }
 
     /**
-     * @param Licence $licence
      *
      * @return void
      * @throws \Exception
@@ -242,9 +234,6 @@ class ProcessInsolvency extends AbstractConsumer
         $this->result->merge($this->handleSideEffect(CreateQueue::create($params)));
     }
 
-    /**
-     * @param Licence $licence
-     */
     private function generateEmails(Licence $licence): void
     {
         $translateToWelsh = $licence->getTranslateToWelsh();
@@ -297,7 +286,6 @@ class ProcessInsolvency extends AbstractConsumer
     }
 
     /**
-     * @param string $name
      *
      * @return int
      * @throws RuntimeException
@@ -308,8 +296,6 @@ class ProcessInsolvency extends AbstractConsumer
     }
 
     /**
-     * @param Licence $licence
-     *
      * @return array
      */
     private function selectTemplate(Licence $licence): array
@@ -335,10 +321,6 @@ class ProcessInsolvency extends AbstractConsumer
         return static::GB_GV_STANDARD_TEMPLATE;
     }
 
-    /**
-     * @param string $email
-     * @param string $translateToWelsh
-     */
     private function sendCorrespondenceEmail(string $email, string $translateToWelsh, bool $isRegistered): void
     {
         $cmdData = [
@@ -358,7 +340,6 @@ class ProcessInsolvency extends AbstractConsumer
     /**
      * Filters out any practitioners that have ceased to act and then removes any duplicates
      *
-     * @param array $practitionerData
      * @return array
      */
     private function filterPractitioners(array $practitionerData): array

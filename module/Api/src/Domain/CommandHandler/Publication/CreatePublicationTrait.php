@@ -38,7 +38,6 @@ trait CreatePublicationTrait
     /**
      * Check if we have an existing publication link, if not return a new one
      *
-     * @param QueryInterface $query
      * @throws RuntimeException
      * @return PublicationLinkEntity
      */
@@ -55,7 +54,6 @@ trait CreatePublicationTrait
 
     /**
      * @param $publicationConfig
-     * @param PublicationLinkEntity $publicationLink
      * @param $existingContext
      * @return Result
      * @throws RuntimeException

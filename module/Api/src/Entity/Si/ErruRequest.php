@@ -34,14 +34,9 @@ class ErruRequest extends AbstractErruRequest
     public const QUEUED_CASE_TYPE = 'erru_case_t_msirnys'; //MSI with response queued
     public const FAILED_CASE_TYPE = 'erru_case_t_msirsf'; //MSI with response failure
     public const SENT_CASE_TYPE = 'erru_case_t_msirs'; //MSI with no response sent
-
     /**
      * ErruRequest constructor.
      *
-     * @param CaseEntity $case
-     * @param RefData $msiType
-     * @param CountryEntity $memberStateCode
-     * @param DocumentEntity $requestDocument
      * @param string $originatingAuthority
      * @param string $transportUndertakingName
      * @param string $vrm
@@ -82,11 +77,6 @@ class ErruRequest extends AbstractErruRequest
 
     /**
      * Updates the serious infringement response information, called while the response is being queued
-     *
-     * @param UserEntity $user
-     * @param \DateTime $responseDateTime
-     * @param DocumentEntity $responseDocument
-     * @param RefData $msiType
      */
     public function queueErruResponse(
         UserEntity $user,

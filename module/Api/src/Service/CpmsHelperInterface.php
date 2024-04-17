@@ -41,7 +41,6 @@ interface CpmsHelperInterface
      * Initiate a card payment
      *
      * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array $fees
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
      */
@@ -51,7 +50,6 @@ interface CpmsHelperInterface
      * Initiate a stored card payment payment
      *
      * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array  $fees
      * @param string $storedCardReference Stored card reference
      *
      * @return array CPMS response data
@@ -63,7 +61,6 @@ interface CpmsHelperInterface
      * Initiate a card not present (CNP) payment
      *
      * @param string $redirectUrl redirect back to here from payment gateway
-     * @param array $fees
      *
      * @return array CPMS response data
      * @throws CpmsResponseException if response is invalid
@@ -205,10 +202,9 @@ interface CpmsHelperInterface
     public function reversePayment($receiptReference, $paymentMethod, $fees = []);
 
     /**
-     * @param mixed $amount
      * @return string amount formatted to two decimal places with no thousands separator
      */
-    public function formatAmount($amount);
+    public function formatAmount(mixed $amount);
 
     /**
      * @return int

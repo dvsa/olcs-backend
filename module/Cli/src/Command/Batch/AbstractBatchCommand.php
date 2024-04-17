@@ -12,16 +12,13 @@ use Symfony\Component\Console\Input\InputOption;
 
 abstract class AbstractBatchCommand extends AbstractOlcsCommand
 {
-    protected QueryHandlerManager $queryHandlerManager;
-
     public function __construct(
         CommandHandlerManager $commandHandlerManager,
-        QueryHandlerManager $queryHandlerManager
+        protected QueryHandlerManager $queryHandlerManager
     ) {
         parent::__construct(
             $commandHandlerManager
         );
-        $this->queryHandlerManager = $queryHandlerManager;
     }
 
     /**
@@ -42,13 +39,12 @@ abstract class AbstractBatchCommand extends AbstractOlcsCommand
     /**
      * Process a query DTO
      *
-     * @param QueryInterface $dto
      * @return BundleSerializableInterface|mixed|null
      */
     protected function handleQuery(QueryInterface $dto)
     {
         try {
-            $this->logAndWriteVerboseMessage("Handling query: " . get_class($dto));
+            $this->logAndWriteVerboseMessage("Handling query: " . $dto::class);
             $result = $this->queryHandlerManager->handleQuery($dto);
             return $result;
         } catch (NotFoundException $e) {

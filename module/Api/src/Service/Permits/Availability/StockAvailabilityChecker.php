@@ -4,19 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Permits\Availability;
 
 class StockAvailabilityChecker
 {
-    /** @var StockAvailabilityCounter */
-    private $stockAvailabilityCounter;
-
     /**
      * Create service instance
      *
-     * @param StockAvailabilityCounter $stockAvailabilityCounter
      *
      * @return StockAvailabilityChecker
      */
-    public function __construct(StockAvailabilityCounter $stockAvailabilityCounter)
+    public function __construct(private StockAvailabilityCounter $stockAvailabilityCounter)
     {
-        $this->stockAvailabilityCounter = $stockAvailabilityCounter;
     }
 
     /**

@@ -28,9 +28,6 @@ class Police implements \Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterf
 
     /**
      * Add all People from context into the police data
-     *
-     * @param PublicationLink $publicationLink
-     * @param ImmutableArrayObject $context
      */
     private function addPeople(PublicationLink $publicationLink, ImmutableArrayObject $context)
     {

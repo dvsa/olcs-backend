@@ -18,15 +18,12 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
 {
     use AuthAwareTrait;
 
-    private ContainerInterface $serviceLocator;
-
     /**
      * Injecting instances of AuthService and RepoServiceManager did not work here due to some deeper co-dependency
      * when the app instantiated part of the Doctrine ORM, so ServiceLocator had to be injected instead.
      */
-    public function __construct(ContainerInterface $serviceLocator)
+    public function __construct(private ContainerInterface $serviceLocator)
     {
-        $this->serviceLocator = $serviceLocator;
         parent::__construct();
     }
 
@@ -75,11 +72,10 @@ class OlcsBlameableListener extends GedmoBlameableListener implements AuthAwareI
      *
      * @param object $meta
      * @param string $field
-     * @param mixed $eventAdapter
      *
      * @return mixed
      */
-    protected function callParentGetFieldValue($meta, $field, $eventAdapter)
+    protected function callParentGetFieldValue($meta, $field, mixed $eventAdapter)
     {
         return parent::getFieldValue($meta, $field, $eventAdapter);
     }

@@ -39,23 +39,13 @@ final class UpdateUserSelfserve extends AbstractUserCommandHandler implements
 
     protected $extraRepos = ['ContactDetails'];
 
-    private EventHistoryCreator $eventHistoryCreator;
-    /**
-     * @var ValidatableAdapterInterface | CognitoAdapter
-     */
-    private ValidatableAdapterInterface $authAdapter;
-    private PasswordService $passwordService;
-
     /**
      * @var mixed
      */
     private string $provider;
 
-    public function __construct(ValidatableAdapterInterface $authAdapter, PasswordService $passwordService, EventHistoryCreator $eventHistoryCreator)
+    public function __construct(private ValidatableAdapterInterface $authAdapter, private PasswordService $passwordService, private EventHistoryCreator $eventHistoryCreator)
     {
-        $this->authAdapter = $authAdapter;
-        $this->passwordService = $passwordService;
-        $this->eventHistoryCreator = $eventHistoryCreator;
     }
 
     /**

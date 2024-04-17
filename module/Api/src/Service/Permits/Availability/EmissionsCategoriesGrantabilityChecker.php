@@ -7,18 +7,13 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class EmissionsCategoriesGrantabilityChecker
 {
-    /** @var EmissionsCategoryAvailabilityCounter */
-    private $emissionsCategoryAvailabilityCounter;
-
-    public function __construct(EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
-        $this->emissionsCategoryAvailabilityCounter = $emissionsCategoryAvailabilityCounter;
     }
 
     /**
      * Whether there is sufficient stock to grant the permits required by the application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return bool
      */

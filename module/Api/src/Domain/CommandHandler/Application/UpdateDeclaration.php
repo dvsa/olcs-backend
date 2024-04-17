@@ -82,7 +82,6 @@ final class UpdateDeclaration extends AbstractCommandHandler implements Transact
     /**
      * Update the application completion
      *
-     * @param UpdateDeclarationCommand $command
      *
      * @return Result
      */

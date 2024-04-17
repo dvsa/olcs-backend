@@ -9,8 +9,6 @@ class QaContextFactory
     /**
      * Create and return an QaContext instance
      *
-     * @param ApplicationStepEntity $applicationStepEntity
-     * @param QaEntityInterface $qaEntity
      *
      * @return QaContext
      */

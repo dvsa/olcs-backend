@@ -8,35 +8,28 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
 
 class NoOfPermitsAnswerFetcher
 {
-    /** @var NamedAnswerFetcher */
-    private $namedAnswerFetcher;
-
     /**
      * Create service instance
      *
-     * @param NamedAnswerFetcher $namedAnswerFetcher
      *
      * @return NoOfPermitsAnswerFetcher
      */
-    public function __construct(NamedAnswerFetcher $namedAnswerFetcher)
+    public function __construct(private NamedAnswerFetcher $namedAnswerFetcher)
     {
-        $this->namedAnswerFetcher = $namedAnswerFetcher;
     }
 
     /**
      * Derive the number of permits for a given emissions type from the post data
      *
      * @param ApplicationStepEntity $applicationStep
-     * @param array $postData
      * @param string $elementName
-     *
      * @return int
      */
     public function fetch(ApplicationStepEntity $applicationStepEntity, array $postData, $elementName)
     {
         try {
             $permitsRequired = $this->namedAnswerFetcher->fetch($applicationStepEntity, $postData, $elementName);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $permitsRequired = 0;
         }
 

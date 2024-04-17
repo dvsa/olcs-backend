@@ -11,7 +11,6 @@ class AnnualTripsAbroadFactory
      *
      * @param int $intensityWarningThreshold
      * @param bool $showNiWarning
-     * @param Text $text
      *
      * @return AnnualTripsAbroad
      */

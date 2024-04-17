@@ -4,15 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Permits\AnswersSummary;
 
 class AnswersSummaryRow
 {
-    /** @var string */
-    private $question;
-
-    /** @var string */
-    private $formattedAnswer;
-
-    /** @var string|null */
-    private $slug;
-
     /**
      * Create instance
      *
@@ -22,11 +13,8 @@ class AnswersSummaryRow
      *
      * @return AnswersSummaryRow
      */
-    public function __construct($question, $formattedAnswer, $slug = null)
+    public function __construct(private $question, private $formattedAnswer, private $slug = null)
     {
-        $this->question = $question;
-        $this->formattedAnswer = $formattedAnswer;
-        $this->slug = $slug;
     }
 
     /**

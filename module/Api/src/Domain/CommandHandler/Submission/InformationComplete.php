@@ -47,7 +47,6 @@ final class InformationComplete extends AbstractCommandHandler implements Transa
     }
 
     /**
-     * @param Cmd $command
      * @return SubmissionEntity
      */
     private function updateSubmission(Cmd $command)
