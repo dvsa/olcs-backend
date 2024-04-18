@@ -122,7 +122,8 @@ class Approve extends AbstractSurrenderCommandHandler
         $validTypes = [
             Licence::LICENCE_TYPE_STANDARD_NATIONAL,
             Licence::LICENCE_TYPE_STANDARD_INTERNATIONAL,
-            Licence::LICENCE_TYPE_RESTRICTED
+            Licence::LICENCE_TYPE_RESTRICTED,
+            Licence::LICENCE_TYPE_SPECIAL_RESTRICTED,
         ];
 
         return in_array($licType, $validTypes);
