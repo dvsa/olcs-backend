@@ -413,23 +413,28 @@ class User extends AbstractRepository
         return $qb->getQuery()->iterate();
     }
 
-    public function updateLastLogin(Entity $user, DateTime $lastLoginAt, Entity $lastModifiedBy): void
+    /**
+     * @param Entity $user
+     * @param DateTime $lastLoginAt
+     * @param Entity $lastModifiedBy
+     * @return mixed
+     * @throws \Exception
+     */
+    public function updateLastLogin(Entity $user, DateTime $lastLoginAt, Entity $lastModifiedBy)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
 
-        $qb->update(Entity::class, 'u')
-           ->set('u.lastLoginAt', ':lastLoginAt')
-           ->set('u.lastModifiedOn', ':lastModifiedOn')
-           ->set('u.lastModifiedBy', ':lastModifiedBy')
-           ->set('u.version', 'u.version + 1')
-           ->where('u.id = :id')
-           ->setParameter('id', $user->getId())
-           ->setParameter('lastLoginAt', $lastLoginAt)
-           ->setParameter('lastModifiedBy', $lastModifiedBy->getId())
-           ->setParameter('lastModifiedOn', new DateTime());
+        $qb
+            ->update(Entity::class, 'u')
+            ->set('u.lastLoginAt', ':lastLoginAt')
+            ->set('u.lastModifiedOn', ':lastModifiedOn')
+            ->set('u.lastModifiedBy', ':lastModifiedBy')
+            ->andWhere($qb->expr()->eq('u.id', ':id'))
+            ->setParameter('lastLoginAt', $lastLoginAt)
+            ->setParameter('id', $user->getId())
+            ->setParameter('lastModifiedBy', $lastModifiedBy->getId())
+            ->setParameter('lastModifiedOn', new DateTime());
 
-        $qb->getQuery()->execute();
-
-        $this->refresh($user);
+        return $qb->getQuery()->execute();
     }
 }
