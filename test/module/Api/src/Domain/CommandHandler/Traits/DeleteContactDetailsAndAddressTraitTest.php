@@ -61,7 +61,12 @@ class DeleteContactDetailsAndAddressTraitTest extends AbstractCommandHandlerTest
     public function testMaybeDeleteContactDetailsAndAddress()
     {
         $address = m::mock(AddressEntity::class);
-        $this->repoMap['Address']->shouldReceive('delete')->with($address);
+        $this->repoMap['Address']->shouldReceive('delete')
+                                 ->once()
+                                 ->with($address);
+        $this->repoMap['Address']->shouldReceive('refresh')
+                                 ->once()
+                                 ->with($address);
         $contactDetails = m::mock(ContactDetailsEntity::class);
         $contactDetails->shouldReceive('getAddress')->andReturn($address);
         $this->repoMap['ContactDetails']->shouldReceive('delete')->with($contactDetails);
