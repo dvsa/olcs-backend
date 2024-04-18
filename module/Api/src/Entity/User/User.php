@@ -118,7 +118,7 @@ class User extends AbstractUser implements OrganisationProviderInterface
     /**
      * User type
      *
-     * @var string
+     * @var string|null
      */
     protected $userType = null;
 
@@ -126,11 +126,11 @@ class User extends AbstractUser implements OrganisationProviderInterface
      * User constructor.
      *
      * @param string $pid      pid
-     * @param string $userType user type
+     * @param string|null $userType user type
      *
      * @return void
      */
-    public function __construct($pid, $userType)
+    public function __construct($pid, ?string $userType)
     {
         parent::__construct();
         $this->userType = $userType;
