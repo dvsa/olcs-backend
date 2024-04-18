@@ -240,8 +240,6 @@ class CognitoAdapterTest extends MockeryTestCase
     }
 
     /**
-     * @param string $awsErrorCode
-     * @param int $expectedResultCode
      * @test
      * @dataProvider changedExpiredPasswordClientExceptionDataProvider
      */
@@ -829,7 +827,6 @@ class CognitoAdapterTest extends MockeryTestCase
     /**
      * @test
      * @dataProvider dataProviderGetIdentityStrings
-     * @param string $identity
      */
     public function getIdentityresultDoesNotContainUppercaseAndCaseConvertsToLowercase(string $identity): void
     {

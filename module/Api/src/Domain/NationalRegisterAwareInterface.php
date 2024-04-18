@@ -7,9 +7,6 @@ namespace Dvsa\Olcs\Api\Domain;
  */
 interface NationalRegisterAwareInterface
 {
-    /**
-     * @param array $nationalRegisterConfig
-     */
     public function setNationalRegisterConfig(array $nationalRegisterConfig);
 
     /**

@@ -2,13 +2,14 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 
 /**
  * Class SiDates
  * @package Dvsa\Olcs\Api\Service\Nr\Filter\Format
+ * @template-extends AbstractFilter<array>
  */
-class SiDates extends LaminasAbstractFilter
+class SiDates extends AbstractFilter
 {
     /**
      * Returns the result of filtering $value

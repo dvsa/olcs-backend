@@ -19,9 +19,6 @@ interface QueryPartialInterface
 {
     /**
      * Modify a query builder object with generic modifications
-     *
-     * @param QueryBuilder $qb
-     * @param array $arguments
      */
     public function modifyQuery(QueryBuilder $qb, array $arguments = []);
 }

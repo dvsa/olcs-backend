@@ -15,21 +15,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresReviewService
 {
-    /** @var PsvOperatingCentreReviewService */
-    private $psvOperatingCentreReviewService;
-
-    /** @var ApplicationPsvOcTotalAuthReviewService */
-    private $applicationPsvOcTotalAuthReviewService;
-
-    /** @var GoodsOperatingCentreReviewService */
-    private $goodsOperatingCentreReviewService;
-
-    /** @var ApplicationGoodsOcTotalAuthReviewService */
-    private $applicationGoodsOcTotalAuthReviewService;
-
-    /** @var TrafficAreaReviewService */
-    private $trafficAreaReviewService;
-
     /**
      * Create service instance
      *
@@ -44,18 +29,13 @@ class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresR
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        PsvOperatingCentreReviewService $psvOperatingCentreReviewService,
-        ApplicationPsvOcTotalAuthReviewService $applicationPsvOcTotalAuthReviewService,
-        GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService,
-        ApplicationGoodsOcTotalAuthReviewService $applicationGoodsOcTotalAuthReviewService,
-        TrafficAreaReviewService $trafficAreaReviewService
+        private PsvOperatingCentreReviewService $psvOperatingCentreReviewService,
+        private ApplicationPsvOcTotalAuthReviewService $applicationPsvOcTotalAuthReviewService,
+        private GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService,
+        private ApplicationGoodsOcTotalAuthReviewService $applicationGoodsOcTotalAuthReviewService,
+        private TrafficAreaReviewService $trafficAreaReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->psvOperatingCentreReviewService = $psvOperatingCentreReviewService;
-        $this->applicationPsvOcTotalAuthReviewService = $applicationPsvOcTotalAuthReviewService;
-        $this->goodsOperatingCentreReviewService = $goodsOperatingCentreReviewService;
-        $this->applicationGoodsOcTotalAuthReviewService = $applicationGoodsOcTotalAuthReviewService;
-        $this->trafficAreaReviewService = $trafficAreaReviewService;
     }
 
     /**

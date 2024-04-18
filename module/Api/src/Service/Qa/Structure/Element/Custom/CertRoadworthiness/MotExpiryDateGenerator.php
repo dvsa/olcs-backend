@@ -14,26 +14,14 @@ class MotExpiryDateGenerator implements ElementGeneratorInterface
 
     public const DATE_THRESHOLD = 'P14M';
 
-    /** @var MotExpiryDateFactory */
-    private $motExpiryDateFactory;
-
-    /** @var DateWithThresholdGenerator */
-    private $dateWithThresholdGenerator;
-
     /**
      * Create service instance
      *
-     * @param MotExpiryDateFactory $motExpiryDateFactory
-     * @param DateWithThresholdGenerator $dateWithThresholdGenerator
      *
      * @return MotExpiryDateGenerator
      */
-    public function __construct(
-        MotExpiryDateFactory $motExpiryDateFactory,
-        DateWithThresholdGenerator $dateWithThresholdGenerator
-    ) {
-        $this->motExpiryDateFactory = $motExpiryDateFactory;
-        $this->dateWithThresholdGenerator = $dateWithThresholdGenerator;
+    public function __construct(private MotExpiryDateFactory $motExpiryDateFactory, private DateWithThresholdGenerator $dateWithThresholdGenerator)
+    {
     }
 
     /**

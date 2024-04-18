@@ -7,24 +7,15 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\Radio;
 
 class IntJourneys implements ElementInterface
 {
-    /** @var bool */
-    private $showNiWarning;
-
-    /** @var Radio */
-    private $radio;
-
     /**
      * Create instance
      *
      * @param bool $showNiWarning
-     * @param Radio $radio
      *
      * @return IntJourneys
      */
-    public function __construct($showNiWarning, Radio $radio)
+    public function __construct(private $showNiWarning, private Radio $radio)
     {
-        $this->showNiWarning = $showNiWarning;
-        $this->radio = $radio;
     }
 
     /**

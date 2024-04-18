@@ -14,26 +14,14 @@ class NoOfPermitsAnswerSaver implements AnswerSaverInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var NamedAnswerFetcher */
-    private $namedAnswerFetcher;
-
-    /** @var NoOfPermitsConditionalUpdater */
-    private $noOfPermitsConditionalUpdater;
-
     /**
      * Create service instance
      *
-     * @param NamedAnswerFetcher $namedAnswerFetcher
-     * @param NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
      *
      * @return NoOfPermitsAnswerSaver
      */
-    public function __construct(
-        NamedAnswerFetcher $namedAnswerFetcher,
-        NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
-    ) {
-        $this->namedAnswerFetcher = $namedAnswerFetcher;
-        $this->noOfPermitsConditionalUpdater = $noOfPermitsConditionalUpdater;
+    public function __construct(private NamedAnswerFetcher $namedAnswerFetcher, private NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
+    {
     }
 
     /**

@@ -48,7 +48,6 @@ final class CreateFee extends AbstractCommandHandler implements TransactionedInt
     /**
      * Create the createFee command
      *
-     * @param Cmd $command
      *
      * @return Result
      */

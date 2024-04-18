@@ -177,8 +177,6 @@ final class SaveBusinessDetails extends AbstractCommandHandler implements AuthAw
 
     /**
      * Update hasChanged status in depend of result of side effect command
-     *
-     * @param Result $result
      */
     private function handleSideEffectResult(Result $result)
     {

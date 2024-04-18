@@ -10,26 +10,14 @@ class QuestionTextGenerator implements QuestionTextGeneratorInterface
 {
     use AnyTrait;
 
-    /** @var QuestionTextFactory */
-    private $questionTextFactory;
-
-    /** @var JsonDecodingFilteredTranslateableTextGenerator */
-    private $jsonDecodingFilteredTranslateableTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param QuestionTextFactory $questionTextFactory
-     * @param JsonDecodingFilteredTranslateableTextGenerator $jsonDecodingFilteredTranslateableTextGenerator
      *
      * @return QuestionTextGenerator
      */
-    public function __construct(
-        QuestionTextFactory $questionTextFactory,
-        JsonDecodingFilteredTranslateableTextGenerator $jsonDecodingFilteredTranslateableTextGenerator
-    ) {
-        $this->questionTextFactory = $questionTextFactory;
-        $this->jsonDecodingFilteredTranslateableTextGenerator = $jsonDecodingFilteredTranslateableTextGenerator;
+    public function __construct(private QuestionTextFactory $questionTextFactory, private JsonDecodingFilteredTranslateableTextGenerator $jsonDecodingFilteredTranslateableTextGenerator)
+    {
     }
 
     /**

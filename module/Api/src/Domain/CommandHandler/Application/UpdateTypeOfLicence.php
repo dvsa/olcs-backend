@@ -106,8 +106,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Check whether we have changed anything
      *
-     * @param Application $application
-     * @param Cmd $command
      * @return bool
      */
     private function hasChangedTypeOfLicence(Application $application, Cmd $command)
@@ -169,8 +167,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether the changes require confirmation
      *
-     * @param Application $application
-     * @param Cmd $command
      * @return boolean
      */
     private function changeRequiresConfirmation(Application $application, Cmd $command)
@@ -186,8 +182,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether we are changing to or from special restricted
      *
-     * @param Application $application
-     * @param Cmd $command
      * @return boolean
      */
     private function changingToOrFromSr(Application $application, Cmd $command)
@@ -202,8 +196,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether we are changing between mixed and lgv vehicle type
      *
-     * @param Application $application
-     * @param Cmd $command
      *
      * @return boolean
      */
@@ -232,8 +224,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether we are changing between goods standard international and other licence type
      *
-     * @param Application $application
-     * @param Cmd $command
      *
      * @return boolean
      */
@@ -267,7 +257,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether the current TOL values are null
      *
-     * @param Application $application
      * @param Cmd $command
      * @return boolean
      */
@@ -281,8 +270,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether we are changing niFlag or goodsOrPsv
      *
-     * @param Application $application
-     * @param Cmd $command
      * @return boolean
      */
     private function typeOfLicenceWillChange(Application $application, Cmd $command)
@@ -301,8 +288,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements Transa
     /**
      * Whether we are changing licenceType
      *
-     * @param Application $application
-     * @param Cmd $command
      * @return boolean
      */
     private function licenceTypeWillChange(Application $application, Cmd $command)

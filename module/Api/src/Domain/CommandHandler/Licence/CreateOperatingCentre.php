@@ -79,8 +79,6 @@ final class CreateOperatingCentre extends AbstractCommandHandler implements Tran
     }
 
     /**
-     * @param Licence $licence
-     * @param OperatingCentre $operatingCentre
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
      */
     private function createLicenceOperatingCentre(

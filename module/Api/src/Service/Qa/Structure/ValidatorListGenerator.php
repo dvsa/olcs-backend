@@ -6,32 +6,19 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 
 class ValidatorListGenerator
 {
-    /** @var ValidatorListFactory */
-    private $validatorListFactory;
-
-    /** @var ValidatorGenerator */
-    private $validatorGenerator;
-
     /**
      * Create service instance
      *
-     * @param ValidatorListFactory $validatorListFactory
-     * @param ValidatorGenerator $validatorGenerator
      *
      * @return ValidatorListGenerator
      */
-    public function __construct(
-        ValidatorListFactory $validatorListFactory,
-        ValidatorGenerator $validatorGenerator
-    ) {
-        $this->validatorListFactory = $validatorListFactory;
-        $this->validatorGenerator = $validatorGenerator;
+    public function __construct(private ValidatorListFactory $validatorListFactory, private ValidatorGenerator $validatorGenerator)
+    {
     }
 
     /**
      * Build and return a ValidatorList instance using the appropriate data sources
      *
-     * @param ApplicationStepEntity $applicationStepEntity
      *
      * @return ValidatorList
      */

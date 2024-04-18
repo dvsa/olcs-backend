@@ -30,9 +30,6 @@ class CpmsIdentityProvider implements IdentityProviderInterface
         $this->setClientSecret($clientSecret);
     }
 
-    /**
-     * @param string $userId
-     */
     public function setUserId(string $userId): void
     {
         $this->userId = $userId;
@@ -46,9 +43,6 @@ class CpmsIdentityProvider implements IdentityProviderInterface
         return $this->userId;
     }
 
-    /**
-     * @param string $clientId
-     */
     public function setClientId(string $clientId): void
     {
         $this->clientId = $clientId;
@@ -62,9 +56,6 @@ class CpmsIdentityProvider implements IdentityProviderInterface
         return $this->clientId;
     }
 
-    /**
-     * @param string $clientSecret
-     */
     public function setClientSecret(string $clientSecret): void
     {
         $this->clientSecret = $clientSecret;
@@ -94,9 +85,6 @@ class CpmsIdentityProvider implements IdentityProviderInterface
         return $this->customerReference;
     }
 
-    /**
-     * @param string $costCentre
-     */
     public function setCostCentre(string $costCentre): void
     {
         $this->costCentre = $costCentre;

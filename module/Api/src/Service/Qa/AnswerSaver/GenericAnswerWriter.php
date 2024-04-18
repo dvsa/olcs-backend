@@ -8,45 +8,25 @@ use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
 
 class GenericAnswerWriter
 {
-    /** @var GenericAnswerProvider */
-    private $genericAnswerProvider;
-
-    /** @var AnswerFactory */
-    private $answerFactory;
-
-    /** @var AnswerRepository */
-    private $answerRepo;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerProvider $genericAnswerProvider
-     * @param AnswerFactory $answerFactory
-     * @param AnswerRepository $answerRepo
      *
      * @return GenericAnswerWriter
      */
-    public function __construct(
-        GenericAnswerProvider $genericAnswerProvider,
-        AnswerFactory $answerFactory,
-        AnswerRepository $answerRepo
-    ) {
-        $this->genericAnswerProvider = $genericAnswerProvider;
-        $this->answerFactory = $answerFactory;
-        $this->answerRepo = $answerRepo;
+    public function __construct(private GenericAnswerProvider $genericAnswerProvider, private AnswerFactory $answerFactory, private AnswerRepository $answerRepo)
+    {
     }
 
     /**
      * Save an answer corresponding to the supplied application step and application to persistent storage using
      * the supplied answer value
      *
-     * @param QaContext $qaContext
-     * @param mixed $answerValue
      * @param string|null $forceQuestionType
      */
     public function write(
         QaContext $qaContext,
-        $answerValue,
+        mixed $answerValue,
         $forceQuestionType = null
     ) {
         $applicationStep = $qaContext->getApplicationStepEntity();
@@ -56,7 +36,7 @@ class GenericAnswerWriter
 
         try {
             $answer = $this->genericAnswerProvider->get($qaContext);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $answer = $this->answerFactory->create(
                 $question->getActiveQuestionText(),
                 $qaEntity

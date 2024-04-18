@@ -44,10 +44,6 @@ class TmQualification extends AbstractTmQualification
     /**
      * Create TmQualification object
      *
-     * @param TransportManager $tm
-     * @param Country $country
-     * @param RefData $qualificationType
-     * @param string $serialNo
      *
      * @return TmQualification
      */

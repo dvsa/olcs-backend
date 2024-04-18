@@ -53,7 +53,7 @@ class InspectionRequest extends AbstractRepository
 
         try {
             $result = $qb->getQuery()->getSingleResult(Query::HYDRATE_ARRAY);
-        } catch (NoResultException $noResultException) {
+        } catch (NoResultException) {
             //expected no result if NI enforcement area so catch exception and continue.
             return $result;
         }

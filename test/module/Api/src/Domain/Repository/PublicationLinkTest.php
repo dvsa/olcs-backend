@@ -146,7 +146,6 @@ class PublicationLinkTest extends RepositoryTestCase
     }
 
     /**
-     * @param QueryInterface|UnpublishedBusReg $query
      * @param $mockQb
      * @return mixed
      */
@@ -160,7 +159,6 @@ class PublicationLinkTest extends RepositoryTestCase
     }
 
     /**
-     * @param QueryInterface|UnpublishedApplication|PreviousPublicationByApplication $query
      * @param $mockQb
      * @return mixed
      */
@@ -177,7 +175,6 @@ class PublicationLinkTest extends RepositoryTestCase
     }
 
     /**
-     * @param QueryInterface|PreviousPublicationByLicence $query
      * @param $mockQb
      * @return mixed
      */

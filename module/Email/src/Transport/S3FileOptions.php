@@ -30,11 +30,6 @@ class S3FileOptions extends AbstractOptions
      */
     protected $s3Options;
 
-    /**
-     * @var S3Client
-     */
-    protected $s3Client;
-
 
 
     /**
@@ -42,11 +37,10 @@ class S3FileOptions extends AbstractOptions
      *
      * @param $options
      * @param $s3Client
+     * @param S3Client $s3Client
      */
-    public function __construct($options, $s3Client)
+    public function __construct($options, protected $s3Client)
     {
-        $this->s3Client = $s3Client;
-
         parent::__construct($options);
     }
 
@@ -89,10 +83,7 @@ class S3FileOptions extends AbstractOptions
         return $this->awsOptions;
     }
 
-    /**
-     * @param mixed $awsOptions
-     */
-    public function setAwsOptions($awsOptions): void
+    public function setAwsOptions(mixed $awsOptions): void
     {
         $this->awsOptions = $awsOptions;
     }
@@ -105,10 +96,7 @@ class S3FileOptions extends AbstractOptions
         return $this->s3Options;
     }
 
-    /**
-     * @param mixed $s3Options
-     */
-    public function setS3Options($s3Options): void
+    public function setS3Options(mixed $s3Options): void
     {
         $this->s3Options = $s3Options;
     }
@@ -121,9 +109,6 @@ class S3FileOptions extends AbstractOptions
         return $this->s3Key;
     }
 
-    /**
-     * @param string $s3Key
-     */
     public function setS3Key(string $s3Key): void
     {
         $this->s3Key = $s3Key;

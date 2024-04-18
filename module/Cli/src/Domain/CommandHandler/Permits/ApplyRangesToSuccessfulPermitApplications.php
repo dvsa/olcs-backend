@@ -156,7 +156,6 @@ class ApplyRangesToSuccessfulPermitApplications extends ScoringCommandHandler im
     /**
      * Derive an array of numeric ids by calling getId on an array of entities
      *
-     * @param array $entities
      *
      * @return array
      */

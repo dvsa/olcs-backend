@@ -45,11 +45,11 @@ class Enqueue extends AbstractCommandHandler implements QueueInterface
             try {
                 $this->queueService->sendMessage($message->toArray());
                 $this->successfulMessageCount++;
-            } catch (AwsException $exception) {
+            } catch (AwsException) {
                 $this->failedMessageCount++;
             } catch (\Exception $exception) {
                 Logger::notice(
-                    'Failed to send message to SQS queue: ' . get_class($exception) . '::' . $exception->getMessage(),
+                    'Failed to send message to SQS queue: ' . $exception::class . '::' . $exception->getMessage(),
                     ['data' => $message->toArray()]
                 );
                 $this->failedMessageCount++;

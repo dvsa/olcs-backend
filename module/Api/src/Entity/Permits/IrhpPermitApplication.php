@@ -227,15 +227,11 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
     public function countPermitsAwarded($assignedEmissionsCategoryId = null, $wantedOnly = false)
     {
         $allocationMode = $this->irhpPermitWindow->getIrhpPermitStock()->getAllocationMode();
-
-        switch ($allocationMode) {
-            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
-                return $this->getTotalEmissionsCategoryPermitsRequired($assignedEmissionsCategoryId);
-            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
-                return count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId, $wantedOnly));
-        }
-
-        return 0;
+        return match ($allocationMode) {
+            IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES => $this->getTotalEmissionsCategoryPermitsRequired($assignedEmissionsCategoryId),
+            IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS => count($this->getSuccessfulIrhpCandidatePermits($assignedEmissionsCategoryId, $wantedOnly)),
+            default => 0,
+        };
     }
 
     /**
@@ -423,14 +419,11 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
         $requiredEuro5 = is_null($this->requiredEuro5) ? 0 : $this->requiredEuro5;
         $requiredEuro6 = is_null($this->requiredEuro6) ? 0 : $this->requiredEuro6;
 
-        switch ($emissionsCategoryId) {
-            case RefData::EMISSIONS_CATEGORY_EURO5_REF:
-                return $requiredEuro5;
-            case RefData::EMISSIONS_CATEGORY_EURO6_REF:
-                return $requiredEuro6;
-            default:
-                return $requiredEuro5 + $requiredEuro6;
-        }
+        return match ($emissionsCategoryId) {
+            RefData::EMISSIONS_CATEGORY_EURO5_REF => $requiredEuro5,
+            RefData::EMISSIONS_CATEGORY_EURO6_REF => $requiredEuro6,
+            default => $requiredEuro5 + $requiredEuro6,
+        };
     }
 
     /**
@@ -663,8 +656,6 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
 
     /**
      * Update required permits for a bilateral application
-     *
-     * @param array $required
      */
     public function updateBilateralRequired(array $required)
     {
@@ -752,11 +743,9 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
      * Get an array of bilateral fee product references in the context of this application for the specified country
      * and standard/cabotage value
      *
-     * @param IrhpPermitStock $irhpPermitStock
      * @param string $requestedType
      *
      * @return array
-     *
      * @throws RuntimeException
      */
     public function getBilateralFeeProductReferences(IrhpPermitStock $irhpPermitStock, $requestedType)
@@ -800,10 +789,8 @@ class IrhpPermitApplication extends AbstractIrhpPermitApplication implements QaE
     /**
      * Get the bilateral fee per permit
      *
-     * @param array $feeTypes
      *
      * @return int
-     *
      * @throws RuntimeException
      */
     public function getBilateralFeePerPermit(array $feeTypes)

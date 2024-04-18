@@ -244,7 +244,6 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
      *
      * @param int $entityId
      * @param string $queueType
-     * @param array $options
      * @param Result|null $result
      * @param string|null $processAfterDate
      */
@@ -275,7 +274,6 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
      * Shortcut for email queue side effects
      *
      * @param string $emailCmdClass
-     * @param array $cmdData
      * @param int $entityId
      * @param Result $result
      * @param string|null $processAfterDate
@@ -487,7 +485,7 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
                 $cmdDataToMatch[$key] = $cmdData[$key] ?? null;
             }
 
-            $this->assertEquals($data, $cmdDataToMatch, get_class($cmd) . ' has unexpected data');
+            $this->assertEquals($data, $cmdDataToMatch, $cmd::class . ' has unexpected data');
         }
     }
 

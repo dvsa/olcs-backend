@@ -173,7 +173,7 @@ class TxcInbox extends AbstractRepository
      *
      * @return array
      */
-    public function fetchLinkedToDocument($documentId)
+    public function fetchLinkedToDocument(mixed $documentId)
     {
         /* @var \Doctrine\Orm\QueryBuilder $qb*/
         $qb = $this->createQueryBuilder();

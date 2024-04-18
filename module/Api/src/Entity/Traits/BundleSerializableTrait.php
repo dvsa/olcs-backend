@@ -122,7 +122,7 @@ trait BundleSerializableTrait
      *
      * @return array|null
      */
-    private function determineValue($value, $property, $propertyBundle = null)
+    private function determineValue(mixed $value, $property, $propertyBundle = null)
     {
         // If we haven't asked for the property
         if ($propertyBundle === null) {
@@ -191,13 +191,13 @@ trait BundleSerializableTrait
      *
      * @return mixed|null
      */
-    private function getSerializedValue($value, $propertyBundle)
+    private function getSerializedValue(mixed $value, $propertyBundle)
     {
         if ($value instanceof BundleSerializableInterface) {
             try {
                 // try to serialize the value
                 return $value->serialize($propertyBundle);
-            } catch (EntityNotFoundException $ex) {
+            } catch (EntityNotFoundException) {
                 // we may have the object id but will not be able to load it
                 // because SoftDeleteable is used
                 return null;

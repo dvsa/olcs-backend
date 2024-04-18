@@ -12,44 +12,19 @@ use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\ApplicationAnswersClearer;
 
 class ExistingIrhpPermitApplicationHandler
 {
-    /** @var IrhpPermitApplicationRepository */
-    private $irhpPermitApplicationRepo;
-
-    /** @var IrhpPermitStockRepository */
-    private $irhpPermitStockRepo;
-
-    /** @var ApplicationAnswersClearer */
-    private $applicationAnswersClearer;
-
-    /** @var QuestionHandlerDelegator */
-    private $questionHandlerDelegator;
-
     /**
      * Create service instance
      *
-     * @param IrhpPermitApplicationRepository $irhpPermitApplicationRepo
-     * @param IrhpPermitStockRepository $irhpPermitStockRepo
-     * @param ApplicationAnswersClearer $applicationAnswersClearer
-     * @param QuestionHandlerDelegator $questionHandlerDelegator
      *
      * @return ExistingIrhpPermitApplicationHandler
      */
-    public function __construct(
-        IrhpPermitApplicationRepository $irhpPermitApplicationRepo,
-        IrhpPermitStockRepository $irhpPermitStockRepo,
-        ApplicationAnswersClearer $applicationAnswersClearer,
-        QuestionHandlerDelegator $questionHandlerDelegator
-    ) {
-        $this->irhpPermitApplicationRepo = $irhpPermitApplicationRepo;
-        $this->irhpPermitStockRepo = $irhpPermitStockRepo;
-        $this->applicationAnswersClearer = $applicationAnswersClearer;
-        $this->questionHandlerDelegator = $questionHandlerDelegator;
+    public function __construct(private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private IrhpPermitStockRepository $irhpPermitStockRepo, private ApplicationAnswersClearer $applicationAnswersClearer, private QuestionHandlerDelegator $questionHandlerDelegator)
+    {
     }
 
     /**
      * Handle the scenario where an irhp permit application already exists for a country
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param int $stockId
      * @param array $requiredPermits
      *

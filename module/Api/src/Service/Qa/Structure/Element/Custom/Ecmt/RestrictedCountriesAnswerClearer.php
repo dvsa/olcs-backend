@@ -13,25 +13,11 @@ class RestrictedCountriesAnswerClearer implements AnswerClearerInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    private GenericAnswerClearer $genericAnswerClearer;
-    private IrhpApplicationRepository $irhpApplicationRepo;
-    private ArrayCollectionFactory $arrayCollectionFactory;
-
     /**
      * Create service instance
-     *
-     * @param GenericAnswerClearer $genericAnswerClearer
-     * @param IrhpApplicationRepository $irhpApplicationRepo
-     * @param ArrayCollectionFactory $arrayCollectionFactory
      */
-    public function __construct(
-        GenericAnswerClearer $genericAnswerClearer,
-        IrhpApplicationRepository $irhpApplicationRepo,
-        ArrayCollectionFactory $arrayCollectionFactory
-    ) {
-        $this->genericAnswerClearer = $genericAnswerClearer;
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
-        $this->arrayCollectionFactory = $arrayCollectionFactory;
+    public function __construct(private GenericAnswerClearer $genericAnswerClearer, private IrhpApplicationRepository $irhpApplicationRepo, private ArrayCollectionFactory $arrayCollectionFactory)
+    {
     }
 
     /**

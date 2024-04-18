@@ -129,7 +129,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
     /**
      * Publish the application
      *
-     * @param Application $application
      *
      * @return Result
      */
@@ -147,8 +146,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
     /**
      * Cancel any S4's attached to the application
-     *
-     * @param Application $application
      */
     protected function cancelS4(Application $application)
     {
@@ -163,8 +160,6 @@ class WithdrawApplication extends AbstractCommandHandler implements Transactione
 
     /**
      * Cancel outstanding fees on the application
-     *
-     * @param Application $application
      */
     private function cancelOutstandingFees(Application $application)
     {

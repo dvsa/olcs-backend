@@ -49,9 +49,9 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($query)->andReturn(true);
-        $this->vhm->setService(get_class($mockService), $mockValidator);
+        $this->vhm->setService($mockService::class, $mockValidator);
 
-        $this->sut->setService(get_class($query), $mockService);
+        $this->sut->setService($query::class, $mockService);
 
         $this->assertEquals(['response'], $this->sut->handleQuery($query, true));
     }
@@ -70,9 +70,9 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($query)->andReturn(true);
-        $this->vhm->setService(get_class($mockService), $mockValidator);
+        $this->vhm->setService($mockService::class, $mockValidator);
 
-        $this->sut->setService(get_class($query), $mockService);
+        $this->sut->setService($query::class, $mockService);
 
         $this->assertEquals($response, $this->sut->handleQuery($query, true));
     }
@@ -90,9 +90,9 @@ class QueryHandlerManagerTest extends MockeryTestCase
 
         $mockValidator = m::mock(HandlerInterface::class);
         $mockValidator->shouldReceive('isValid')->with($query)->andReturn(false);
-        $this->vhm->setService(get_class($mockService), $mockValidator);
+        $this->vhm->setService($mockService::class, $mockValidator);
 
-        $this->sut->setService(get_class($query), $mockService);
+        $this->sut->setService($query::class, $mockService);
 
         $this->sut->handleQuery($query, true);
     }
@@ -106,7 +106,7 @@ class QueryHandlerManagerTest extends MockeryTestCase
         $mockService = m::mock();
         $mockService->shouldReceive('handleQuery')->with($query)->andReturn(['response']);
 
-        $this->sut->setService(get_class($query), $mockService);
+        $this->sut->setService($query::class, $mockService);
 
         $this->sut->handleQuery($query);
     }

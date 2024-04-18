@@ -11,26 +11,14 @@ class CheckboxGenerator implements ElementGeneratorInterface
 {
     use AnyTrait;
 
-    /** @var CheckboxFactory */
-    private $checkboxFactory;
-
-    /** @var TranslateableTextGenerator */
-    private $translateableTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param CheckboxFactory $checkboxFactory
-     * @param TranslateableTextGenerator $translateableTextGenerator
      *
      * @return CheckboxGenerator
      */
-    public function __construct(
-        CheckboxFactory $checkboxFactory,
-        TranslateableTextGenerator $translateableTextGenerator
-    ) {
-        $this->checkboxFactory = $checkboxFactory;
-        $this->translateableTextGenerator = $translateableTextGenerator;
+    public function __construct(private CheckboxFactory $checkboxFactory, private TranslateableTextGenerator $translateableTextGenerator)
+    {
     }
 
     /**

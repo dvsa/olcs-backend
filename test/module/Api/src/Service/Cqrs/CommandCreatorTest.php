@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Cqrs;
 
-use DMS\PHPUnitExtensions\ArraySubset\Assert;
 use Dvsa\Olcs\Api\Entity\Fee\Fee;
 use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 use Dvsa\Olcs\Transfer\Command\Fee\CreateFee;
@@ -29,7 +28,11 @@ class CommandCreatorTest extends MockeryTestCase
 
         $commandCreator = new CommandCreator();
         $command = $commandCreator->create(CreateFee::class, $parameters);
-        $this->assertInstanceOf(CreateFee::class, $command);
-        Assert::assertArraySubset($parameters, $command->getArrayCopy());
+        $commandArray = $command->getArrayCopy();
+
+        foreach ($parameters as $key => $value) {
+            $this->assertArrayHasKey($key, $commandArray, "Array key '{$key}' is missing in the command array.");
+            $this->assertEquals($value, $commandArray[$key], "Value for '{$key}' does not match expected value in the command array.");
+        }
     }
 }

@@ -65,7 +65,6 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
     /**
      * Create the complaint object
      *
-     * @param Cmd $command
      * @return Complaint
      */
     private function createComplaintObject(Cmd $command)
@@ -104,7 +103,6 @@ final class CreateEnvironmentalComplaint extends AbstractCommandHandler implemen
     }
 
     /**
-     * @param Cmd $command
      * @return CreateTask
      */
     private function createCreateTaskCommand(Cmd $command)

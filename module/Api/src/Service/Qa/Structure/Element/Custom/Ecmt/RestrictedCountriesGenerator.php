@@ -14,44 +14,14 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var RestrictedCountriesFactory */
-    private $restrictedCountriesFactory;
-
-    /** @var RestrictedCountryFactory */
-    private $restrictedCountryFactory;
-
-    /** @var CountryRepository */
-    private $countryRepo;
-
-    /** @var GenericAnswerProvider */
-    private $genericAnswerProvider;
-
-    /** @var StockBasedPermitTypeConfigProvider */
-    private $stockBasedPermitTypeConfigProvider;
-
     /**
      * Create service instance
      *
-     * @param RestrictedCountriesFactory $restrictedCountriesFactory
-     * @param RestrictedCountryFactory $restrictedCountryFactory
-     * @param CountryRepository $countryRepo
-     * @param GenericAnswerProvider $genericAnswerProvider
-     * @param StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider
      *
      * @return RestrictedCountriesGenerator
      */
-    public function __construct(
-        RestrictedCountriesFactory $restrictedCountriesFactory,
-        RestrictedCountryFactory $restrictedCountryFactory,
-        CountryRepository $countryRepo,
-        GenericAnswerProvider $genericAnswerProvider,
-        StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider
-    ) {
-        $this->restrictedCountriesFactory = $restrictedCountriesFactory;
-        $this->restrictedCountryFactory = $restrictedCountryFactory;
-        $this->countryRepo = $countryRepo;
-        $this->genericAnswerProvider = $genericAnswerProvider;
-        $this->stockBasedPermitTypeConfigProvider = $stockBasedPermitTypeConfigProvider;
+    public function __construct(private RestrictedCountriesFactory $restrictedCountriesFactory, private RestrictedCountryFactory $restrictedCountryFactory, private CountryRepository $countryRepo, private GenericAnswerProvider $genericAnswerProvider, private StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider)
+    {
     }
 
     /**
@@ -65,7 +35,7 @@ class RestrictedCountriesGenerator implements ElementGeneratorInterface
         $yesNo = null;
         try {
             $yesNo = $this->genericAnswerProvider->get($qaContext)->getValue();
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
         }
 
         $irhpPermitStockId = $irhpApplication->getFirstIrhpPermitApplication()

@@ -140,12 +140,9 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
     /**
      * Allows creation of task with suitable attributes/context.
      *
-     * @param mixed $recordObject
-     * @param Result $result
-     * @param MissingEmailException $exception
      * @return Result
      */
-    abstract protected function createMissingEmailTask($recordObject, Result $result, MissingEmailException $exception): Result;
+    abstract protected function createMissingEmailTask(mixed $recordObject, Result $result, MissingEmailException $exception): Result;
 
     /**
      * Returns the message object, used to assist with UT

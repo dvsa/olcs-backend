@@ -14,14 +14,12 @@ use Doctrine\ORM\QueryBuilder;
  */
 final class WithPersonContactDetails implements QueryPartialInterface
 {
-    /**
-     * @var With
-     */
-    private $with;
-
-    public function __construct(QueryPartialInterface $with)
-    {
-        $this->with = $with;
+    public function __construct(
+        /**
+         * @var With
+         */
+        private QueryPartialInterface $with
+    ) {
     }
 
     /**
@@ -34,7 +32,7 @@ final class WithPersonContactDetails implements QueryPartialInterface
     {
         $column = $arguments[0] ?? 'contactDetails';
 
-        if (strpos($column, '.') === false) {
+        if (!str_contains($column, '.')) {
             $column = $qb->getRootAliases()[0] . '.' . $column;
         }
 

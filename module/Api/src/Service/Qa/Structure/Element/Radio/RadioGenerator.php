@@ -12,32 +12,14 @@ class RadioGenerator implements ElementGeneratorInterface
 {
     use AnyTrait;
 
-    /** @var RadioFactory */
-    private $radioFactory;
-
-    /** @var OptionListGenerator */
-    private $optionListGenerator;
-
-    /** @var TranslateableTextGenerator */
-    private $translateableTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param RadioFactory $radioFactory
-     * @param OptionListGenerator $optionListGenerator
-     * @param TranslateableTextGenerator $translateableTextGenerator
      *
      * @return RadioGenerator
      */
-    public function __construct(
-        RadioFactory $radioFactory,
-        OptionListGenerator $optionListGenerator,
-        TranslateableTextGenerator $translateableTextGenerator
-    ) {
-        $this->radioFactory = $radioFactory;
-        $this->optionListGenerator = $optionListGenerator;
-        $this->translateableTextGenerator = $translateableTextGenerator;
+    public function __construct(private RadioFactory $radioFactory, private OptionListGenerator $optionListGenerator, private TranslateableTextGenerator $translateableTextGenerator)
+    {
     }
 
     /**

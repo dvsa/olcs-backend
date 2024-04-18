@@ -32,7 +32,7 @@ class Terminate extends AbstractCommandHandler implements TransactionedInterface
         try {
             // update the status
             $permit->proceedToStatus($this->refData(IrhpPermit::STATUS_TERMINATED));
-        } catch (ForbiddenException $exception) {
+        } catch (ForbiddenException) {
             $this->result->addMessage('You cannot terminate an inactive permit.');
             return $this->result;
         }

@@ -37,7 +37,7 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
             $this->getEntityManager()->persist($entity);
             $this->getEntityManager()->flush();
         } catch (OptimisticLockException $e) {
-            \Olcs\Logging\Log\Logger::info($e->getMessage() . get_class($entity));
+            \Olcs\Logging\Log\Logger::info($e->getMessage() . $entity::class);
             throw $e;
         } catch (\Exception $e) {
             \Olcs\Logging\Log\Logger::crit($e->getMessage());
@@ -54,7 +54,7 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
      * @throws Exception\RuntimeException
      * @throws \Exception
      */
-    public function saveOnFlush($entity)
+    public function saveOnFlush(mixed $entity)
     {
         if (!($entity instanceof $this->entity)) {
             throw new Exception\RuntimeException('This repository can only saveOnFlush entities of type ' . $this->entity);
@@ -120,7 +120,7 @@ abstract class AbstractRepository extends AbstractReadonlyRepository implements 
      * @throws Exception\RuntimeException
      * @throws \Exception
      */
-    public function deleteOnFlush($entity)
+    public function deleteOnFlush(mixed $entity)
     {
         if (!($entity instanceof $this->entity)) {
             throw new Exception\RuntimeException(

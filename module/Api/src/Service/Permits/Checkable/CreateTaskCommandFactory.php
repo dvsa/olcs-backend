@@ -9,7 +9,6 @@ class CreateTaskCommandFactory
     /**
      * Create and return a CreateTask command instance using the specified parameters
      *
-     * @param array $params
      *
      * @return CreateTask
      */

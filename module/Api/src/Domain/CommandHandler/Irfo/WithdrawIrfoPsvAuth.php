@@ -51,7 +51,6 @@ final class WithdrawIrfoPsvAuth extends AbstractCommandHandler implements Transa
     /**
      * Cancel all associated fees, but IRFOPSVAPP
      *
-     * @param CommandInterface $command
      * @return Result
      */
     private function cancelFees(CommandInterface $command)

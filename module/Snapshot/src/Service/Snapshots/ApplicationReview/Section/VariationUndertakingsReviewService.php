@@ -115,7 +115,6 @@ class VariationUndertakingsReviewService extends AbstractReviewService
     /**
      * Get the translation key corresponding to the auth bullet points within the declaration
      *
-     * @param array $data
      *
      * @return string
      */
@@ -176,7 +175,6 @@ class VariationUndertakingsReviewService extends AbstractReviewService
     /**
      * If the variation is upgrading from restricted to standard
      *
-     * @param array $data
      * @return bool
      */
     private function isUpgrade(array $data)

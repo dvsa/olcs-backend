@@ -29,7 +29,6 @@ abstract class AbstractReviewService implements ReviewServiceInterface
     /**
      * Create service instance
      *
-     * @param AbstractReviewServiceServices $abstractReviewServiceServices
      *
      * @return AbstractReviewService
      */
@@ -127,9 +126,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface
     /**
      * Get the translation key to be used by this section of the snapshot
      *
-     * @param array $reviewData
      * @param string $section
-     *
      * @return string
      */
     public function getHeaderTranslationKey(array $reviewData, $section)

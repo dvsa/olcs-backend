@@ -27,7 +27,7 @@ final class Create extends AbstractSurrenderCommandHandler
                 throw new ForbiddenException('A surrender record already exists for this licence and isn\'t withdrawn');
             }
             $this->withdrawnSurrender($surrender);
-        } catch (NotFoundException $exception) {
+        } catch (NotFoundException) {
             $this->newSurrender($command);
         } catch (ForbiddenException $exception) {
             throw $exception;

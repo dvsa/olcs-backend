@@ -11,41 +11,21 @@ use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 
 class CandidatePermitsCreator
 {
-    /** @var IrhpCandidatePermitRepository */
-    private $irhpCandidatePermitRepo;
-
-    /** @var SystemParameterRepository */
-    private $systemParameterRepo;
-
-    /** @var IrhpCandidatePermitFactory */
-    private $irhpCandidatePermitFactory;
-
     /**
      * Create service instance
      *
-     * @param IrhpCandidatePermitRepository $irhpCandidatePermitRepo
-     * @param SystemParameterRepository $systemParameterRepo
-     * @param IrhpCandidatePermitFactory $irhpCandidatePermitFactory
      *
      * @return CandidatePermitsCreator
      */
-    public function __construct(
-        IrhpCandidatePermitRepository $irhpCandidatePermitRepo,
-        SystemParameterRepository $systemParameterRepo,
-        IrhpCandidatePermitFactory $irhpCandidatePermitFactory
-    ) {
-        $this->irhpCandidatePermitRepo = $irhpCandidatePermitRepo;
-        $this->systemParameterRepo = $systemParameterRepo;
-        $this->irhpCandidatePermitFactory = $irhpCandidatePermitFactory;
+    public function __construct(private IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private SystemParameterRepository $systemParameterRepo, private IrhpCandidatePermitFactory $irhpCandidatePermitFactory)
+    {
     }
 
     /**
      * Create IRHP Candidate Permit records for each emissions category
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param int $requiredEuro5
      * @param int $requiredEuro6
-     *
      * @return void
      */
     public function create(
@@ -73,9 +53,6 @@ class CandidatePermitsCreator
     /**
      * Create IRHP Candidate Permit records for a given emissions category
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param string $emissionsCategory
-     * @param int $permitsRequired
      *
      * @return void
      */

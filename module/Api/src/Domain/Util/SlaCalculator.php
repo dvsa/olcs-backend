@@ -10,11 +10,8 @@ use Olcs\Logging\Log\Logger;
 
 class SlaCalculator implements SlaCalculatorInterface
 {
-    private TimeProcessorBuilderInterface $timeProcessorBuilder;
-
-    public function __construct(TimeProcessorBuilderInterface $timeProcessorBuilder)
+    public function __construct(private TimeProcessorBuilderInterface $timeProcessorBuilder)
     {
-        $this->timeProcessorBuilder = $timeProcessorBuilder;
     }
 
     public function applySla(\DateTime $date, Sla $sla, ?TrafficArea $trafficArea = null): \DateTime

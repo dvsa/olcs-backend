@@ -13,26 +13,14 @@ class NoOfPermitsMoroccoAnswerSaver implements AnswerSaverInterface
 {
     use IrhpPermitApplicationOnlyTrait;
 
-    /** @var GenericAnswerFetcher */
-    private $genericAnswerFetcher;
-
-    /** @var NoOfPermitsConditionalUpdater */
-    private $noOfPermitsConditionalUpdater;
-
     /**
      * Create service instance
      *
-     * @param GenericAnswerFetcher $genericAnswerFetcher
-     * @param NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
      *
      * @return NoOfPermitsMoroccoAnswerSaver
      */
-    public function __construct(
-        GenericAnswerFetcher $genericAnswerFetcher,
-        NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater
-    ) {
-        $this->genericAnswerFetcher = $genericAnswerFetcher;
-        $this->noOfPermitsConditionalUpdater = $noOfPermitsConditionalUpdater;
+    public function __construct(private GenericAnswerFetcher $genericAnswerFetcher, private NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
+    {
     }
 
     /**

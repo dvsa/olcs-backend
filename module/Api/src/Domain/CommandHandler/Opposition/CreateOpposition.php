@@ -72,8 +72,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
     /**
      * Create the opposition object
      *
-     * @param Cmd $command
-     * @param Opposer $opposer
      * @return Opposition
      */
     private function createOppositionObject(Cmd $command, Opposer $opposer)
@@ -124,8 +122,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
     /**
      * Create the opposer  object
      *
-     * @param Cmd $command
-     * @param ContactDetails $contactDetails
      * @return Opposer
      */
     private function createOpposerObject(Cmd $command, ContactDetails $contactDetails)
@@ -143,7 +139,6 @@ final class CreateOpposition extends AbstractCommandHandler implements Transacti
      * Generate list of operatingCentres based on type of opposition. At present it allows both types to specify OCs
      * This may need to be either one or the other.
      *
-     * @param Cmd $command
      * @return ArrayCollection
      */
     private function generateOperatingCentres(Cmd $command)

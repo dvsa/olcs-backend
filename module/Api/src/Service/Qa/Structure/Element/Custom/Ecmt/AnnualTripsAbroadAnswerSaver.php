@@ -12,19 +12,14 @@ class AnnualTripsAbroadAnswerSaver implements AnswerSaverInterface
 {
     use AnyTrait;
 
-    /** @var BaseAnswerSaver */
-    private $baseAnswerSaver;
-
     /**
      * Create service instance
      *
-     * @param BaseAnswerSaver $baseAnswerSaver
      *
      * @return AnnualTripsAbroadAnswerSaver
      */
-    public function __construct(BaseAnswerSaver $baseAnswerSaver)
+    public function __construct(private BaseAnswerSaver $baseAnswerSaver)
     {
-        $this->baseAnswerSaver = $baseAnswerSaver;
     }
 
     /**

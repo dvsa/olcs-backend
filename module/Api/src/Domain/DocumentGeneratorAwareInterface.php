@@ -10,9 +10,6 @@ use Dvsa\Olcs\Api\Service\Document\DocumentGenerator;
  */
 interface DocumentGeneratorAwareInterface
 {
-    /**
-     * @param DocumentGenerator $service
-     */
     public function setDocumentGenerator(DocumentGenerator $service);
 
     /**

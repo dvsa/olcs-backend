@@ -4,24 +4,15 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 class FilteredTranslateableText
 {
-    /** @var string */
-    private $filter;
-
-    /** @var TranslateableText */
-    private $translateableText;
-
     /**
      * Create instance
      *
      * @param string $filter
-     * @param TranslateableText $translateableText
      *
      * @return FilteredTranslateableText
      */
-    public function __construct($filter, TranslateableText $translateableText)
+    public function __construct(private $filter, private TranslateableText $translateableText)
     {
-        $this->filter = $filter;
-        $this->translateableText = $translateableText;
     }
 
     /**

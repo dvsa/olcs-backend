@@ -51,8 +51,6 @@ final class UpdateComplaint extends AbstractCommandHandler implements Transactio
     }
 
     /**
-     * @param Cmd $command
-     * @param Complaint $complaint
      * @return Complaint
      */
     private function updateComplaintObject(Cmd $command, Complaint $complaint)
@@ -85,8 +83,6 @@ final class UpdateComplaint extends AbstractCommandHandler implements Transactio
     }
 
     /**
-     * @param Cmd $command
-     * @param Person $person
      * @return Person
      */
     private function updatePersonObject(Cmd $command, Person $person)

@@ -69,7 +69,6 @@ class Address implements FormatterInterface
     }
 
     /**
-     * @param array $fields
      * @return void
      */
     public static function setFields(array $fields)

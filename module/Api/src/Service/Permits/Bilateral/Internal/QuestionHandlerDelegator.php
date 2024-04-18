@@ -12,23 +12,16 @@ class QuestionHandlerDelegator
     /** @var array */
     private $handlers = [];
 
-    private QaContextFactory $qaContextFactory;
-
     /**
      * Create service instance
-     *
-     * @param QaContextFactory $qaContextFactory
      */
-    public function __construct(QaContextFactory $qaContextFactory)
+    public function __construct(private QaContextFactory $qaContextFactory)
     {
-        $this->qaContextFactory = $qaContextFactory;
     }
 
     /**
      * Get the appropriate instance of QuestionHandlerInterface associated with the specified application step
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
-     * @param ApplicationStep $applicationStep
      * @param array $requiredPermits
      *
      * @throws RuntimeException
@@ -53,7 +46,6 @@ class QuestionHandlerDelegator
      * Register a handler to be used for a given question id within an application path
      *
      * @param int $questionId
-     * @param QuestionHandlerInterface $questionHandler
      */
     public function registerQuestionHandler($questionId, QuestionHandlerInterface $questionHandler)
     {

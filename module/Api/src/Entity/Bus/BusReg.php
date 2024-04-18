@@ -1196,16 +1196,11 @@ class BusReg extends AbstractBusReg implements ContextProviderInterface, Organis
 
         $revertStatus = $this->revertStatus->getId();
         $shortNotice = $this->isShortNotice;
-
-        switch ($revertStatus) {
-            case self::STATUS_NEW:
-            case self::STATUS_VAR:
-                return $this->getPublicationSectionForGrantEmailRegistered($revertStatus, $shortNotice);
-            case self::STATUS_CANCEL:
-                return $this->getPublicationSectionForGrantEmailCancelled($shortNotice);
-        }
-
-        throw new RuntimeException('valid revert statuses for grant email are new, variation or cancellation');
+        return match ($revertStatus) {
+            self::STATUS_NEW, self::STATUS_VAR => $this->getPublicationSectionForGrantEmailRegistered($revertStatus, $shortNotice),
+            self::STATUS_CANCEL => $this->getPublicationSectionForGrantEmailCancelled($shortNotice),
+            default => throw new RuntimeException('valid revert statuses for grant email are new, variation or cancellation'),
+        };
     }
 
     /**

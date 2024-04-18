@@ -34,7 +34,7 @@ abstract class AbstractController extends LaminasAbstractRestfulController
             ]
         ];
 
-        Logger::debug('*** Legacy Api Controller ***: ' . get_class($this), $data);
+        Logger::debug('*** Legacy Api Controller ***: ' . static::class, $data);
 
         $response = $this->doDispatch($e);
 

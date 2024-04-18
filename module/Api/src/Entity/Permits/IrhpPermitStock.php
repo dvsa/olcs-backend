@@ -54,16 +54,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     public const APGG_SHORT_TERM_NO_CANDIDATES_YEAR = 2019;
 
     /**
-     * @param IrhpPermitType $type
-     * @param Country|null $country
-     * @param RefData|null $permitCategory
      * @param int $quota
-     * @param RefData $status
-     * @param ApplicationPathGroup|null $applicationPathGroup
-     * @param RefData|null $businessProcess
-     * @param string|null $periodNameKey
-     * @param mixed $validFrom
-     * @param mixed $validTo
      * @param bool $hiddenSs
      *
      * @return IrhpPermitStock
@@ -78,8 +69,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         ?ApplicationPathGroup $applicationPathGroup,
         ?RefData $businessProcess,
         ?string $periodNameKey = null,
-        $validFrom = null,
-        $validTo = null,
+        mixed $validFrom = null,
+        mixed $validTo = null,
         $hiddenSs = false
     ) {
         static::validateCountry($type, $country, $permitCategory);
@@ -102,12 +93,9 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     }
 
     /**
-     * @param IrhpPermitType $type
      * @param Country $country
      * @param int $quota
      * @param string|null $periodNameKey
-     * @param mixed $validFrom
-     * @param mixed $validTo
      * @param bool $hiddenSs
      *
      * @return $this
@@ -119,8 +107,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
         $permitCategory,
         $quota,
         $periodNameKey = null,
-        $validFrom = null,
-        $validTo = null,
+        mixed $validFrom = null,
+        mixed $validTo = null,
         $hiddenSs = false
     ) {
         static::validateCountry($type, $country, $permitCategory);
@@ -140,9 +128,7 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Enforces business logic that a Bilateral Permit MUST have a country specified
      *
-     * @param IrhpPermitType $type
      * @param Country $country
-     * @param RefData|null $permitCategory
      *
      * @throws ValidationException
      */
@@ -285,7 +271,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Update the status of the stock to indicate that the scoring process has been queued
      *
-     * @param RefData $scoringPendingStatus
      *
      * @throws ForbiddenException
      */
@@ -307,7 +292,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * Update the status of the stock to indicate that the scoring process could not start due to one or more failed
      * failed prerequisites
      *
-     * @param RefData $scoringPrerequisiteFailStatus
      *
      * @throws ForbiddenException
      */
@@ -328,7 +312,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Attempt to update the status of the stock to indicate that the scoring process is in progress
      *
-     * @param RefData $scoringInProgressStatus
      *
      * @throws ForbiddenException
      */
@@ -349,7 +332,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Attempt to update the status of the stock to indicate that the scoring process has been successfully completed
      *
-     * @param RefData $scoringSuccessfulStatus
      *
      * @throws ForbiddenException
      */
@@ -371,7 +353,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * Attempt to update the status of the stock to indicate that an unexpected failure happened whilst stock scoring
      * was in progress
      *
-     * @param RefData $scoringUnexpectedFailStatus
      *
      * @throws ForbiddenException
      */
@@ -392,7 +373,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
    /**
      * Update the status of the stock to indicate that the accept process has been queued
      *
-     * @param RefData $acceptPendingStatus
      *
      * @throws ForbiddenException
      */
@@ -414,7 +394,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * Update the status of the stock to indicate that the accept process could not start due to one or more failed
      * failed prerequisites
      *
-     * @param RefData $acceptPrerequisiteFailStatus
      *
      * @throws ForbiddenException
      */
@@ -435,7 +414,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Attempt to update the status of the stock to indicate that the accept process is in progress
      *
-     * @param RefData $acceptInProgressStatus
      *
      * @throws ForbiddenException
      */
@@ -456,7 +434,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Attempt to update the status of the stock to indicate that the accept process has been successfully completed
      *
-     * @param RefData $acceptSuccessfulStatus
      *
      * @throws ForbiddenException
      */
@@ -478,7 +455,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
      * Attempt to update the status of the stock to indicate that an unexpected failure happened whilst stock accept
      * was in progress
      *
-     * @param RefData $acceptUnexpectedFailStatus
      *
      * @throws ForbiddenException
      */
@@ -629,7 +605,6 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Does stock have a range with given emissions category ref data id?
      *
-     * @param string $emissionsRef
      * @return bool
      */
     protected function hasRangeWithEmissionsCat(string $emissionsRef)
@@ -683,10 +658,8 @@ class IrhpPermitStock extends AbstractIrhpPermitStock implements DeletableInterf
     /**
      * Get the first available unreserved range with no countries matching the specified emissions category
      *
-     * @param EmissionsStandardCriteria $criteria
      *
      * @return IrhpPermitRange
-     *
      * @throws RuntimeException
      */
     public function getFirstAvailableRangePreferWithNoCountries(EmissionsStandardCriteria $criteria)

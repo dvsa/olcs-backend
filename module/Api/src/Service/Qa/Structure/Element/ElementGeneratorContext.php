@@ -10,29 +10,15 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 
 class ElementGeneratorContext
 {
-    /** @var ValidatorList */
-    private $validatorList;
-
-    /** @var QaContext */
-    private $qaContext;
-
-    /** @var string */
-    private $elementContainer;
-
     /**
      * Create instance
      *
-     * @param ValidatorList $validatorList
-     * @param QaContext $qaContext
      * @param string $elementContainer
      *
      * @return ElementGeneratorContext
      */
-    public function __construct(ValidatorList $validatorList, QaContext $qaContext, $elementContainer)
+    public function __construct(private ValidatorList $validatorList, private QaContext $qaContext, private $elementContainer)
     {
-        $this->validatorList = $validatorList;
-        $this->qaContext = $qaContext;
-        $this->elementContainer = $elementContainer;
     }
 
     /**

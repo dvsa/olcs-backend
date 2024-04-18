@@ -36,7 +36,6 @@ trait PermitAppReviveFromWithdrawnTrait
     /**
      * Revive this application from a withdrawn state
      *
-     * @param RefData $underConsiderationStatus
      *
      * @throws ForbiddenException
      */

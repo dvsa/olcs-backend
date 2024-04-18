@@ -9,9 +9,6 @@ use Laminas\I18n\Translator\TranslatorInterface;
  */
 interface TranslatorAwareInterface
 {
-    /**
-     * @param TranslatorInterface $translator
-     */
     public function setTranslator(TranslatorInterface $translator);
 
     /**

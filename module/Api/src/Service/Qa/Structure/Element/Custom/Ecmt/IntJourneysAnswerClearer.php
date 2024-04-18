@@ -11,19 +11,14 @@ class IntJourneysAnswerClearer implements AnswerClearerInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var IrhpApplicationRepository */
-    private $irhpApplicationRepo;
-
     /**
      * Create service instance
      *
-     * @param IrhpApplicationRepository $irhpApplicationRepo
      *
      * @return IntJourneysAnswerClearer
      */
-    public function __construct(IrhpApplicationRepository $irhpApplicationRepo)
+    public function __construct(private IrhpApplicationRepository $irhpApplicationRepo)
     {
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
     }
 
     /**

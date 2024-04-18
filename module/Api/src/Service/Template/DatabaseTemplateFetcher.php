@@ -12,19 +12,14 @@ class DatabaseTemplateFetcher
     public const COMPONENT_OFFSET_FORMAT = 1;
     public const COMPONENT_OFFSET_NAME = 2;
 
-    /** @var TemplateRepo */
-    private $repo;
-
     /**
      * Create service instance
      *
-     * @param TemplateRepo $repo
      *
      * @return DatabaseTemplateFetcher
      */
-    public function __construct(TemplateRepo $repo)
+    public function __construct(private TemplateRepo $repo)
     {
-        $this->repo = $repo;
     }
 
     /**

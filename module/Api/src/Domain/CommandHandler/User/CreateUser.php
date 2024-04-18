@@ -39,25 +39,10 @@ final class CreateUser extends AbstractUserCommandHandler implements
     protected $extraRepos = ['Application', 'ContactDetails', 'Licence'];
 
     /**
-     * @var ValidatableAdapterInterface
-     */
-    private $adapter;
-
-    /**
-     * @var PasswordService
-     */
-    private $passwordService;
-
-    /**
      * CreateUser constructor.
-     *
-     * @param PasswordService $passwordService
-     * @param ValidatableAdapterInterface|null $adapter
      */
-    public function __construct(PasswordService $passwordService, ?ValidatableAdapterInterface $adapter)
+    public function __construct(private PasswordService $passwordService, private ?ValidatableAdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
-        $this->passwordService = $passwordService;
     }
 
 
@@ -157,7 +142,7 @@ final class CreateUser extends AbstractUserCommandHandler implements
                     ]
                 )
             );
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             // swallow any exception
         }
 
@@ -169,7 +154,6 @@ final class CreateUser extends AbstractUserCommandHandler implements
     }
 
     /**
-     * @param string $loginId
      * @return string
      */
     private function generatePid(string $loginId)

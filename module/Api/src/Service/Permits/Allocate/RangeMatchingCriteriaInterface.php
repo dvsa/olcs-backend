@@ -9,7 +9,6 @@ interface RangeMatchingCriteriaInterface
     /**
      * Whether the specified range instance matches the stored criteria
      *
-     * @param IrhpPermitRange $irhpPermitRange
      *
      * @return bool
      */

@@ -8,7 +8,6 @@ class UnrestrictedWithLowestStartNumberProvider
      * From the set of unrestricted ranges (i.e. ranges that do not allow travel to any of the restricted countries),
      * return the range that has the lowest start number. Returns null if no unrestricted ranges were found
      *
-     * @param array $ranges
      *
      * @return array|null
      */

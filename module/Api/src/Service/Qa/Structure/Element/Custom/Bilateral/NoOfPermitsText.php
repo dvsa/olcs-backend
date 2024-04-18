@@ -4,18 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 class NoOfPermitsText
 {
-    /** @var string */
-    private $name;
-
-    /** @var string */
-    private $label;
-
-    /** @var string */
-    private $hint;
-
-    /** @var string|null */
-    private $value;
-
     /**
      * Create instance
      *
@@ -26,12 +14,8 @@ class NoOfPermitsText
      *
      * @return NoOfPermitsText
      */
-    public function __construct($name, $label, $hint, $value)
+    public function __construct(private $name, private $label, private $hint, private $value)
     {
-        $this->name = $name;
-        $this->label = $label;
-        $this->hint = $hint;
-        $this->value = $value;
     }
 
     /**

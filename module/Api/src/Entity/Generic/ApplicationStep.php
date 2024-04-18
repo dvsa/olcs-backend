@@ -49,7 +49,7 @@ class ApplicationStep extends AbstractApplicationStep
         $previousApplicationStep = null;
         try {
             $previousApplicationStep = $this->getPreviousApplicationStep();
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
         }
 
         if (is_null($previousApplicationStep)) {

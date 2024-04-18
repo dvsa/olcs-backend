@@ -114,7 +114,6 @@ final class CreateHearing extends AbstractCommandHandler implements AuthAwareInt
     }
 
     /**
-     * @param PiHearingEntity $hearing
      * @return CreateTaskCmd
      */
     private function createTaskCommand(PiHearingEntity $hearing)

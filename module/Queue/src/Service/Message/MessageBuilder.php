@@ -7,9 +7,6 @@ class MessageBuilder
     /**
      * Builds an array of messages based on the message type
      *
-     * @param array  $messageData
-     * @param string $messageType
-     * @param array  $queueConfig
      *
      * @return array
      */

@@ -63,7 +63,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Create paginated query - vehicles data for PSV licence
      *
-     * @param QueryInterface $query
      * @param $licenceId
      * @return QueryBuilder
      */
@@ -81,7 +80,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Create paginated query - vehicles data for PSV application
      *
-     * @param QueryInterface $query
      * @param int $applicationId
      * @param int $licenceId
      * @return QueryBuilder
@@ -190,7 +188,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * If any VRM's duplicate those on the application then mark them as duplicates
      *
-     * @param ApplicationEntity $application
      *
      * @return int number of vehicles that have been marked duplicates
      */
@@ -240,7 +237,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Generic filters for LVA
      *
-     * @param QueryInterface $query
      * @return QueryBuilder
      */
     private function createFilteredQueryForLva(QueryInterface $query, $filterBySpecifiedDate = true)
@@ -267,7 +263,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Create filtered query for LVA, PSV version
      *
-     * @param QueryInterface $query
      * @return QueryBuilder
      */
     private function createFilteredQueryForLvaPsv(QueryInterface $query)
@@ -283,7 +278,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Filter by application or licence
      *
-     * @param QueryBuilder $qb
      * @param $applicationId
      * @param $licenceId
      */
@@ -302,7 +296,6 @@ class LicenceVehicle extends AbstractRepository
     /**
      * Filter by application or licence specified only
      *
-     * @param QueryBuilder $qb
      * @param $applicationId
      * @param $licenceId
      */
@@ -323,8 +316,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * Filter the query to only show specified records
-     *
-     * @param QueryBuilder $qb
      */
     private function filterSpecifiedOnly(QueryBuilder $qb)
     {
@@ -333,10 +324,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * Filter a query to those that have a vehicle id provided by a query.
-     *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
-     * @param string $vehicleTable
      */
     private function filterByVehicleIds(QueryBuilder $qb, QueryInterface $query, string $vehicleTable)
     {
@@ -349,9 +336,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * Filter a query that must either HAVE a disc or NOT HAVE a disc
-     *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
      */
     private function filterByDisc(QueryBuilder $qb, QueryInterface $query)
     {
@@ -371,9 +355,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * Filter a query that must either HAVE specifiedDate or NOT HAVE specified date
-     *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
      */
     private function filterBySpecifiedDate(QueryBuilder $qb, QueryInterface $query)
     {
@@ -391,9 +372,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * Filter a query to exclude removed discs
-     *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
      */
     private function filterByRemovalDate(QueryBuilder $qb, QueryInterface $query)
     {
@@ -409,9 +387,6 @@ class LicenceVehicle extends AbstractRepository
 
     /**
      * Filter a query to show only VRMs containing the $vrm string
-     *
-     * @param QueryBuilder $qb
-     * @param QueryInterface $query
      */
     private function filterByVrm(QueryBuilder $qb, QueryInterface $query)
     {

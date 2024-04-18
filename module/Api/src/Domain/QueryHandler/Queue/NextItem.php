@@ -44,9 +44,9 @@ class NextItem extends AbstractQueryHandler
 
         try {
             $entity = $repo->getNextItem($query->getIncludeTypes(), $query->getExcludeTypes());
-        } catch (NotFoundException $ex) {
+        } catch (NotFoundException) {
             return null;
-        } catch (OptimisticLockException $ex) {
+        } catch (OptimisticLockException) {
             Logger::info('skipping - another queue process is already working on this record');
             return null;
         }

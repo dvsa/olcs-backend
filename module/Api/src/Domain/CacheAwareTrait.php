@@ -20,8 +20,6 @@ trait CacheAwareTrait
     protected $cacheService;
 
     /**
-     * @param CacheEncryption $cacheService
-     *
      * @return void
      */
     public function setCache(CacheEncryption $cacheService): void
@@ -40,7 +38,6 @@ trait CacheAwareTrait
     /**
      * Clear caches for the array of user ids
      *
-     * @param array $userIds
      *
      * @throws \Exception
      */
@@ -78,7 +75,6 @@ trait CacheAwareTrait
      * Clear the caches related to a licence, for now this just clears caches for users attached to the parent org
      * This code can also be called via \Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence command
      *
-     * @param Licence $licence
      * @throws \Exception
      */
     public function clearLicenceCaches(Licence $licence)
@@ -91,7 +87,6 @@ trait CacheAwareTrait
      * Clear the caches related to an organisation. Currently this is only users but in future it could be other things
      * e.g. licences
      *
-     * @param Organisation $organisation
      * @throws \Exception
      */
     public function clearOrganisationCaches(Organisation $organisation)
@@ -111,7 +106,6 @@ trait CacheAwareTrait
     /**
      * Clear a system parameter cache - also clears the parameter list as a whole
      *
-     * @param string $id
      * @return void
      */
     public function clearSystemParamCache(string $id): void

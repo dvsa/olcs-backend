@@ -17,7 +17,6 @@ class ApplicationReferenceMapper
     protected const APPLICATION_REFERENCE_REGEX = '/^[0-9a-z]{7}$/i';
 
     /**
-     * @param array $data
      * @return ApplicationReference
      * @throws MapperParseException
      */

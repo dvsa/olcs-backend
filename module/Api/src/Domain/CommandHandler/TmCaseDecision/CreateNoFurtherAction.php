@@ -35,7 +35,6 @@ final class CreateNoFurtherAction extends AbstractCommandHandler implements Tran
     }
 
     /**
-     * @param Cmd $command
      * @return Entity
      */
     private function createEntityObject(Cmd $command)

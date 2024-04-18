@@ -25,9 +25,6 @@ class PublicationPoliceData extends AbstractPublicationPoliceData
 {
     /**
      * Creates a new entity
-     *
-     * @param PublicationLinkEntity $publicationLink
-     * @param PersonEntity $person
      */
     public function __construct(PublicationLinkEntity $publicationLink, PersonEntity $person)
     {
@@ -39,9 +36,6 @@ class PublicationPoliceData extends AbstractPublicationPoliceData
      *
      * @note we appear to duplicate data already held in the person entity, however this is intended behaviour since
      * we're storing a snapshot of a fixed point in time
-     *
-     * @param PublicationLink $publicationLink
-     * @param PersonEntity $person
      */
     private function create(PublicationLinkEntity $publicationLink, PersonEntity $person)
     {

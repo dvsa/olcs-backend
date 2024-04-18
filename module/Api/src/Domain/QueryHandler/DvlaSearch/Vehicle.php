@@ -38,7 +38,7 @@ class Vehicle extends AbstractQueryHandler
                 'count' => 1,
                 'result' => [$vehicle->toArray()]
             ];
-        } catch (VehicleUnavailableException $exception) {
+        } catch (VehicleUnavailableException) {
             return [
                 'count' => 0,
                 'result' => []

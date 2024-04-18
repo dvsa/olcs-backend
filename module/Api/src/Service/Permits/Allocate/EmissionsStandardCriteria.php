@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 
 class EmissionsStandardCriteria implements RangeMatchingCriteriaInterface
 {
-    /** @var string */
-    private $emissionsCategoryId;
-
     /**
      * Create instance
      *
@@ -16,9 +13,8 @@ class EmissionsStandardCriteria implements RangeMatchingCriteriaInterface
      *
      * @return EmissionsStandardCriteria
      */
-    public function __construct($emissionsCategoryId)
+    public function __construct(private $emissionsCategoryId)
     {
-        $this->emissionsCategoryId = $emissionsCategoryId;
     }
 
     /**

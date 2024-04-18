@@ -4,19 +4,14 @@ namespace Dvsa\Olcs\Api\Service\Permits\Common;
 
 class StockBasedRestrictedCountryIdsProvider
 {
-    /** @var StockBasedPermitTypeConfigProvider */
-    private $stockBasedPermitTypeConfigProvider;
-
     /**
      * Create service instance
      *
-     * @param StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider
      *
      * @return StockBasedRestrictedCountryIdsProvider
      */
-    public function __construct(StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider)
+    public function __construct(private StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider)
     {
-        $this->stockBasedPermitTypeConfigProvider = $stockBasedPermitTypeConfigProvider;
     }
 
     /**

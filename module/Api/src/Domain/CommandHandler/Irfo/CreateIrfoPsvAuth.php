@@ -64,7 +64,6 @@ final class CreateIrfoPsvAuth extends AbstractCommandHandler implements Transact
     }
 
     /**
-     * @param Cmd $command
      * @return IrfoPsvAuth
      */
     private function createIrfoPsvAuthObject(Cmd $command)

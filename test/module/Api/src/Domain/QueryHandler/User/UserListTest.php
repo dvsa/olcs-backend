@@ -8,9 +8,12 @@ use Dvsa\Olcs\Api\Domain\Query\User\UserListByTrafficArea;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandler\User\UserList as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\User as Repo;
+use Dvsa\Olcs\Api\Entity\User\User;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Transfer\Query\User\UserList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
+use ReflectionClass;
 
 /**
  * @see QueryHandler
@@ -43,6 +46,11 @@ class UserListTest extends QueryHandlerTestCase
 
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, User::USER_TYPE_OPERATOR);
 
         $this->repoMap['User']->shouldReceive('fetchList')->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
             ->andReturn([$user]);

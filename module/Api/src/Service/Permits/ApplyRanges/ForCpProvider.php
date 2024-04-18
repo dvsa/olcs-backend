@@ -8,46 +8,20 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 
 class ForCpProvider
 {
-    /** @var ForCpWithCountriesProvider */
-    private $forCpWithCountriesProvider;
-
-    /** @var ForCpWithNoCountriesProvider */
-    private $forCpWithNoCountriesProvider;
-
-    /** @var EntityIdsExtractor */
-    private $entityIdsExtractor;
-
-    /** @var RangeSubsetGenerator */
-    private $rangeSubsetGenerator;
-
     /**
      * Create service instance
      *
-     * @param ForCpWithCountriesProvider $forCpWithCountriesProvider
-     * @param ForCpWithNoCountriesProvider $forCpWithNoCountriesProvider
-     * @param EntityIdsExtractor $entityIdsExtractor
-     * @param RangeSubsetGenerator $rangeSubsetGenerator
      *
      * @return ForCpProvider
      */
-    public function __construct(
-        ForCpWithCountriesProvider $forCpWithCountriesProvider,
-        ForCpWithNoCountriesProvider $forCpWithNoCountriesProvider,
-        EntityIdsExtractor $entityIdsExtractor,
-        RangeSubsetGenerator $rangeSubsetGenerator
-    ) {
-        $this->forCpWithCountriesProvider = $forCpWithCountriesProvider;
-        $this->forCpWithNoCountriesProvider = $forCpWithNoCountriesProvider;
-        $this->entityIdsExtractor = $entityIdsExtractor;
-        $this->rangeSubsetGenerator = $rangeSubsetGenerator;
+    public function __construct(private ForCpWithCountriesProvider $forCpWithCountriesProvider, private ForCpWithNoCountriesProvider $forCpWithNoCountriesProvider, private EntityIdsExtractor $entityIdsExtractor, private RangeSubsetGenerator $rangeSubsetGenerator)
+    {
     }
 
     /**
      * Returns the best fitting range for an application with the specified countries
      *
-     * @param Result $result
      * @param IrhpCandidatePermit $irhpCandidatePermit
-     * @param array $ranges
      *
      * @return IrhpPermitRange
      */

@@ -23,7 +23,7 @@ class Standard extends AbstractHandler
     public function isValid($dto)
     {
         // Log the fact that we are missing a validation handler
-        Logger::info('Missing validation handler...', ['data' => ['dto' => get_class($dto)]]);
+        Logger::info('Missing validation handler...', ['data' => ['dto' => $dto::class]]);
 
         return true;
     }

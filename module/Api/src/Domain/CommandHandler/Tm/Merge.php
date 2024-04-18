@@ -77,8 +77,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
     /**
      * Validate the donor and recipient Transport Managers
      *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      * @param bool $confirm
      *
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
@@ -136,7 +134,7 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
      */
     protected function getEntityName($entity)
     {
-        return get_class($entity);
+        return $entity::class;
     }
 
     /**
@@ -151,9 +149,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer any associated licences, new applications or variations
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferLva(TransportManager $donorTm, TransportManager $recipientTm)
     {
@@ -172,9 +167,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer any associated cases
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferCases(TransportManager $donorTm, TransportManager $recipientTm)
     {
@@ -187,9 +179,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer any associated documents
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferDocuments(TransportManager $donorTm, TransportManager $recipientTm)
     {
@@ -202,9 +191,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer any associated tasks
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferTasks(TransportManager $donorTm, TransportManager $recipientTm)
     {
@@ -218,9 +204,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer any associated notes
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferNotes(TransportManager $donorTm, TransportManager $recipientTm)
     {
@@ -234,9 +217,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer any event history
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferEventHistory(TransportManager $donorTm, TransportManager $recipientTm)
     {
@@ -250,9 +230,6 @@ final class Merge extends AbstractCommandHandler implements TransactionedInterfa
 
     /**
      * Transfer the loser's linked user account (if applicable)
-     *
-     * @param TransportManager $donorTm
-     * @param TransportManager $recipientTm
      */
     protected function transferUserAccount(TransportManager $donorTm, TransportManager $recipientTm)
     {

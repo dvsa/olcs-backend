@@ -24,6 +24,7 @@ use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use LmcRbacMvc\Service\AuthorizationService;
+use ReflectionClass;
 
 /**
  * Update User Selfserve Test
@@ -123,6 +124,11 @@ class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
         $user->setPid('pid');
         $user->setLoginId($data['loginId']);
         $user->shouldReceive('update')->once()->with($data)->andReturnSelf();
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_OPERATOR);
 
         $this->repoMap['User']->shouldReceive('fetchById')
             ->once()

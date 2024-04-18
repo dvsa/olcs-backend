@@ -147,7 +147,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Do any changes need to be made to the variation?
      *
-     * @param Application $application
      * @param $command
      *
      * $return bool
@@ -224,7 +223,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Return a command prompting the frontend to reset the variation
      *
-     * @param Cmd $command
      *
      * @return ResetVariationCmd
      */
@@ -238,8 +236,6 @@ final class UpdateTypeOfLicence extends AbstractCommandHandler implements AuthAw
     /**
      * Whether the changes require confirmation
      *
-     * @param Application $application
-     * @param Cmd $command
      *
      * @return bool
      */

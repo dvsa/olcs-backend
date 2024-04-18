@@ -15,7 +15,6 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
     protected $repoServiceName = 'Note';
 
     /**
-     * @param CommandInterface $command
      * @return Entity\Note\Note
      */
     public function getNoteEntity(CommandInterface $command)
@@ -127,7 +126,6 @@ abstract class CreateUpdateAbstract extends AbstractCommandHandler
     }
 
     /**
-     * @param CommandInterface $command
      * @return Entity\Note\Note
      */
     abstract protected function retrieveEntity(CommandInterface $command);

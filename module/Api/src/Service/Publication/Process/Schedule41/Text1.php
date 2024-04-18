@@ -48,8 +48,6 @@ final class Text1 implements ProcessInterface
 
     /**
      * Add operting centre text
-     *
-     * @param PublicationLink $publicationLink
      */
     private function addOperatingCentreText(PublicationLink $publicationLink)
     {
@@ -66,9 +64,6 @@ final class Text1 implements ProcessInterface
 
     /**
      * Add transferred text
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4
-     * @param ImmutableArrayObject $context
      */
     private function addTransferredText(\Dvsa\Olcs\Api\Entity\Application\S4 $s4, ImmutableArrayObject $context)
     {
@@ -106,8 +101,6 @@ final class Text1 implements ProcessInterface
 
     /**
      * Add the closing text
-     *
-     * @param \Dvsa\Olcs\Api\Entity\Application\S4 $s4
      */
     private function addClosingText(\Dvsa\Olcs\Api\Entity\Application\S4 $s4)
     {
@@ -120,8 +113,6 @@ final class Text1 implements ProcessInterface
 
     /**
      * Add Licence upgrade text
-     *
-     * @param PublicationLink $publicationLink
      */
     private function addUpgradeText(PublicationLink $publicationLink)
     {

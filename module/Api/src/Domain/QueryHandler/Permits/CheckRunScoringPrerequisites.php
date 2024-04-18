@@ -32,7 +32,7 @@ class CheckRunScoringPrerequisites extends AbstractQueryHandler
         $windowOpen = true;
         try {
             $this->getRepo('IrhpPermitWindow')->fetchLastOpenWindowByStockId($stockId);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $windowOpen = false;
         }
 

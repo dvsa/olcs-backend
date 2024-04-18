@@ -9,35 +9,17 @@ use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedPermitTypeConfigProvider;
 
 class RangeBasedRestrictedCountriesProvider
 {
-    /** @var IrhpPermitRangeRepo */
-    private $irhpPermitRangeRepo;
-
-    /** @var TypeBasedPermitTypeConfigProvider */
-    private $typeBasedPermitTypeConfigProvider;
-
-    /** @var CountryRepo */
-    private $countryRepo;
-
     /** @var array */
     private $restrictedCountries = [];
 
     /**
      * Create service instance
      *
-     * @param IrhpPermitRangeRepo $irhpPermitRangeRepo
-     * @param TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider
-     * @param CountryRepo $countryRepo
      *
      * @return RangeBasedRestrictedCountriesProvider
      */
-    public function __construct(
-        IrhpPermitRangeRepo $irhpPermitRangeRepo,
-        TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider,
-        CountryRepo $countryRepo
-    ) {
-        $this->irhpPermitRangeRepo = $irhpPermitRangeRepo;
-        $this->typeBasedPermitTypeConfigProvider = $typeBasedPermitTypeConfigProvider;
-        $this->countryRepo = $countryRepo;
+    public function __construct(private IrhpPermitRangeRepo $irhpPermitRangeRepo, private TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider, private CountryRepo $countryRepo)
+    {
     }
 
     /**

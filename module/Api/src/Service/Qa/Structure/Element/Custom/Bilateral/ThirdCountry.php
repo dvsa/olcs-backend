@@ -6,9 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class ThirdCountry implements ElementInterface
 {
-    /** @var string|null */
-    private $yesNo;
-
     /**
      * Create instance
      *
@@ -16,9 +13,8 @@ class ThirdCountry implements ElementInterface
      *
      * @return ThirdCountry
      */
-    public function __construct($yesNo)
+    public function __construct(private $yesNo)
     {
-        $this->yesNo = $yesNo;
     }
 
     /**

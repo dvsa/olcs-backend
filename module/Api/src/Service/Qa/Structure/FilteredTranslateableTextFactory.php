@@ -8,7 +8,6 @@ class FilteredTranslateableTextFactory
      * Create and return an FilteredTranslateableText instance
      *
      * @param string $filter
-     * @param TranslateableText $translateableText
      *
      * @return FilteredTranslateableText
      */

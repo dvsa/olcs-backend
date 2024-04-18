@@ -92,7 +92,6 @@ final class CreateConditionUndertaking extends AbstractCommandHandler implements
     /**
      * Sets the AttachedTo and if required the Operating Centre
      *
-     * @param ConditionUndertaking $conditionUndertaking
      * @param Cmd $command
      * @return ConditionUndertaking
      */

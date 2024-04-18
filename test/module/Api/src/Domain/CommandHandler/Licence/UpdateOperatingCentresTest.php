@@ -573,8 +573,6 @@ class UpdateOperatingCentresTest extends AbstractCommandHandlerTestCase
     }
 
     /**
-     * @param array $operatingCentresVehicleCapacities
-     * @param array $expectedVehicleConstraints
      * @test
      * @depends handleCommandValidatesHgvsWhenCommandIsNotPartial
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider

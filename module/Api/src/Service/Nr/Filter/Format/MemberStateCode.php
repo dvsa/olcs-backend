@@ -2,12 +2,13 @@
 
 namespace Dvsa\Olcs\Api\Service\Nr\Filter\Format;
 
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 
 /**
  * @author Dmitry Golubev <dmitrij.golubev@valtech.com>
+ * @template-extends AbstractFilter<array>
  */
-class MemberStateCode extends LaminasAbstractFilter
+class MemberStateCode extends AbstractFilter
 {
     /**
      * Change 'UK' to 'GB'

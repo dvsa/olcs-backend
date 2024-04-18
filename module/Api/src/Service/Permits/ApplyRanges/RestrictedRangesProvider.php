@@ -7,7 +7,6 @@ class RestrictedRangesProvider
     /**
      * Returns the set of restricted ranges (i.e. ranges that allow travel to one or more of the restricted countries)
      *
-     * @param array $ranges
      *
      * @return array
      */

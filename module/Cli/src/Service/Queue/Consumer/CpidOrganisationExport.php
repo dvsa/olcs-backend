@@ -19,21 +19,17 @@ use Dvsa\Olcs\Transfer\Command as TransferCmd;
  */
 class CpidOrganisationExport extends AbstractConsumer
 {
-    /** @var Repository\Organisation */
-    private $organisationRepo;
-
     /**
      * CpidOrganisationExport constructor.
      *
      * @param AbstractConsumerServices $abstractConsumerServices
-     * @param Repository\Organisation $organisation   Repository
+     * @param Repository\Organisation $organisationRepo Repository
      */
     public function __construct(
         AbstractConsumerServices $abstractConsumerServices,
-        Repository\Organisation $organisation
+        private Repository\Organisation $organisationRepo
     ) {
         parent::__construct($abstractConsumerServices);
-        $this->organisationRepo = $organisation;
     }
 
     /**

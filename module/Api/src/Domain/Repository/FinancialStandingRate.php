@@ -21,7 +21,6 @@ class FinancialStandingRate extends AbstractRepository
     protected $alias = 'fsr';
 
     /**
-     * @param \DateTime $date
      *
      * @return array \Dvsa\Olcs\Api\Entity\System\FinancialStandingRate
      * @throws NotFoundException

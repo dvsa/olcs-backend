@@ -9,24 +9,14 @@ class EcmtPermitUsageRefDataSource implements SourceInterface
     public const LABEL_KEY = 'label';
     public const HINT_KEY = 'hint';
 
-    /** @var RefDataSource */
-    private $refDataSource;
-
-    /** @var array */
-    private $transformations;
-
     /**
      * Create service instance
      *
-     * @param RefDataSource $refDataSource
-     * @param array $transformations
      *
      * @return EcmtPermitUsageRefDataSource
      */
-    public function __construct(RefDataSource $refDataSource, array $transformations)
+    public function __construct(private RefDataSource $refDataSource, private array $transformations)
     {
-        $this->refDataSource = $refDataSource;
-        $this->transformations = $transformations;
     }
 
     /**

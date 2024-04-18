@@ -11,12 +11,6 @@ use Dvsa\Olcs\Api\Service\FinancialStandingHelperService;
  */
 class FinanceReviewService extends AbstractReviewService
 {
-    /** @var FinancialStandingHelperService */
-    private $financialStandingHelperService;
-
-    /** @var DocumentRepository */
-    private $documentRepo;
-
     /**
      * Create service instance
      *
@@ -28,12 +22,10 @@ class FinanceReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        FinancialStandingHelperService $financialStandingHelperService,
-        DocumentRepository $documentRepo
+        private FinancialStandingHelperService $financialStandingHelperService,
+        private DocumentRepository $documentRepo
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->financialStandingHelperService = $financialStandingHelperService;
-        $this->documentRepo = $documentRepo;
     }
 
     /**

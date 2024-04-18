@@ -12,19 +12,14 @@ class ThirdCountryAnswerSaver implements AnswerSaverInterface
 
     public const YES_ANSWER = 'qanda.bilaterals.third-country.yes-answer';
 
-    /** @var CountryDeletingAnswerSaver */
-    private $countryDeletingAnswerSaver;
-
     /**
      * Create service instance
      *
-     * @param CountryDeletingAnswerSaver $countryDeletingAnswerSaver
      *
      * @return ThirdCountryAnswerSaver
      */
-    public function __construct(CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
+    public function __construct(private CountryDeletingAnswerSaver $countryDeletingAnswerSaver)
     {
-        $this->countryDeletingAnswerSaver = $countryDeletingAnswerSaver;
     }
 
     /**

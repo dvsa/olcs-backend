@@ -71,10 +71,6 @@ class PeopleTest extends MockeryTestCase
         return $publicationLink;
     }
 
-    /**
-     * @param PublicationLink $publicationLink
-     * @param Person $person
-     */
     private function addOrganisationPerson(PublicationLink $publicationLink, Person $person)
     {
         $organisationPerson = new \Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson();

@@ -14,19 +14,14 @@ class RestrictedCountriesGenerator implements QuestionTextGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var QuestionTextGenerator */
-    private $questionTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param QuestionTextGenerator $questionTextGenerator
      *
      * @return RestrictedCountriesGenerator
      */
-    public function __construct(QuestionTextGenerator $questionTextGenerator)
+    public function __construct(private QuestionTextGenerator $questionTextGenerator)
     {
-        $this->questionTextGenerator = $questionTextGenerator;
     }
 
     /**

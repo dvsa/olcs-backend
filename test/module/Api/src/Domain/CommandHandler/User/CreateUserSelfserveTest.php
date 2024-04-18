@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Transfer\Command\User\CreateUserSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
+use ReflectionClass;
 
 /**
  * Create User Selfserve Test
@@ -168,6 +169,11 @@ class CreateUserSelfserveTest extends AbstractCommandHandlerTestCase
         $currentUser->setId(222);
         $currentUser->setPartnerContactDetails($partnerContactDetails);
 
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_PARTNER);
+
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
 
@@ -186,6 +192,11 @@ class CreateUserSelfserveTest extends AbstractCommandHandlerTestCase
         $currentUser = m::mock(UserEntity::class)->makePartial();
         $currentUser->setId(222);
         $currentUser->setLocalAuthority($localAuthority);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_LOCAL_AUTHORITY);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
@@ -282,6 +293,11 @@ class CreateUserSelfserveTest extends AbstractCommandHandlerTestCase
         $currentUser = m::mock(UserEntity::class)->makePartial();
         $currentUser->setId($userId);
         $currentUser->setTeam($team);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, 'wrong');
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);

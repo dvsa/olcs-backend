@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface as FileProcessor;
  */
 interface FileProcessorAwareInterface
 {
-    /**
-     * @param FileProcessor $fileProcessor
-     */
     public function setFileProcessor(FileProcessor $fileProcessor);
 
     /**

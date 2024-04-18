@@ -22,12 +22,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 
 final class UpdateSurrender extends AbstractCommandHandler implements TransactionedInterface
 {
-    private EventHistoryCreator $eventHistoryCreator;
     protected $repoServiceName = 'Surrender';
 
-    public function __construct(EventHistoryCreator $eventHistoryCreator)
+    public function __construct(private EventHistoryCreator $eventHistoryCreator)
     {
-        $this->eventHistoryCreator = $eventHistoryCreator;
     }
 
     public function handleCommand(CommandInterface $command): Result

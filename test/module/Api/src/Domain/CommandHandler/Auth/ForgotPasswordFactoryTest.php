@@ -65,9 +65,6 @@ class ForgotPasswordFactoryTest extends MockeryTestCase
         $this->sut = new ForgotPasswordFactory();
     }
 
-    /**
-     * @param ServiceManager $serviceManager
-     */
     protected function setUpDefaultServices(ServiceManager $serviceManager): void
     {
         $this->setUpAbstractCommandHandlerServices();

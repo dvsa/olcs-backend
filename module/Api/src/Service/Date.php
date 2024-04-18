@@ -29,7 +29,6 @@ class Date
 
     /**
      * Convert DateSelect style array data to a DateTime object
-     * @param array $date
      * @return \DateTime
      */
     public function getDateObjectFromArray(array $date)

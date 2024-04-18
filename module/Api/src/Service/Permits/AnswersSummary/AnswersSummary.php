@@ -24,8 +24,6 @@ class AnswersSummary
 
     /**
      * Add a AnswersSummaryRow instance representing a row in the answers summary
-     *
-     * @param AnswersSummaryRow $row
      */
     public function addRow(AnswersSummaryRow $row)
     {

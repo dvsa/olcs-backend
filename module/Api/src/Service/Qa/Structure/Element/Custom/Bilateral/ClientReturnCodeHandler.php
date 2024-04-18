@@ -10,26 +10,20 @@ class ClientReturnCodeHandler
     public const FRONTEND_DESTINATION_OVERVIEW = 'OVERVIEW';
     public const FRONTEND_DESTINATION_CANCEL = 'CANCEL';
 
-    /** @var ApplicationCountryRemover */
-    private $applicationCountryRemover;
-
     /**
      * Create service instance
      *
-     * @param ApplicationCountryRemover $applicationCountryRemover
      *
      * @return ClientReturnCodeHandler
      */
-    public function __construct(ApplicationCountryRemover $applicationCountryRemover)
+    public function __construct(private ApplicationCountryRemover $applicationCountryRemover)
     {
-        $this->applicationCountryRemover = $applicationCountryRemover;
     }
 
     /**
      * Delete the country from the application if required, and return a code indicating the next action to be taken
      * by the frontend
      *
-     * @param QaContext $qaContext
      *
      * @return string
      */

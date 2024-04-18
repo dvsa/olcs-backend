@@ -49,7 +49,7 @@ class FeeType extends AbstractRepository
         RefDataEntity $goodsOrPsv,
         RefDataEntity $licenceType = null,
         \DateTime $date = null,
-        $trafficArea = null,
+        mixed $trafficArea = null,
         $optional = false
     ) {
         $qb = $this->createQueryBuilder();
@@ -107,8 +107,6 @@ class FeeType extends AbstractRepository
     }
 
     /**
-     * @param RefDataEntity $irfoFeeType
-     * @param RefDataEntity $feeType
      * @return \Dvsa\Olcs\Api\Entity\Fee\FeeType
      * @throws Exception\NotFoundException
      */
@@ -259,9 +257,6 @@ class FeeType extends AbstractRepository
 
     /**
      * Add a an where clause for fee types
-     *
-     * @param QueryBuilder $qb
-     * @param array $feeTypes
      */
     private function addFeeTypeClause(QueryBuilder $qb, array $feeTypes)
     {
@@ -270,9 +265,6 @@ class FeeType extends AbstractRepository
 
     /**
      * Add a and where clause for licenceType
-     *
-     * @param QueryBuilder $qb
-     * @param RefDataEntity $licenceType
      */
     private function addLicenceTypeClause(QueryBuilder $qb, RefDataEntity $licenceType)
     {
@@ -295,7 +287,6 @@ class FeeType extends AbstractRepository
      * Get the fee type based on IrfoPsvAuth and fee type string
      *
      * @param IrfoGvPermit|IrfoPsvAuth $irfoEntity
-     * @param RefDataEntity $feeTypeFeeType
      * @return Entity
      * @throws NotFoundException
      */

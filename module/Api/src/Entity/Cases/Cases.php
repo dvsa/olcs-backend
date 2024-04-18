@@ -88,10 +88,6 @@ class Cases extends AbstractCases implements
     /**
      * Creates a new case entity and sets the open date
      *
-     * @param \DateTime $openDate
-     * @param RefData $caseType
-     * @param ArrayCollection $categorys
-     * @param ArrayCollection $outcomes
      * @param Application|null $application
      * @param Licence|null $licence
      * @param TransportManager|null $transportManager
@@ -204,7 +200,6 @@ class Cases extends AbstractCases implements
 
     /**
      * Checks a stay type exists
-     * @param RefData $stayType
      * @return bool
      */
     public function hasStayType(RefData $stayType)

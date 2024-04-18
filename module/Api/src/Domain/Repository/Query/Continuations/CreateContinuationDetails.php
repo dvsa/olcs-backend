@@ -54,8 +54,8 @@ class CreateContinuationDetails extends AbstractRawQuery
 
         try {
             return $this->connection->executeUpdate($query);
-        } catch (\Exception $ex) {
-            throw new RuntimeException('An unexpected error occurred while running query: ' . get_class($this));
+        } catch (\Exception) {
+            throw new RuntimeException('An unexpected error occurred while running query: ' . static::class);
         }
     }
 }

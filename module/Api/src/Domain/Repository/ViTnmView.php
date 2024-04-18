@@ -53,7 +53,7 @@ class ViTnmView extends AbstractRepository
                             'tradingNameId' => $recordParams['tradingNameId']
                         ]
                     );
-            } catch (\Exception $e) {
+            } catch (\Exception) {
                 throw new RuntimeException('Error clearing VI flags for Operating Centres');
             }
         }

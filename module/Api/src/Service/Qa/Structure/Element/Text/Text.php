@@ -7,15 +7,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 
 class Text implements ElementInterface
 {
-    /** @var TranslateableText|null $label */
-    private $label;
-
-    /** @var TranslateableText|null $hint */
-    private $hint;
-
-    /** @var string $value */
-    private $value;
-
     /**
      * Create instance
      *
@@ -25,14 +16,8 @@ class Text implements ElementInterface
      *
      * @return Text
      */
-    public function __construct(
-        ?TranslateableText $label = null,
-        ?TranslateableText $hint = null,
-        $value
-    ) {
-        $this->label = $label;
-        $this->hint = $hint;
-        $this->value = $value;
+    public function __construct(private $value, private ?TranslateableText $label = null, private ?TranslateableText $hint = null)
+    {
     }
 
     /**

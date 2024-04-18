@@ -3,13 +3,14 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr\Filter\Format;
 
 use Laminas\Filter\Exception;
-use Laminas\Filter\AbstractFilter as LaminasAbstractFilter;
+use Laminas\Filter\AbstractFilter as AbstractFilter;
 
 /**
  * Class Subsidy
  * @package Dvsa\Olcs\Api\Service\Ebsr\Filter\Format
+ * @template-extends AbstractFilter<array>
  */
-class Subsidy extends LaminasAbstractFilter
+class Subsidy extends AbstractFilter
 {
     protected $map = [
         'none' => 'bs_no',

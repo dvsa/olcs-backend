@@ -11,8 +11,6 @@ interface AnswerSaverInterface
      * Save an answer corresponding to the supplied context to persistent storage using the supplied post data as the
      * source of the answer. Optionally returns a string representing what the frontend should do after saving
      *
-     * @param QaContext $qaContext
-     * @param array $postData
      *
      * @return string|null
      */
@@ -21,7 +19,6 @@ interface AnswerSaverInterface
     /**
      * Whether this answer saver supports the specified entity
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

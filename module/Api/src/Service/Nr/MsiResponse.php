@@ -37,20 +37,14 @@ class MsiResponse
     private $authority;
 
     /**
-     * @var XmlNodeBuilder
-     */
-    private $xmlBuilder;
-
-    /**
      * MsiResponse constructor
      *
      * @param XmlNodeBuilder $xmlBuilder xml node builder
      *
      * @return MsiResponse
      */
-    public function __construct(XmlNodeBuilder $xmlBuilder)
+    public function __construct(private XmlNodeBuilder $xmlBuilder)
     {
-        $this->xmlBuilder = $xmlBuilder;
     }
 
     /**

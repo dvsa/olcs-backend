@@ -46,19 +46,12 @@ final class ConditionUndertaking extends AbstractContext implements AddressForma
                 $action = $conditionUndertaking->getAction();
 
                 //work out the action
-                switch ($action) {
-                    case 'A':
-                        $actionString = self::COND_NEW;
-                        break;
-                    case 'D':
-                        $actionString = self::COND_REMOVE;
-                        break;
-                    case 'U':
-                        $actionString = self::COND_UPDATE;
-                        break;
-                    default:
-                        $actionString = self::COND_NEW;
-                }
+                $actionString = match ($action) {
+                    'A' => self::COND_NEW,
+                    'D' => self::COND_REMOVE,
+                    'U' => self::COND_UPDATE,
+                    default => self::COND_NEW,
+                };
 
                 $string = sprintf(
                     $actionString,

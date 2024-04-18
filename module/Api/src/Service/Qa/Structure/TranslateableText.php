@@ -6,9 +6,6 @@ use RuntimeException;
 
 class TranslateableText
 {
-    /** @var string */
-    private $key;
-
     /** @var array */
     private $parameters;
 
@@ -19,9 +16,8 @@ class TranslateableText
      *
      * @return TranslateableText
      */
-    public function __construct($key)
+    public function __construct(private $key)
     {
-        $this->key = $key;
         $this->parameters = [];
     }
 

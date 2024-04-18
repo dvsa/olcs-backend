@@ -13,20 +13,14 @@ use Olcs\Logging\Log\Logger;
 class InrClient implements InrClientInterface
 {
     /**
-     * @var RestClient
-     */
-    protected $restClient;
-
-    /**
      * Contructor, expects Laminas rest client
      *
      * @param RestClient $restClient Laminas rest client
      *
      * @return void
      */
-    public function __construct($restClient)
+    public function __construct(protected $restClient)
     {
-        $this->restClient = $restClient;
     }
 
     /**

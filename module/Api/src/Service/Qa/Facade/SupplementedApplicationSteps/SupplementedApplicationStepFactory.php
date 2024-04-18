@@ -10,8 +10,6 @@ class SupplementedApplicationStepFactory
     /**
      * Create and return a SupplementedApplicationStep instance
      *
-     * @param ApplicationStep $applicationStep
-     * @param FormControlStrategyInterface $formControlStrategy
      *
      * @return SupplementedApplicationStep
      */

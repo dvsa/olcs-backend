@@ -15,18 +15,6 @@ namespace Dvsa\Olcs\Snapshot\Service\Snapshots\ApplicationReview\Section;
  */
 class VariationOperatingCentresReviewService extends AbstractOperatingCentresReviewService
 {
-    /** @var PsvOperatingCentreReviewService */
-    private $psvOperatingCentreReviewService;
-
-    /** @var VariationPsvOcTotalAuthReviewService */
-    private $variationPsvOcTotalAuthReviewService;
-
-    /** @var GoodsOperatingCentreReviewService */
-    private $goodsOperatingCentreReviewService;
-
-    /** @var VariationGoodsOcTotalAuthReviewService */
-    private $variationGoodsOcTotalAuthReviewService;
-
     /**
      * Create service instance
      *
@@ -40,16 +28,12 @@ class VariationOperatingCentresReviewService extends AbstractOperatingCentresRev
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        PsvOperatingCentreReviewService $psvOperatingCentreReviewService,
-        VariationPsvOcTotalAuthReviewService $variationPsvOcTotalAuthReviewService,
-        GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService,
-        VariationGoodsOcTotalAuthReviewService $variationGoodsOcTotalAuthReviewService
+        private PsvOperatingCentreReviewService $psvOperatingCentreReviewService,
+        private VariationPsvOcTotalAuthReviewService $variationPsvOcTotalAuthReviewService,
+        private GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService,
+        private VariationGoodsOcTotalAuthReviewService $variationGoodsOcTotalAuthReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
-        $this->psvOperatingCentreReviewService = $psvOperatingCentreReviewService;
-        $this->variationPsvOcTotalAuthReviewService = $variationPsvOcTotalAuthReviewService;
-        $this->goodsOperatingCentreReviewService = $goodsOperatingCentreReviewService;
-        $this->variationGoodsOcTotalAuthReviewService = $variationGoodsOcTotalAuthReviewService;
     }
 
     /**

@@ -12,32 +12,14 @@ class QaContextGenerator
     public const ERR_NOT_ACCESSIBLE = 'This question isn\'t yet accessible';
     public const ERR_QA_NOT_SUPPORTED = 'Entity does not support q&a';
 
-    /** @var ApplicationStepRepository */
-    private $applicationStepRepo;
-
-    /** @var QaEntityProvider */
-    private $qaEntityProvider;
-
-    /** @var QaContextFactory */
-    private $qaContextFactory;
-
     /**
      * Create service instance
      *
-     * @param ApplicationStepRepository $applicationStepRepo
-     * @param QaEntityProvider $qaEntityProvider
-     * @param QaContextFactory $qaContextFactory
      *
      * @return QaContextGenerator
      */
-    public function __construct(
-        ApplicationStepRepository $applicationStepRepo,
-        QaEntityProvider $qaEntityProvider,
-        QaContextFactory $qaContextFactory
-    ) {
-        $this->applicationStepRepo = $applicationStepRepo;
-        $this->qaEntityProvider = $qaEntityProvider;
-        $this->qaContextFactory = $qaContextFactory;
+    public function __construct(private ApplicationStepRepository $applicationStepRepo, private QaEntityProvider $qaEntityProvider, private QaContextFactory $qaContextFactory)
+    {
     }
 
     /**
@@ -73,7 +55,7 @@ class QaContextGenerator
 
         try {
             $previousApplicationStep = $applicationStep->getPreviousApplicationStep();
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
             $previousApplicationStep = null;
         }
 

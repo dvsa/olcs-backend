@@ -223,17 +223,6 @@ class Generator extends AbstractGenerator
 
     protected $lva;
 
-    /** @var SectionAccessService */
-    private $sectionAccessService;
-
-    /** @var NiTextTranslation */
-    private $niTextTranslation;
-
-    /** @var SignatureReviewService */
-    private $signatureReviewService;
-
-    private ContainerInterface $services;
-
     /**
      * Create service instance
      *
@@ -249,16 +238,12 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        SectionAccessService $sectionAccessService,
-        NiTextTranslation $niTextTranslation,
-        SignatureReviewService $signatureReviewService,
-        ContainerInterface $services
+        private SectionAccessService $sectionAccessService,
+        private NiTextTranslation $niTextTranslation,
+        private SignatureReviewService $signatureReviewService,
+        private ContainerInterface $services
     ) {
         parent::__construct($abstractGeneratorServices);
-        $this->sectionAccessService = $sectionAccessService;
-        $this->niTextTranslation = $niTextTranslation;
-        $this->signatureReviewService = $signatureReviewService;
-        $this->services = $services;
 
         $notRemovedCriteria = Criteria::create();
         $notRemovedCriteria->andWhere(
@@ -423,7 +408,6 @@ class Generator extends AbstractGenerator
     /**
      * Grab all of the review for a variation
      *
-     * @param array $sections
      *
      * @return array
      */
@@ -458,7 +442,6 @@ class Generator extends AbstractGenerator
     }
 
     /**
-     * @param Application $application
      * @return array
      */
     private function buildSignatureSection(Application $application): array

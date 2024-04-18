@@ -9,7 +9,6 @@ interface AnswersSummaryRowsAdderInterface
     /**
      * Add one or more AnswersSummaryRow instances to the provided AnswersSummary instance
      *
-     * @param AnswersSummary $answersSummary
      * @param QaEntityInterface $qaEntityInterface
      * @param bool $isSnapshot
      */

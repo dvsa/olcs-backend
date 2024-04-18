@@ -16,18 +16,12 @@ use PDO;
 class DataGovUk
 {
     /**
-     * @var Connection
-     */
-    private $conn;
-
-    /**
      * DataGovUk constructor.
      *
      * @param Connection $conn Database connection
      */
-    public function __construct(Connection $conn)
+    public function __construct(private Connection $conn)
     {
-        $this->conn = $conn;
     }
 
     /**

@@ -62,7 +62,6 @@ class GetList extends AbstractQueryHandler
     /**
      * Get a list of ConditionUndertaking for an Application
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
      *
      * @return array
      */
@@ -87,7 +86,6 @@ class GetList extends AbstractQueryHandler
     /**
      * Get a list of ConditionUndertaking for an Variation
      *
-     * @param \Dvsa\Olcs\Api\Entity\Application\Application $application
      *
      * @return array
      */

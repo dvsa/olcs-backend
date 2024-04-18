@@ -77,8 +77,6 @@ class LicenceBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $hgvCount
-     * @param int $lgvCount
      * @return $this
      */
     public function authorizedFor(int $hgvCount = 0, int $lgvCount = 0): self
@@ -97,7 +95,6 @@ class LicenceBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $extraHgvs
      * @return $this
      */
     public function withExtraOperatingCentreCapacityFor(int $extraHgvs): self

@@ -199,7 +199,7 @@ final class Create extends AbstractCommandHandler implements ToggleRequiredInter
         foreach ($documentIds as $id) {
             try {
                 $doc = $docRepo->fetchById($id);
-            } catch (NotFoundException $ex) {
+            } catch (NotFoundException) {
                 // Document deleted.
                 continue;
             }

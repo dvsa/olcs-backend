@@ -27,8 +27,6 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
 
     /**
      * Constructor.
-     *
-     * @param Client $httpClient
      */
     public function __construct(Client $httpClient)
     {

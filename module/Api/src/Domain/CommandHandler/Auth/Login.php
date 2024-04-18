@@ -49,7 +49,6 @@ class Login extends AbstractCommandHandler
     /**
      * Login constructor.
      * @param AuthenticationService $authenticationService
-     * @param ValidatableAdapterInterface $adapter
      */
     public function __construct(AuthenticationServiceInterface $authenticationService, ValidatableAdapterInterface $adapter)
     {
@@ -165,7 +164,6 @@ class Login extends AbstractCommandHandler
     /**
      * Checks that the user is enabled.
      *
-     * @param User $user
      * @return bool
      * @throws UserIsNotEnabledException
      */
@@ -183,7 +181,6 @@ class Login extends AbstractCommandHandler
     /**
      * Checks that the user is not soft-deleted.
      *
-     * @param User $user
      * @return bool
      * @throws UserSoftDeletedException
      */
@@ -203,8 +200,6 @@ class Login extends AbstractCommandHandler
      *
      * A user can ONLY log into a realm (SelfServe or Internal) they are assigned as.
      *
-     * @param User $user
-     * @param string $realm
      * @return bool
      * @throws UserRealmMismatchException
      */
@@ -227,7 +222,6 @@ class Login extends AbstractCommandHandler
      *
      * A user can ONLY log into a self-serve realm if they have a related organisation.
      *
-     * @param User $user
      * @return bool
      * @throws UserHasNoOrganisationException
      */

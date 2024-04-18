@@ -80,7 +80,7 @@ final class DeletePeople extends AbstractCommandHandler implements Transactioned
                 $this->getRepo('ApplicationOrganisationPerson')->delete($appOrgPerson);
                 $this->getRepo('Person')->delete($appOrgPerson->getPerson());
             }
-        } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException $e) {
+        } catch (\Dvsa\Olcs\Api\Domain\Exception\NotFoundException) {
             $appOrgPerson = new ApplicationOrganisationPerson(
                 $application,
                 $application->getLicence()->getOrganisation(),

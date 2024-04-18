@@ -1642,7 +1642,6 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
     /**
      * Whether this licence has one or more under consideration applications associated with the specified stock
      *
-     * @param IrhpPermitStock $irhpPermitStock
      *
      * @return bool
      */

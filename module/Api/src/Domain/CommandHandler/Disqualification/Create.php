@@ -53,7 +53,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Get a refernece to the Organisation entity
      *
-     * @param Command $command
      *
      * @return Organisation|null
      */
@@ -67,7 +66,6 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
     /**
      * Get a refernece to the Person entity
      *
-     * @param Command $command
      *
      * @return \Dvsa\Olcs\Api\Entity\Person\Person|null
      */

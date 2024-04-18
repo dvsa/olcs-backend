@@ -36,9 +36,7 @@ final class BilateralCountryAccessible extends AbstractQueryHandler
     /**
      * Whether the specified country id is accessible for the specified application
      *
-     * @param IrhpApplication $irhpApplication
      * @param string $countryId
-     *
      * @return bool
      */
     private function isCountryAccessible(IrhpApplication $irhpApplication, $countryId)

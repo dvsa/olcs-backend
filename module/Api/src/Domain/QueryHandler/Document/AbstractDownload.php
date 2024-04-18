@@ -66,7 +66,7 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
 
         // OLCS-14910 If file doesn't have an extension then add a '.txt' extension
         $downloadFileName = basename($identifier);
-        if (FileHelper::getExtension($downloadFileName) === false) {
+        if (empty(FileHelper::getExtension($downloadFileName))) {
             $downloadFileName .= '.txt';
         }
 

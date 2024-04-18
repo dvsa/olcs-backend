@@ -53,7 +53,6 @@ final class CreatePreviousConviction extends AbstractCommandHandler implements T
     }
 
     /**
-     * @param Cmd $command
      * @return Application
      */
     private function createPreviousConvictionObject(Cmd $command)

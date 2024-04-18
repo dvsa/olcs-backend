@@ -80,7 +80,7 @@ class ByConversation extends AbstractQueryHandler implements ToggleRequiredInter
             $message = $messageRepo->fetchById($messageId);
             try {
                 $messageUserRead = $userMessageReadRepo->fetchByMessageIdAndUserId($messageId, $this->getUser()->getId());
-            } catch (NoResultException $e) {
+            } catch (NoResultException) {
                 $messageUserRead = new MessagingUserMessageRead();
                 $messageUserRead->setMessagingMessage($message);
                 $messageUserRead->setUser($this->getUser());

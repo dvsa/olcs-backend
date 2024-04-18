@@ -24,15 +24,11 @@ class AcquiredRightsClient
      */
     protected const URI_BY_REFERENCE_PATTERN = 'ref-vol-lookup/%s';
 
-    protected Client $httpClient;
-
-    public function __construct(Client $httpClient)
+    public function __construct(protected Client $httpClient)
     {
-        $this->httpClient = $httpClient;
     }
 
     /**
-     * @param string $reference
      * @return ApplicationReference
      * @throws ReferenceNotFoundException
      * @throws ServiceException

@@ -66,7 +66,6 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
     }
 
     /**
-     * @param Cmd $command
      *
      * @return SubmissionEntity
      * @throws \Dvsa\Olcs\Api\Domain\Exception\RuntimeException
@@ -90,7 +89,6 @@ final class CreateSubmission extends AbstractCommandHandler implements Submissio
      * Returns an array of Comment commands set up with comment text generated from the section data.
      * Generate comments for all sections that are configured as type = 'text'
      *
-     * @param SubmissionEntity $submissionEntity
      *
      * @return array
      */

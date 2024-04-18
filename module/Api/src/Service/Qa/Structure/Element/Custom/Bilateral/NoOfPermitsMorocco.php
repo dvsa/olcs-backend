@@ -6,12 +6,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 
 class NoOfPermitsMorocco implements ElementInterface
 {
-    /** @var string */
-    private $label;
-
-    /** @var string|null */
-    private $value;
-
     /**
      * Create instance
      *
@@ -20,10 +14,8 @@ class NoOfPermitsMorocco implements ElementInterface
      *
      * @return NoOfPermitsMorocco
      */
-    public function __construct($label, $value)
+    public function __construct(private $label, private $value)
     {
-        $this->label = $label;
-        $this->value = $value;
     }
 
     /**

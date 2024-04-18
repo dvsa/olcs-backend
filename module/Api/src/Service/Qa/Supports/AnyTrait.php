@@ -9,7 +9,6 @@ trait AnyTrait
     /**
      * Whether the passed entity is any entity (always returns true)
      *
-     * @param QaEntityInterface $qaEntity
      *
      * @return bool
      */

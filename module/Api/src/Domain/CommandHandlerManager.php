@@ -30,7 +30,7 @@ class CommandHandlerManager extends AbstractPluginManager
     {
         $start = microtime(true);
 
-        $commandFqcn = get_class($command);
+        $commandFqcn = $command::class;
 
         $commandHandler = $this->get($commandFqcn);
 
@@ -51,7 +51,7 @@ class CommandHandlerManager extends AbstractPluginManager
             ['data' => ['commandData' => $data]]
         );
 
-        $commandHandlerFqcn = get_class($validateCommandHandler);
+        $commandHandlerFqcn = $validateCommandHandler::class;
 
         $validateCommandHandler->checkEnabled();
 

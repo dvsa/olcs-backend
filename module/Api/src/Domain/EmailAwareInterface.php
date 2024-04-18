@@ -7,9 +7,6 @@ namespace Dvsa\Olcs\Api\Domain;
  */
 interface EmailAwareInterface
 {
-    /**
-     * @param \Dvsa\Olcs\Email\Service\TemplateRenderer $service
-     */
     public function setTemplateRendererService(\Dvsa\Olcs\Email\Service\TemplateRenderer $service);
 
     /**

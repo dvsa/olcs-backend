@@ -11,19 +11,14 @@ use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
  */
 class AbstractConsumerServices
 {
-    /** @var CommandHandlerManager */
-    private $commandHandlerManager;
-
     /**
      * Create service instance
      *
-     * @param CommandHandlerManager $commandHandlerManager
      *
      * @return AbstractConsumerServices
      */
-    public function __construct(CommandHandlerManager $commandHandlerManager)
+    public function __construct(private CommandHandlerManager $commandHandlerManager)
     {
-        $this->commandHandlerManager = $commandHandlerManager;
     }
 
     /**

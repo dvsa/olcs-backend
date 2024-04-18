@@ -48,7 +48,6 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
     /**
      * Calculate Out of Representation date
      *
-     * @param CaseEntity $case
      *
      * @return string A date string or and empty string
      */
@@ -67,7 +66,6 @@ final class CasesWithOppositionDates extends AbstractQueryHandler
     /**
      * Calculate the Out of Opposition date
      *
-     * @param CaseEntity $case
      *
      * @return string A date string or and empty string
      */

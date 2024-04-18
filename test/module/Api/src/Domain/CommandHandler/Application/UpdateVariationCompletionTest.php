@@ -1028,8 +1028,6 @@ class UpdateVariationCompletionTest extends AbstractCommandHandlerTestCase
     }
 
     /**
-     * @param array $operatingCentresVehicleCapacities
-     * @param array $expectedVehicleConstraints
      * @test
      * @depends handleCommandValidatesTotAuthHgvVehiclesForPsvLicences
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
@@ -1098,8 +1096,6 @@ class UpdateVariationCompletionTest extends AbstractCommandHandlerTestCase
     }
 
     /**
-     * @param array $operatingCentresVehicleCapacities
-     * @param array $expectedVehicleConstraints
      * @test
      * @depends      handleCommandValidatesHgvsForGoodsVehicleLicences
      * @dataProvider operatingCentreVehicleAuthorisationConstraintsDataProvider
@@ -1318,7 +1314,6 @@ class UpdateVariationCompletionTest extends AbstractCommandHandlerTestCase
     }
 
     /**
-     * @param Application $application
      * @return Cmd
      */
     protected function commandToUpdateOperatingCentresSectionForApplication(Application $application): Cmd

@@ -9,29 +9,15 @@ class Checkbox implements ElementInterface
 {
     public const LABEL_KEY = 'label';
 
-    /** @var TranslateableText $label */
-    private $label;
-
-    /** @var TranslateableText $notCheckedMessage */
-    private $notCheckedMessage;
-
-    /** @var bool $checked */
-    private $checked;
-
     /**
      * Create instance
      *
-     * @param TranslateableText $label
-     * @param TranslateableText $notCheckedMessage
      * @param bool $checked
      *
      * @return Checkbox
      */
-    public function __construct(TranslateableText $label, TranslateableText $notCheckedMessage, $checked)
+    public function __construct(private TranslateableText $label, private TranslateableText $notCheckedMessage, private $checked)
     {
-        $this->label = $label;
-        $this->notCheckedMessage = $notCheckedMessage;
-        $this->checked = $checked;
     }
 
     /**

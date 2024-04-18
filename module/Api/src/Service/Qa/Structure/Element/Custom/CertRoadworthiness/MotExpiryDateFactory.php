@@ -10,7 +10,6 @@ class MotExpiryDateFactory
      * Create and return a MotExpiryDate instance
      *
      * @param bool $enableFileUploads
-     * @param DateWithThreshold $dateWithThreshold
      *
      * @return MotExpiryDate
      */

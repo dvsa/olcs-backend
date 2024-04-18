@@ -30,11 +30,9 @@ class EntityCloner
     /**
      * Clones an entity and copies all properties except those in the ignored list
      *
-     * @param mixed $sourceEntity
-     * @param array $ignoredProperties
      * @return mixed
      */
-    public static function cloneEntity($sourceEntity, array $ignoredProperties = [])
+    public static function cloneEntity(mixed $sourceEntity, array $ignoredProperties = [])
     {
         $ignoredProperties = array_merge(self::$alwaysIgnore, $ignoredProperties);
 
@@ -45,7 +43,7 @@ class EntityCloner
         }
 
         // Get a template with default properties
-        $entityClass = get_class($sourceEntity);
+        $entityClass = $sourceEntity::class;
         $template = self::instantiate($entityClass);
 
         // Set ignored properties to their defaults
@@ -67,16 +65,14 @@ class EntityCloner
     /**
      * Copies data from the sourceEntity to the targetEntity (can be different type)
      *
-     * @param mixed $sourceEntity
-     * @param array $ignoredProperties
      * @return mixed
      */
-    public static function cloneEntityInto($sourceEntity, $targetEntity, array $ignoredProperties = [])
+    public static function cloneEntityInto(mixed $sourceEntity, $targetEntity, array $ignoredProperties = [])
     {
         $ignoredProperties = array_merge(self::$alwaysIgnore, $ignoredProperties);
 
         if (!is_object($targetEntity)) {
-            if ($targetEntity == get_class($sourceEntity)) {
+            if ($targetEntity == $sourceEntity::class) {
                 return self::cloneEntity($sourceEntity, $ignoredProperties);
             }
 

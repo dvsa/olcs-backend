@@ -76,7 +76,6 @@ final class CreateUnlicensed extends AbstractCommandHandler
     }
 
     /**
-     * @param CommandInterface $command
      * @return OrganisationEntity
      */
     private function getOrganisation(CommandInterface $command): OrganisationEntity
@@ -91,7 +90,6 @@ final class CreateUnlicensed extends AbstractCommandHandler
     }
 
     /**
-     * @param CommandInterface $command
      * @return ContactDetailsEntity
      */
     private function getContactDetails(CommandInterface $command): ContactDetailsEntity
@@ -105,9 +103,6 @@ final class CreateUnlicensed extends AbstractCommandHandler
     }
 
     /**
-     * @param CommandInterface $command
-     * @param OrganisationEntity $organisation
-     * @param ContactDetailsEntity $contactDetails
      * @return LicenceEntity
      */
     private function getLicence(CommandInterface $command, OrganisationEntity $organisation, ContactDetailsEntity $contactDetails): LicenceEntity

@@ -200,7 +200,7 @@ class LicenceTest extends QueryHandlerTestCase
     }
 
     /**
-     * @dataProvider testHandleQueryShowExpiryWarningDataProvider
+     * @dataProvider dptestHandleQueryShowExpiryWarningDataProvider
      */
     public function testHandleQueryShowExpiryWarning(
         $expected,
@@ -254,15 +254,16 @@ class LicenceTest extends QueryHandlerTestCase
 
         $result = $this->sut->handleQuery($query);
 
-        $expectedResult = [
-            'showExpiryWarning' => $expected,
-            'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
-        ];
+        $resultArray = $result->serialize();
 
-        Assert::assertArraySubset($expectedResult, $result->serialize());
+        $this->assertArrayHasKey('showExpiryWarning', $resultArray);
+        $this->assertSame($expected, $resultArray['showExpiryWarning']);
+
+        $this->assertArrayHasKey('isLicenceSurrenderAllowed', $resultArray);
+        $this->assertSame($isLicenceSurrenderAllowed, $resultArray['isLicenceSurrenderAllowed']);
     }
 
-    public function testHandleQueryShowExpiryWarningDataProvider()
+    public function dptestHandleQueryShowExpiryWarningDataProvider()
     {
         return [
             'should show' => [
@@ -358,7 +359,12 @@ class LicenceTest extends QueryHandlerTestCase
             'isLicenceSurrenderAllowed' => $isLicenceSurrenderAllowed
         ];
 
-        Assert::assertArraySubset($expected, $result->serialize());
+        $serializedResult = $result->serialize();
+
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $serializedResult, "The key '{$key}' is missing in the result.");
+            $this->assertSame($value, $serializedResult[$key], "The value of '{$key}' does not match the expected value.");
+        }
     }
 
     public function dptestHandleQuery()

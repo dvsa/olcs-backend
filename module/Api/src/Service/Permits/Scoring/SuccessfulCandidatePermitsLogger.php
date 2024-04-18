@@ -8,9 +8,6 @@ class SuccessfulCandidatePermitsLogger
 {
     /**
      * Logs a list of successful candidate permits to a CQRS result object
-     *
-     * @param array $candidatePermits
-     * @param Result $result
      */
     public function log(array $candidatePermits, Result $result)
     {

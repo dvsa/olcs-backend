@@ -21,26 +21,6 @@ class TransExchangeClient implements TransExchangeClientInterface
     public const TRANSXCHANGE_INVALID_XML = 'TransXchange response did not validate against the schema: ';
 
     /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    /**
-     * @var MapXmlFile
-     */
-    private $xmlFilter;
-
-    /**
-     * @var ParseXmlString
-     */
-    private $xmlParser;
-
-    /**
-     * @var Xsd
-     */
-    private $xsdValidator;
-
-    /**
      * TransExchangeClient constructor.
      *
      * @param RestClient     $restClient   Laminas rest client
@@ -48,16 +28,8 @@ class TransExchangeClient implements TransExchangeClientInterface
      * @param ParseXmlString $xmlParser    olcs-xmltools xml parser
      * @param Xsd            $xsdValidator olcs-xmltools xml validator
      */
-    public function __construct(
-        RestClient $restClient,
-        MapXmlFile $xmlFilter,
-        ParseXmlString $xmlParser,
-        Xsd $xsdValidator
-    ) {
-        $this->restClient = $restClient;
-        $this->xmlFilter = $xmlFilter;
-        $this->xmlParser = $xmlParser;
-        $this->xsdValidator = $xsdValidator;
+    public function __construct(private RestClient $restClient, private MapXmlFile $xmlFilter, private ParseXmlString $xmlParser, private Xsd $xsdValidator)
+    {
     }
 
     /**

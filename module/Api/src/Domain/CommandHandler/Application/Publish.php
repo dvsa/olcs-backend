@@ -53,7 +53,6 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
     /**
      * Publish the application
      *
-     * @param ApplicationEntity $application
      *
      * @return Result
      */
@@ -72,7 +71,6 @@ final class Publish extends AbstractCommandHandler implements TransactionedInter
     /**
      * Create any TEX tasks on the application
      *
-     * @param ApplicationEntity $application
      *
      * @return Result
      */

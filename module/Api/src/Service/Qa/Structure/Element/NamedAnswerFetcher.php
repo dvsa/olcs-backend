@@ -14,12 +14,10 @@ class NamedAnswerFetcher
     /**
      * Retrieve an answer from the appropriate location within the post data
      *
-     * @param ApplicationStepEntity $applicationStep
      * @param array $postData
      * @param string $elementName
      *
      * @return mixed
-     *
      * @throws NotFoundException
      */
     public function fetch(ApplicationStepEntity $applicationStep, $postData, $elementName)

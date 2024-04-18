@@ -168,7 +168,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Prepares data and calls TieredProductReference Trait method genericGetProdRefForTier
      *
-     * @param DateTime $now
      * @return string
      */
     public function getProductReferenceForTier(DateTime $now = null)
@@ -782,7 +781,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Terminate an application
      *
-     * @param RefData $terminateStatus
      *
      * @return void
      */
@@ -1146,8 +1144,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     }
 
     /**
-     * @param RefData $source
-     * @param RefData $status
      * @param RefData $irhpPermitType
      * @param RefData $licence
      * @param string|null $dateReceived
@@ -1204,26 +1200,17 @@ class IrhpApplication extends AbstractIrhpApplication implements
             throw new ForbiddenException(self::ERR_CANT_SUBMIT);
         }
 
-        switch ($this->getIrhpPermitType()->getId()) {
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT:
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM:
-                return $this->proceedToUnderConsideration($submitStatus);
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL:
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL:
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL:
-                return $this->proceedToIssuing($submitStatus);
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE:
-            case IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER:
-                return $this->proceedToValid($submitStatus);
-            default:
-                throw new ForbiddenException(self::ERR_CANT_SUBMIT);
-        }
+        return match ($this->getIrhpPermitType()->getId()) {
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_SHORT_TERM => $this->proceedToUnderConsideration($submitStatus),
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_BILATERAL, IrhpPermitType::IRHP_PERMIT_TYPE_ID_MULTILATERAL, IrhpPermitType::IRHP_PERMIT_TYPE_ID_ECMT_REMOVAL => $this->proceedToIssuing($submitStatus),
+            IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_VEHICLE, IrhpPermitType::IRHP_PERMIT_TYPE_ID_CERT_ROADWORTHINESS_TRAILER => $this->proceedToValid($submitStatus),
+            default => throw new ForbiddenException(self::ERR_CANT_SUBMIT),
+        };
     }
 
     /**
      * Grant Application -
      *
-     * @param RefData $grantStatus
      * @throws ForbiddenException
      */
     public function grant(RefData $grantStatus)
@@ -1501,7 +1488,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Proceeds the application from not yet submitted status to issuing status
      *
-     * @param RefData $issuingStatus
      *
      * @throws ForbiddenException
      */
@@ -1517,7 +1503,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Proceeds the application from not yet submitted status to under consideration status
      *
-     * @param RefData $uc_status
      *
      * @throws ForbiddenException
      */
@@ -1533,7 +1518,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Proceeds the application from issuing status to valid status
      *
-     * @param RefData $validStatus
      *
      * @throws ForbiddenException
      */
@@ -1656,9 +1640,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Changes the status to expired
      *
-     * @param RefData       $expireStatus
      * @param DateTime|null $expiryDate
-     *
      * @throws ForbiddenException
      */
     public function expire(RefData $expireStatus, DateTime $expiryDate = null)
@@ -1733,8 +1715,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Update the international journeys answer value
-     *
-     * @param RefData $internationalJourneys
      */
     public function updateInternationalJourneys(RefData $internationalJourneys)
     {
@@ -1751,8 +1731,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Update the sectors answer value
-     *
-     * @param Sectors $sectors
      */
     public function updateSectors(Sectors $sectors)
     {
@@ -1780,7 +1758,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
                 ->getIrhpPermitWindow()
                 ->getIrhpPermitStock()
                 ->getBusinessProcess();
-        } catch (RuntimeException $ex) {
+        } catch (RuntimeException) {
             // do nothing if getFirstIrhpPermitApplication() throws an exception
         }
     }
@@ -1834,8 +1812,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
 
     /**
      * Update the list of countries associated with this application
-     *
-     * @param ArrayCollection $countries
      */
     public function updateCountries(ArrayCollection $countries)
     {
@@ -2156,10 +2132,8 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Expire certificate of roadworthiness
      *
-     * @param RefData $expireStatus
      *
      * @throws \Exception
-     *
      * @return void
      */
     public function expireCertificate(RefData $expireStatus): void
@@ -2356,7 +2330,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Proceeds the application from under consideration to unsuccessful during the accept scoring process
      *
-     * @param RefData $unsuccessfulStatus
      *
      * @throws ForbiddenException
      */
@@ -2372,7 +2345,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Proceeds the application from under consideration to awaiting fee during the accept scoring process
      *
-     * @param RefData $awaitingFeeStatus
      *
      * @throws ForbiddenException
      */
@@ -2587,7 +2559,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Reset to NotYetSubmitted from Valid
      *
-     * @param RefData $status
      *
      * @throws ForbiddenException
      */
@@ -2622,7 +2593,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Reset to NotYetSubmitted from Cancelled
      *
-     * @param RefData $status
      *
      * @throws ForbiddenException
      */
@@ -2673,7 +2643,6 @@ class IrhpApplication extends AbstractIrhpApplication implements
     /**
      * Whether this application is either under consideration or awating fee, and associated with the specified stock
      *
-     * @param IrhpPermitStock $irhpPermitStock
      *
      * @return bool
      */

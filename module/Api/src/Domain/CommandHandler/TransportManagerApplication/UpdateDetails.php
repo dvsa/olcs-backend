@@ -40,11 +40,8 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
         'PreviousConviction',
     ];
 
-    protected AcquiredRightsService $acquiredRightsService;
-
-    public function __construct(AcquiredRightsService $acquiredRightsService)
+    public function __construct(protected AcquiredRightsService $acquiredRightsService)
     {
-        $this->acquiredRightsService = $acquiredRightsService;
     }
 
     /**
@@ -87,8 +84,6 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
     /**
      * Add LGV Acquired Rights qualification if reference number is provided and this TM doesn't have one already
      *
-     * @param TransportManagerApplication $tma
-     * @param UpdateDetailsCommand $command
      *
      * @return void
      */
@@ -310,7 +305,6 @@ final class UpdateDetails extends AbstractCommandHandler implements Transactione
      *  - The reference number is valid and refers to a real acquired rights application.
      *  - The acquired rights application has been approved.
      *
-     * @param string $acquiredRightsReferenceNumber
      * @return void
      * @throws ValidationException
      */

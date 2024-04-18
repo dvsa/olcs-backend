@@ -16,9 +16,6 @@ trait UploaderAwareTrait
      */
     private $uploader;
 
-    /**
-     * @param ContentStoreFileUploader $uploader
-     */
     public function setUploader(ContentStoreFileUploader $uploader)
     {
         $this->uploader = $uploader;

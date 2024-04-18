@@ -4,32 +4,19 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure;
 
 class FilteredTranslateableTextGenerator
 {
-    /** @var FilteredTranslateableTextFactory */
-    private $filteredTranslateableTextFactory;
-
-    /** @var TranslateableTextGenerator */
-    private $translateableTextGenerator;
-
     /**
      * Create service instance
      *
-     * @param FilteredTranslateableTextFactory $filteredTranslateableTextFactory
-     * @param TranslateableTextGenerator $translateableTextGenerator
      *
      * @return FilteredTranslateableText
      */
-    public function __construct(
-        FilteredTranslateableTextFactory $filteredTranslateableTextFactory,
-        TranslateableTextGenerator $translateableTextGenerator
-    ) {
-        $this->filteredTranslateableTextFactory = $filteredTranslateableTextFactory;
-        $this->translateableTextGenerator = $translateableTextGenerator;
+    public function __construct(private FilteredTranslateableTextFactory $filteredTranslateableTextFactory, private TranslateableTextGenerator $translateableTextGenerator)
+    {
     }
 
     /**
      * Build and return an FilteredTranslateableText instance using the appropriate data sources
      *
-     * @param array $options
      *
      * @return FilteredTranslateableText
      */

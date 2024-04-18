@@ -4,15 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 class RestrictedCountry
 {
-    /** @var string */
-    private $code;
-
-    /** @var string */
-    private $labelTranslationKey;
-
-    /** @var bool */
-    private $checked;
-
     /**
      * Create instance
      *
@@ -22,11 +13,8 @@ class RestrictedCountry
      *
      * @return RestrictedCountry
      */
-    public function __construct($code, $labelTranslationKey, $checked)
+    public function __construct(private $code, private $labelTranslationKey, private $checked)
     {
-        $this->code = $code;
-        $this->labelTranslationKey = $labelTranslationKey;
-        $this->checked = $checked;
     }
 
     /**

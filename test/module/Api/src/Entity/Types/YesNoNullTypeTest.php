@@ -22,7 +22,7 @@ class YesNoNullTypeTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetSqlDeclaration()
     {
-        $mockPlatform = $this->createMock(MySQLPlatform::class);
+        $mockPlatform = $this->createMock(\Doctrine\DBAL\Platforms\MySQLPlatform::class);
         $this->assertEquals(
             'tinyint(1) NULL COMMENT \'(DC2Type:yesnonull)\'',
             $this->type->getSqlDeclaration([], $mockPlatform)

@@ -30,7 +30,6 @@ class PublishValidationService implements FactoryInterface
     /**
      * Validate the application for publishing
      *
-     * @param ApplicationEntity $application
      *
      * @return array of validation error messages
      */

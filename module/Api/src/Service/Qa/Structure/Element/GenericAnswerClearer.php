@@ -12,22 +12,11 @@ class GenericAnswerClearer implements AnswerClearerInterface
 {
     use AnyTrait;
 
-    /** @var GenericAnswerProvider */
-    private $genericAnswerProvider;
-
-    /** @var AnswerRepository */
-    private $answerRepo;
-
     /**
      * Create service instance
-     *
-     * @param GenericAnswerProvider $genericAnswerProvider
-     * @param AnswerRepository $answerRepo
      */
-    public function __construct(GenericAnswerProvider $genericAnswerProvider, AnswerRepository $answerRepo)
+    public function __construct(private GenericAnswerProvider $genericAnswerProvider, private AnswerRepository $answerRepo)
     {
-        $this->genericAnswerProvider = $genericAnswerProvider;
-        $this->answerRepo = $answerRepo;
     }
 
     /**
@@ -38,7 +27,7 @@ class GenericAnswerClearer implements AnswerClearerInterface
         $answer = null;
         try {
             $answer = $this->genericAnswerProvider->get($qaContext);
-        } catch (NotFoundException $e) {
+        } catch (NotFoundException) {
         }
 
         if (is_object($answer)) {

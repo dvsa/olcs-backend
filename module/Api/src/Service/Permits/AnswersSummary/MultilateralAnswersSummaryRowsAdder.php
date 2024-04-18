@@ -9,24 +9,14 @@ class MultilateralAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
 {
     public const TEMPLATE_DIRECTORY = 'answers-summary/';
 
-    /** @var AnswersSummaryRowFactory */
-    private $answersSummaryRowFactory;
-
-    /** @var RendererInterface */
-    private $viewRenderer;
-
     /**
      * Create service instance
      *
-     * @param AnswersSummaryRowFactory $answersSummaryRowFactory
-     * @param RendererInterface $viewRenderer
      *
      * @return MultilateralAnswersSummaryRowsAdder
      */
-    public function __construct(AnswersSummaryRowFactory $answersSummaryRowFactory, RendererInterface $viewRenderer)
+    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer)
     {
-        $this->answersSummaryRowFactory = $answersSummaryRowFactory;
-        $this->viewRenderer = $viewRenderer;
     }
 
     /**

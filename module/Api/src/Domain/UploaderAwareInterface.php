@@ -11,9 +11,6 @@ use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
  */
 interface UploaderAwareInterface
 {
-    /**
-     * @param ContentStoreFileUploader $uploader
-     */
     public function setUploader(ContentStoreFileUploader $uploader);
 
     /**

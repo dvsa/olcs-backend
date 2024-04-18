@@ -18,6 +18,7 @@ use Dvsa\Olcs\Transfer\Query\User\UserListSelfserve as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
+use ReflectionClass;
 
 /**
  * UserListSelfserveTest
@@ -40,6 +41,11 @@ class UserListSelfserveTest extends QueryHandlerTestCase
     {
         $user = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
         $user->setId(74);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($user, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_PARTNER);
 
         $this->repoMap['User']->shouldReceive('fetchList')->andReturn([$user]);
         $this->repoMap['User']->shouldReceive('fetchCount')->andReturn('COUNT');
@@ -64,6 +70,11 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $currentUser->setId(222);
         $currentUser->setPartnerContactDetails($partnerContactDetails);
 
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_PARTNER);
+
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
 
@@ -81,6 +92,11 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $currentUser = m::mock(UserEntity::class)->makePartial();
         $currentUser->setId(222);
         $currentUser->setLocalAuthority($localAuthority);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_LOCAL_AUTHORITY);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
@@ -148,6 +164,11 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $currentUser->setId(222);
         $currentUser->setTeam($team);
 
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, 'wrong_user_type');
+
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);
 
@@ -167,6 +188,11 @@ class UserListSelfserveTest extends QueryHandlerTestCase
         $currentUser = m::mock(UserEntity::class)->makePartial();
         $currentUser->setId(222);
         $currentUser->setPartnerContactDetails($partnerContactDetails);
+
+        $reflectionClass = new ReflectionClass(UserEntity::class);
+        $property = $reflectionClass->getProperty('userType');
+        $property->setAccessible(true);
+        $property->setValue($currentUser, \Dvsa\Olcs\Api\Entity\User\User::USER_TYPE_PARTNER);
 
         $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
             ->andReturn($currentUser);

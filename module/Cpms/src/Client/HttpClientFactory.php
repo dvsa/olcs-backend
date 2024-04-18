@@ -9,20 +9,8 @@ use Psr\Log\LoggerInterface as Logger;
 
 class HttpClientFactory
 {
-    /**
-     * @var ClientOptions
-     */
-    private $options;
-
-    /**
-     * @var Logger
-     */
-    private $logger;
-
-    public function __construct(ClientOptions $options, Logger $logger)
+    public function __construct(private ClientOptions $options, private Logger $logger)
     {
-        $this->options = $options;
-        $this->logger = $logger;
     }
 
     public function createHttpClient(): HttpClient

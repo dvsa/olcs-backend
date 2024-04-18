@@ -91,36 +91,22 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     /**
      * Allocate the permits relating to a given irhp permit application
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param string $allocationMode
      */
     private function processIrhpPermitApplication(IrhpPermitApplication $irhpPermitApplication, $allocationMode)
     {
-        switch ($allocationMode) {
-            case IrhpPermitStock::ALLOCATION_MODE_STANDARD:
-                $this->processStandard($irhpPermitApplication);
-                break;
-            case IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY:
-                $this->processStandardWithExpiry($irhpPermitApplication);
-                break;
-            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
-                $this->processForEmissionsCategories($irhpPermitApplication);
-                break;
-            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
-                $this->processForCandidatePermits($irhpPermitApplication);
-                break;
-            case IrhpPermitStock::ALLOCATION_MODE_BILATERAL:
-                $this->processForBilateral($irhpPermitApplication);
-                break;
-            default:
-                throw new RuntimeException('Unknown allocation mode: ' . $allocationMode);
-        }
+        match ($allocationMode) {
+            IrhpPermitStock::ALLOCATION_MODE_STANDARD => $this->processStandard($irhpPermitApplication),
+            IrhpPermitStock::ALLOCATION_MODE_STANDARD_WITH_EXPIRY => $this->processStandardWithExpiry($irhpPermitApplication),
+            IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES => $this->processForEmissionsCategories($irhpPermitApplication),
+            IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS => $this->processForCandidatePermits($irhpPermitApplication),
+            IrhpPermitStock::ALLOCATION_MODE_BILATERAL => $this->processForBilateral($irhpPermitApplication),
+            default => throw new RuntimeException('Unknown allocation mode: ' . $allocationMode),
+        };
     }
 
     /**
      * Allocate the permits for an application that uses the standard allocation method
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     private function processStandard(IrhpPermitApplication $irhpPermitApplication)
     {
@@ -133,8 +119,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
 
     /**
      * Allocate the permits for an application that uses the standard allocation method with expiry date
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     private function processStandardWithExpiry(IrhpPermitApplication $irhpPermitApplication)
     {
@@ -148,8 +132,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
 
     /**
      * Allocate the permits for an application that uses the emissions categories allocation method
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     private function processForEmissionsCategories(IrhpPermitApplication $irhpPermitApplication)
     {
@@ -168,8 +150,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
 
     /**
      * Allocate the permits based upon the candidate permits associated with the irhp permit application
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     private function processForCandidatePermits(IrhpPermitApplication $irhpPermitApplication)
     {
@@ -184,8 +164,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
 
     /**
      * Allocate the permits for a bilateral application
-     *
-     * @param IrhpPermitApplication $irhpPermitApplication
      */
     private function processForBilateral(IrhpPermitApplication $irhpPermitApplication)
     {
@@ -207,7 +185,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     /**
      * Allocate standard or cabotage permits within a bilateral application
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param string $requestedType
      * @param int $permitsRequired
      */
@@ -225,7 +202,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     /**
      * Allocate morocco permits within a bilateral application
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param int $permitsRequired
      */
     private function processBilateralMoroccoRequest(IrhpPermitApplication $irhpPermitApplication, $permitsRequired)
@@ -235,30 +211,22 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
             ->getPermitCategory()
             ->getId();
 
-        switch ($permitCategory) {
-            case RefData::PERMIT_CAT_STANDARD_MULTIPLE_15:
-                $this->allocatePermits($irhpPermitApplication, null, $permitsRequired);
-                break;
-            case RefData::PERMIT_CAT_STANDARD_SINGLE:
-            case RefData::PERMIT_CAT_EMPTY_ENTRY:
-            case RefData::PERMIT_CAT_HORS_CONTINGENT:
-                $this->allocatePermits(
-                    $irhpPermitApplication,
-                    null,
-                    $permitsRequired,
-                    $irhpPermitApplication->generateExpiryDate()
-                );
-                break;
-            default:
-                throw new RuntimeException('Unknown permit category: ' . $permitCategory);
-        }
+        match ($permitCategory) {
+            RefData::PERMIT_CAT_STANDARD_MULTIPLE_15 => $this->allocatePermits($irhpPermitApplication, null, $permitsRequired),
+            RefData::PERMIT_CAT_STANDARD_SINGLE, RefData::PERMIT_CAT_EMPTY_ENTRY, RefData::PERMIT_CAT_HORS_CONTINGENT => $this->allocatePermits(
+                $irhpPermitApplication,
+                null,
+                $permitsRequired,
+                $irhpPermitApplication->generateExpiryDate()
+            ),
+            default => throw new RuntimeException('Unknown permit category: ' . $permitCategory),
+        };
     }
 
     /**
      * Allocate the permits for a single emissions category within an application that uses the emissions categories
      * allocation method
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param int $permitsRequired
      * @param string $emissionsCategoryId
      */
@@ -272,7 +240,6 @@ final class AllocateIrhpApplicationPermits extends AbstractCommandHandler
     /**
      * Run the specified permit allocation command permitsRequired times
      *
-     * @param IrhpPermitApplication $irhpPermitApplication
      * @param RangeMatchingCriteriaInterface $criteria (optional)
      * @param int $permitsRequired
      * @param DateTime $expiryDate (optional)

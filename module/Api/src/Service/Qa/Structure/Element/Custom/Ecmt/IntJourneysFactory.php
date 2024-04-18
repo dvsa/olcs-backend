@@ -10,7 +10,6 @@ class IntJourneysFactory
      * Create and return a IntJourneys instance
      *
      * @param bool $showNiWarning
-     * @param Radio $radio
      *
      * @return IntJourneys
      */

@@ -43,7 +43,6 @@ final class RefreshSubmissionSections extends AbstractCommandHandler implements 
     }
 
     /**
-     * @param Cmd $command
      * @return Submission
      */
     private function refreshSubmission(Cmd $command)

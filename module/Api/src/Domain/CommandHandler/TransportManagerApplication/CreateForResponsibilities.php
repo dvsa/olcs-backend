@@ -54,7 +54,7 @@ final class CreateForResponsibilities extends AbstractCommandHandler implements 
     {
         try {
             $application = $this->getRepo('Application')->fetchWithLicence($command->getApplication());
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             throw new ValidationException(
                 [
                     'application' =>  'The application ID is not valid'

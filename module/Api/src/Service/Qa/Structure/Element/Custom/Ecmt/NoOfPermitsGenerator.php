@@ -15,44 +15,14 @@ class NoOfPermitsGenerator implements ElementGeneratorInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var FeeTypeRepository */
-    private $feeTypeRepo;
-
-    /** @var NoOfPermitsFactory */
-    private $noOfPermitsFactory;
-
-    /** @var EmissionsCategoryConditionalAdder */
-    private $emissionsCategoryConditionalAdder;
-
-    /** @var StockAvailabilityCounter */
-    private $stockAvailabilityCounter;
-
-    /** @var StockLicenceMaxPermittedCounter */
-    private $stockLicenceMaxPermittedCounter;
-
     /**
      * Create service instance
      *
-     * @param FeeTypeRepository $feeTypeRepo
-     * @param NoOfPermitsFactory $noOfPermitsFactory
-     * @param EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder
-     * @param StockAvailabilityCounter $stockAvailabilityCounter
-     * @param StockLicenceMaxPermittedCounter $stockLicenceMaxPermittedCounter
      *
      * @return NoOfPermitsGenerator
      */
-    public function __construct(
-        FeeTypeRepository $feeTypeRepo,
-        NoOfPermitsFactory $noOfPermitsFactory,
-        EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder,
-        StockAvailabilityCounter $stockAvailabilityCounter,
-        StockLicenceMaxPermittedCounter $stockLicenceMaxPermittedCounter
-    ) {
-        $this->feeTypeRepo = $feeTypeRepo;
-        $this->noOfPermitsFactory = $noOfPermitsFactory;
-        $this->emissionsCategoryConditionalAdder = $emissionsCategoryConditionalAdder;
-        $this->stockAvailabilityCounter = $stockAvailabilityCounter;
-        $this->stockLicenceMaxPermittedCounter = $stockLicenceMaxPermittedCounter;
+    public function __construct(private FeeTypeRepository $feeTypeRepo, private NoOfPermitsFactory $noOfPermitsFactory, private EmissionsCategoryConditionalAdder $emissionsCategoryConditionalAdder, private StockAvailabilityCounter $stockAvailabilityCounter, private StockLicenceMaxPermittedCounter $stockLicenceMaxPermittedCounter)
+    {
     }
 
     /**

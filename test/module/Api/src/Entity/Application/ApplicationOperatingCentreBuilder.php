@@ -17,7 +17,6 @@ class ApplicationOperatingCentreBuilder implements BuilderInterface
     protected $instance;
 
     /**
-     * @param Application $application
      * @param int|null $id
      */
     public function __construct(Application $application, int $id = null)
@@ -31,7 +30,6 @@ class ApplicationOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param int $noOfVehicles
      * @return self
      */
     public function withVehicleCapacity(int $noOfVehicles): self
@@ -41,7 +39,6 @@ class ApplicationOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param string $action
      * @return self
      */
     public function withAction(string $action): self
@@ -59,7 +56,6 @@ class ApplicationOperatingCentreBuilder implements BuilderInterface
     }
 
     /**
-     * @param Application $application
      * @param int|null $id
      * @return self
      */

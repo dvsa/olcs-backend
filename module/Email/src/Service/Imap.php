@@ -21,7 +21,6 @@ class Imap implements FactoryInterface
     private $config;
 
     /**
-     * @param array $config
      * @return $this
      */
     public function setConfig(array $config)

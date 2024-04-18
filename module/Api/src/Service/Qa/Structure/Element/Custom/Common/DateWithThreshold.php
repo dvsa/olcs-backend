@@ -10,24 +10,14 @@ class DateWithThreshold implements ElementInterface
 {
     public const DATE_THRESHOLD_FORMAT = 'Y-m-d';
 
-    /** @var DateTime */
-    private $dateThreshold;
-
-    /** @var DateElement */
-    private $date;
-
     /**
      * Create instance
      *
-     * @param DateTime $dateThreshold
-     * @param DateElement $date
      *
      * @return DateWithThreshold
      */
-    public function __construct(DateTime $dateThreshold, DateElement $date)
+    public function __construct(private DateTime $dateThreshold, private DateElement $date)
     {
-        $this->dateThreshold = $dateThreshold;
-        $this->date = $date;
     }
 
     /**

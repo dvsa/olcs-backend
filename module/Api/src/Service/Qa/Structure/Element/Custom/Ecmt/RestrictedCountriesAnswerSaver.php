@@ -18,50 +18,14 @@ class RestrictedCountriesAnswerSaver implements AnswerSaverInterface
 {
     use IrhpApplicationOnlyTrait;
 
-    /** @var IrhpApplicationRepository */
-    private $irhpApplicationRepo;
-
-    /** @var CountryRepository */
-    private $countryRepo;
-
-    /** @var ArrayCollectionFactory */
-    private $arrayCollectionFactory;
-
-    /** @var NamedAnswerFetcher */
-    private $namedAnswerFetcher;
-
-    /** @var GenericAnswerWriter */
-    private $genericAnswerWriter;
-
-    /** @var StockBasedRestrictedCountryIdsProvider */
-    private $stockBasedRestrictedCountryIdsProvider;
-
     /**
      * Create service instance
      *
-     * @param IrhpApplicationRepository $irhpApplicationRepo
-     * @param CountryRepository $countryRepo
-     * @param ArrayCollectionFactory $arrayCollectionFactory
-     * @param NamedAnswerFetcher $namedAnswerFetcher
-     * @param GenericAnswerWriter $genericAnswerWriter
-     * @param StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider
      *
      * @return RestrictedCountriesAnswerSaver
      */
-    public function __construct(
-        IrhpApplicationRepository $irhpApplicationRepo,
-        CountryRepository $countryRepo,
-        ArrayCollectionFactory $arrayCollectionFactory,
-        NamedAnswerFetcher $namedAnswerFetcher,
-        GenericAnswerWriter $genericAnswerWriter,
-        StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider
-    ) {
-        $this->irhpApplicationRepo = $irhpApplicationRepo;
-        $this->countryRepo = $countryRepo;
-        $this->arrayCollectionFactory = $arrayCollectionFactory;
-        $this->namedAnswerFetcher = $namedAnswerFetcher;
-        $this->genericAnswerWriter = $genericAnswerWriter;
-        $this->stockBasedRestrictedCountryIdsProvider = $stockBasedRestrictedCountryIdsProvider;
+    public function __construct(private IrhpApplicationRepository $irhpApplicationRepo, private CountryRepository $countryRepo, private ArrayCollectionFactory $arrayCollectionFactory, private NamedAnswerFetcher $namedAnswerFetcher, private GenericAnswerWriter $genericAnswerWriter, private StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider)
+    {
     }
 
     /**

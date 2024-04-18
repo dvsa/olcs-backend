@@ -9,46 +9,20 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 
 class DateWithThresholdGenerator
 {
-    /** @var DateWithThresholdFactory */
-    private $dateWithThresholdFactory;
-
-    /** @var CurrentDateTimeFactory */
-    private $currentDateTimeFactory;
-
-    /** @var DateIntervalFactory */
-    private $dateIntervalFactory;
-
-    /** @var DateGenerator */
-    private $dateGenerator;
-
     /**
      * Create service instance
      *
-     * @param DateWithThresholdFactory $dateWithThresholdFactory
-     * @param CurrentDateTimeFactory $currentDateTimeFactory
-     * @param DateIntervalFactory $dateIntervalFactory
-     * @param DateGenerator $dateGenerator
      *
      * @return DateWithThresholdGenerator
      */
-    public function __construct(
-        DateWithThresholdFactory $dateWithThresholdFactory,
-        CurrentDateTimeFactory $currentDateTimeFactory,
-        DateIntervalFactory $dateIntervalFactory,
-        DateGenerator $dateGenerator
-    ) {
-        $this->dateWithThresholdFactory = $dateWithThresholdFactory;
-        $this->currentDateTimeFactory = $currentDateTimeFactory;
-        $this->dateIntervalFactory = $dateIntervalFactory;
-        $this->dateGenerator = $dateGenerator;
+    public function __construct(private DateWithThresholdFactory $dateWithThresholdFactory, private CurrentDateTimeFactory $currentDateTimeFactory, private DateIntervalFactory $dateIntervalFactory, private DateGenerator $dateGenerator)
+    {
     }
 
     /**
      * Build and return an element instance using the appropriate data sources
      *
-     * @param ElementGeneratorContext $context
      * @param string $dateInterval
-     *
      * @return DateWithThreshold
      */
     public function generate(ElementGeneratorContext $context, $dateInterval)

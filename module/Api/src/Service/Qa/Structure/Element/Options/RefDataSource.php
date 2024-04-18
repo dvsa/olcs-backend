@@ -6,19 +6,14 @@ use Dvsa\Olcs\Api\Domain\Repository\RefData as RefDataRepository;
 
 class RefDataSource implements SourceInterface
 {
-    /** @var RefDataRepository */
-    private $refDataRepo;
-
     /**
      * Create service instance
      *
-     * @param RefDataRepository $refDataRepo
      *
      * @return RefDataSource
      */
-    public function __construct(RefDataRepository $refDataRepo)
+    public function __construct(private RefDataRepository $refDataRepo)
     {
-        $this->refDataRepo = $refDataRepo;
     }
 
     /**

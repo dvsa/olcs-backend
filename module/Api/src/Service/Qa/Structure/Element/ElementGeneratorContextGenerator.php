@@ -7,30 +7,16 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorListGenerator;
 
 class ElementGeneratorContextGenerator
 {
-    /** @var ValidatorListGenerator */
-    private $validatorListGenerator;
-
-    /** @var ElementGeneratorContextFactory */
-    private $elementGeneratorContextFactory;
-
     /**
      * Create service instance
-     *
-     * @param ValidatorListGenerator $validatorListGenerator
-     * @param ElementGeneratorContextFactory $elementGeneratorContextFactory
      */
-    public function __construct(
-        ValidatorListGenerator $validatorListGenerator,
-        ElementGeneratorContextFactory $elementGeneratorContextFactory
-    ) {
-        $this->validatorListGenerator = $validatorListGenerator;
-        $this->elementGeneratorContextFactory = $elementGeneratorContextFactory;
+    public function __construct(private ValidatorListGenerator $validatorListGenerator, private ElementGeneratorContextFactory $elementGeneratorContextFactory)
+    {
     }
 
     /**
      * Create and return an ElementGeneratorContext instance
      *
-     * @param QaContext $qaContext
      *
      * @return ElementGeneratorContext
      */

@@ -15,16 +15,13 @@ use Dvsa\Olcs\Transfer\Query\Messaging\Messages\ByConversation;
 
 class Generator extends AbstractGenerator implements SnapshotGeneratorInterface
 {
-    protected MessageRepo $messageRepository;
     protected MessagingConversation $conversation;
 
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        MessageRepo $messageRepository
+        protected MessageRepo $messageRepository
     ) {
         parent::__construct($abstractGeneratorServices);
-
-        $this->messageRepository = $messageRepository;
     }
 
     public function setData($data): void

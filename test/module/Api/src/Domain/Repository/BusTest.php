@@ -100,10 +100,9 @@ class BusTest extends RepositoryTestCase
     }
 
     /**
-     * @param mixed $results
      * @return m\MockInterface
      */
-    public function getMockFetchByIdQueryBuilder($results)
+    public function getMockFetchByIdQueryBuilder(mixed $results)
     {
         /** @var QueryBuilder $qb */
         $qb = m::mock(QueryBuilder::class);

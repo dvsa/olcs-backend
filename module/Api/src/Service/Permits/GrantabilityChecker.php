@@ -11,32 +11,19 @@ use RuntimeException;
 
 class GrantabilityChecker
 {
-    /** @var EmissionsCategoriesGrantabilityChecker */
-    private $emissionsCategoriesGrantabilityChecker;
-
-    /** @var CandidatePermitsGrantabilityChecker */
-    private $candidatePermitsGrantabilityChecker;
-
     /**
      * Create service instance
      *
-     * @param EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker
-     * @param CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker
      *
      * @return GrantabilityChecker
      */
-    public function __construct(
-        EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker,
-        CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker
-    ) {
-        $this->emissionsCategoriesGrantabilityChecker = $emissionsCategoriesGrantabilityChecker;
-        $this->candidatePermitsGrantabilityChecker = $candidatePermitsGrantabilityChecker;
+    public function __construct(private EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker, private CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker)
+    {
     }
 
     /**
      * Whether there is sufficient stock to grant the permits required by the application
      *
-     * @param IrhpApplication $irhpApplication
      *
      * @return bool
      */
@@ -45,14 +32,10 @@ class GrantabilityChecker
         if ((string)$irhpApplication->getBusinessProcess() !== RefData::BUSINESS_PROCESS_APGG) {
             throw new RuntimeException('GrantabilityChecker is only implemented for APGG');
         }
-
-        switch ($irhpApplication->getAllocationMode()) {
-            case IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES:
-                return $this->emissionsCategoriesGrantabilityChecker->isGrantable($irhpApplication);
-            case IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS:
-                return $this->candidatePermitsGrantabilityChecker->isGrantable($irhpApplication);
-        }
-
-        throw new RuntimeException('Unable to grant application due to unsupported allocation mode');
+        return match ($irhpApplication->getAllocationMode()) {
+            IrhpPermitStock::ALLOCATION_MODE_EMISSIONS_CATEGORIES => $this->emissionsCategoriesGrantabilityChecker->isGrantable($irhpApplication),
+            IrhpPermitStock::ALLOCATION_MODE_CANDIDATE_PERMITS => $this->candidatePermitsGrantabilityChecker->isGrantable($irhpApplication),
+            default => throw new RuntimeException('Unable to grant application due to unsupported allocation mode'),
+        };
     }
 }

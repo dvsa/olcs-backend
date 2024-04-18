@@ -26,7 +26,6 @@ trait MocksAbstractCommandHandlerServicesTrait
     abstract protected function serviceManager(): ServiceManager;
 
     /**
-     * @param string $class
      * @return mixed
      */
     abstract protected function setUpMockService(string $class);

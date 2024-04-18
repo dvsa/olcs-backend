@@ -34,8 +34,6 @@ class TranslationKeyText extends AbstractRepository
     /**
      * Fetch all translation keys, with option to filter by locale
      *
-     * @param string|null $locale
-     * @param int         $hydrationMode
      *
      * @return mixed
      */

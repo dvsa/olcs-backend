@@ -377,11 +377,9 @@ class OperatingCentresTest extends MockeryTestCase
     }
 
     /**
-     * @param PublicationLink $publicationLink
      * @param string $action
      * @param int $vehiclesRequired
      * @param int $trailersRequired
-     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre
      */
     private function addApplicationOperatingCentre(
         PublicationLink $publicationLink,
@@ -405,10 +403,8 @@ class OperatingCentresTest extends MockeryTestCase
 
     /**
      *
-     * @param PublicationLink $publicationLink
      * @param type $vehiclesRequired
      * @param type $trailersRequired
-     * @param \Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre $operatingCentre
      */
     private function addLicenceOperatingCentre(
         PublicationLink $publicationLink,

@@ -21,8 +21,6 @@ trait EmailAwareTrait
     protected $templateRendererService;
 
     /**
-     * @param TemplateRenderer $service
-     *
      * @return void
      */
     public function setTemplateRendererService(TemplateRenderer $service)
@@ -41,7 +39,6 @@ trait EmailAwareTrait
     /**
      * Send an email
      *
-     * @param Message $message
      *
      * @return \Dvsa\Olcs\Api\Domain\Command\Result
      * @throws \Dvsa\Olcs\Email\Exception\EmailNotSentException
@@ -54,11 +51,8 @@ trait EmailAwareTrait
     /**
      * Send an email in a HTML template
      *
-     * @param Message      $message
      * @param string|array $template
-     * @param array        $variables
      * @param string       $layout
-     *
      * @return true
      * @throws \Dvsa\Olcs\Email\Exception\EmailNotSentException
      */
@@ -72,8 +66,6 @@ trait EmailAwareTrait
      * In theory (although probably not in practice) both the user and the organisation emails could be empty
      * Need to decide what to do in those situations (throw an exception here?)
      *
-     * @param Organisation $organisation
-     * @param User|null    $user
      *
      * @return array
      * @throws MissingEmailException
@@ -92,7 +84,7 @@ trait EmailAwareTrait
                     $toEmail = $contactDetails->getEmailAddress();
                 }
             }
-        } catch (EntityNotFoundException $ex) {
+        } catch (EntityNotFoundException) {
             // user or contact details entry may have been soft deleted and lazy loading can throw
         }
 

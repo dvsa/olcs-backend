@@ -20,7 +20,6 @@ interface ReviewServiceInterface
     /**
      * Format the readonly config from the given record
      *
-     * @param TransportManagerApplication $tma
      * @return mixed
      */
     public function getConfig(TransportManagerApplication $tma);

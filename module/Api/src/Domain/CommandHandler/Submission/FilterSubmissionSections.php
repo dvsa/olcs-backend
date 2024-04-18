@@ -39,7 +39,6 @@ final class FilterSubmissionSections extends AbstractCommandHandler implements S
     }
 
     /**
-     * @param Cmd $command
      * @return Submission
      */
     private function filterSubmission(Cmd $command)

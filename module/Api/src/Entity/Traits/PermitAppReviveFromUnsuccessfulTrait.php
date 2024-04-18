@@ -24,7 +24,6 @@ trait PermitAppReviveFromUnsuccessfulTrait
     /**
      * Revive this application from an unsuccessful state
      *
-     * @param RefData $underConsiderationStatus
      *
      * @throws ForbiddenException
      */

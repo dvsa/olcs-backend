@@ -30,14 +30,14 @@ class RepositoryServiceManager extends AbstractPluginManager
         }
 
         //repos used for data exports have no corresponding Doctrine Entity, and don't implement the usual interfaces
-        if (in_array(get_class($instance), $this->exportRepos)) {
+        if (in_array($instance::class, $this->exportRepos)) {
             return;
         }
 
         throw new InvalidServiceException(sprintf(
             self::VALIDATE_ERROR,
             self::class,
-            is_object($instance) ? get_class($instance) : gettype($instance)
+            get_debug_type($instance)
         ));
     }
 }
