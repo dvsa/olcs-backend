@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Auth;
 
+use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\Exception\UserHasNoOrganisationException;
@@ -125,16 +126,10 @@ class Login extends AbstractCommandHandler
         return $this->result;
     }
 
-    /**
-     * Updates the last_login_at for a given user to NOW().
-     *
-     * @return User
-     * @throws RuntimeException
-     */
     protected function updateUserLastLoginAt(User $user): User
     {
-        $user->setLastLoginAt(new \DateTime());
-        $this->getRepo()->save($user);
+        $this->getRepo()->updateLastLogin($user, new DateTime(), $user);
+
         return $user;
     }
 
