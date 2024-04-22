@@ -2,8 +2,12 @@
 
 namespace Olcs\Db\Service\Search;
 
+use Common\Data\Object\Search\ComplexTermInterface;
+use Common\Data\Object\Search\InternalSearchAbstract;
+use Common\Service\Data\Search\SearchType;
 use DomainException;
 use Elastica\Query;
+use InvalidArgumentException;
 use RuntimeException;
 
 /**
@@ -15,14 +19,19 @@ class QueryTemplate extends Query
 {
     public const FILTER_TYPE_DYNAMIC = 'DYNAMIC';
     public const FILTER_TYPE_FIXED = 'FIXED';
+    public const FILTER_TYPE_COMPLEX = 'COMPLEX';
     public const FILTER_TYPE_BOOLEAN = 'BOOLEAN';
 
+    /**
+     * @param InternalSearchAbstract[] $searchTypes
+     */
     public function __construct(
         string $filename,
         string $searchTerm,
         array $filters = [],
         array $filterTypes = [],
-        $dateRanges = []
+        array $dateRanges = [],
+        protected array $searchTypes = [],
     ) {
         if (!file_exists($filename)) {
             throw new RuntimeException("Query template file '" . $filename . "' is missing");
@@ -70,6 +79,23 @@ class QueryTemplate extends Query
             }
 
             switch ($filterTypes[$field]) {
+                case self::FILTER_TYPE_COMPLEX:
+                    $filter = null;
+                    foreach ($this->searchTypes as $searchType) {
+                        try {
+                            $filter = $searchType->getFilter($field);
+                        } catch (InvalidArgumentException) {
+                            continue;
+                        }
+
+                        if (!($filter instanceof ComplexTermInterface)) {
+                            continue;
+                        }
+
+                        $filter->applySearch($this->_params['query']['bool']);
+                    }
+                    break;
+
                 case self::FILTER_TYPE_FIXED:
                     $fields = explode('|', $field);
                     foreach ($fields as $subField) {

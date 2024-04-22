@@ -1,5 +1,6 @@
 <?php
 
+use Common\Data\Object\Search\People;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Repository\RepositoryFactory;
 use Dvsa\Olcs\Api\Domain\QueryPartial;
@@ -151,6 +152,7 @@ return [
             \Laminas\Cache\Service\StorageCacheAbstractServiceFactory::class,
         ],
         'factories' => [
+            \Common\Service\Data\Search\SearchTypeManager::class => \Common\Service\Data\Search\SearchTypeManagerFactory::class,
             \Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger::class => \Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory::class,
             'ConvertToPdf' => \Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory::class,
             'FileUploader' => \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader::class,
@@ -1249,5 +1251,10 @@ return [
                 'type' => Translator\TranslationLoader::class,
             ]
         ],
+    ],
+    'search' => [
+        'invokables' => [
+            'person' => People::class,
+        ]
     ],
 ];
