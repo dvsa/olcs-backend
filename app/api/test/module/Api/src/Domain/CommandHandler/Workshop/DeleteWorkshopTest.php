@@ -58,7 +58,12 @@ class DeleteWorkshopTest extends AbstractCommandHandlerTestCase
         $workshopEntity1->shouldReceive('getContactDetails')->andReturn($contactDetails1);
         $workshopEntity2 = m::mock(WorkshopEntity::class);
         $workshopEntity2->shouldReceive('getContactDetails')->andReturn(null);
-        $this->repoMap['Address']->shouldReceive('delete')->with($address1);
+        $this->repoMap['Address']->shouldReceive('delete')
+                                 ->once()
+                                 ->with($address1);
+        $this->repoMap['Address']->shouldReceive('refresh')
+                                 ->once()
+                                 ->with($address1);
         $this->repoMap['ContactDetails']->shouldReceive('delete')->with($contactDetails1);
 
         $this->repoMap['Workshop']->shouldReceive('fetchById')

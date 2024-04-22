@@ -650,7 +650,12 @@ class SaveAddressesTest extends AbstractCommandHandlerTestCase
             )
             ->getMock();
 
-        $this->repoMap['Address']->shouldReceive('delete')->with($transportConsultantAddress);
+        $this->repoMap['Address']->shouldReceive('delete')
+                                 ->once()
+                                 ->with($transportConsultantAddress);
+        $this->repoMap['Address']->shouldReceive('refresh')
+                                 ->once()
+                                 ->with($transportConsultantAddress);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
