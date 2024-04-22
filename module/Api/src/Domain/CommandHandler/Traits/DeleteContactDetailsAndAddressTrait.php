@@ -29,7 +29,9 @@ trait DeleteContactDetailsAndAddressTrait
         $this->injectRepos();
         if ($contactDetails->getAddress() !== null) {
             $addressRepo = $this->getRepo('Address');
-            $addressRepo->delete($contactDetails->getAddress());
+            $address = $contactDetails->getAddress();
+            $addressRepo->refresh($address);
+            $addressRepo->delete($address);
         }
         $this->getRepo('ContactDetails')->delete($contactDetails);
     }
