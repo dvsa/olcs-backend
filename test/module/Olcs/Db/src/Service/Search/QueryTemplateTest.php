@@ -33,11 +33,9 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
     {
         $tmls = m::mock(TransportManagerLicenceStatus::class);
         $tmls->shouldReceive('applySearch')
-             ->andReturnUsing(
-                 function (&$params) {
-                     $params['apple'] = 'banana';
-                },
-             );
+             ->andReturnUsing(function (&$params) {
+                 $params['apple'] = 'banana';
+             });
         $searchType = m::mock(People::class);
         $searchType->shouldReceive('getFilter')
                    ->with('field_6')
