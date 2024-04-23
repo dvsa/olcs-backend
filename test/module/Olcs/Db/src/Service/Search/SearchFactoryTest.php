@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OlcsTest\Db\Service\Search;
 
-use Common\Service\Data\Search\SearchTypeManager;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Elastica\Client as ElasticaClient;
@@ -27,13 +26,10 @@ class SearchFactoryTest extends MockeryTestCase
         $mockRepoServiceManager = m::mock(RepositoryServiceManager::class);
         $mockRepoServiceManager->expects('get')->with('SystemParameter')->andReturn($mockSystemParamRepo);
 
-        $mockSearchTypeManager = m::mock(SearchTypeManager::class);
-
         $container = m::mock(ContainerInterface::class);
         $container->expects('get')->with(Client::class)->andReturn($mockElastica);
         $container->expects('get')->with(AuthorizationService::class)->andReturn($mockAuth);
         $container->expects('get')->with('RepositoryServiceManager')->andReturn($mockRepoServiceManager);
-        $container->expects('get')->with(SearchTypeManager::class)->andReturn($mockSearchTypeManager);
 
         $sut = new SearchFactory();
         $this->assertInstanceOf(Search::class, $sut->__invoke($container, Search::class));

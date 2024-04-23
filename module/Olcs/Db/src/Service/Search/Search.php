@@ -2,7 +2,6 @@
 
 namespace Olcs\Db\Service\Search;
 
-use Common\Service\Data\Search\SearchTypeManager;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SysParamRepo;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter as SysParamEntity;
@@ -53,7 +52,6 @@ class Search implements AuthAwareInterface
         protected Client $client,
         AuthorizationService $authService,
         protected SysParamRepo $sysParamRepo,
-        protected SearchTypeManager $searchTypeManager,
     ) {
         $this->authService = $authService;
     }
@@ -131,7 +129,7 @@ class Search implements AuthAwareInterface
 
         $searchTypes = array_filter(
             array_map(
-                fn($index) => $this->searchTypeManager->has($index) ? $this->searchTypeManager->get($index) : null,
+                fn($index) => $this->getSearchType($index),
                 $indexes,
             ),
             fn($item) => $item !== null,
@@ -413,5 +411,13 @@ class Search implements AuthAwareInterface
         }
 
         return $postFilter;
+    }
+
+    protected function getSearchType(string $index)
+    {
+        $index = ucwords($index);
+        $class = '\\Olcs\\Db\\Service\\Search\\Indices\\' . $index;
+
+        return new $class();
     }
 }

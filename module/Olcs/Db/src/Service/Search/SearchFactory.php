@@ -2,7 +2,6 @@
 
 namespace Olcs\Db\Service\Search;
 
-use Common\Service\Data\Search\SearchTypeManager;
 use Elasticsearch\Client;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
@@ -30,7 +29,6 @@ class SearchFactory implements FactoryInterface
             $container->get(Client::class),
             $container->get(AuthorizationService::class),
             $container->get('RepositoryServiceManager')->get('SystemParameter'),
-            $container->get(SearchTypeManager::class),
         );
     }
 }

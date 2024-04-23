@@ -2,8 +2,8 @@
 
 namespace OlcsTest\Db\Service\Search;
 
-use Common\Data\Object\Search\Aggregations\Terms\TransportManagerLicenceStatus;
-use Common\Data\Object\Search\People;
+use Olcs\Db\Service\Search\Indices\Person;
+use Olcs\Db\Service\Search\Indices\Terms\TransportManagerLicenceStatus;
 use Olcs\Db\Service\Search\QueryTemplate;
 use Mockery as m;
 
@@ -36,7 +36,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
              ->andReturnUsing(function (&$params) {
                  $params['apple'] = 'banana';
              });
-        $searchType = m::mock(People::class);
+        $searchType = m::mock(Person::class);
         $searchType->shouldReceive('getFilter')
                    ->with('field_6')
                    ->andReturn($tmls);

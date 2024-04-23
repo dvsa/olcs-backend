@@ -2,10 +2,9 @@
 
 namespace OlcsTest\Db\Service\Search;
 
-use Common\Data\Object\Search\ComplexTermInterface;
-use Common\Service\Data\Search\SearchTypeManager;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Elastica\Request;
+use Olcs\Db\Service\Search\Indices\Terms\ComplexTermInterface;
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -28,7 +27,6 @@ class SearchTest extends MockeryTestCase
     private $mockClient;
     /** @var  m\MockInterface | \Dvsa\Olcs\Api\Entity\User\User */
     private $mockUser;
-    private SearchTypeManager|m\MockInterface $searchTypeManager;
 
     public function setUp(): void
     {
@@ -36,9 +34,8 @@ class SearchTest extends MockeryTestCase
         $this->mockAuthSrv = m::mock(AuthorizationService::class);
         $this->mockSPRepo = m::mock(SystemParameter::class);
         $this->mockUser = m::mock(\Dvsa\Olcs\Api\Entity\User\User::class)->makePartial();
-        $this->searchTypeManager = m::mock(SearchTypeManager::class);
 
-        $this->sut = new SearchService($this->mockClient, $this->mockAuthSrv, $this->mockSPRepo, $this->searchTypeManager);
+        $this->sut = new SearchService($this->mockClient, $this->mockAuthSrv, $this->mockSPRepo);
 
         $this->mockAuthSrv->shouldReceive('getIdentity->getUser')->andReturn($this->mockUser);
         $this->mockUser->shouldReceive('getUser')->andReturnSelf();
@@ -185,15 +182,6 @@ class SearchTest extends MockeryTestCase
      */
     public function testSearchIndexInternal($excludedTeamIds, $taCheckTimes, $teamId, $trafficAreaId)
     {
-        $this->searchTypeManager->shouldReceive('has')
-                                ->once()
-                                ->with('licence')
-                                ->andReturn(true);
-        $this->searchTypeManager->shouldReceive('get')
-                                ->once()
-                                ->with('licence')
-                                ->andReturn(m::mock(ComplexTermInterface::class));
-
         $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
 
         $this->mockAuthSrv
@@ -229,11 +217,6 @@ class SearchTest extends MockeryTestCase
 
     public function testSearchIndexExternal()
     {
-        $this->searchTypeManager->shouldReceive('has')
-                                ->once()
-                                ->with('licence')
-                                ->andReturn(false);
-
         $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(false);
 
         $this->mockAuthSrv
@@ -271,11 +254,6 @@ class SearchTest extends MockeryTestCase
 
     public function testSearchIndexAnon()
     {
-        $this->searchTypeManager->shouldReceive('has')
-                                ->once()
-                                ->with('licence')
-                                ->andReturn(false);
-
         $this->mockUser->shouldReceive('isAnonymous')->zeroOrMoreTimes()->andReturn(true);
 
         $this->mockAuthSrv
