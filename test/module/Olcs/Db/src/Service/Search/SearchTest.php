@@ -4,7 +4,7 @@ namespace OlcsTest\Db\Service\Search;
 
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Elastica\Request;
-use Olcs\Db\Exceptions\SearchDateFilterParseException;
+use Olcs\Db\Service\Search\Indices\Terms\ComplexTermInterface;
 use Olcs\Db\Service\Search\Search as SearchService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

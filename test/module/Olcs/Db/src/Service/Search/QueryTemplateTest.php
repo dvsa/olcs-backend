@@ -2,6 +2,8 @@
 
 namespace OlcsTest\Db\Service\Search;
 
+use Olcs\Db\Service\Search\Indices\Person;
+use Olcs\Db\Service\Search\Indices\Terms\TransportManagerLicenceStatus;
 use Olcs\Db\Service\Search\QueryTemplate;
 use Mockery as m;
 
@@ -21,21 +23,32 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
     /**
      * @dataProvider queryTemplateDataProvider
      */
-    public function testQueryTemplate($query, $filters, $filterTypes, $dates, $expected)
+    public function testQueryTemplate($query, $filters, $filterTypes, $dates, $searchTypes, $expected)
     {
-        $sut = new QueryTemplate(__DIR__ . '/mock-query-template.json', $query, $filters, $filterTypes, $dates);
+        $sut = new QueryTemplate(__DIR__ . '/mock-query-template.json', $query, $filters, $filterTypes, $dates, $searchTypes);
         $this->assertEquals($expected, $sut->getParam('query'));
     }
 
     public function queryTemplateDataProvider()
     {
+        $tmls = m::mock(TransportManagerLicenceStatus::class);
+        $tmls->shouldReceive('applySearch')
+             ->andReturnUsing(function (&$params) {
+                 $params['apple'] = 'banana';
+             });
+        $searchType = m::mock(Person::class);
+        $searchType->shouldReceive('getFilter')
+                   ->with('field_6')
+                   ->andReturn($tmls);
+
         return [
             // simple query
             [
                 'SMITH',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -57,7 +70,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 'SM"\das\'[]{}ITH',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -79,7 +93,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 '',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -101,7 +116,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 '"',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -123,7 +139,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 '""',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -145,7 +162,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 '"SMITH"',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -167,7 +185,8 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 '{"key":"value"}',
                 [],
                 [],
-                null,
+                [],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -193,6 +212,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'field_1' => 'DYNAMIC',
                 ],
+                [],
                 [],
                 [
                     'bool' => [
@@ -225,14 +245,17 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     'field_2' => 'value2',
                     'field_3' => '0',
                     'field_4|field_5' => 'value3|value4',
+                    'field_6' => 'value5',
                 ],
                 [
                     'field_1' => 'DYNAMIC',
                     'field_2' => 'DYNAMIC',
                     'field_3' => 'BOOLEAN',
-                    'field_4|field_5' => 'FIXED'
+                    'field_4|field_5' => 'FIXED',
+                    'field_6' => 'COMPLEX',
                 ],
                 [],
+                [$searchType],
                 [
                     'bool' => [
                         'must' => [
@@ -281,6 +304,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                                 ]
                             ],
                         ],
+                        'apple' => 'banana',
                     ]
                 ]
             ],
@@ -292,6 +316,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'field_1_from_and_to' => '2010-09-30'
                 ],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -323,6 +348,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                 [
                     'field_1_from' => '2010-09-30'
                 ],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -355,6 +381,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     'field_1_from' => '2010-09-30',
                     'field_1_to' => '2010-10-30'
                 ],
+                [],
                 [
                     'bool' => [
                         'must' => [
@@ -397,6 +424,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     'field_3_from' => '2010-09-30',
                     'field_3_to' => '2010-10-30'
                 ],
+                [],
                 [
                     'bool' => [
                         'must' => [

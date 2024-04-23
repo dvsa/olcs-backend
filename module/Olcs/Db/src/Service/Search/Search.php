@@ -17,6 +17,7 @@ use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use LmcRbacMvc\Service\AuthorizationService;
+use Olcs\Db\Service\Search\Indices\AbstractIndex;
 
 /**
  * Class Search
@@ -28,16 +29,6 @@ class Search implements AuthAwareInterface
     use AuthAwareTrait;
 
     public const MAX_NUMBER_OF_RESULTS = 10000;
-
-    /**
-     * @var Client
-     */
-    protected $client;
-
-    /**
-     * @var SysParamRepo
-     */
-    protected $sysParamRepo;
 
     protected array $filters = [];
 
@@ -58,15 +49,12 @@ class Search implements AuthAwareInterface
      */
     protected $order = '';
 
-    /**
-     * Search constructor.
-     *
-     */
-    public function __construct(Client $client, AuthorizationService $authService, SysParamRepo $sysParamRepo)
-    {
-        $this->client = $client;
+    public function __construct(
+        protected Client $client,
+        AuthorizationService $authService,
+        protected SysParamRepo $sysParamRepo,
+    ) {
         $this->authService = $authService;
-        $this->sysParamRepo = $sysParamRepo;
     }
 
     /**
@@ -139,7 +127,23 @@ class Search implements AuthAwareInterface
         if ($queryTemplate === false) {
             throw new \RuntimeException('Cannot generate an elasticsearch query, is the template missing');
         }
-        $elasticaQuery = new QueryTemplate($queryTemplate, $query, $this->getFilters(), $this->getFilterTypes(), $this->getDateRanges());
+
+        $searchTypes = array_filter(
+            array_map(
+                fn($index) => $this->getSearchType($index),
+                $indexes,
+            ),
+            fn($item) => $item !== null,
+        );
+
+        $elasticaQuery = new QueryTemplate(
+            $queryTemplate,
+            $query,
+            $this->getFilters(),
+            $this->getFilterTypes(),
+            $this->getDateRanges(),
+            $searchTypes,
+        );
 
         if (!empty($this->getSort()) && !empty($this->getOrder())) {
             $elasticaQuery->setSort([$this->getSort() => strtolower($this->getOrder())]);
@@ -408,5 +412,17 @@ class Search implements AuthAwareInterface
         }
 
         return $postFilter;
+    }
+
+    protected function getSearchType(string $index): ?AbstractIndex
+    {
+        $index = ucwords($index);
+        $class = '\\Olcs\\Db\\Service\\Search\\Indices\\' . $index;
+
+        if (!class_exists($class)) {
+            return null;
+        }
+
+        return new $class();
     }
 }

@@ -28,7 +28,7 @@ class SearchFactory implements FactoryInterface
         return new Search(
             $container->get(Client::class),
             $container->get(AuthorizationService::class),
-            $container->get('RepositoryServiceManager')->get('SystemParameter')
+            $container->get('RepositoryServiceManager')->get('SystemParameter'),
         );
     }
 }
