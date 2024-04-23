@@ -17,6 +17,7 @@ use Laminas\Filter\Word\UnderscoreToCamelCase;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use LmcRbacMvc\Service\AuthorizationService;
+use Olcs\Db\Service\Search\Indices\AbstractIndex;
 
 /**
  * Class Search
@@ -413,10 +414,14 @@ class Search implements AuthAwareInterface
         return $postFilter;
     }
 
-    protected function getSearchType(string $index)
+    protected function getSearchType(string $index): ?AbstractIndex
     {
         $index = ucwords($index);
         $class = '\\Olcs\\Db\\Service\\Search\\Indices\\' . $index;
+
+        if (!class_exists($class)) {
+            return null;
+        }
 
         return new $class();
     }
