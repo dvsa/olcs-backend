@@ -115,7 +115,8 @@ class Fee extends AbstractRepository
     public function fetchOutstandingFeesByOrganisationId(
         $organisationId,
         $hideForCeasedLicences = false,
-        $hideContinuationsFees = false
+        $hideContinuationsFees = false,
+        bool $onlySubmitted = false,
     ) {
         $doctrineQb = $this->createQueryBuilder();
 
@@ -137,6 +138,10 @@ class Fee extends AbstractRepository
             $this->hideContinuationFees($doctrineQb);
         }
 
+        if ($onlySubmitted) {
+            $this->onlySubmitted($doctrineQb);
+        }
+
         return $doctrineQb->getQuery()->getResult();
     }
 
@@ -153,6 +158,12 @@ class Fee extends AbstractRepository
             ->innerJoin($this->alias . '.feeType', 'ftype')
             ->andWhere($doctrineQb->expr()->neq('ftype.feeType', ':feeType'))
             ->setParameter('feeType', RefDataEntity::FEE_TYPE_CONT);
+    }
+
+    protected function onlySubmitted(QueryBuilder $doctrineQb): void
+    {
+        $doctrineQb->andWhere('l.status = :status');
+        $doctrineQb->setParameter('status', 'lsts_valid');
     }
 
     /**
@@ -638,6 +649,12 @@ class Fee extends AbstractRepository
 
         if ($query->getStatus() !== null) {
             $this->filterByStatus($qb, $query->getStatus());
+        }
+
+        if ($query->getOnlySubmitted()) {
+            $qb->join($this->alias . '.licence', 'l');
+            $qb->andWhere('l.status = :licenceStatus');
+            $qb->setParameter('licenceStatus', 'lsts_valid');
         }
 
         $this->getQueryBuilder()->modifyQuery($qb)->withCreatedBy();
