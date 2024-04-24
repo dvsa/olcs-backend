@@ -148,7 +148,7 @@ class ClientFactory implements FactoryInterface
             $sabreClient = new SabreClient(
                 [
                     'baseUri' => $clientOptions['webdav_baseuri'],
-                    'username' => $clientOptions['username'],
+                    'userName' => $clientOptions['username'],
                     'password' => $clientOptions['password']
                 ]
             );
