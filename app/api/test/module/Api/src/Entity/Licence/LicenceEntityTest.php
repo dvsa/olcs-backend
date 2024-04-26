@@ -134,9 +134,13 @@ class LicenceEntityTest extends EntityTester
             ->andReturn($activeCollection);
 
         $lv = m::mock(LicenceVehicle::class);
-        $lv->shouldReceive('getApplication')
-            ->times(4)
-            ->andReturn(null);
+        $lv->shouldReceive('getRemovalDate')
+           ->times(4)
+           ->andReturnNull();
+
+        $lv->shouldReceive('getSpecifiedDate')
+           ->times(4)
+           ->andReturn(new DateTime());
 
         $activeCollection->shouldReceive('toArray')
             ->once()
@@ -161,9 +165,13 @@ class LicenceEntityTest extends EntityTester
             ->andReturn($activeCollection);
 
         $lv = m::mock(LicenceVehicle::class);
-        $lv->shouldReceive('getApplication')
+        $lv->shouldReceive('getRemovalDate')
             ->once()
             ->andReturnNull();
+
+        $lv->shouldReceive('getSpecifiedDate')
+           ->once()
+           ->andReturn(new DateTime());
 
         $activeCollection->shouldReceive('toArray')
                          ->once()
