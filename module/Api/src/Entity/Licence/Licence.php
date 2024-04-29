@@ -447,7 +447,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
         $vehicles = $this->getLicenceVehicles()->matching($criteria)->toArray();
         $vehicles = array_filter(
             $vehicles,
-            fn($vehicle) => $vehicle->getApplication() === null || $vehicle->getApplication()->getStatus()->getId() !== Application::APPLICATION_STATUS_CANCELLED,
+            fn($vehicle) => $vehicle->getRemovalDate(false) === null && $vehicle->getSpecifiedDate(false) !== null,
         );
 
         return new ArrayCollection($vehicles);
