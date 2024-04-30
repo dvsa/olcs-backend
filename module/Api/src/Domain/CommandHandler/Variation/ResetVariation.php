@@ -1,45 +1,36 @@
-<?php
-
-/**
- * Reset Variation
- *
- * @author Jonathan Thomas <jonathan@opalise.co.uk>
- */
+<?php declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Variation;
 
 use DateTime;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Variation\ResetVariation as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Traits\ApplicationResetTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateVariation as CreateVariationCommand;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
+use Psr\Container\ContainerInterface;
 
-/**
- * Reset Variation
- *
- * @author Jonathan Thomas <jonathan@opalise.co.uk>
- */
 final class ResetVariation extends AbstractCommandHandler implements TransactionedInterface
 {
     use ApplicationResetTrait;
 
-    protected $repoServiceName = 'Application';
+    private Repository\Application $applicationRepo;
+    private Repository\ApplicationOperatingCentre $applicationOperatingCentreRepo;
 
     /**
-     * @param Cmd|CommandInterface $command
-     *
-     * @return Result
+     * @throws RequiresConfirmationException
+     * @throws RuntimeException
      */
-    public function handleCommand(CommandInterface $command): Result
+    public function handleCommand(Cmd|CommandInterface $command): Result
     {
-        $application = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT);
+        $application = $this->getRepo()->fetchUsingId($command);
 
         $this->validate($command);
 
@@ -49,6 +40,9 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
         $licenceId = $application->getLicence()->getId();
         $receivedDate = $application->getReceivedDate();
         $appliedVia = $application->getAppliedVia();
+
+        $aocCount = $this->removeAssociationOfApplicationAndOperatingCentres($application);
+        $this->result->addMessage($aocCount . ' application operating centres associations removed');
 
         $this->getRepo()->delete($application);
         $this->result->addMessage('Variation removed');
@@ -60,15 +54,7 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
         return $this->result;
     }
 
-    /**
-     * Create the new variation from the provided parameters
-     *
-     * @param int $licenceId
-     * @param DateTime|null $receivedDate
-     *
-     * @return Result
-     */
-    private function createNewVariation($licenceId, $receivedDate, RefData $appliedVia): Result
+    private function createNewVariation(int $licenceId, ?DateTime $receivedDate, RefData $appliedVia): Result
     {
         $data = [
             'id' => $licenceId,
@@ -84,7 +70,6 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
     /**
      * If the user is required to confirm this change, throw an exception to the front end to indicate as such
      *
-     *
      * @throws RequiresConfirmationException
      */
     private function validate(Cmd $command): void
@@ -95,5 +80,17 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
                 Application::ERROR_REQUIRES_CONFIRMATION
             );
         }
+    }
+
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ResetVariation
+    {
+        $fullContainer = $container;
+
+        $this->applicationRepo = $container->get('RepositoryServiceManager')
+            ->get('Application');
+        $this->applicationOperatingCentreRepo = $container->get('RepositoryServiceManager')
+            ->get('ApplicationOperatingCentre');
+
+        return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }
