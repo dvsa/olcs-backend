@@ -61,7 +61,8 @@ class TmResponsibilitiesListTest extends QueryHandlerTestCase
                 [
                     Licence::LICENCE_STATUS_VALID,
                     Licence::LICENCE_STATUS_SUSPENDED,
-                    Licence::LICENCE_STATUS_CURTAILED
+                    Licence::LICENCE_STATUS_CURTAILED,
+                    Licence::LICENCE_STATUS_SURRENDER_UNDER_CONSIDERATION,
                 ]
             )
             ->once()
