@@ -73,9 +73,10 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
     private function createNewApplication(
         Cmd $command,
         Organisation $organisation,
-        $receivedDate = null,
+        mixed $receivedDate = null,
         RefData $appliedVia = null
-    ) {
+    ): Result
+    {
         $data = $command->getArrayCopy();
         $data['organisation'] = $organisation->getId();
         $data['appliedVia'] = $appliedVia->getId();

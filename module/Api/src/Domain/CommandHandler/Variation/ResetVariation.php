@@ -56,7 +56,7 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
         return $this->result;
     }
 
-    private function createNewVariation(int $licenceId, ?DateTime $receivedDate, RefData $appliedVia): Result
+    private function createNewVariation(int $licenceId, mixed $receivedDate, RefData $appliedVia): Result
     {
         $data = [
             'id' => $licenceId,
