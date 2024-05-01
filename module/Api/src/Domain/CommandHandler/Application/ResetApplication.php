@@ -75,8 +75,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
         Organisation $organisation,
         mixed $receivedDate = null,
         RefData $appliedVia = null
-    ): Result
-    {
+    ): Result {
         $data = $command->getArrayCopy();
         $data['organisation'] = $organisation->getId();
         $data['appliedVia'] = $appliedVia->getId();
