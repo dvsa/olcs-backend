@@ -111,7 +111,7 @@ final class ResetApplication extends AbstractCommandHandler implements Transacti
             Application::ERROR_REQUIRES_CONFIRMATION
         );
     }
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ResetApplication
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
 

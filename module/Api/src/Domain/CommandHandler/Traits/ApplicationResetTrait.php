@@ -54,6 +54,11 @@ trait ApplicationResetTrait
     {
         $count = 0;
         $applicationOperatingCentres = $application->getOperatingCentres();
+
+        if (empty($applicationOperatingCentres)) {
+            return $count;
+        }
+
         foreach ($applicationOperatingCentres as $aoc) {
             $this->applicationOperatingCentreRepo->delete($aoc);
             $count++;

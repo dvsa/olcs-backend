@@ -32,7 +32,7 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
      */
     public function handleCommand(Cmd|CommandInterface $command): Result
     {
-        $application = $this->getRepo()->fetchUsingId($command);
+        $application = $this->applicationRepo->fetchUsingId($command);
 
         $this->validate($command);
 
@@ -46,7 +46,7 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
         $aocCount = $this->removeAssociationOfApplicationAndOperatingCentres($application);
         $this->result->addMessage($aocCount . ' application operating centres associations removed');
 
-        $this->getRepo()->delete($application);
+        $this->applicationRepo->delete($application);
         $this->result->addMessage('Variation removed');
 
         $this->result->merge(
@@ -76,15 +76,17 @@ final class ResetVariation extends AbstractCommandHandler implements Transaction
      */
     private function validate(Cmd $command): void
     {
-        if ($command->getConfirm() === false) {
-            throw new RequiresConfirmationException(
-                'Updating these elements requires confirmation',
-                Application::ERROR_REQUIRES_CONFIRMATION
-            );
+        if ($command->getConfirm() !== false) {
+            return;
         }
+
+        throw new RequiresConfirmationException(
+            'Updating these elements requires confirmation',
+            Application::ERROR_REQUIRES_CONFIRMATION
+        );
     }
 
-    public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ResetVariation
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
 
