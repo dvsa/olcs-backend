@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Domain\Command\Variation\ResetVariation as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Variation\ResetVariation;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
@@ -34,6 +35,7 @@ class ResetVariationTest extends AbstractCommandHandlerTestCase
     {
         $this->sut = new ResetVariation();
         $this->mockRepo('Application', Application::class);
+        $this->mockRepo('ApplicationOperatingCentre', ApplicationOperatingCentre::class);
 
         parent::setUp();
     }
@@ -65,6 +67,18 @@ class ResetVariationTest extends AbstractCommandHandlerTestCase
             ->withNoArgs()
             ->andReturn($this->refData[$appliedVia]);
 
+        $associatedOperatingCentres = [
+            m::mock(ApplicationOperatingCentre::class),
+            m::mock(ApplicationOperatingCentre::class),
+        ];
+
+        $this->repoMap['ApplicationOperatingCentre']->shouldReceive('delete')
+            ->times(count($associatedOperatingCentres));
+
+        $application->shouldReceive('getOperatingCentres')
+            ->withNoArgs()
+            ->andReturn($associatedOperatingCentres);
+
         $data = [
             'id' => $applicationId,
             'confirm' => true
@@ -73,7 +87,7 @@ class ResetVariationTest extends AbstractCommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command)
             ->once()
             ->globally()
             ->ordered()
@@ -122,6 +136,7 @@ class ResetVariationTest extends AbstractCommandHandlerTestCase
 
         $expectedMessages = [
             '1 task(s) closed',
+            count($associatedOperatingCentres) . ' application operating centres associations removed',
             'Variation removed'
         ];
 
@@ -146,7 +161,7 @@ class ResetVariationTest extends AbstractCommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command)
             ->andReturn($application);
 
         $this->sut->handleCommand($command);
