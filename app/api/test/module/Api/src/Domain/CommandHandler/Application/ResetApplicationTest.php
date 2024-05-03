@@ -9,9 +9,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\ApplicationOperatingCentre;
 use Dvsa\Olcs\Transfer\Command\Application\CreateApplication;
 use Mockery as m;
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Repository\Licence;
 use Dvsa\Olcs\Api\Domain\Repository\Application;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
@@ -36,6 +36,7 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
     {
         $this->sut = new ResetApplication();
         $this->mockRepo('Application', Application::class);
+        $this->mockRepo('ApplicationOperatingCentre', ApplicationOperatingCentre::class);
         $this->mockRepo('Licence', Licence::class);
 
         parent::setUp();
@@ -74,7 +75,7 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
         $application->setLicence($licence);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command)
             ->andReturn($application);
 
         $this->expectException(ValidationException::class);
@@ -104,7 +105,7 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
         $application->setLicence($licence);
 
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command)
             ->andReturn($application);
 
         $this->expectException(RequiresConfirmationException::class);
@@ -115,7 +116,7 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
     /**
      * @dataProvider providerWithConfirm
      */
-    public function testHandleCommandRequireConfirmationWithConfirm($receivedDate, $expectedCreateApp)
+    public function testHandleCommandRequireConfirmationWithConfirm($receivedDate, $expectedCreateApp, $associatedOperatingCentres)
     {
         $data = [
             'niFlag' => 'N',
@@ -147,8 +148,14 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
         $application->setReceivedDate($receivedDate);
         $application->setAppliedVia($this->mapRefData(ApplicationEntity::APPLIED_VIA_POST));
 
+        if (!empty($associatedOperatingCentres)) {
+            $this->repoMap['ApplicationOperatingCentre']->shouldReceive('delete')
+                ->times(count($associatedOperatingCentres));
+            $application->setOperatingCentres($associatedOperatingCentres);
+        }
+
         $this->repoMap['Application']->shouldReceive('fetchUsingId')
-            ->with($command, Query::HYDRATE_OBJECT)
+            ->with($command)
             ->andReturn($application)
             ->shouldReceive('save')
             ->with($application)
@@ -172,6 +179,7 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
             'messages' => [
                 '1 task(s) closed',
                 'Licence removed',
+                count($associatedOperatingCentres) . ' application operating centres associations removed',
                 'Application removed'
             ]
         ];
@@ -192,6 +200,11 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
                     'operatorType' => LicenceEntity::LICENCE_CATEGORY_PSV,
                     'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
                     'receivedDate' => null
+                ],
+                [
+                    m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre::class),
+                    m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre::class),
+                    m::mock(\Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre::class),
                 ]
             ],
             [
@@ -202,6 +215,9 @@ class ResetApplicationTest extends AbstractCommandHandlerTestCase
                     'operatorType' => LicenceEntity::LICENCE_CATEGORY_PSV,
                     'licenceType' => LicenceEntity::LICENCE_TYPE_SPECIAL_RESTRICTED,
                     'receivedDate' => '2015-01-01'
+                ],
+                [
+                    // No Operating Centres
                 ]
             ]
         ];
