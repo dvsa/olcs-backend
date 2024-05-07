@@ -30,6 +30,8 @@ final class Compare extends AbstractCommandHandler
      */
     public function handleCommand(CommandInterface $command)
     {
+        $this->result->setFlag('isInsolvent', false);
+
         $companyNumber = $command->getCompanyNumber();
 
         try {
