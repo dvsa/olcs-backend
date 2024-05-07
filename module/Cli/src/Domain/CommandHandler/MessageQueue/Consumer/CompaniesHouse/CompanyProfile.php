@@ -29,12 +29,13 @@ class CompanyProfile extends AbstractConsumer
         }
 
         $companyNumber = $messages[0]['Body'];
-        $this->result->merge($this->handleSideEffect(Compare::create(['companyNumber' => $companyNumber])));
+        $companyResult = $this->handleSideEffect(Compare::create(['companyNumber' => $companyNumber]));
+        $this->result->merge($companyResult);
 
         $companiesHouseCompany = $this->getRepo()->getLatestByCompanyNumber($companyNumber);
         $isProcessed = $companiesHouseCompany->getInsolvencyProcessed();
 
-        if ($this->result->getFlag('isInsolvent') && !$isProcessed) {
+        if ($companyResult->getFlag('isInsolvent') === true && !$isProcessed) {
             $insolvencyMessage = $this->messageBuilderService->buildMessage(
                 ['companyOrLlpNo' => $companyNumber],
                 ProcessInsolvency::class,
