@@ -13,6 +13,13 @@ class CanAccessDocument extends AbstractCanAccessEntity
 {
     protected $repo = Repository\Document::class;
 
+    public const PRINTABLE_LICENCE_DESCRIPTIONS = [
+        'GV Licence',
+        'GV Licence LGV Only',
+        'PSV Licence',
+        'PSV-SR Licence'
+    ];
+
     /**
      * @throws NotFoundException
      */
@@ -84,7 +91,7 @@ class CanAccessDocument extends AbstractCanAccessEntity
 
         $correctCat = $category !== null && $category->getId() === Entity\System\Category::CATEGORY_LICENSING;
         $correctSubCat = $subCategory !== null && $subCategory->getId() === Entity\System\SubCategory::DOC_SUB_CATEGORY_LICENCING_OTHER_DOCUMENTS;
-        $correctDescr = in_array($document->getDescription(), ['GV Licence', 'PSV Licence']);
+        $correctDescr = in_array($document->getDescription(), self::PRINTABLE_LICENCE_DESCRIPTIONS);
 
         return $correctCat && $correctSubCat && $correctDescr;
     }
