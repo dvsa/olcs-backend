@@ -62,7 +62,21 @@ class CanAccessDocument extends AbstractCanAccessEntity
     {
         return $this->checkDocumentWasExternallyUploaded($documentId)
             || $this->checkDocumentInCorrespondence($documentId)
+            || $this->isGVorPSVLicencePrintDocument($documentId)
             || $this->checkIsTxcDocument($documentId);
+    }
+
+    /**
+     * Checks if the cat/sub-cat and description match those expected for a printable licence document linked from SS
+     *
+     * @throws NotFoundException
+     */
+    private function isGVorPSVLicencePrintDocument(string $documentId)
+    {
+        $document = $this->getRepo(Repository\Document::class)->fetchById($documentId);
+        return $document?->getCategory()?->getId() === Entity\System\Category::CATEGORY_LICENSING
+            && $document?->getSubCategory()?->getId() === Entity\System\SubCategory::DOC_SUB_CATEGORY_LICENCING_OTHER_DOCUMENTS
+            && in_array($document?->getDescription(), ['GV Licence', 'PSV Licence']);
     }
 
     private function checkDocumentInCorrespondence(string $documentId): bool
