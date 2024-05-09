@@ -413,25 +413,45 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
     }
 
     /**
-     * @throws NotFoundException
      * @throws Exception
+     * @return m\MockInterface The mocked document object.
      */
-    private function getMockDocument(bool $isExternal, int $createdById = 123456, m\MockInterface $relatedOrganisation = null): m\MockInterface
-    {
+    private function getMockDocument(
+        bool $isExternal,
+        int $createdById = 123456,
+        m\MockInterface $relatedOrganisation = null,
+        int $categoryId = 100,
+        int $subCategoryId = 1000,
+        string $description = 'Description'
+    ): m\MockInterface {
         if ($relatedOrganisation === null) {
             $relatedOrganisation = m::mock(Entity\Organisation\Organisation::class);
             $relatedOrganisation->allows('getId')->andReturn(567890);
         }
 
         $mockDoc = m::mock(Entity\Doc\Document::class);
+        $mockCategory = m::mock(Entity\System\Category::class);
+        $mockSubCategory = m::mock(Entity\System\SubCategory::class);
+
+        // Set returns for category and subcategory if provided
+        if ($categoryId !== null) {
+            $mockCategory->allows('getId')->andReturn($categoryId);
+        }
+        if ($subCategoryId !== null) {
+            $mockSubCategory->allows('getId')->andReturn($subCategoryId);
+        }
 
         $mockDoc->allows('getIsExternal')->andReturn($isExternal);
         $mockDoc->allows('getId')->andReturn(static::DOCUMENT_ID);
         $mockDoc->allows('getCreatedBy->getId')->andReturn($createdById);
         $mockDoc->allows('getRelatedOrganisation')->andReturn($relatedOrganisation);
+        $mockDoc->allows('getCategory')->andReturn($mockCategory);
+        $mockDoc->allows('getSubCategory')->andReturn($mockSubCategory);
+        $mockDoc->allows('getDescription')->andReturn($description);
 
         return $mockDoc;
     }
+
 
     /**
      * @throws NotFoundException
@@ -534,5 +554,64 @@ class CanAccessDocumentTest extends AbstractValidatorsTestCase
             'LOCAL AUTHORITY USER' => [static::IS_LOCAL_AUTHORITY_USER],
             'LOCAL AUTHORITY ADMIN' => [static::IS_LOCAL_AUTHORITY_ADMIN],
         ];
+    }
+
+    public function testIsLicencePrintDocumentGV()
+    {
+        $this->setupMockIdentity(static::IS_EXTERNAL_USER);
+
+        $this->mockRepo(\Dvsa\Olcs\Api\Domain\Repository\Document::class)
+            ->shouldReceive('fetchById')
+            ->andReturn($document = $this->getMockDocument(
+                isExternal: false,
+                categoryId: Entity\System\Category::CATEGORY_LICENSING,
+                subCategoryId: Entity\System\SubCategory::DOC_SUB_CATEGORY_LICENCING_OTHER_DOCUMENTS,
+                description: 'GV Licence'
+            ));
+
+        $this->setIsValid('isOwner', [$document], true);
+
+        $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
+    }
+
+    public function testIsLicencePrintDocumentPSV()
+    {
+        $this->setupMockIdentity(static::IS_EXTERNAL_USER);
+
+        $this->mockRepo(\Dvsa\Olcs\Api\Domain\Repository\Document::class)
+            ->shouldReceive('fetchById')
+            ->andReturn($document = $this->getMockDocument(
+                isExternal: false,
+                categoryId: Entity\System\Category::CATEGORY_LICENSING,
+                subCategoryId: Entity\System\SubCategory::DOC_SUB_CATEGORY_LICENCING_OTHER_DOCUMENTS,
+                description: 'PSV Licence'
+            ));
+
+        $this->setIsValid('isOwner', [$document], true);
+
+        $this->assertTrue($this->sut->isValid(static::DOCUMENT_ID));
+    }
+
+    public function testIsLicencePrintDocumentGVCorrectTitleWrongCategory()
+    {
+        $this->setupMockIdentity(static::IS_EXTERNAL_USER);
+
+        $this->mockRepo(\Dvsa\Olcs\Api\Domain\Repository\Document::class)
+            ->shouldReceive('fetchById')
+            ->andReturn($document = $this->getMockDocument(
+                isExternal: false,
+                categoryId: Entity\System\Category::CATEGORY_LICENSING,
+                subCategoryId: Entity\System\SubCategory::DOC_SUB_CATEGORY_SUPPORTING_EVIDENCE,
+                description: 'GV Licence'
+            ));
+
+        $this->mockRepo(Repository\TxcInbox::class)
+            ->shouldReceive('fetchLinkedToDocument')
+            ->with(static::DOCUMENT_ID)
+            ->andReturnFalse();
+
+        $this->setIsValid('isOwner', [$document], true);
+
+        $this->assertFalse($this->sut->isValid(static::DOCUMENT_ID));
     }
 }
