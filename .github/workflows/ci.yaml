@@ -7,17 +7,17 @@ on:
 
 jobs:
   security:
-    uses: dvsa/.github/.github/workflows/php-security.yml@main
+    uses: chlip2/olcs-backend/.github/workflows/php-security.yml@feature-bl-16691-update-actions-to-node-20
     secrets:
       SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
   static-analysis:
-    uses: dvsa/.github/.github/workflows/php-static.yml@main
+    uses: chlip2/olcs-backend/.github/workflows/php-static.yml@feature-bl-16691-update-actions-to-node-20
     with:
       php-version: '8.0'
 
   tests:
-    uses: dvsa/.github/.github/workflows/php-tests.yml@main
+    uses: chlip2/olcs-backend/.github/workflows/php-tests.yml@feature-bl-16691-update-actions-to-node-20
     with:
       php-versions: '["8.0"]'
       fail-fast: false
