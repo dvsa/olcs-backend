@@ -24,7 +24,7 @@ final class UpdateSurrender extends AbstractCommandHandler implements Transactio
 {
     protected $repoServiceName = 'Surrender';
 
-    public function __construct(private EventHistoryCreator $eventHistoryCreator)
+    public function __construct(private readonly EventHistoryCreator $eventHistoryCreator)
     {
     }
 

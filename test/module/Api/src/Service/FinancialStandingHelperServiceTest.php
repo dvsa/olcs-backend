@@ -42,7 +42,7 @@ class FinancialStandingHelperServiceTest extends MockeryTestCase
 
         $this->repoMap['FinancialStandingRate']
             ->shouldReceive('fetchRatesInEffect')
-            ->andReturnUsing([$this, 'getStubRates']);
+            ->andReturnUsing($this->getStubRates(...));
 
         // Create service with mocked dependencies
         $this->sut = $this->createService();

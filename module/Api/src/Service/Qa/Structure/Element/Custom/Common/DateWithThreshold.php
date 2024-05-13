@@ -16,7 +16,7 @@ class DateWithThreshold implements ElementInterface
      *
      * @return DateWithThreshold
      */
-    public function __construct(private DateTime $dateThreshold, private DateElement $date)
+    public function __construct(private readonly DateTime $dateThreshold, private readonly DateElement $date)
     {
     }
 

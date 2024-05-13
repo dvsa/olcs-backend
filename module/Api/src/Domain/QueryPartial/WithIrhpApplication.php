@@ -6,7 +6,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryPartial;
 
 use Doctrine\ORM\QueryBuilder;
 
-final class WithIrhpApplication implements QueryPartialInterface
+final readonly class WithIrhpApplication implements QueryPartialInterface
 {
     public function __construct(private With $with)
     {

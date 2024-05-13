@@ -18,6 +18,8 @@ use Laminas\Router\RouteMatch;
 
 class PayloadValidationListenerTest extends MockeryTestCase
 {
+    public $annotationBuilder;
+    public $sut;
     public function setUp(): void
     {
         $this->annotationBuilder = m::mock(AnnotationBuilder::class);

@@ -575,7 +575,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             'licence' => $licenceId,
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
-            'filename' => basename($transxchangeFilename),
+            'filename' => basename((string) $transxchangeFilename),
             'description' => $documentDesc,
             'user' => 1
         ];

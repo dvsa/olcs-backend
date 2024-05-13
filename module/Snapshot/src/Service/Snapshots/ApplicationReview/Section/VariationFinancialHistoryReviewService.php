@@ -25,7 +25,7 @@ class VariationFinancialHistoryReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private ApplicationFinancialHistoryReviewService $applicationFinancialHistoryReviewService
+        private readonly ApplicationFinancialHistoryReviewService $applicationFinancialHistoryReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

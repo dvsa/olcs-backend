@@ -26,7 +26,7 @@ class Address implements AddressInterface
      *
      * @param Client $client Postcode Api Http Client
      */
-    public function __construct(private Client $client)
+    public function __construct(private readonly Client $client)
     {
     }
 

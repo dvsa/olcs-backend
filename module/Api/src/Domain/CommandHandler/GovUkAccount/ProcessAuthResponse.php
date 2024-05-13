@@ -28,7 +28,7 @@ class ProcessAuthResponse extends AbstractCommandHandler implements Transactione
 
     protected $repoServiceName = 'DigitalSignature';
 
-    public function __construct(private GovUkAccountService $govUkAccountService)
+    public function __construct(private readonly GovUkAccountService $govUkAccountService)
     {
     }
 

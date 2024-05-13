@@ -150,7 +150,7 @@ class Search implements AuthAwareInterface
         }
 
         if (!$this->isAnonymousUser() && $this->isInternalUser() && $indexes[0] !== 'irfo') {
-            $exemptTeams = str_getcsv($this->sysParamRepo->fetchValue(SysParamEntity::DATA_SEPARATION_TEAMS_EXEMPT));
+            $exemptTeams = str_getcsv((string) $this->sysParamRepo->fetchValue(SysParamEntity::DATA_SEPARATION_TEAMS_EXEMPT));
             if (!in_array($this->getCurrentUser()->getTeam()->getId(), $exemptTeams)) {
                 $elasticaQuery->setPostFilter($this->getInternalUserTAPostFilter($indexes[0]));
             }
@@ -235,7 +235,7 @@ class Search implements AuthAwareInterface
             $raw = $result->getSource();
             $refined = [];
             foreach ($raw as $key => $value) {
-                $refined[lcfirst($f->filter($key))] = $value;
+                $refined[lcfirst((string) $f->filter($key))] = $value;
             }
 
             $response[] = $refined;
@@ -258,7 +258,7 @@ class Search implements AuthAwareInterface
         $f = new UnderscoreToCamelCase();
 
         foreach ($aggregations as $aggregation => $value) {
-            $return[lcfirst($f->filter($aggregation))] = $value['buckets'];
+            $return[lcfirst((string) $f->filter($aggregation))] = $value['buckets'];
         }
 
         return $return;
@@ -284,8 +284,8 @@ class Search implements AuthAwareInterface
         $f = new CamelCaseToUnderscore();
 
         foreach ($filters as $filterName => $value) {
-            $this->filters[strtolower($f->filter($filterName))] = $value;
-            $this->filterTypes[strtolower($f->filter($filterName))] = $filterTypes[$filterName] ?? QueryTemplate::FILTER_TYPE_DYNAMIC;
+            $this->filters[strtolower((string) $f->filter($filterName))] = $value;
+            $this->filterTypes[strtolower((string) $f->filter($filterName))] = $filterTypes[$filterName] ?? QueryTemplate::FILTER_TYPE_DYNAMIC;
         }
 
         return $this;
@@ -340,7 +340,7 @@ class Search implements AuthAwareInterface
             }
 
             if (!empty($value)) {
-                $this->dateRanges[strtolower($f->filter($filterName))] = $value;
+                $this->dateRanges[strtolower((string) $f->filter($filterName))] = $value;
             }
         }
         return $this;

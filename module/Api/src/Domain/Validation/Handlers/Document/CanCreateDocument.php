@@ -160,7 +160,7 @@ class CanCreateDocument extends AbstractHandler implements AuthAwareInterface
             : self::EXTENSIONS_KEY_EXTERNAL;
 
         $allowedExtensions = isset($this->allowedExtensions[$key])
-            ? explode(',', $this->allowedExtensions[$key])
+            ? explode(',', (string) $this->allowedExtensions[$key])
             : [];
 
         $extension = '';

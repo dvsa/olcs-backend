@@ -30,8 +30,8 @@ final class Oppositions extends AbstractSection
                 /** @var Opposition $a */
                 /** @var Opposition $b */
                 strnatcmp(
-                    $b->getOppositionType()->getDescription(),
-                    $a->getOppositionType()->getDescription()
+                    (string) $b->getOppositionType()->getDescription(),
+                    (string) $a->getOppositionType()->getDescription()
                 )
         );
 

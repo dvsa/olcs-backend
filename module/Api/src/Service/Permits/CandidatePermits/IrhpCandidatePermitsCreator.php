@@ -14,7 +14,7 @@ class IrhpCandidatePermitsCreator
      *
      * @return IrhpCandidatePermitsCreator
      */
-    public function __construct(private ScoringCandidatePermitsCreator $scoringCandidatePermitsCreator, private ApggCandidatePermitsCreator $apggCandidatePermitsCreator)
+    public function __construct(private readonly ScoringCandidatePermitsCreator $scoringCandidatePermitsCreator, private readonly ApggCandidatePermitsCreator $apggCandidatePermitsCreator)
     {
     }
 

@@ -73,7 +73,7 @@ class DigitalSignature extends AbstractDigitalSignature
         }
 
         foreach ($names as &$namePart) {
-            $namePart = ucfirst(strtolower($namePart));
+            $namePart = ucfirst(strtolower((string) $namePart));
         }
 
         return implode(' ', $names);

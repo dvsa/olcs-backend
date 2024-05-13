@@ -19,6 +19,7 @@ use Laminas\Http\Response;
  */
 class RemoveDeletedDocumentsTest extends AbstractCommandHandlerTestCase
 {
+    public $mockUploader;
     public function setUp(): void
     {
         $this->sut = new RemoveDeletedDocuments();

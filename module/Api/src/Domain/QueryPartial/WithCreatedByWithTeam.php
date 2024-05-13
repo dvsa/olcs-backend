@@ -8,7 +8,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * With Team
  */
-final class WithCreatedByWithTeam implements QueryPartialInterface
+final readonly class WithCreatedByWithTeam implements QueryPartialInterface
 {
     public function __construct(private With $with)
     {

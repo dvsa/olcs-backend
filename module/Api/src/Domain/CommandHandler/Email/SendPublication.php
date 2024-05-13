@@ -68,7 +68,7 @@ final class SendPublication extends AbstractCommandHandler implements EmailAware
             $subject = self::EMAIL_SUBJECT;
         }
 
-        $templateData = ['filename' => basename($document->getFilename())];
+        $templateData = ['filename' => basename((string) $document->getFilename())];
 
         $message = new Message(self::TO_EMAIL, $subject);
         $message->setBcc($recipients);

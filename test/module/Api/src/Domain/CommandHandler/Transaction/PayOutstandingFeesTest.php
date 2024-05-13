@@ -1152,7 +1152,7 @@ class PayOutstandingFeesTest extends AbstractCommandHandlerTestCase
             $this->sut->handleCommand($command);
         } catch (ValidationException $e) {
             $messages = $e->getMessages();
-            $this->assertTrue(str_contains(reset($messages), 'Amount must be at least 99.00'));
+            $this->assertTrue(str_contains((string) reset($messages), 'Amount must be at least 99.00'));
         }
     }
 
@@ -1213,7 +1213,7 @@ class PayOutstandingFeesTest extends AbstractCommandHandlerTestCase
             $this->sut->handleCommand($command);
         } catch (RuntimeException $e) {
             $messages = $e->getMessages();
-            $this->assertTrue(str_contains(reset($messages), 'ohnoes'));
+            $this->assertTrue(str_contains((string) reset($messages), 'ohnoes'));
         }
     }
 

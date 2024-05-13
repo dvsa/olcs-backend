@@ -762,9 +762,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
                     // in Business Details causing trading names to have the
                     // same createdOn date. Sort alphabetically to avoid
                     // 'random' behaviour.
-                    return strcasecmp($a->getName(), $b->getName());
+                    return strcasecmp((string) $a->getName(), (string) $b->getName());
                 }
-                return strtotime($a->getCreatedOn()) < strtotime($b->getCreatedOn()) ? -1 : 1;
+                return strtotime((string) $a->getCreatedOn()) < strtotime((string) $b->getCreatedOn()) ? -1 : 1;
             }
         );
 
@@ -785,9 +785,9 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             $iterator,
             function ($a, $b) {
                 if ($a->getCreatedOn() == $b->getCreatedOn()) {
-                    return strcasecmp($a->getName(), $b->getName());
+                    return strcasecmp((string) $a->getName(), (string) $b->getName());
                 }
-                return strtotime($a->getCreatedOn()) < strtotime($b->getCreatedOn()) ? -1 : 1;
+                return strtotime((string) $a->getCreatedOn()) < strtotime((string) $b->getCreatedOn()) ? -1 : 1;
             }
         );
 
@@ -1165,8 +1165,8 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
             fn($a, $b) =>
                 /** @var PublicationLinkEntity $a */
                 /** @var PublicationLinkEntity $b */
-                strtotime($b->getPublication()->getPubDate()) -
-                strtotime($a->getPublication()->getPubDate())
+                strtotime((string) $b->getPublication()->getPubDate()) -
+                strtotime((string) $a->getPublication()->getPubDate())
         );
         $publicationLinks = new ArrayCollection(iterator_to_array($iterator));
 

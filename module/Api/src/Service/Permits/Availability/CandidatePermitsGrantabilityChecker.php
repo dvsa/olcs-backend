@@ -13,7 +13,7 @@ class CandidatePermitsGrantabilityChecker
      *
      * @return CandidatePermitsGrantabilityChecker
      */
-    public function __construct(private CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator)
+    public function __construct(private readonly CandidatePermitsAvailableCountCalculator $candidatePermitsAvailableCountCalculator)
     {
     }
 

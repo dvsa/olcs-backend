@@ -17,6 +17,11 @@ use Mockery as m;
  */
 class SendEcmtShortTermAutomaticallyWithdrawnTest extends AbstractPermitTest
 {
+    public $orgEmails;
+    public $contactDetails;
+    public $userEmail;
+    public $orgEmail1;
+    public $orgEmail2;
     protected $commandClass = SendEcmtShortTermAutomaticallyWithdrawnCmd::class;
     protected $commandHandlerClass = SendEcmtShortTermAutomaticallyWithdrawnHandler::class;
     protected $template = 'ecmt-short-term-automatically-withdrawn';

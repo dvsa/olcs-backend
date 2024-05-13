@@ -30,12 +30,12 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        private LicenceDetailsService $licenceDetailsService,
-        private CurrentDiscsReviewService $currentDiscsReviewService,
-        private OperatorLicenceReviewService $operatorLicenceReviewService,
-        private CommunityLicenceReviewService $communityLicenceReviewService,
-        private DeclarationReviewService $declarationReviewService,
-        private SignatureReviewService $signatureReviewService
+        private readonly LicenceDetailsService $licenceDetailsService,
+        private readonly CurrentDiscsReviewService $currentDiscsReviewService,
+        private readonly OperatorLicenceReviewService $operatorLicenceReviewService,
+        private readonly CommunityLicenceReviewService $communityLicenceReviewService,
+        private readonly DeclarationReviewService $declarationReviewService,
+        private readonly SignatureReviewService $signatureReviewService
     ) {
         parent::__construct($abstractGeneratorServices);
     }

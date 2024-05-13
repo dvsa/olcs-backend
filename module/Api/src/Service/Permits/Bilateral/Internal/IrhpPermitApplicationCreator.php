@@ -14,7 +14,7 @@ class IrhpPermitApplicationCreator
      *
      * @return IrhpPermitApplicationCreator
      */
-    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private IrhpPermitApplicationFactory $irhpPermitApplicationFactory)
+    public function __construct(private readonly IrhpPermitStockRepository $irhpPermitStockRepo, private readonly IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private readonly IrhpPermitApplicationFactory $irhpPermitApplicationFactory)
     {
     }
 

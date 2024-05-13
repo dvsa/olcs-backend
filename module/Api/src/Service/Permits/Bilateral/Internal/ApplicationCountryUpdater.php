@@ -12,7 +12,7 @@ class ApplicationCountryUpdater
      *
      * @return ApplicationCountryUpdater
      */
-    public function __construct(private IrhpPermitApplicationCreator $irhpPermitApplicationCreator, private ExistingIrhpPermitApplicationHandler $existingIrhpPermitApplicationHandler)
+    public function __construct(private readonly IrhpPermitApplicationCreator $irhpPermitApplicationCreator, private readonly ExistingIrhpPermitApplicationHandler $existingIrhpPermitApplicationHandler)
     {
     }
 

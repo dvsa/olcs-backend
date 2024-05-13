@@ -82,7 +82,7 @@ final class UpdateLicenceHistory extends AbstractCommandHandler
 
     private function validateField($errors, $field, $type, $application, $command)
     {
-        $method = 'get' . ucfirst($field);
+        $method = 'get' . ucfirst((string) $field);
         $value = $command->$method();
         if (
             $value === 'Y' &&

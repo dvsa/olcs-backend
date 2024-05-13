@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * With User
  */
-final class WithUser implements QueryPartialInterface
+final readonly class WithUser implements QueryPartialInterface
 {
     public function __construct(private With $with)
     {

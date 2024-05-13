@@ -42,7 +42,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
      */
     public function attach(EventManagerInterface $events, $priority = 1)
     {
-        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute'], $priority);
+        $this->listeners[] = $events->attach(MvcEvent::EVENT_ROUTE, $this->onRoute(...), $priority);
     }
 
     public function onRoute(MvcEvent $e)
@@ -95,7 +95,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
             $isXml = in_array($mediaType, $this->xmlMediaTypes);
 
             if ($mediaType === self::JSON_MEDIA_TYPE) {
-                $data = json_decode($request->getContent(), true);
+                $data = json_decode((string) $request->getContent(), true);
             } elseif ($isXml) {
                 $data = ['xml' => $request->getContent()];
             } else {

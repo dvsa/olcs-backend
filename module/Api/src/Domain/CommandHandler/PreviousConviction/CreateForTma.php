@@ -44,7 +44,7 @@ final class CreateForTma extends AbstractCommandHandler implements Transactioned
         $this->getRepo()->save($previousConviction);
 
         $result = new Result();
-        $result->addId(lcfirst($this->repoServiceName), $previousConviction->getId());
+        $result->addId(lcfirst((string) $this->repoServiceName), $previousConviction->getId());
         $result->addMessage("Previous Conviction ID {$previousConviction->getId()} created");
 
         return $result;

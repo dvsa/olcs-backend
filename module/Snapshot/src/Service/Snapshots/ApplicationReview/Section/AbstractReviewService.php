@@ -39,7 +39,7 @@ abstract class AbstractReviewService implements ReviewServiceInterface
 
     protected function formatText($text)
     {
-        return nl2br($text);
+        return nl2br((string) $text);
     }
 
     protected function findFiles($files, $category, $subCategory)

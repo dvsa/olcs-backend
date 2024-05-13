@@ -18,7 +18,7 @@ class CountryGenerator
      *
      * @return CountryGenerator
      */
-    public function __construct(private PeriodArrayGenerator $periodArrayGenerator)
+    public function __construct(private readonly PeriodArrayGenerator $periodArrayGenerator)
     {
     }
 

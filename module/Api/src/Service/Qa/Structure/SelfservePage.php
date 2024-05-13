@@ -15,7 +15,7 @@ class SelfservePage
      *
      * @return SelfservePage
      */
-    public function __construct(private $title, private array $additionalViewData, private ApplicationStep $applicationStep, private QuestionText $questionText, private $submitOptionsName, private $nextStepSlug)
+    public function __construct(private $title, private readonly array $additionalViewData, private readonly ApplicationStep $applicationStep, private readonly QuestionText $questionText, private $submitOptionsName, private $nextStepSlug)
     {
     }
 

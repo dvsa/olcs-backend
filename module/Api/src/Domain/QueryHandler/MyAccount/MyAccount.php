@@ -65,7 +65,7 @@ class MyAccount extends AbstractQueryHandler implements CacheAwareInterface
                 SystemParameter::DATA_SEPARATION_TEAMS_EXEMPT
             );
 
-            $teamsExcluded = explode(",", $teamDataExclusionsParam->getObject()->getParamValue());
+            $teamsExcluded = explode(",", (string) $teamDataExclusionsParam->getObject()->getParamValue());
 
             $team = $user->getTeam();
 

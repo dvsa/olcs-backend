@@ -17,7 +17,7 @@ class ApplicationStep
      *
      * @return ApplicationStep
      */
-    public function __construct(private $type, private $fieldsetName, private $shortName, private $slug, private $enabled, private ElementInterface $element, private ValidatorList $validatorList)
+    public function __construct(private $type, private $fieldsetName, private $shortName, private $slug, private $enabled, private readonly ElementInterface $element, private readonly ValidatorList $validatorList)
     {
     }
 

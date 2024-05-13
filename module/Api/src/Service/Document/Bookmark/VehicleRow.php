@@ -53,7 +53,7 @@ class VehicleRow extends DynamicBookmark
             }
 
             $tokens = [
-                'SPEC_DATE'     => date('d-M-Y', strtotime($vehicle['specifiedDate'])),
+                'SPEC_DATE'     => date('d-M-Y', strtotime((string) $vehicle['specifiedDate'])),
                 'PLATED_WEIGHT' => $vehicle['vehicle']['platedWeight'],
                 'REG_MARK'      => $vehicle['vehicle']['vrm']
             ];

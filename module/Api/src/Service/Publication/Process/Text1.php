@@ -51,7 +51,7 @@ class Text1 implements ProcessInterface
 
         //licence address
         if ($context->offsetExists('licenceAddress')) {
-            $hearingText[] = "\n" . strtoupper($context->offsetGet('licenceAddress'));
+            $hearingText[] = "\n" . strtoupper((string) $context->offsetGet('licenceAddress'));
         }
 
         $publication->setText1(implode(' ', $hearingText));

@@ -102,7 +102,7 @@ class UpdateTypeOfLicenceTest extends AbstractCommandHandlerTestCase
         // Calling getApplication needs to be deferred to here rather than in the dataProvider to avoid initialising
         // references twice and creating duplicate refdata entries in the process
         $application = call_user_func_array(
-            [$this, 'getApplication'],
+            $this->getApplication(...),
             $applicationData
         );
 
@@ -601,7 +601,7 @@ class UpdateTypeOfLicenceTest extends AbstractCommandHandlerTestCase
         // Calling getApplication needs to be deferred to here rather than in the dataProvider to avoid initialising
         // references twice and creating duplicate refdata entries in the process
         $application = call_user_func_array(
-            [$this, 'getApplication'],
+            $this->getApplication(...),
             $applicationData
         );
 

@@ -13,7 +13,7 @@ class DaysToPayIssueFeeProvider
      *
      * @return DaysToPayIssueFeeProvider
      */
-    public function __construct(private SystemParameterRepository $systemParameterRepo)
+    public function __construct(private readonly SystemParameterRepository $systemParameterRepo)
     {
     }
 

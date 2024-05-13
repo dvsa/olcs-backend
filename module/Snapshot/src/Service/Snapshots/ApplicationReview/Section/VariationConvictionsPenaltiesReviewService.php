@@ -25,7 +25,7 @@ class VariationConvictionsPenaltiesReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private ApplicationConvictionsPenaltiesReviewService $applicationConvictionsPenaltiesReviewService
+        private readonly ApplicationConvictionsPenaltiesReviewService $applicationConvictionsPenaltiesReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

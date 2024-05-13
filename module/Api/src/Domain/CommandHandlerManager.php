@@ -18,7 +18,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\CommandHandlerInterface;
 class CommandHandlerManager extends AbstractPluginManager
 {
     protected $instanceOf = CommandHandlerInterface::class;
-    private ValidationHandlerManager $validationHandlerManager;
+    private readonly ValidationHandlerManager $validationHandlerManager;
 
     public function __construct(ContainerInterface $container, array $config = [])
     {

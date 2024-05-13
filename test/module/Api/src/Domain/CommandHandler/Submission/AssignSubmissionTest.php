@@ -40,7 +40,7 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
  */
 class AssignSubmissionTest extends AbstractCommandHandlerTestCase
 {
-    protected $submissionConfig = [
+    public $submissionConfig = [
         'submissions' => [
             'sections' => [
                 'configuration' => [

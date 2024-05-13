@@ -14,7 +14,7 @@ class QaEntityProvider
      *
      * @return QaEntityProvider
      */
-    public function __construct(private IrhpApplicationRepository $irhpApplicationRepo, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
+    public function __construct(private readonly IrhpApplicationRepository $irhpApplicationRepo, private readonly IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
     {
     }
 

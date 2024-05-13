@@ -40,7 +40,7 @@ class SupportingDocuments extends AbstractValidator
     public function isValid($value, $context = [])
     {
         $this->abstractOptions['messages'] = [];
-        $dir = dirname($context['xml_filename']) . DIRECTORY_SEPARATOR;
+        $dir = dirname((string) $context['xml_filename']) . DIRECTORY_SEPARATOR;
 
         $this->checkFileExistsByTag($dir, $value, 'DocumentUri');
         $this->checkFileExistsByTag($dir, $value, 'SchematicMap');

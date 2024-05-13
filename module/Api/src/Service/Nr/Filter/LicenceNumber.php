@@ -26,7 +26,7 @@ class LicenceNumber extends AbstractFilter
         $value['licenceNumber'] = $value['communityLicenceNumber'];
 
         //see if we can split into three parts, as per a community licence number
-        $explodedCommunityLicence = explode('/', $value['communityLicenceNumber']);
+        $explodedCommunityLicence = explode('/', (string) $value['communityLicenceNumber']);
 
         //if we have three parts, assume a community licence and extract the middle part
         if (count($explodedCommunityLicence) === 3) {

@@ -10,7 +10,7 @@ use Olcs\Logging\Log\Logger;
 
 class SlaCalculator implements SlaCalculatorInterface
 {
-    public function __construct(private TimeProcessorBuilderInterface $timeProcessorBuilder)
+    public function __construct(private readonly TimeProcessorBuilderInterface $timeProcessorBuilder)
     {
     }
 

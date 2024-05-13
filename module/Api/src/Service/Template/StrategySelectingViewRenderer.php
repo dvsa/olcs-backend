@@ -14,7 +14,7 @@ class StrategySelectingViewRenderer
      *
      * @return StrategySelectingViewRenderer
      */
-    public function __construct(private RendererInterface $legacyViewRenderer, private TwigRenderer $twigRenderer, private TwigLoader $twigLoader)
+    public function __construct(private readonly RendererInterface $legacyViewRenderer, private readonly TwigRenderer $twigRenderer, private readonly TwigLoader $twigLoader)
     {
     }
 

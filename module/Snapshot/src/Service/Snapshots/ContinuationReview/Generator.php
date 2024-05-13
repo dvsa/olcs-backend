@@ -43,9 +43,9 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        private SectionAccessService $sectionAccessService,
-        private NiTextTranslation $niTextTranslation,
-        private ContainerInterface $services
+        private readonly SectionAccessService $sectionAccessService,
+        private readonly NiTextTranslation $niTextTranslation,
+        private readonly ContainerInterface $services
     ) {
         parent::__construct($abstractGeneratorServices);
     }
@@ -86,7 +86,7 @@ class Generator extends AbstractGenerator
         $sectionConfig = [];
 
         foreach ($sections as $section) {
-            $serviceName = 'ContinuationReview\\' . ucfirst($filter->filter($section));
+            $serviceName = 'ContinuationReview\\' . ucfirst((string) $filter->filter($section));
             $config = null;
             $summary = null;
             $summaryHeader = null;

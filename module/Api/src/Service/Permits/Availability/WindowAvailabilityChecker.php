@@ -14,7 +14,7 @@ class WindowAvailabilityChecker
      *
      * @return WindowAvailabilityChecker
      */
-    public function __construct(private IrhpPermitWindowRepository $irhpPermitWindowRepo, private StockAvailabilityChecker $stockAvailabilityChecker)
+    public function __construct(private readonly IrhpPermitWindowRepository $irhpPermitWindowRepo, private readonly StockAvailabilityChecker $stockAvailabilityChecker)
     {
     }
 

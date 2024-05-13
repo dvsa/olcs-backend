@@ -12,7 +12,7 @@ class QaContext
      *
      * @return QaContext
      */
-    public function __construct(private ApplicationStepEntity $applicationStepEntity, private QaEntityInterface $qaEntity)
+    public function __construct(private readonly ApplicationStepEntity $applicationStepEntity, private readonly QaEntityInterface $qaEntity)
     {
     }
 

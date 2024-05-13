@@ -14,7 +14,7 @@ class ApggEmissionsCatCandidatePermitsCreator
      *
      * @return ApggEmissionsCatCandidatePermitsCreator
      */
-    public function __construct(private ApggCandidatePermitFactory $apggCandidatePermitFactory, private IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private EmissionsStandardCriteriaFactory $emissionsStandardCriteriaFactory)
+    public function __construct(private readonly ApggCandidatePermitFactory $apggCandidatePermitFactory, private readonly IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private readonly EmissionsStandardCriteriaFactory $emissionsStandardCriteriaFactory)
     {
     }
 

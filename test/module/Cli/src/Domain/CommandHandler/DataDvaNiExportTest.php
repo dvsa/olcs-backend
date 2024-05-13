@@ -16,6 +16,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class DataDvaNiExportTest extends AbstractCommandHandlerTestCase
 {
+    public $mockDbalResult;
     /**
      * @var DataDvaNiExport
      */

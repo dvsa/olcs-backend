@@ -17,6 +17,7 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
  */
 class GrantValidationServiceTest extends \Mockery\Adapter\Phpunit\MockeryTestCase
 {
+    public $sectionAccessService;
     protected $sut;
 
     /**

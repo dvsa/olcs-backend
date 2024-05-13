@@ -14,7 +14,7 @@ class NumberOfPermitsMoroccoQuestionHandler implements QuestionHandlerInterface
      *
      * @return NumberOfPermitsMoroccoQuestionHandler
      */
-    public function __construct(private NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
+    public function __construct(private readonly NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
     {
     }
 

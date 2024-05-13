@@ -20,6 +20,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class DataRetentionCommandTest extends TestCase
 {
+    public $mockQueryHandlerManager;
     private $command;
     private $commandTester;
     private $mockCommandHandlerManager;

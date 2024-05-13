@@ -18,7 +18,7 @@ class QaContextGenerator
      *
      * @return QaContextGenerator
      */
-    public function __construct(private ApplicationStepRepository $applicationStepRepo, private QaEntityProvider $qaEntityProvider, private QaContextFactory $qaContextFactory)
+    public function __construct(private readonly ApplicationStepRepository $applicationStepRepo, private readonly QaEntityProvider $qaEntityProvider, private readonly QaContextFactory $qaContextFactory)
     {
     }
 

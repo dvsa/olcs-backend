@@ -13,7 +13,7 @@ class FixedAnswerQuestionHandler implements QuestionHandlerInterface
      * @param string $answer
      * @return FixedAnswerQuestionHandler
      */
-    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private $answer)
+    public function __construct(private readonly GenericAnswerWriter $genericAnswerWriter, private $answer)
     {
     }
 

@@ -55,7 +55,7 @@ abstract class AbstractReadonlyRepository implements ReadonlyRepositoryInterface
      * @param QueryBuilderInterface  $queryBuilder   Doctrine Query Builder
      * @param DbQueryServiceManager  $dbQueryManager Olcs Query manager
      */
-    public function __construct(private EntityManagerInterface $em, private QueryBuilderInterface $queryBuilder, private DbQueryServiceManager $dbQueryManager)
+    public function __construct(private readonly EntityManagerInterface $em, private readonly QueryBuilderInterface $queryBuilder, private readonly DbQueryServiceManager $dbQueryManager)
     {
     }
 

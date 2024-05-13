@@ -41,6 +41,7 @@ use Olcs\Logging\Log\Logger;
  */
 abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
 {
+    public $submissionConfig;
     use ValidateMockRepoTypeTrait;
 
     /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler */
@@ -172,10 +173,10 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
         $this->validateMockRepoType($name, $class);
 
         $class
-            ->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData'])
-            ->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference'])
-            ->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference'])
-            ->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+            ->shouldReceive('getRefdataReference')->andReturnUsing($this->mapRefData(...))
+            ->shouldReceive('getReference')->andReturnUsing($this->mapReference(...))
+            ->shouldReceive('getCategoryReference')->andReturnUsing($this->mapCategoryReference(...))
+            ->shouldReceive('getSubCategoryReference')->andReturnUsing($this->mapSubCategoryReference(...));
 
         $this->repoMap[$name] = $class;
 
@@ -343,7 +344,7 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
             ->once()
             ->with(m::type($class), false)
             ->andReturnUsing(
-                function (CommandInterface $command) use ($class, $data, $exception) {
+                function (CommandInterface $command) use ($class, $data, $exception): never {
                     $this->commands[] = [$command, $data];
                     throw $exception;
                 }

@@ -12,7 +12,7 @@ class SuccessfulCandidatePermitsWriter
      *
      * @return SuccessfulCandidatePermitsWriter
      */
-    public function __construct(private IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
+    public function __construct(private readonly IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
     {
     }
 

@@ -15,6 +15,11 @@ use Mockery as m;
  */
 class SendEcmtShortTermUnsuccessfulTest extends AbstractPermitTest
 {
+    public $orgEmails;
+    public $contactDetails;
+    public $userEmail;
+    public $orgEmail1;
+    public $orgEmail2;
     protected $commandClass = SendEcmtShortTermUnsuccessfulCmd::class;
     protected $commandHandlerClass = SendEcmtShortTermUnsuccessfulHandler::class;
     protected $template = 'ecmt-short-term-app-unsuccessful';

@@ -17,7 +17,7 @@ class GrantabilityChecker
      *
      * @return GrantabilityChecker
      */
-    public function __construct(private EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker, private CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker)
+    public function __construct(private readonly EmissionsCategoriesGrantabilityChecker $emissionsCategoriesGrantabilityChecker, private readonly CandidatePermitsGrantabilityChecker $candidatePermitsGrantabilityChecker)
     {
     }
 

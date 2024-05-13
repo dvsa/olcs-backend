@@ -39,7 +39,7 @@ final class Compare extends AbstractCommandHandler
                 throw new ChNotFoundException('Company number has invalid characters');
             }
             $apiResult = $this->api->getCompanyProfile($companyNumber, true);
-        } catch (ChNotFoundException $e) {
+        } catch (ChNotFoundException) {
             $this->result->merge(
                 $this->createAlert(
                     [AlertEntity::REASON_INVALID_COMPANY_NUMBER],
@@ -176,7 +176,7 @@ final class Compare extends AbstractCommandHandler
      */
     protected function nameHasChanged($old, $new)
     {
-        return (trim(strtolower($new['companyName'])) !== trim(strtolower($old['companyName'])));
+        return (trim(strtolower((string) $new['companyName'])) !== trim(strtolower((string) $old['companyName'])));
     }
 
     /**
@@ -206,14 +206,14 @@ final class Compare extends AbstractCommandHandler
                     // field has been deleted
                     return true;
                 }
-                if (trim(strtolower($new[$field])) !== trim(strtolower($old[$field]))) {
+                if (trim(strtolower((string) $new[$field])) !== trim(strtolower((string) $old[$field]))) {
                     // field has changed!
                     return true;
                 }
             }
 
             // check for new fields that have been added
-            if (isset($new[$field]) && trim(strtolower($new[$field])) !== trim(strtolower($old[$field]))) {
+            if (isset($new[$field]) && trim(strtolower((string) $new[$field])) !== trim(strtolower((string) $old[$field]))) {
                 return true;
             }
         }

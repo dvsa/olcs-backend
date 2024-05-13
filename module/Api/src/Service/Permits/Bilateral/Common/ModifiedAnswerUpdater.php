@@ -14,7 +14,7 @@ class ModifiedAnswerUpdater
      *
      * @return ModifiedAnswerUpdater
      */
-    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private ApplicationAnswersClearer $applicationAnswersClearer)
+    public function __construct(private readonly GenericAnswerWriter $genericAnswerWriter, private readonly ApplicationAnswersClearer $applicationAnswersClearer)
     {
     }
 

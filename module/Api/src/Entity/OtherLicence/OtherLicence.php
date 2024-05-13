@@ -87,7 +87,7 @@ class OtherLicence extends AbstractOtherLicence implements \Dvsa\Olcs\Api\Entity
                 'disqualificationDate' => $this->setDisqualificationDate(new \DateTime($disqualificationDate)),
                 'disqualificationLength' => $this->setDisqualificationLength($disqualificationLength),
                 'purchaseDate' => $this->setPurchaseDate(new \DateTime($purchaseDate)),
-                default => throw new \RuntimeException("Unexpected field '${field}'"),
+                default => throw new \RuntimeException("Unexpected field '{$field}'"),
             };
         }
         return true;

@@ -66,7 +66,7 @@ class GetRedirect extends AbstractCommandHandler implements AuthAwareInterface, 
         ]);
 
         $edhApiResult = $this->httpClient->send();
-        $resultBody = json_decode($edhApiResult->getContent(), true);
+        $resultBody = json_decode((string) $edhApiResult->getContent(), true);
 
         if (!isset($resultBody['redirectUrl'])) {
             Logger::err('TOPS Report API Error Message: ' . $resultBody['message']);

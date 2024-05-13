@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\PublicHolidayDateProvider;
 
 class TimeProcessorBuilder implements TimeProcessorBuilderInterface
 {
-    public function __construct(private PublicHoliday $publicHolidayRepo)
+    public function __construct(private readonly PublicHoliday $publicHolidayRepo)
     {
     }
 

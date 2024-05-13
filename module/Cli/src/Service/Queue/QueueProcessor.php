@@ -31,7 +31,7 @@ class QueueProcessor
      *
      * @return QueueProcessor
      */
-    public function __construct(private QueryHandlerManager $queryHandlerManager, private MessageConsumerManager $messageConsumerManager)
+    public function __construct(private readonly QueryHandlerManager $queryHandlerManager, private readonly MessageConsumerManager $messageConsumerManager)
     {
     }
 

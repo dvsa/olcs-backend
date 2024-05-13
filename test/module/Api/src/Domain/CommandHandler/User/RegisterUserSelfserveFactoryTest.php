@@ -40,7 +40,7 @@ class RegisterUserSelfserveFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, '__invoke']);
+        $this->assertIsCallable($this->sut->__invoke(...));
     }
 
     /**

@@ -130,7 +130,7 @@ final class UpdateApplicationCompletion extends AbstractCommandHandler implement
         $sectionsToUpdate = [];
 
         foreach ($this->sections as $section) {
-            $status = (int)$completion->{'get' . ucfirst($section) . 'Status'}();
+            $status = (int)$completion->{'get' . ucfirst((string) $section) . 'Status'}();
             if ($this->shouldUpdateSection($section, $command, $status)) {
                 $sectionsToUpdate[$section] = $status;
             }

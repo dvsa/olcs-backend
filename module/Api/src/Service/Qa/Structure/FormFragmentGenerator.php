@@ -14,7 +14,7 @@ class FormFragmentGenerator
      *
      * @return FormFragmentGenerator
      */
-    public function __construct(private FormFragmentFactory $formFragmentFactory, private ApplicationStepGenerator $applicationStepGenerator, private QaContextFactory $qaContextFactory)
+    public function __construct(private readonly FormFragmentFactory $formFragmentFactory, private readonly ApplicationStepGenerator $applicationStepGenerator, private readonly QaContextFactory $qaContextFactory)
     {
     }
 

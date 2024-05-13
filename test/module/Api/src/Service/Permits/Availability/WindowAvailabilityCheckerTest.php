@@ -17,6 +17,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class WindowAvailabilityCheckerTest extends MockeryTestCase
 {
+    public $windowAvailabilityChecker;
     private $now;
 
     private $irhpPermitStock1Id;

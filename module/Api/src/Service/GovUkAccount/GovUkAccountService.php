@@ -80,7 +80,7 @@ class GovUkAccountService
             'exp' => $currentTimestamp + $expireSeconds,
         ]);
 
-        return JWT::encode($data, base64_decode($this->config['keys']['private_key']), $this->config['keys']['algorithm']);
+        return JWT::encode($data, base64_decode((string) $this->config['keys']['private_key']), $this->config['keys']['algorithm']);
     }
 
     /**
@@ -90,7 +90,7 @@ class GovUkAccountService
      */
     public function getStateClaimsFromToken(string $token): array
     {
-        return (array) JWT::decode($token, new Key(base64_decode($this->config['keys']['public_key']), $this->config['keys']['algorithm']));
+        return (array) JWT::decode($token, new Key(base64_decode((string) $this->config['keys']['public_key']), $this->config['keys']['algorithm']));
     }
 
     /**

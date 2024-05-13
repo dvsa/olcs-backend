@@ -25,7 +25,7 @@ class VariationTransportManagersReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private TransportManagersReviewService $transportManagersReviewService
+        private readonly TransportManagersReviewService $transportManagersReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

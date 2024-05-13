@@ -1126,7 +1126,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
         $converter = new CamelCaseToUnderscore();
         foreach ($applicationCompletion as $key => $value) {
             if (preg_match('/^([a-zA-Z]+)Status$/', $key, $matches)) {
-                $section = strtolower($converter->filter($matches[1]));
+                $section = strtolower((string) $converter->filter($matches[1]));
                 $completions[$section] = (int)$value;
             }
         }
@@ -1193,7 +1193,7 @@ class Application extends AbstractApplication implements ContextProviderInterfac
                 continue;
             }
 
-            $section = strtolower($filter->filter($matches[1]));
+            $section = strtolower((string) $filter->filter($matches[1]));
 
             if ($this->isSectionRequireAttention($section, (int)$value)) {
                 $sections[] = $section;

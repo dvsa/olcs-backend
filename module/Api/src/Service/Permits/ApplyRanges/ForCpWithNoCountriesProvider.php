@@ -13,7 +13,7 @@ class ForCpWithNoCountriesProvider
      *
      * @return ForCpWithNoCountriesProvider
      */
-    public function __construct(private UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider, private RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider, private HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector)
+    public function __construct(private readonly UnrestrictedWithLowestStartNumberProvider $unrestrictedWithLowestStartNumberProvider, private readonly RestrictedWithFewestCountriesProvider $restrictedWithFewestCountriesProvider, private readonly HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector)
     {
     }
 

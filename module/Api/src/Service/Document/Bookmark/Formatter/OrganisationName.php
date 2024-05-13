@@ -57,7 +57,7 @@ class OrganisationName implements FormatterInterface
         $first = null;
         $name = null;
         foreach ($tradingNames as $tradingName) {
-            $current = strtotime($tradingName['createdOn']);
+            $current = strtotime((string) $tradingName['createdOn']);
             if ($name === null || $current < $first) {
                 $first = $current;
                 $name = $tradingName['name'];

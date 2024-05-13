@@ -26,6 +26,10 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class ResetFeesTest extends AbstractCommandHandlerTestCase
 {
+    /**
+     * @var (\Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee\FeesHelper & \Mockery\MockInterface)
+     */
+    public $mockFeesHelperService;
     public function setUp(): void
     {
         $this->mockFeesHelperService = m::mock(FeesHelper::class);

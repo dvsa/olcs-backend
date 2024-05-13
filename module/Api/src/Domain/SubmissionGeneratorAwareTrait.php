@@ -17,7 +17,7 @@ trait SubmissionGeneratorAwareTrait
     /**
      * @var array $submissionConfig
      */
-    protected $submissionConfig;
+    public $submissionConfig;
 
     public function setSubmissionGenerator(SubmissionGenerator $service)
     {

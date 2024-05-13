@@ -16,7 +16,7 @@ class ClientReturnCodeHandler
      *
      * @return ClientReturnCodeHandler
      */
-    public function __construct(private ApplicationCountryRemover $applicationCountryRemover)
+    public function __construct(private readonly ApplicationCountryRemover $applicationCountryRemover)
     {
     }
 

@@ -15,7 +15,7 @@ class OptionListGenerator
      *
      * @return OptionListGenerator
      */
-    public function __construct(private OptionListFactory $optionListFactory, private OptionFactory $optionFactory)
+    public function __construct(private readonly OptionListFactory $optionListFactory, private readonly OptionFactory $optionFactory)
     {
     }
 

@@ -20,7 +20,7 @@ class BookmarkFactory
         // 1) SomethingLike_This -> Something_Like_This
         $className = $c2u->filter($token);
         // 2) SOMETHING__Like_This -> something__like_this
-        $className = strtolower($className);
+        $className = strtolower((string) $className);
         // 3) something__like_this -> Something_LikeThis
         $className = $u2c->filter($className);
         // 4) Something_LikeThis -> SomethingLikeThis

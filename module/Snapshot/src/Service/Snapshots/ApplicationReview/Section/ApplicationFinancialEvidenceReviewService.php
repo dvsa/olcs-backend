@@ -29,7 +29,7 @@ class ApplicationFinancialEvidenceReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private QueryHandlerManager $queryHandlerManager
+        private readonly QueryHandlerManager $queryHandlerManager
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

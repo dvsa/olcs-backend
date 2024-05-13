@@ -18,7 +18,7 @@ class AbstractGeneratorServices
      *
      * @return AbstractGeneratorServices
      */
-    public function __construct(private RendererInterface $renderer)
+    public function __construct(private readonly RendererInterface $renderer)
     {
     }
 

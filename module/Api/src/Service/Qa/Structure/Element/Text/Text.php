@@ -16,7 +16,7 @@ class Text implements ElementInterface
      *
      * @return Text
      */
-    public function __construct(private $value, private ?TranslateableText $label = null, private ?TranslateableText $hint = null)
+    public function __construct(private $value, private readonly ?TranslateableText $label = null, private readonly ?TranslateableText $hint = null)
     {
     }
 

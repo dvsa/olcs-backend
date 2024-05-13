@@ -15,7 +15,7 @@ class DvlaVehicle
         /**
          * Registration number of the vehicle
          */
-        private string $registrationNumber,
+        private readonly string $registrationNumber,
         /**
          * Tax status of the vehicle
          * Enum:
@@ -24,15 +24,15 @@ class DvlaVehicle
          *      Taxed
          *      Untaxed
          */
-        private ?string $taxStatus,
+        private readonly ?string $taxStatus,
         /**
          * Date of tax liability, used in calculating licence information presented to user
          */
-        private ?\DateTime $taxDueDate,
+        private readonly ?\DateTime $taxDueDate,
         /**
          * Additional Rate of Tax End Date
          */
-        private ?\DateTime $artEndDate,
+        private readonly ?\DateTime $artEndDate,
         /**
          * MOT Status of the vehicle
          * Enum:
@@ -41,71 +41,71 @@ class DvlaVehicle
          *      Not valid
          *      Valid
          */
-        private ?string $motStatus,
+        private readonly ?string $motStatus,
         /**
          * Mot Expiry Date
          */
-        private ?\DateTime $motExpiryDate,
+        private readonly ?\DateTime $motExpiryDate,
         /**
          * Vehicle make
          */
-        private ?string $make,
+        private readonly ?string $make,
         /**
          * Month of First DVLA Registration
          */
-        private ?\DateTime $monthOfFirstDvlaRegistration,
+        private readonly ?\DateTime $monthOfFirstDvlaRegistration,
         /**
          * Month of First Registration
          */
-        private ?\DateTime $monthOfFirstRegistration,
+        private readonly ?\DateTime $monthOfFirstRegistration,
         /**
          * Year of Manufacture
          */
-        private ?int $yearOfManufacture,
+        private readonly ?int $yearOfManufacture,
         /**
          * Engine capacity in cubic centimetres
          */
-        private ?int $engineCapacity,
+        private readonly ?int $engineCapacity,
         /**
          * Carbon Dioxide emissions in grams per kilometre
          */
-        private ?int $co2Emissions,
+        private readonly ?int $co2Emissions,
         /**
          * Fuel type (Method of Propulsion)
          */
-        private ?string $fuelType,
+        private readonly ?string $fuelType,
         /**
          * True only if vehicle has been export marked
          */
-        private ?bool $markedForExport,
+        private readonly ?bool $markedForExport,
         /**
          * Vehicle colour
          */
-        private ?string $colour,
+        private readonly ?string $colour,
         /**
          * Vehicle Type Approval Category
          */
-        private ?string $typeApproval,
+        private readonly ?string $typeApproval,
         /**
          * Vehicle wheel plan
          */
-        private ?string $wheelplan,
+        private readonly ?string $wheelplan,
         /**
          * Revenue weight in kilograms
          */
-        private ?int $revenueWeight,
+        private readonly ?int $revenueWeight,
         /**
          * Real Driving Emissions value
          */
-        private ?string $realDrivingEmissions,
+        private readonly ?string $realDrivingEmissions,
         /**
          * Date of last V5C issued
          */
-        private ?\DateTime $dateOfLastV5CIssued,
+        private readonly ?\DateTime $dateOfLastV5CIssued,
         /**
          * Euro Status (Dealer / Customer Provided (new vehicles))
          */
-        private ?string $euroStatus
+        private readonly ?string $euroStatus
     ) {
     }
 

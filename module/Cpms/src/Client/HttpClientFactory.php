@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface as Logger;
 
 class HttpClientFactory
 {
-    public function __construct(private ClientOptions $options, private Logger $logger)
+    public function __construct(private readonly ClientOptions $options, private readonly Logger $logger)
     {
     }
 

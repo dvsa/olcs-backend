@@ -13,7 +13,7 @@ class SelfservePageGenerator
      *
      * @return SelfservePageGenerator
      */
-    public function __construct(private SelfservePageFactory $selfservePageFactory, private ApplicationStepGenerator $applicationStepGenerator, private FormControlServiceManager $formControlServiceManager)
+    public function __construct(private readonly SelfservePageFactory $selfservePageFactory, private readonly ApplicationStepGenerator $applicationStepGenerator, private readonly FormControlServiceManager $formControlServiceManager)
     {
     }
 

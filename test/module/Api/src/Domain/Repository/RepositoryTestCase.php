@@ -80,97 +80,97 @@ class RepositoryTestCase extends MockeryTestCase
         $this->qb = m::mock(QueryBuilder::class);
 
         $this->qb->shouldReceive('expr->eq')
-            ->andReturnUsing([$this, 'mockExprEq']);
+            ->andReturnUsing($this->mockExprEq(...));
 
         $this->qb->shouldReceive('expr->neq')
-            ->andReturnUsing([$this, 'mockExprNeq']);
+            ->andReturnUsing($this->mockExprNeq(...));
 
         $this->qb->shouldReceive('expr->lte')
-            ->andReturnUsing([$this, 'mockExprLte']);
+            ->andReturnUsing($this->mockExprLte(...));
 
         $this->qb->shouldReceive('expr->lt')
-            ->andReturnUsing([$this, 'mockExprLt']);
+            ->andReturnUsing($this->mockExprLt(...));
 
         $this->qb->shouldReceive('expr->gte')
-            ->andReturnUsing([$this, 'mockExprGte']);
+            ->andReturnUsing($this->mockExprGte(...));
 
         $this->qb->shouldReceive('expr->gt')
-            ->andReturnUsing([$this, 'mockExprGt']);
+            ->andReturnUsing($this->mockExprGt(...));
 
         $this->qb->shouldReceive('expr->isNull')
-            ->andReturnUsing([$this, 'mockExprIsNull']);
+            ->andReturnUsing($this->mockExprIsNull(...));
 
         $this->qb->shouldReceive('expr->between')
-            ->andReturnUsing([$this, 'mockExprBetween']);
+            ->andReturnUsing($this->mockExprBetween(...));
 
         $this->qb->shouldReceive('expr->in')
-            ->andReturnUsing([$this, 'mockExprIn']);
+            ->andReturnUsing($this->mockExprIn(...));
 
         $this->qb->shouldReceive('expr->notIn')
-            ->andReturnUsing([$this, 'mockExprNotIn']);
+            ->andReturnUsing($this->mockExprNotIn(...));
 
         $this->qb->shouldReceive('expr->isNotNull')
-            ->andReturnUsing([$this, 'mockExprIsNotNull']);
+            ->andReturnUsing($this->mockExprIsNotNull(...));
 
         $this->qb->shouldReceive('expr->like')
-            ->andReturnUsing([$this, 'mockExprLike']);
+            ->andReturnUsing($this->mockExprLike(...));
 
         $this->qb->shouldReceive('expr->orX')
-            ->andReturnUsing([$this, 'mockOrX']);
+            ->andReturnUsing($this->mockOrX(...));
 
         $this->qb->shouldReceive('expr->andX')
-            ->andReturnUsing([$this, 'mockAndX']);
+            ->andReturnUsing($this->mockAndX(...));
 
         $this->qb->shouldReceive('expr->count')
-            ->andReturnUsing([$this, 'mockCount']);
+            ->andReturnUsing($this->mockCount(...));
 
         $this->qb->shouldReceive('select')
-            ->andReturnUsing([$this, 'mockAddSelect']);
+            ->andReturnUsing($this->mockAddSelect(...));
 
         $this->qb->shouldReceive('distinct')
-            ->andReturnUsing([$this, 'mockDistinct']);
+            ->andReturnUsing($this->mockDistinct(...));
 
         $this->qb->shouldReceive('addSelect')
-            ->andReturnUsing([$this, 'mockAddSelect']);
+            ->andReturnUsing($this->mockAddSelect(...));
 
         $this->qb->shouldReceive('select')
-            ->andReturnUsing([$this, 'mockAddSelect']);
+            ->andReturnUsing($this->mockAddSelect(...));
 
         $this->qb->shouldReceive('where')
-            ->andReturnUsing([$this, 'mockAndWhere']);
+            ->andReturnUsing($this->mockAndWhere(...));
 
         $this->qb->shouldReceive('andWhere')
-            ->andReturnUsing([$this, 'mockAndWhere']);
+            ->andReturnUsing($this->mockAndWhere(...));
 
         $this->qb->shouldReceive('orWhere')
-            ->andReturnUsing([$this, 'mockOrWhere']);
+            ->andReturnUsing($this->mockOrWhere(...));
 
         $this->qb->shouldReceive('join')
-            ->andReturnUsing([$this, 'mockInnerJoin']);
+            ->andReturnUsing($this->mockInnerJoin(...));
 
         $this->qb->shouldReceive('innerJoin')
-            ->andReturnUsing([$this, 'mockInnerJoin']);
+            ->andReturnUsing($this->mockInnerJoin(...));
 
         $this->qb->shouldReceive('leftJoin')
-            ->andReturnUsing([$this, 'mockLeftJoin']);
+            ->andReturnUsing($this->mockLeftJoin(...));
 
         $this->qb->shouldReceive('orderBy')
-            ->andReturnUsing([$this, 'mockOrderBy']);
+            ->andReturnUsing($this->mockOrderBy(...));
 
         $this->qb->shouldReceive('addOrderBy')
-            ->andReturnUsing([$this, 'mockOrderBy']);
+            ->andReturnUsing($this->mockOrderBy(...));
 
         $this->qb->shouldReceive('groupBy')
-            ->andReturnUsing([$this, 'mockGroupBy']);
+            ->andReturnUsing($this->mockGroupBy(...));
 
         $this->qb->shouldReceive('setParameter')
-            ->andReturnUsing([$this, 'mockSetParameter']);
+            ->andReturnUsing($this->mockSetParameter(...));
 
         $this->qb->shouldReceive('setMaxResults')
-            ->andReturnUsing([$this, 'mockSetMaxResults']);
+            ->andReturnUsing($this->mockSetMaxResults(...));
 
         $this->qb->shouldReceive('distinct')
-            ->andReturnUsing([$this, 'mockDistinct']);
+            ->andReturnUsing($this->mockDistinct(...));
 
         return $this->qb;
     }
@@ -412,7 +412,7 @@ class RepositoryTestCase extends MockeryTestCase
      */
     protected function setUpServiceManager(): ServiceManager
     {
-        return (new ServiceManagerBuilder([$this, 'setUpDefaultServices']))->build();
+        return (new ServiceManagerBuilder($this->setUpDefaultServices(...)))->build();
     }
 
     /**

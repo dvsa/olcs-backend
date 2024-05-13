@@ -12,7 +12,7 @@ class StockAvailabilityCounter
      *
      * @return StockAvailabilityCounter
      */
-    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private readonly EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
     }
 

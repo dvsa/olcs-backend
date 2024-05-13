@@ -16,7 +16,7 @@ class Checkbox implements ElementInterface
      *
      * @return Checkbox
      */
-    public function __construct(private TranslateableText $label, private TranslateableText $notCheckedMessage, private $checked)
+    public function __construct(private readonly TranslateableText $label, private readonly TranslateableText $notCheckedMessage, private $checked)
     {
     }
 

@@ -13,7 +13,7 @@ class SupplementedApplicationStep
      *
      * @return SupplementedApplicationStep
      */
-    public function __construct(private ApplicationStep $applicationStep, private FormControlStrategyInterface $formControlStrategy)
+    public function __construct(private readonly ApplicationStep $applicationStep, private readonly FormControlStrategyInterface $formControlStrategy)
     {
     }
 

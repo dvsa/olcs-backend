@@ -13,7 +13,7 @@ class CheckedValueUpdater
      *
      * @return CheckedValueUpdater
      */
-    public function __construct(private TaskRepository $taskRepo)
+    public function __construct(private readonly TaskRepository $taskRepo)
     {
     }
 

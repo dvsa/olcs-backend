@@ -13,7 +13,7 @@ class GenericAnswerProvider
      *
      * @return GenericAnswerProvider
      */
-    public function __construct(private AnswerRepository $answerRepo)
+    public function __construct(private readonly AnswerRepository $answerRepo)
     {
     }
 

@@ -43,7 +43,7 @@ class MsiResponse
      *
      * @return MsiResponse
      */
-    public function __construct(private XmlNodeBuilder $xmlBuilder)
+    public function __construct(private readonly XmlNodeBuilder $xmlBuilder)
     {
     }
 

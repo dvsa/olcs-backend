@@ -14,7 +14,7 @@ class ReportListTest extends QueryHandlerTestCase
      */
     public function handleQueryIsCallable()
     {
-        $this->assertIsCallable([$this->sut, 'handleQuery']);
+        $this->assertIsCallable($this->sut->handleQuery(...));
     }
 
     /**

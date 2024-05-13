@@ -22,6 +22,16 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class PermitUsageGeneratorTest extends MockeryTestCase
 {
+    public $answerValue;
+    public $options;
+    public $applicationStepEntity;
+    public $irhpPermitApplication;
+    public $elementGeneratorContext;
+    public $radioFactory;
+    public $translateableTextGenerator;
+    public $optionFactory;
+    public $optionListFactory;
+    public $sut;
     public function setUp(): void
     {
         $this->answerValue = RefData::JOURNEY_SINGLE;

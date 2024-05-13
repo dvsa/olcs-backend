@@ -13,7 +13,7 @@ use Olcs\Db\Service\Search\Search;
  */
 class SearchController extends AbstractController
 {
-    public function __construct(private Search $elasticSearchService)
+    public function __construct(private readonly Search $elasticSearchService)
     {
     }
     /**
@@ -25,7 +25,7 @@ class SearchController extends AbstractController
     {
         $params = array_merge((array)$this->params()->fromRoute(), (array)$this->params()->fromQuery());
 
-        $indices = explode('|', $params['index']);
+        $indices = explode('|', (string) $params['index']);
 
         if (isset($params['filters']) && !empty($params['filters']) && is_array($params['filters'])) {
             $this->elasticSearchService->setFilters($params['filters'], $params['filterTypes'] ?? []);

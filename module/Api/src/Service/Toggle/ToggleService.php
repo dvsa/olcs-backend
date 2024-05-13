@@ -11,7 +11,7 @@ use Qandidate\Toggle\ToggleManager;
  */
 class ToggleService
 {
-    public function __construct(private ToggleManager $toggleManager)
+    public function __construct(private readonly ToggleManager $toggleManager)
     {
     }
 

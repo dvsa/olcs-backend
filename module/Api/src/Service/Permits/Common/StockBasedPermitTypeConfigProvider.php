@@ -12,7 +12,7 @@ class StockBasedPermitTypeConfigProvider
      *
      * @return StockBasedPermitTypeConfigProvider
      */
-    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo, private TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider)
+    public function __construct(private readonly IrhpPermitStockRepository $irhpPermitStockRepo, private readonly TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider)
     {
     }
 

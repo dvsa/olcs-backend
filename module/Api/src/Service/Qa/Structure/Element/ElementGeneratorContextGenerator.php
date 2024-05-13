@@ -10,7 +10,7 @@ class ElementGeneratorContextGenerator
     /**
      * Create service instance
      */
-    public function __construct(private ValidatorListGenerator $validatorListGenerator, private ElementGeneratorContextFactory $elementGeneratorContextFactory)
+    public function __construct(private readonly ValidatorListGenerator $validatorListGenerator, private readonly ElementGeneratorContextFactory $elementGeneratorContextFactory)
     {
     }
 

@@ -13,7 +13,7 @@ use Dvsa\Olcs\Api\Mvc\Controller\Plugin\Response as ResponsePlugin;
  */
 class XmlController extends AbstractRestfulController
 {
-    public function __construct(private CommandHandlerManager $commandHandlerManager)
+    public function __construct(private readonly CommandHandlerManager $commandHandlerManager)
     {
     }
     /**

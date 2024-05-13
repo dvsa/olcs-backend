@@ -24,6 +24,7 @@ use Doctrine\DBAL\Connection;
  */
 class PsvDiscTest extends RepositoryTestCase
 {
+    public $activeStatuses;
     public function setUp(): void
     {
         $this->activeStatuses = [

@@ -243,7 +243,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
                 throw new \RuntimeException('Unable to process attachment (empty document downloaded)');
             }
             $downloadedDocs[] = [
-                'fileName' => basename($doc->getFilename()),
+                'fileName' => basename((string) $doc->getFilename()),
                 'content' => $file->getContent()
             ];
         }

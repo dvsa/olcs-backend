@@ -66,7 +66,7 @@ class RoadworthinessReport extends AbstractCommandHandler implements TranslatorA
             //deal with missing user records for the document
             try {
                 $issuedBy = $document->getCreatedBy()->getContactDetails()->getPerson()->getFullName();
-            } catch (EntityNotFoundException $ex) {
+            } catch (EntityNotFoundException) {
                 $issuedBy = self::MSG_USER_MISSING;
             }
 

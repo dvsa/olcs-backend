@@ -160,7 +160,7 @@ abstract class EntityTester extends MockeryTestCase
     {
         $classToTestName = $this->getClassToTestName();
 
-        $parts = explode('\\', $classToTestName);
+        $parts = explode('\\', (string) $classToTestName);
 
         $class = array_pop($parts);
         $class = 'Abstract' . $class;
@@ -213,7 +213,7 @@ abstract class EntityTester extends MockeryTestCase
     {
         $classToTestName = $this->getClassToTestName();
 
-        $parts = explode('\\', $classToTestName);
+        $parts = explode('\\', (string) $classToTestName);
 
         $class = array_pop($parts);
         $class = 'Abstract' . $class;

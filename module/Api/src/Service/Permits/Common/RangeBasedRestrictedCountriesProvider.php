@@ -18,7 +18,7 @@ class RangeBasedRestrictedCountriesProvider
      *
      * @return RangeBasedRestrictedCountriesProvider
      */
-    public function __construct(private IrhpPermitRangeRepo $irhpPermitRangeRepo, private TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider, private CountryRepo $countryRepo)
+    public function __construct(private readonly IrhpPermitRangeRepo $irhpPermitRangeRepo, private readonly TypeBasedPermitTypeConfigProvider $typeBasedPermitTypeConfigProvider, private readonly CountryRepo $countryRepo)
     {
     }
 

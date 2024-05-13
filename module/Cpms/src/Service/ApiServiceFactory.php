@@ -15,7 +15,7 @@ use RuntimeException;
 
 class ApiServiceFactory
 {
-    public function __construct(private array $config, private string $userId)
+    public function __construct(private array $config, private readonly string $userId)
     {
     }
 

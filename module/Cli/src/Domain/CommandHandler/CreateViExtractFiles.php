@@ -79,7 +79,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
             $this->exportPath = $command->getPath();
         }
         foreach ($this->paramMap as $key => $settings) {
-            $method = 'get' . ucfirst($key);
+            $method = 'get' . ucfirst((string) $key);
             $commandParam = $command->$method();
             $repo = $this->getRepo($settings['repo']);
             $fileName = $this->getFilename($settings['prefix']);
@@ -97,7 +97,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
                 $this->result->addMessage('Found ' . $total . ' record(s) for ' . $settings['name']);
                 if ($total) {
                     foreach ($results as &$result) {
-                        $result['line'] = strtoupper($result['line']);
+                        $result['line'] = strtoupper((string) $result['line']);
                     }
                     $content = implode(self::PHP_EOL_WIN, array_column($results, 'line')) . self::PHP_EOL_WIN;
                     if (file_put_contents($fileName, $content) === false) {

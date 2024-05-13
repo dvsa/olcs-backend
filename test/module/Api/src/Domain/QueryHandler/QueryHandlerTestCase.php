@@ -36,6 +36,11 @@ use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
  */
 class QueryHandlerTestCase extends MockeryTestCase
 {
+    public $entityAccessLogger;
+    /**
+     * @var (\Mockery\MockInterface & \Psr\Container\ContainerInterface)
+     */
+    public $container;
     use ValidateMockRepoTypeTrait;
 
     /**
@@ -206,19 +211,19 @@ class QueryHandlerTestCase extends MockeryTestCase
 
         //if statements here are for BC. We have some existing tests which implement this themselves
         if (!empty($this->refData)) {
-            $class->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData']);
+            $class->shouldReceive('getRefdataReference')->andReturnUsing($this->mapRefData(...));
         }
 
         if (!empty($this->references)) {
-            $class->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference']);
+            $class->shouldReceive('getReference')->andReturnUsing($this->mapReference(...));
         }
 
         if (!empty($this->categoryReferences)) {
-            $class->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference']);
+            $class->shouldReceive('getCategoryReference')->andReturnUsing($this->mapCategoryReference(...));
         }
 
         if (!empty($this->subCategoryReferences)) {
-            $class->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+            $class->shouldReceive('getSubCategoryReference')->andReturnUsing($this->mapSubCategoryReference(...));
         }
 
         $this->repoMap[$name] = $class;

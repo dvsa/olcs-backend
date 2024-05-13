@@ -64,7 +64,7 @@ final class CreateSnapshot extends AbstractCommandHandler implements AuthAwareIn
         $code = $this->getDocumentCode($application);
 
         $data = [
-            'content' => base64_encode(trim($content)),
+            'content' => base64_encode(trim((string) $content)),
             'application' => $application->getId(),
             'licence' => $licenceId,
             'category' => Category::CATEGORY_APPLICATION,

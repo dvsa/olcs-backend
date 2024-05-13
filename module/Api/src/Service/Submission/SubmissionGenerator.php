@@ -24,7 +24,7 @@ class SubmissionGenerator
      *
      * @return void
      */
-    public function __construct(private array $submissionConfig, private SectionGeneratorPluginManager $sectionGeneratorPluginManager)
+    public function __construct(private array $submissionConfig, private readonly SectionGeneratorPluginManager $sectionGeneratorPluginManager)
     {
     }
 

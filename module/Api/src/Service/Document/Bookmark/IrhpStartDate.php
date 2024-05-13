@@ -23,7 +23,7 @@ class IrhpStartDate extends SingleValueAbstract
         $now = strtotime('today midnight');
 
         if (isset($this->data['validFrom'])) {
-            if ($now > strtotime($this->data['validFrom'])) {
+            if ($now > strtotime((string) $this->data['validFrom'])) {
                 $this->setData(['validFrom' => date("d F Y", $now)]);
             }
         }

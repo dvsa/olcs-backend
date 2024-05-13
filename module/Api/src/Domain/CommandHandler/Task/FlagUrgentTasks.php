@@ -26,7 +26,7 @@ final class FlagUrgentTasks extends AbstractCommandHandler implements Transactio
     {
         $updatedTaskCount = $this->getRepo()->flagUrgentsTasks();
 
-        $this->result->addMessage("${updatedTaskCount} task(s) flagged as urgent");
+        $this->result->addMessage("{$updatedTaskCount} task(s) flagged as urgent");
 
         return $this->result;
     }

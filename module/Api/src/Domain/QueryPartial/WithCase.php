@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * With Case
  */
-final class WithCase implements QueryPartialInterface
+final readonly class WithCase implements QueryPartialInterface
 {
     public function __construct(private With $with)
     {

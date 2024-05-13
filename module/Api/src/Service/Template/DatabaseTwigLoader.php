@@ -15,7 +15,7 @@ class DatabaseTwigLoader implements LoaderInterface
      *
      * @return DatabaseTwigLoader
      */
-    public function __construct(private DatabaseTemplateFetcher $templateFetcher)
+    public function __construct(private readonly DatabaseTemplateFetcher $templateFetcher)
     {
     }
 

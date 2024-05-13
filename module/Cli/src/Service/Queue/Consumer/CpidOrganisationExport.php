@@ -27,7 +27,7 @@ class CpidOrganisationExport extends AbstractConsumer
      */
     public function __construct(
         AbstractConsumerServices $abstractConsumerServices,
-        private Repository\Organisation $organisationRepo
+        private readonly Repository\Organisation $organisationRepo
     ) {
         parent::__construct($abstractConsumerServices);
     }

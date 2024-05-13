@@ -12,7 +12,7 @@ class ConditionalFeeUpdater
      *
      * @return ConditionalFeeUpdater
      */
-    public function __construct(private FeeUpdater $feeUpdater)
+    public function __construct(private readonly FeeUpdater $feeUpdater)
     {
     }
 

@@ -21,6 +21,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class CreatorTest extends MockeryTestCase
 {
+    public $sut;
     private $authService;
 
     private $eventHistoryRepo;

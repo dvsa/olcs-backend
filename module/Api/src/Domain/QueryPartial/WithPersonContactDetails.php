@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * With PersonContactDetails
  */
-final class WithPersonContactDetails implements QueryPartialInterface
+final readonly class WithPersonContactDetails implements QueryPartialInterface
 {
     public function __construct(
         /**
@@ -32,7 +32,7 @@ final class WithPersonContactDetails implements QueryPartialInterface
     {
         $column = $arguments[0] ?? 'contactDetails';
 
-        if (!str_contains($column, '.')) {
+        if (!str_contains((string) $column, '.')) {
             $column = $qb->getRootAliases()[0] . '.' . $column;
         }
 

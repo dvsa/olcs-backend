@@ -20,6 +20,11 @@ use Mockery as m;
  */
 class SendEcmtShortTermApsgPartSuccessfulTest extends AbstractPermitTest
 {
+    public $orgEmails;
+    public $contactDetails;
+    public $userEmail;
+    public $orgEmail1;
+    public $orgEmail2;
     protected $commandClass = SendEcmtShortTermApsgPartSuccessfulCmd::class;
     protected $commandHandlerClass = SendEcmtShortTermApsgPartSuccessfulHandler::class;
     protected $template = 'ecmt-short-term-app-part-successful';

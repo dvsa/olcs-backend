@@ -41,7 +41,7 @@ class PrintJob extends AbstractCommandHandler
     /** @var int */
     private $stubPrintToLicenceId;
 
-    public function __construct(private array $config, private ContentStoreFileUploader $fileUploader, private WebServiceClient $convertToPdfService)
+    public function __construct(private array $config, private readonly ContentStoreFileUploader $fileUploader, private readonly WebServiceClient $convertToPdfService)
     {
     }
 
@@ -96,7 +96,7 @@ class PrintJob extends AbstractCommandHandler
                 }
 
                 // create a temp file
-                $fileName = $this->createTmpFile($file, $this->filesPrefix, basename($document->getFilename()));
+                $fileName = $this->createTmpFile($file, $this->filesPrefix, basename((string) $document->getFilename()));
 
                 // unset no longer needed vars
                 unset($file, $document);

@@ -28,7 +28,7 @@ use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
  */
 class UpdateSubmissionTest extends AbstractCommandHandlerTestCase
 {
-    protected $submissionConfig = [
+    public $submissionConfig = [
         'submissions' => [
             'sections' => [
                 'configuration' => [

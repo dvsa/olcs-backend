@@ -12,7 +12,7 @@ class ValidatorListGenerator
      *
      * @return ValidatorListGenerator
      */
-    public function __construct(private ValidatorListFactory $validatorListFactory, private ValidatorGenerator $validatorGenerator)
+    public function __construct(private readonly ValidatorListFactory $validatorListFactory, private readonly ValidatorGenerator $validatorGenerator)
     {
     }
 

@@ -24,6 +24,6 @@ class StoreEnhancedSnapshotTest extends AbstractCreateSnapshotHandlerTest
     protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_LICENCING_OTHER_DOCUMENTS;
     protected $documentDescription = 'Enhanced Conversation Snapshot';
     protected $documentLinkId = 'messagingConversation';
-    protected $documentLinkValue = 999;
+    public $documentLinkValue = 999;
     protected $generatorClass = EnhancedGenerator::class;
 }

@@ -10,7 +10,7 @@ class TranslateableTextGenerator
      *
      * @return TranslateableTextGenerator
      */
-    public function __construct(private TranslateableTextFactory $translateableTextFactory, private TranslateableTextParameterGenerator $translateableTextParameterGenerator)
+    public function __construct(private readonly TranslateableTextFactory $translateableTextFactory, private readonly TranslateableTextParameterGenerator $translateableTextParameterGenerator)
     {
     }
 

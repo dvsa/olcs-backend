@@ -12,7 +12,7 @@ class EmissionsCategoryConditionalAdder
      *
      * @return EmissionsCategoryConditionalAdder
      */
-    public function __construct(private EmissionsCategoryFactory $emissionsCategoryFactory, private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private readonly EmissionsCategoryFactory $emissionsCategoryFactory, private readonly EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
     }
 

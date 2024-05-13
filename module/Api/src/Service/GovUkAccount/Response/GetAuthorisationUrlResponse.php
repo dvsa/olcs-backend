@@ -4,7 +4,7 @@ namespace Dvsa\Olcs\Api\Service\GovUkAccount\Response;
 
 class GetAuthorisationUrlResponse
 {
-    public function __construct(private string $url, private string $state, private string $nonce)
+    public function __construct(private readonly string $url, private readonly string $state, private readonly string $nonce)
     {
     }
 
