@@ -674,7 +674,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
             $case,
             (bool) $isCompliance,
             $this->generateRefDataEntity(Complaint::COMPLAIN_STATUS_OPEN),
-            new \DateTime($complaintDate),
+            new \DateTime($complaintDate ?? 'now'),
             $contactDetails
         );
 

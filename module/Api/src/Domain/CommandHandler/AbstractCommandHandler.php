@@ -199,7 +199,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         if ($this instanceof ConfigAwareInterface) {
-            $this->setConfig($mainServiceLocator->get('Config'));
+            $config = $mainServiceLocator->get('Config') ?? [];
+            $this->setConfig($config);
         }
 
         if ($this instanceof FileProcessorAwareInterface) {

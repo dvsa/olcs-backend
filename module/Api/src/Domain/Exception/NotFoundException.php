@@ -20,6 +20,6 @@ class NotFoundException extends Exception
     {
         $this->messages = [$message];
 
-        parent::__construct($message, $this->getCode(), $this->getPrevious());
+        parent::__construct($message ?? '', $this->getCode(), $this->getPrevious());
     }
 }
