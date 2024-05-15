@@ -23,9 +23,10 @@ class DocmanFileTest extends TestCase
 
         $streamContent = 'UNIT_expect_content' . str_repeat('E', File::CHUNK_SIZE);
         $streamBody =
-            str_repeat('x', File::CHUNK_SIZE - strlen('content') / 2) .
+            str_repeat('x', intval(File::CHUNK_SIZE - strlen('content') / 2)) .
             '"content":"' . base64_encode($streamContent) . '"' .
             str_repeat('aftercontent', 3);
+
 
         $stream = vfsStream::newFile('stream')
             ->withContent($streamBody)

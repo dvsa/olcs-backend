@@ -210,7 +210,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof QueueInterface) {
             $this->setQueueService($mainServiceLocator->get(Queue::class));
             $this->setMessageBuilderService($mainServiceLocator->get(MessageBuilder::class));
-            $this->setQueueConfig($mainServiceLocator->get('Config')['message_queue']);
+            $messageQueueConfig = $mainServiceLocator->get('Config')['message_queue'] ?? [];
+            $this->setQueueConfig($messageQueueConfig);
         }
 
         if ($this instanceof CacheAwareInterface) {

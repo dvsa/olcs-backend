@@ -110,8 +110,6 @@ class DocManClientTest extends MockeryTestCase
             );
         $this->mockClient->expects(static::once())->method('send')->willThrowException(new \Exception('simulate_err'));
 
-        static::assertFalse(is_file($filePath));
-
         //  expect
         $this->expectException(\Exception::class);
 

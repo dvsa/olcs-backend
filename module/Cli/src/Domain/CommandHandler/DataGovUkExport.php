@@ -66,7 +66,7 @@ final class DataGovUkExport extends AbstractDataExport
      */
     public function handleCommand(CommandInterface $command)
     {
-        $this->path = (trim($command->getPath()) ?: $this->path);
+        $this->path = trim($command->getPath() ?? '') ?: $this->path;
         $this->reportName = $command->getReportName();
 
         $this->dataGovUkRepo = $this->getRepo();

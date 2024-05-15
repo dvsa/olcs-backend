@@ -1605,7 +1605,7 @@ class Licence extends AbstractLicence implements ContextProviderInterface, Organ
      */
     public function isExempt()
     {
-        return (substr($this->licNo, 0, 1) === self::LICENCE_EXEMPT_PREFIX);
+        return $this->licNo !== null && substr($this->licNo, 0, 1) === self::LICENCE_EXEMPT_PREFIX;
     }
 
     /**

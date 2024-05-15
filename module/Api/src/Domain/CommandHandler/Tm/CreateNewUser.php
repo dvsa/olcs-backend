@@ -71,8 +71,8 @@ final class CreateNewUser extends AbstractUserCommandHandler implements Transact
      */
     public function handleCommand(CommandInterface $command)
     {
-        $username = trim($command->getUsername());
-        $emailAddress = trim($command->getEmailAddress());
+        $username = trim($command->getUsername() ?? '');
+        $emailAddress = trim($command->getEmailAddress() ?? '');
 
         if ($command->getHasEmail() === 'Y') {
             $this->validateRequired($username, $emailAddress);
