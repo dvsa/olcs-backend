@@ -51,6 +51,9 @@ class DigitalSignature extends AbstractDigitalSignature
      */
     public function getAttributesArray()
     {
+        if ($this->attributes === null) {
+            return [];
+        }
         $array = json_decode($this->attributes, true);
         return is_array($array) ? $array : [];
     }

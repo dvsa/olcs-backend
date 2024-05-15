@@ -138,6 +138,10 @@ class Publication extends AbstractPublication
      */
     public function getNextPublicationDate()
     {
+        if ($this->pubDate === null) {
+            throw new RuntimeException('Current publication date is not set.');
+        }
+
         $newPubDate = \DateTime::createFromFormat('Y-m-d', $this->pubDate);
 
         if (!$newPubDate instanceof \DateTime) {
