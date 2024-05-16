@@ -28,6 +28,14 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
      */
     protected $mockHttpClient;
 
+    protected $config = [
+        'top-report-link' => [
+            'targetUrl' => 'apiurl',
+            'apiKey' => '123',
+            'proxy' => 'http://proxy:123'
+        ]
+    ];
+
     /**
      * @return void
      */
@@ -102,6 +110,7 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
         $this->mockHttpClient->shouldReceive('send')->once()->withNoArgs()->andReturn($apiResponse);
         $apiResponse->shouldReceive('getContent')->once()->andReturn('{"redirectUrl": "somenewurl"}');
 
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

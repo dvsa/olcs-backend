@@ -52,6 +52,12 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UpdateUserTest extends AbstractCommandHandlerTestCase
 {
+    public $config = [
+        'auth' => [
+            'identity_provider' => JWTIdentityProvider::class
+        ]
+    ];
+
     public function setUp(): void
     {
         $this->sut = new Sut();
@@ -207,6 +213,8 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             );
 
         $this->expectedUserCacheClear([$userId]);
+
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -333,6 +341,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             );
 
         $this->expectedUserCacheClear([$userId]);
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -465,6 +474,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('resetPassword');
 
         $this->expectedUserCacheClear([$userId]);
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -639,6 +649,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('generatePassword')
             ->andReturn('password');
 
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -769,6 +780,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             );
 
         $this->expectedUserCacheClear([$userId]);
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -811,6 +823,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
         $command = Cmd::create($data);
 
         $this->expectException(ForbiddenException::class);
+        $this->sut->setConfig($this->config);
 
         $this->sut->handleCommand($command);
     }
@@ -869,6 +882,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
 
         $this->expectException(ValidationException::class);
 
+        $this->sut->setConfig($this->config);
         $this->sut->handleCommand($command);
     }
 
@@ -929,6 +943,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
 
         $this->expectException(ValidationException::class);
 
+        $this->sut->setConfig($this->config);
         $this->sut->handleCommand($command);
     }
 
@@ -990,6 +1005,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
 
         $this->expectException(ValidationException::class);
 
+        $this->sut->setConfig($this->config);
         $this->sut->handleCommand($command);
     }
 
@@ -1111,6 +1127,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             );
 
         $this->expectedUserCacheClear([$userId]);
+        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

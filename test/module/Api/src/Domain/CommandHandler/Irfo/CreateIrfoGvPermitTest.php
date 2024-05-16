@@ -116,7 +116,8 @@ class CreateIrfoGvPermitTest extends AbstractCommandHandlerTestCase
                 'application' => null,
                 'busReg' => null,
                 'licence' => null,
-                'task' => null
+                'task' => null,
+                'expiryDate' => date('Y-m-d', strtotime('+1 year'))
             ],
             $result1
         );
