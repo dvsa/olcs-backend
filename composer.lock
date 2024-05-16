@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f2376a5936215e57f02af9ee293bd08e",
+    "content-hash": "3a9990db2e9916212b03b8641ce62f46",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1901,16 +1901,16 @@
         },
         {
             "name": "dvsa/php-govuk-account",
-            "version": "1.0.4",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/php-govuk-account.git",
-                "reference": "980bc170250dcc6843be94f91e09f46b6021d077"
+                "reference": "3b2652973e6162c6da6df4ca1b74343f229711c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/php-govuk-account/zipball/980bc170250dcc6843be94f91e09f46b6021d077",
-                "reference": "980bc170250dcc6843be94f91e09f46b6021d077",
+                "url": "https://api.github.com/repos/dvsa/php-govuk-account/zipball/3b2652973e6162c6da6df4ca1b74343f229711c5",
+                "reference": "3b2652973e6162c6da6df4ca1b74343f229711c5",
                 "shasum": ""
             },
             "require": {
@@ -1921,7 +1921,7 @@
                 "illuminate/collections": "^8.0",
                 "league/oauth2-client": "^2.6",
                 "paragonie/random_compat": "^9.99",
-                "php": "^7.4 || ^8.0",
+                "php": "^8.2",
                 "psr/cache": "^1.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
@@ -1957,9 +1957,9 @@
             ],
             "support": {
                 "issues": "https://github.com/dvsa/php-govuk-account/issues",
-                "source": "https://github.com/dvsa/php-govuk-account/tree/1.0.4"
+                "source": "https://github.com/dvsa/php-govuk-account/tree/2.0.1"
             },
-            "time": "2023-11-09T15:29:00+00:00"
+            "time": "2024-05-16T08:52:39+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -6069,16 +6069,16 @@
         },
         {
             "name": "olcs/olcs-transfer",
-            "version": "v7.1.1",
+            "version": "v7.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dvsa/olcs-transfer.git",
-                "reference": "144bbdbdf426174e4db22d188fe8c519af6e5b23"
+                "reference": "11e2325b6ab7536dd522266c4487b17c42e48677"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/144bbdbdf426174e4db22d188fe8c519af6e5b23",
-                "reference": "144bbdbdf426174e4db22d188fe8c519af6e5b23",
+                "url": "https://api.github.com/repos/dvsa/olcs-transfer/zipball/11e2325b6ab7536dd522266c4487b17c42e48677",
+                "reference": "11e2325b6ab7536dd522266c4487b17c42e48677",
                 "shasum": ""
             },
             "require": {
@@ -6120,9 +6120,9 @@
             "notification-url": "https://packagist.org/downloads/",
             "description": "OLCS Transfer",
             "support": {
-                "source": "https://github.com/dvsa/olcs-transfer/tree/v7.1.1"
+                "source": "https://github.com/dvsa/olcs-transfer/tree/v7.1.2"
             },
-            "time": "2024-04-29T11:14:43+00:00"
+            "time": "2024-05-16T08:59:13+00:00"
         },
         {
             "name": "olcs/olcs-utils",
@@ -7209,36 +7209,38 @@
         },
         {
             "name": "ruflin/elastica",
-            "version": "7.1.0",
+            "version": "7.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ruflin/Elastica.git",
-                "reference": "ec22ea0797c4087514e720af428fa5fc189c59a3"
+                "reference": "84ba137678707a1aa4242d12bad891dc38fa2608"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/ec22ea0797c4087514e720af428fa5fc189c59a3",
-                "reference": "ec22ea0797c4087514e720af428fa5fc189c59a3",
+                "url": "https://api.github.com/repos/ruflin/Elastica/zipball/84ba137678707a1aa4242d12bad891dc38fa2608",
+                "reference": "84ba137678707a1aa4242d12bad891dc38fa2608",
                 "shasum": ""
             },
             "require": {
-                "elasticsearch/elasticsearch": "^7.1.1",
+                "elasticsearch/elasticsearch": "^7.10",
                 "ext-json": "*",
                 "nyholm/dsn": "^2.0.0",
                 "php": "^7.2 || ^8.0",
-                "psr/log": "^1.0",
-                "symfony/deprecation-contracts": "^2.2"
+                "psr/log": "^1.0 || ^2.0 || ^3.0",
+                "symfony/deprecation-contracts": "^2.2 || ^3.0",
+                "symfony/polyfill-php73": "^1.19"
             },
             "require-dev": {
                 "aws/aws-sdk-php": "^3.155",
                 "guzzlehttp/guzzle": "^6.3 || ^7.2",
+                "phpstan/phpstan": "^1.5",
+                "phpstan/phpstan-phpunit": "^1.1",
                 "phpunit/phpunit": "^8.5.8 || ^9.4",
-                "symfony/phpunit-bridge": "^5.1.1"
+                "symfony/phpunit-bridge": "^6.0"
             },
             "suggest": {
                 "aws/aws-sdk-php": "Allow using IAM authentication with Amazon ElasticSearch Service",
-                "egeloen/http-adapter": "Allow using httpadapter transport",
-                "guzzlehttp/guzzle": "Allow using guzzle 6 as the http transport",
+                "guzzlehttp/guzzle": "Allow using guzzle as transport",
                 "monolog/monolog": "Logging request"
             },
             "type": "library",
@@ -7270,9 +7272,9 @@
             ],
             "support": {
                 "issues": "https://github.com/ruflin/Elastica/issues",
-                "source": "https://github.com/ruflin/Elastica/tree/7.1.0"
+                "source": "https://github.com/ruflin/Elastica/tree/7.3.2"
             },
-            "time": "2021-02-15T10:32:48+00:00"
+            "time": "2024-03-11T14:11:50+00:00"
         },
         {
             "name": "sabre/dav",

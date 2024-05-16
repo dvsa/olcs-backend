@@ -85,6 +85,8 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             'Config' => $mockConfig
         ];
 
+        $this->sut->setConfig($mockConfig);
+
         parent::setUp();
     }
 
