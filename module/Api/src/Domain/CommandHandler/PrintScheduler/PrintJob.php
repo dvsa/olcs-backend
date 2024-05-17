@@ -41,7 +41,7 @@ class PrintJob extends AbstractCommandHandler
     /** @var int */
     private $stubPrintToLicenceId;
 
-    public function __construct(private array $config, private readonly ContentStoreFileUploader $fileUploader, private readonly WebServiceClient $convertToPdfService)
+    public function __construct(private array $config, private ContentStoreFileUploader $fileUploader, private WebServiceClient $convertToPdfService)
     {
     }
 

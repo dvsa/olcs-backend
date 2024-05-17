@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
+use _PHPStan_49641e245\Nette\Utils\Paginator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -592,6 +593,11 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
      */
     public function hasUnlicencedLicences()
     {
+        $licences = $this->getLicences();
+        if ($licences->isEmpty()) {
+            return false;
+        }
+
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->contains('licNo', 'U'));
 

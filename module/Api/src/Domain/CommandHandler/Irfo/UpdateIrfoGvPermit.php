@@ -23,8 +23,8 @@ final class UpdateIrfoGvPermit extends AbstractCommandHandler
     {
         $irfoGvPermit = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
 
-        $inForceDate = $command->getInForceDate() !== null ? new \DateTime($command->getInForceDate()) : null;
-        $expiryDate = $command->getExpiryDate() !== null ? new \DateTime($command->getExpiryDate()) : null;
+        $inForceDate = $command->getInForceDate() !== null ? new \DateTime($command->getInForceDate()) : new \DateTime('now');
+        $expiryDate = $command->getExpiryDate() !== null ? new \DateTime($command->getExpiryDate()) : new \DateTime('now');
 
         $irfoGvPermit->update(
             $this->getRepo()->getReference(IrfoGvPermitType::class, $command->getIrfoGvPermitType()),

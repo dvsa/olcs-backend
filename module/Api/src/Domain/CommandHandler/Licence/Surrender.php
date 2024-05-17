@@ -51,7 +51,7 @@ final class Surrender extends AbstractCommandHandler implements TransactionedInt
         }
 
         $licence->setStatus($this->getRepo()->getRefdataReference($status));
-        $surrenderDate = $command->getSurrenderDate() !== null ? new \DateTime($command->getSurrenderDate()) : null;
+        $surrenderDate = $command->getSurrenderDate() !== null ? new \DateTime($command->getSurrenderDate()) : new \DateTime('now');
         $licence->setSurrenderedDate($surrenderDate);
         $licence->setDecisions($this->buildArrayCollection(DecisionEntity::class, $command->getDecisions()));
 

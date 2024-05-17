@@ -63,8 +63,8 @@ final class CreateIrfoGvPermit extends AbstractCommandHandler implements Transac
 
         $irfoGvPermit = new IrfoGvPermit($organisation, $type, $status);
 
-        $inForceDate = $command->getInForceDate() !== null ? new \DateTime($command->getInForceDate()) : null;
-        $expiryDate = $command->getExpiryDate() !== null ? new \DateTime($command->getExpiryDate()) : null;
+        $inForceDate = $command->getInForceDate() !== null ? new \DateTime($command->getInForceDate()) : new \DateTime('now');
+        $expiryDate = $command->getExpiryDate() !== null ? new \DateTime($command->getExpiryDate()) : new \DateTime('now');
 
         $irfoGvPermit->update(
             $type,

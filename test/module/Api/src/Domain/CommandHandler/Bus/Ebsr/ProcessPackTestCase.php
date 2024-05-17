@@ -30,6 +30,12 @@ use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 
 class ProcessPackTestCase extends AbstractCommandHandlerTestCase
 {
+    public $config = [
+        'ebsr' => [
+            'tmp_extra_path' => 'root'
+        ]
+    ];
+
     public function setUp(): void
     {
         $this->mockRepo('Bus', BusRepo::class);
