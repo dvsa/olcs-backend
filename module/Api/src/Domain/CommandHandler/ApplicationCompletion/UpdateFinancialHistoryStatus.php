@@ -43,7 +43,7 @@ final class UpdateFinancialHistoryStatus extends AbstractUpdateStatus
                 return false;
             }
 
-            if ($yesNo === 'Y' && strlen(preg_replace('/\s+/', '', $application->getInsolvencyDetails())) < 150) {
+            if ($yesNo === 'Y' && strlen((string) preg_replace('/\s+/', '', $application->getInsolvencyDetails())) < 150) {
                 return false;
             }
         }

@@ -13,7 +13,7 @@ class NumberOfPermitsQuestionHandler implements QuestionHandlerInterface
      *
      * @return NumberOfPermitsQuestionHandler
      */
-    public function __construct(private PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private BilateralRequiredGenerator $bilateralRequiredGenerator, private NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
+    public function __construct(private readonly PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private readonly BilateralRequiredGenerator $bilateralRequiredGenerator, private readonly NoOfPermitsConditionalUpdater $noOfPermitsConditionalUpdater)
     {
     }
 

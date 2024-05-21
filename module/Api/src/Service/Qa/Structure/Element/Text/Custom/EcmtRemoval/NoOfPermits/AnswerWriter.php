@@ -13,7 +13,7 @@ class AnswerWriter
      *
      * @return AnswerWriter
      */
-    public function __construct(private IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
+    public function __construct(private readonly IrhpPermitApplicationRepository $irhpPermitApplicationRepo)
     {
     }
 

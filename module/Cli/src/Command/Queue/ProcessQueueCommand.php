@@ -20,7 +20,7 @@ class ProcessQueueCommand extends AbstractOlcsCommand
     public function __construct(
         CommandHandlerManager $commandHandlerManager,
         private array $config,
-        private QueueProcessor $queueProcessor
+        private readonly QueueProcessor $queueProcessor
     ) {
         parent::__construct(
             $commandHandlerManager
@@ -53,8 +53,8 @@ class ProcessQueueCommand extends AbstractOlcsCommand
     {
         $this->initializeOutputInterface($output);
 
-        $includeTypes = array_filter(explode(',', $input->getOption('type')));
-        $excludeTypes = array_filter(explode(',', $input->getOption('exclude')));
+        $includeTypes = array_filter(explode(',', (string) $input->getOption('type')));
+        $excludeTypes = array_filter(explode(',', (string) $input->getOption('exclude')));
         $queueDuration = (int) $input->getOption('queue-duration') ?: $this->config['queue']['runFor'] ?? self::DEFAULT_RUN_FOR;
 
         $this->logAndWriteVerboseMessage("Processing queue items...");

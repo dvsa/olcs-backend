@@ -15,7 +15,7 @@ class AnnualTripsAbroad implements ElementInterface
      *
      * @return AnnualTripsAbroad
      */
-    public function __construct(private $intensityWarningThreshold, private $showNiWarning, private Text $text)
+    public function __construct(private $intensityWarningThreshold, private $showNiWarning, private readonly Text $text)
     {
     }
 

@@ -14,7 +14,7 @@ class ForCpProvider
      *
      * @return ForCpProvider
      */
-    public function __construct(private ForCpWithCountriesProvider $forCpWithCountriesProvider, private ForCpWithNoCountriesProvider $forCpWithNoCountriesProvider, private EntityIdsExtractor $entityIdsExtractor, private RangeSubsetGenerator $rangeSubsetGenerator)
+    public function __construct(private readonly ForCpWithCountriesProvider $forCpWithCountriesProvider, private readonly ForCpWithNoCountriesProvider $forCpWithNoCountriesProvider, private readonly EntityIdsExtractor $entityIdsExtractor, private readonly RangeSubsetGenerator $rangeSubsetGenerator)
     {
     }
 

@@ -25,7 +25,7 @@ class BilateralFeeBreakdownGenerator implements FeeBreakdownGeneratorInterface
      *
      * @return BilateralFeeBreakdownGenerator
      */
-    public function __construct(private FeeTypeRepository $feeTypeRepo)
+    public function __construct(private readonly FeeTypeRepository $feeTypeRepo)
     {
     }
 

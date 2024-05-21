@@ -35,7 +35,7 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
     {
         $companyDetails = [
             'companyName' => $data['company_name'],
-            'companyNumber' => strtoupper($data['company_number']),
+            'companyNumber' => strtoupper((string) $data['company_number']),
             'companyStatus' => $data['company_status'],
         ];
 
@@ -88,7 +88,7 @@ abstract class AbstractCommandHandler extends DomainAbstractCommandHandler imple
      */
     protected function normaliseFieldName($fieldName)
     {
-        $newFieldName = lcfirst($this->wordFilter->filter($fieldName));
+        $newFieldName = lcfirst((string) $this->wordFilter->filter($fieldName));
         return str_replace('_', '', $newFieldName);
     }
 

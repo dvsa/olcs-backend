@@ -12,7 +12,7 @@ class StockBasedForCpProviderFactory
      *
      * @return StockBasedForCpProviderFactory
      */
-    public function __construct(private StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider, private ForCpProviderFactory $forCpProviderFactory)
+    public function __construct(private readonly StockBasedRestrictedCountryIdsProvider $stockBasedRestrictedCountryIdsProvider, private readonly ForCpProviderFactory $forCpProviderFactory)
     {
     }
 

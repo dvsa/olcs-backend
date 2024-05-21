@@ -15,7 +15,7 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      * @param string $savePath
      * @param string $name
      */
-    public function open($savePath, $name)
+    public function open($savePath, $name): bool
     {
         return true;
     }
@@ -24,7 +24,7 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      * Close Session - free resources
      *
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -34,7 +34,7 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      *
      * @param string $id
      */
-    public function read($id)
+    public function read($id): string
     {
         // PHP 7.1 session handlers returning a bool or null value causes errors in logs. Empty string does not.
         return '';
@@ -45,7 +45,7 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      *
      * @param string $id
      */
-    public function write($id, mixed $data)
+    public function write($id, mixed $data): bool
     {
         return true;
     }
@@ -56,7 +56,7 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      *
      * @param string $id
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         return true;
     }
@@ -67,8 +67,8 @@ class NullSaveHandler implements \Laminas\Session\SaveHandler\SaveHandlerInterfa
      *
      * @param int $maxlifetime
      */
-    public function gc($maxlifetime)
+    public function gc($maxlifetime): false
     {
-        return true;
+        return false;
     }
 }

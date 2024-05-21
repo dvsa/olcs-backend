@@ -23,11 +23,12 @@ trait IrfoPsvAuthUpdateTrait
     public function updateIrfoPsvAuth(UpdateIrfoPsvAuthCmd $command)
     {
         $irfoPsvAuth = $this->getRepo()->fetchUsingId($command, Query::HYDRATE_OBJECT, $command->getVersion());
+        $inForceDate = $command->getInForceDate() !== null ? new \DateTime($command->getInForceDate()) : new \DateTime('now');
 
         $irfoPsvAuth->update(
             $this->getRepo()->getReference(IrfoPsvAuthType::class, $command->getIrfoPsvAuthType()),
             $command->getValidityPeriod(),
-            new \DateTime($command->getInForceDate()),
+            $inForceDate,
             $command->getServiceRouteFrom(),
             $command->getServiceRouteTo(),
             $this->getRepo()->getRefdataReference($command->getJourneyFrequency()),

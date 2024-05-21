@@ -27,7 +27,7 @@ class MsiResponseFactoryTest extends TestCase
         ];
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn($config);
 
         $sut = new MsiResponseFactory();
         $service = $sut->__invoke($mockSl, MsiResponse::class);
@@ -42,7 +42,7 @@ class MsiResponseFactoryTest extends TestCase
         $this->expectExceptionMessage('No config specified for xml ns');
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn([]);
         $sut = new MsiResponseFactory();
         $sut->__invoke($mockSl, MsiResponse::class);
     }

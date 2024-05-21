@@ -23,7 +23,7 @@ class NamingModel
      * @param string $description
      * @param string $extension
      */
-    public function __construct(private DateTime $date, private $description, private $extension, private ?\Dvsa\Olcs\Api\Entity\System\Category $category = null, private ?\Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory = null, private ?\Dvsa\Olcs\Api\Service\Document\ContextProviderInterface $entity = null)
+    public function __construct(private readonly DateTime $date, private $description, private $extension, private readonly ?\Dvsa\Olcs\Api\Entity\System\Category $category = null, private readonly ?\Dvsa\Olcs\Api\Entity\System\SubCategory $subCategory = null, private readonly ?\Dvsa\Olcs\Api\Service\Document\ContextProviderInterface $entity = null)
     {
     }
 
@@ -36,7 +36,7 @@ class NamingModel
         /*
          * DateTime return zeros as a microseconds so we need to do the trick
          */
-        if (!empty($flag) && str_contains($flag, 'u')) {
+        if (!empty($flag) && str_contains((string) $flag, 'u')) {
             [$usec, $sec] = explode(' ', microtime());
             $usec = substr($usec, 2, 6);
             $date = $this->date->format($flag);

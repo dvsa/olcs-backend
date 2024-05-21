@@ -6,7 +6,8 @@ use Laminas\Mail\Transport\Factory;
 use Laminas\Stdlib\AbstractOptions;
 
 /**
- * MultiTransport Options
+ * @template TValue
+ * @extends AbstractOptions<TValue>
  */
 class MultiTransportOptions extends AbstractOptions
 {

@@ -20,7 +20,7 @@ class AbstractServiceManagerFactoryTest extends MockeryTestCase
             ->andReturnUsing(
                 function ($class) {
                     $map = [
-                        'Config' => [
+                        'config' => [
                             AbstractServiceManagerFactoryStub::CONFIG_KEY => ['cfg_data'],
                         ]
                     ];

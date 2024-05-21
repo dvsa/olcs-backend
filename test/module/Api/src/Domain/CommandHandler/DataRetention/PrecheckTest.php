@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
-use Doctrine\DBAL\Driver\Statement;
 use Doctrine\ORM\EntityManager;
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\Precheck;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use PDOStatement;
 
 class PrecheckTest extends AbstractCommandHandlerTestCase
 {
@@ -33,12 +33,14 @@ class PrecheckTest extends AbstractCommandHandlerTestCase
             ->withNoArgs()
             ->andReturn(10);
 
-        $mockStatement = m::mock(Statement::class);
-        $mockStatement
-            ->expects('execute')
-            ->withNoArgs();
+        $mockStatement = m::mock(PDOStatement::class);
+        $mockStatement->expects('execute')->withNoArgs();
 
-        $this->mockedConnection->shouldReceive('prepare')->with("CALL sp_dr_precheck(10);")->once()->andReturn($mockStatement);
+        $this->mockedConnection->shouldReceive('prepare')
+            ->with("CALL sp_dr_precheck(10);")
+            ->once()
+            ->andReturn($mockStatement);
+
         $result = $this->sut->handleCommand($command);
 
         $expected = [

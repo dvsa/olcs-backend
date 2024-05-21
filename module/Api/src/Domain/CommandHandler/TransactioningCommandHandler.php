@@ -17,7 +17,7 @@ use Laminas\ServiceManager\ServiceLocatorInterface;
  */
 class TransactioningCommandHandler implements CommandHandlerInterface
 {
-    public function __construct(private CommandHandlerInterface $wrapped, private TransactionManagerInterface $repo)
+    public function __construct(private readonly CommandHandlerInterface $wrapped, private readonly TransactionManagerInterface $repo)
     {
     }
 

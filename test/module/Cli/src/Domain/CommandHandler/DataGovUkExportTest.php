@@ -62,7 +62,7 @@ class DataGovUkExportTest extends AbstractCommandHandlerTestCase
         $this->mockDbalResult = m::mock(\Doctrine\DBAL\Result::class);
 
         //  mock config
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'data-gov-uk-export' => [
                 'path' => 'unit_CfgPath',
             ],

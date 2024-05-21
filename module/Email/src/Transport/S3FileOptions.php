@@ -9,6 +9,8 @@ use Aws\S3\S3Client;
  * Class S3FileOptions
  *
  * @codeCoverageIgnore
+ * @template TValue
+ * @extends AbstractOptions<TValue>
  */
 class S3FileOptions extends AbstractOptions
 {

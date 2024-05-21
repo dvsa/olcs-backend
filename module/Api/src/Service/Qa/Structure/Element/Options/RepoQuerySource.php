@@ -12,7 +12,7 @@ class RepoQuerySource implements SourceInterface
      *
      * @return RepoQuerySource
      */
-    public function __construct(private RepositoryServiceManager $repoServiceManager)
+    public function __construct(private readonly RepositoryServiceManager $repoServiceManager)
     {
     }
 

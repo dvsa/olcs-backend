@@ -16,7 +16,7 @@ class SuccessfulCandidatePermitsGenerator
      *
      * @return SuccessfulCandidatePermitsGenerator
      */
-    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private readonly EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
     }
 

@@ -291,7 +291,7 @@ class Message
     public function setCc(array $cc)
     {
         foreach ($cc as &$email) {
-            $email = trim($email);
+            $email = trim((string) $email);
         }
         $this->cc = $cc;
         return $this;
@@ -315,7 +315,7 @@ class Message
     public function setBcc(array $bcc)
     {
         foreach ($bcc as &$email) {
-            $email = trim($email);
+            $email = trim((string) $email);
         }
         $this->bcc = $bcc;
         return $this;

@@ -12,7 +12,7 @@ class CreateTaskCommandGenerator
      *
      * @return CreateTaskCommandGenerator
      */
-    public function __construct(private CreateTaskCommandFactory $createTaskCommandFactory)
+    public function __construct(private readonly CreateTaskCommandFactory $createTaskCommandFactory)
     {
     }
 

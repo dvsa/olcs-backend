@@ -175,7 +175,7 @@ class ProcessInsolvencyDlqTest extends AbstractCompaniesHouseConsumerTestCase
         $this->mockedSmServices = [
             Queue::class => $this->getMockQueueService(),
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
         $this->setupService();
     }
@@ -197,7 +197,7 @@ class ProcessInsolvencyDlqTest extends AbstractCompaniesHouseConsumerTestCase
         $this->mockedSmServices = [
             Queue::class => $this->getEmptyQueueService(),
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
         $this->setupService();
     }
@@ -207,7 +207,7 @@ class ProcessInsolvencyDlqTest extends AbstractCompaniesHouseConsumerTestCase
         $this->mockedSmServices = [
             Queue::class => $this->getMockQueueServiceWithDuplicateEntries(),
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
         $this->setupService();
     }

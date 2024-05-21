@@ -31,6 +31,7 @@ use Laminas\View\Renderer\PhpRenderer;
  */
 class GeneratorTest extends MockeryTestCase
 {
+    public $sm;
     /**
      * @var Generator
      */

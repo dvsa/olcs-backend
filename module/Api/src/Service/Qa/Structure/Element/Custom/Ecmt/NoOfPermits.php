@@ -19,7 +19,7 @@ class NoOfPermits implements ElementInterface
      *
      * @return NoOfPermits
      */
-    public function __construct(private $maxCanApplyFor, private $maxPermitted, private $applicationFee, private $issueFee, private bool $skipAvailabilityValidation)
+    public function __construct(private $maxCanApplyFor, private $maxPermitted, private $applicationFee, private $issueFee, private readonly bool $skipAvailabilityValidation)
     {
     }
 

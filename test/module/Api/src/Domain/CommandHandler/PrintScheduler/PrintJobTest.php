@@ -20,6 +20,8 @@ use Mockery as m;
 
 class PrintJobTest extends AbstractCommandHandlerTestCase
 {
+    public $mockFileUploader;
+    public $config;
     /** @var  CommandHandler | m\MockInterface */
     protected $sut;
 

@@ -59,7 +59,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             TemplateBuilder::class => m::mock(TemplateBuilder::class),
             FileProcessorInterface::class => m::mock(FileProcessor::class)->makePartial(),
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
-            'Config' => $config,
+            'config' => $config,
             'FileUploader' => m::mock(ContentStoreFileUploader::class)
         ];
 
@@ -575,7 +575,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             'licence' => $licenceId,
             'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
             'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
-            'filename' => basename($transxchangeFilename),
+            'filename' => basename((string) $transxchangeFilename),
             'description' => $documentDesc,
             'user' => 1
         ];

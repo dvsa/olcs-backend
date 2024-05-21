@@ -25,7 +25,7 @@ class VariationVehiclesDeclarationsReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private ApplicationVehiclesDeclarationsReviewService $applicationVehiclesDeclarationsReviewService
+        private readonly ApplicationVehiclesDeclarationsReviewService $applicationVehiclesDeclarationsReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

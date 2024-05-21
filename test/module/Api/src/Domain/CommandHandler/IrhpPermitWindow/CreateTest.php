@@ -19,6 +19,12 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class CreateTest extends AbstractCommandHandlerTestCase
 {
+    public $today;
+    public $tomorrow;
+    /**
+     * @var string
+     */
+    public $yesterday;
     public function setUp(): void
     {
         $this->sut = m::mock(CreateHandler::class)->makePartial();

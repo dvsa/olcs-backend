@@ -37,7 +37,7 @@ class XmlStructureInputFactory implements FactoryInterface
     {
         $inputName = 'xml_structure';
         $service = new Input($inputName);
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $filterChain = $service->getFilterChain();
         $filterChain->attach($container->get('FilterManager')->get(ParseXml::class));
         $validatorchain = $service->getValidatorChain();

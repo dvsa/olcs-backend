@@ -141,7 +141,7 @@ final class GenerateAndStoreWithMultipleAddresses extends AbstractCommandHandler
         if (!array_key_exists('metadata', $data)) {
             $data['metadata'] = json_encode([]);
         }
-        $metadata = json_decode($data['metadata'], true);
+        $metadata = json_decode((string) $data['metadata'], true);
         if (!array_key_exists('details', $metadata)) {
             $metadata['details'] = [];
         }

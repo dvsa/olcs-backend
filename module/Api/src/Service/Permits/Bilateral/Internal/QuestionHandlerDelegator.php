@@ -15,7 +15,7 @@ class QuestionHandlerDelegator
     /**
      * Create service instance
      */
-    public function __construct(private QaContextFactory $qaContextFactory)
+    public function __construct(private readonly QaContextFactory $qaContextFactory)
     {
     }
 

@@ -39,7 +39,7 @@ class EmailTest extends MockeryTestCase
         $config = [];
 
         $sm = m::mock(ContainerInterface::class);
-        $sm->shouldReceive('get')->with('Config')->andReturn($config);
+        $sm->shouldReceive('get')->with('config')->andReturn($config);
 
         $this->sut->__invoke($sm, Email::class);
     }
@@ -54,7 +54,7 @@ class EmailTest extends MockeryTestCase
         ];
 
         $sm = m::mock(ContainerInterface::class);
-        $sm->shouldReceive('get')->with('Config')->andReturn($config);
+        $sm->shouldReceive('get')->with('config')->andReturn($config);
 
         $service = $this->sut->__invoke($sm, Email::class);
 

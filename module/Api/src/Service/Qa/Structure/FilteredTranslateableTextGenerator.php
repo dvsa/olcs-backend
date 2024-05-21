@@ -10,7 +10,7 @@ class FilteredTranslateableTextGenerator
      *
      * @return FilteredTranslateableText
      */
-    public function __construct(private FilteredTranslateableTextFactory $filteredTranslateableTextFactory, private TranslateableTextGenerator $translateableTextGenerator)
+    public function __construct(private readonly FilteredTranslateableTextFactory $filteredTranslateableTextFactory, private readonly TranslateableTextGenerator $translateableTextGenerator)
     {
     }
 

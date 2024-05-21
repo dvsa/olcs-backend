@@ -10,7 +10,7 @@ class StockBasedRestrictedCountryIdsProvider
      *
      * @return StockBasedRestrictedCountryIdsProvider
      */
-    public function __construct(private StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider)
+    public function __construct(private readonly StockBasedPermitTypeConfigProvider $stockBasedPermitTypeConfigProvider)
     {
     }
 

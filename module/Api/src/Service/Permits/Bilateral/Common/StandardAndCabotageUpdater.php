@@ -12,7 +12,7 @@ class StandardAndCabotageUpdater
      *
      * @return StandardAndCabotageUpdater
      */
-    public function __construct(private ModifiedAnswerUpdater $modifiedAnswerUpdater)
+    public function __construct(private readonly ModifiedAnswerUpdater $modifiedAnswerUpdater)
     {
     }
 

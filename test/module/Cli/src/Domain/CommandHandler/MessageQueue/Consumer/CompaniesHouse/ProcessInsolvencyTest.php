@@ -245,7 +245,7 @@ class ProcessInsolvencyTest extends AbstractCompaniesHouseConsumerTestCase
             CompaniesHouseClient::class => m::mock(CompaniesHouseClient::class),
             Queue::class => $queueService,
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
 
         $this->setupService();
@@ -541,7 +541,7 @@ class ProcessInsolvencyTest extends AbstractCompaniesHouseConsumerTestCase
             CompaniesHouseClient::class => $this->getMockCompaniesHouseClient(),
             Queue::class => $this->getMockQueueService(),
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
         $this->setupService();
     }

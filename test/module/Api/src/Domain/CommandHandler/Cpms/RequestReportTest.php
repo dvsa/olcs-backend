@@ -25,6 +25,7 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
  */
 class RequestReportTest extends AbstractCommandHandlerTestCase
 {
+    public $mockCpmsService;
     protected $mockApi;
 
     public function setUp(): void

@@ -13,7 +13,7 @@ class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
     public function testInvoke(): void
     {
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn(
+        $mockSl->shouldReceive('get')->with('config')->andReturn(
             ['elastic_search' => ['host' => 'google.com', 'port' => 4034]]
         );
 
@@ -26,7 +26,7 @@ class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
     public function testInvokeWithException(): void
     {
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
         $sut = new ClientFactory();
         $passed = false;

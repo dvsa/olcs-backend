@@ -707,7 +707,11 @@ class Fee extends AbstractFee implements OrganisationProviderInterface
      */
     public static function amountToPence($amount)
     {
-        return (int) number_format($amount, 2, '', '');
+        if ($amount === null) {
+            return 0;
+        }
+
+        return (int) number_format((float) $amount, 2, '', '');
     }
 
     /**

@@ -17,7 +17,7 @@ class QuestionText
      *
      * @return QuestionText
      */
-    public function __construct(private ?FilteredTranslateableText $question = null, private ?FilteredTranslateableText $questionSummary = null, private ?FilteredTranslateableText $details = null, private ?FilteredTranslateableText $guidance = null, private ?FilteredTranslateableText $additionalGuidance = null)
+    public function __construct(private readonly ?FilteredTranslateableText $question = null, private readonly ?FilteredTranslateableText $questionSummary = null, private readonly ?FilteredTranslateableText $details = null, private readonly ?FilteredTranslateableText $guidance = null, private readonly ?FilteredTranslateableText $additionalGuidance = null)
     {
     }
 

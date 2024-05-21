@@ -16,6 +16,10 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
  */
 class SearchTest extends MockeryTestCase
 {
+    /**
+     * @var array<string, (\LmcRbacMvc\Service\AuthorizationService & \Mockery\MockInterface)>
+     */
+    public $mockedSmServices;
     /** @var  SearchService */
     private $sut;
 

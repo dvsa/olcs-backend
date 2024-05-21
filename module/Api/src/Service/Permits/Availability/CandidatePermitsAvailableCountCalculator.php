@@ -14,7 +14,7 @@ class CandidatePermitsAvailableCountCalculator
      *
      * @return CandidatePermitsAvailableCountCalculator
      */
-    public function __construct(private IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private IrhpPermitRepository $irhpPermitRepo)
+    public function __construct(private readonly IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private readonly IrhpPermitRepository $irhpPermitRepo)
     {
     }
 

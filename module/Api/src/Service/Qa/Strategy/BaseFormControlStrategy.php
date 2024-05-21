@@ -23,7 +23,7 @@ class BaseFormControlStrategy implements FormControlStrategyInterface
      *
      * @return BaseFormControlStrategy
      */
-    public function __construct(private $frontendType, private ElementGeneratorInterface $elementGenerator, private AnswerSaverInterface $answerSaver, private AnswerClearerInterface $answerClearer, private QuestionTextGeneratorInterface $questionTextGenerator, private AnswerSummaryProviderInterface $answerSummaryProvider)
+    public function __construct(private $frontendType, private readonly ElementGeneratorInterface $elementGenerator, private readonly AnswerSaverInterface $answerSaver, private readonly AnswerClearerInterface $answerClearer, private readonly QuestionTextGeneratorInterface $questionTextGenerator, private readonly AnswerSummaryProviderInterface $answerSummaryProvider)
     {
     }
 

@@ -26,7 +26,7 @@ final class With implements QueryPartialInterface
         $property = $arguments[0];
         $alias = ($arguments[1] ?? 'w' . $this->i++);
 
-        if (!str_contains($property, '.')) {
+        if (!str_contains((string) $property, '.')) {
             $property = $qb->getRootAliases()[0] . '.' . $property;
         }
 

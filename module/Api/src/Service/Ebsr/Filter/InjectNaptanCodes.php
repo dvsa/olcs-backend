@@ -24,7 +24,7 @@ class InjectNaptanCodes extends AbstractFilter
         $naptan = [];
 
         foreach ($value['stops'] as $stop) {
-            $extractedCode = substr($stop, 0, 3);
+            $extractedCode = substr((string) $stop, 0, 3);
             $naptan[$extractedCode] = $extractedCode;
         }
 

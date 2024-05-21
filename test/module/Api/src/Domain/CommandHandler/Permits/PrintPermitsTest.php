@@ -28,7 +28,7 @@ class PrintPermitsTest extends AbstractCommandHandlerTestCase
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            'Config' => [
+            'config' => [
                 'permit_printing' => ['max_batch_size' => null]
             ],
         ];
@@ -57,11 +57,7 @@ class PrintPermitsTest extends AbstractCommandHandlerTestCase
 
         $maxBatchSize = 10000;
 
-        $this->sut->setConfig(
-            [
-                'permit_printing' => ['max_batch_size' => $maxBatchSize],
-            ]
-        );
+        $this->mockedSmServices['config'] = ['permit_printing' => ['max_batch_size' => $maxBatchSize]];
 
         $cmdData = [
             'ids' => range(1, $maxBatchSize + 1),

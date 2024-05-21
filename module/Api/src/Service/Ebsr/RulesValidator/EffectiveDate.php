@@ -36,7 +36,7 @@ class EffectiveDate extends AbstractValidator
     public function isValid($value)
     {
         if ($value['txcAppType'] === BusRegEntity::TXC_APP_NEW) {
-            $date = strtotime($value['effectiveDate']);
+            $date = strtotime((string) $value['effectiveDate']);
             $today = strtotime(date('Y-m-d'));
 
             if ($date < $today) {

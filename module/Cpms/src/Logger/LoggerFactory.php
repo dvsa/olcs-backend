@@ -14,7 +14,7 @@ use Monolog\Logger;
  */
 class LoggerFactory
 {
-    public function __construct(private string $logPath, private int $zendLogLevel)
+    public function __construct(private readonly string $logPath, private readonly int $zendLogLevel)
     {
     }
 

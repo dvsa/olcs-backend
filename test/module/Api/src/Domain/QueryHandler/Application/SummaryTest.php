@@ -15,6 +15,7 @@ use Mockery as m;
  */
 class SummaryTest extends QueryHandlerTestCase
 {
+    public $mockCaseRepo;
     /** @var  Summary */
     protected $sut;
 

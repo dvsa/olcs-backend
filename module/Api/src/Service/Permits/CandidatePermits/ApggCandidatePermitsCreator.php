@@ -13,7 +13,7 @@ class ApggCandidatePermitsCreator
      *
      * @return ApggCandidatePermitsCreator
      */
-    public function __construct(private ApggEmissionsCatCandidatePermitsCreator $apggEmissionsCatCandidatePermitsCreator)
+    public function __construct(private readonly ApggEmissionsCatCandidatePermitsCreator $apggEmissionsCatCandidatePermitsCreator)
     {
     }
 

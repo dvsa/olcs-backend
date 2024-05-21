@@ -65,7 +65,7 @@ final class Create extends AbstractCommandHandler implements TransactionedInterf
 
         $result = new Result();
         $result->merge($createContactResult);
-        $result->addId(lcfirst($this->repoServiceName), $tmEmployment->getId());
+        $result->addId(lcfirst((string) $this->repoServiceName), $tmEmployment->getId());
         $result->addMessage("Tm Employment ID {$tmEmployment->getId()} created");
 
         return $result;

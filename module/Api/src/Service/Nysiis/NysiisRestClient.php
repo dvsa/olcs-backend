@@ -24,7 +24,7 @@ class NysiisRestClient
      *
      * @return void
      */
-    public function __construct(private RestClient $restClient)
+    public function __construct(private readonly RestClient $restClient)
     {
     }
 

@@ -18,7 +18,7 @@ class DatabaseTemplateFetcher
      *
      * @return DatabaseTemplateFetcher
      */
-    public function __construct(private TemplateRepo $repo)
+    public function __construct(private readonly TemplateRepo $repo)
     {
     }
 

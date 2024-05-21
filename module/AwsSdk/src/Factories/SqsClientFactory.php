@@ -25,7 +25,7 @@ class SqsClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SqsClient
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $sqsClient = new SqsClient([
             'region' => $config['awsOptions']['region'],
             'version' => $config['awsOptions']['version'],

@@ -10,7 +10,7 @@ class EmissionsCategoryAvailabilityChecker
      *
      * @return EmissionsCategoryAvailabilityChecker
      */
-    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private readonly EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
     }
 

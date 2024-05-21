@@ -33,7 +33,7 @@ class ForgotPasswordTest extends AbstractCommandHandlerTestCase
         $this->mockRepo('UserPasswordReset', UserPasswordResetRepo::class);
 
         $this->mockedSmServices = [
-            'Config' => $this->getConfig('not openam'),
+            'config' => $this->getConfig('not openam'),
         ];
 
         $this->command = $this->getCommand();

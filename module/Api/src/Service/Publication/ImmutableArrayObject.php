@@ -7,15 +7,15 @@ namespace Dvsa\Olcs\Api\Service\Publication;
  */
 class ImmutableArrayObject extends \ArrayObject
 {
-    public function offsetSet($index, $newval)
+    public function offsetSet($index, $newval): void
     {
     }
 
-    public function offsetUnset($index)
+    public function offsetUnset($index): void
     {
     }
 
-    public function exchangeArray($input)
+    public function exchangeArray($input): array
     {
         return [];
     }

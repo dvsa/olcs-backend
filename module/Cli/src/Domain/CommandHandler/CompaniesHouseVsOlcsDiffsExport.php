@@ -132,7 +132,7 @@ final class CompaniesHouseVsOlcsDiffsExport extends AbstractCommandHandler
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $exportCfg = (!empty($config['ch-vs-olcs-export']) ? $config['ch-vs-olcs-export'] : []);
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];

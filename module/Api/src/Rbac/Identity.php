@@ -15,7 +15,7 @@ class Identity implements IdentityInterface
      */
     private $roles;
 
-    public function __construct(private User $user)
+    public function __construct(private readonly User $user)
     {
     }
 

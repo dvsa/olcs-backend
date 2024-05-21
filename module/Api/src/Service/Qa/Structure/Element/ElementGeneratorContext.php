@@ -17,7 +17,7 @@ class ElementGeneratorContext
      *
      * @return ElementGeneratorContext
      */
-    public function __construct(private ValidatorList $validatorList, private QaContext $qaContext, private $elementContainer)
+    public function __construct(private readonly ValidatorList $validatorList, private readonly QaContext $qaContext, private $elementContainer)
     {
     }
 

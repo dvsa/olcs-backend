@@ -17,7 +17,7 @@ use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandl
 class QueryHandlerManager extends AbstractPluginManager
 {
     protected $instanceOf = QueryHandlerInterface::class;
-    private ValidationHandlerManager $validationHandlerManager;
+    private readonly ValidationHandlerManager $validationHandlerManager;
 
     public function __construct(ContainerInterface $container, array $config = [])
     {

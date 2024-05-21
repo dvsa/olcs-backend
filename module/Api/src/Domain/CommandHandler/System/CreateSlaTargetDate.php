@@ -77,7 +77,7 @@ final class CreateSlaTargetDate extends AbstractCommandHandler
      */
     private function fetchEntity(Cmd $command)
     {
-        $repoName = ucfirst($command->getEntityType());
+        $repoName = ucfirst((string) $command->getEntityType());
 
         if (!in_array($repoName, $this->extraRepos)) {
             throw new ValidationException(['Cannot add SLA target date for unsupported entity type']);

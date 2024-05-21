@@ -14,7 +14,7 @@ class ApplicationStepGenerator
      *
      * @return ApplicationStepGenerator
      */
-    public function __construct(private FormControlServiceManager $formControlServiceManager, private ApplicationStepFactory $applicationStepFactory, private ElementGeneratorContextGenerator $elementGeneratorContextGenerator)
+    public function __construct(private readonly FormControlServiceManager $formControlServiceManager, private readonly ApplicationStepFactory $applicationStepFactory, private readonly ElementGeneratorContextGenerator $elementGeneratorContextGenerator)
     {
     }
 

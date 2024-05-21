@@ -17,7 +17,7 @@ class ShortNoticeInputFactoryTest extends TestCase
         $mockValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
         $mockSl->shouldReceive('get')->with(MissingSection::class)->once()->andReturn($mockValidator);
@@ -44,7 +44,7 @@ class ShortNoticeInputFactoryTest extends TestCase
         ];
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
 
         $sut = new ShortNoticeInputFactory();
         $service = $sut->__invoke($mockSl, Input::class);

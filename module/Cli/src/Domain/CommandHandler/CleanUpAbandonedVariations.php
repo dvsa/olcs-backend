@@ -52,7 +52,7 @@ final class CleanUpAbandonedVariations extends AbstractCommandHandler
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (isset($config['batch_config']['clean-abandoned-variations']['older-than'])) {
             $this->olderThan = $config['batch_config']['clean-abandoned-variations']['older-than'];
         }

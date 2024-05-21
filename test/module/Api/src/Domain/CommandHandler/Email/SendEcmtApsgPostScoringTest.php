@@ -18,6 +18,11 @@ use Mockery as m;
  */
 class SendEcmtApsgPostScoringTest extends AbstractPermitTest
 {
+    public $orgEmails;
+    public $contactDetails;
+    public $userEmail;
+    public $orgEmail1;
+    public $orgEmail2;
     protected $commandClass = SendEcmtApsgPostScoringCmd::class;
     protected $commandHandlerClass = SendEcmtApsgPostScoringHandler::class;
     protected $template = 'ecmt-apsg-post-scoring-notification';

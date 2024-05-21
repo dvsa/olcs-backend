@@ -12,7 +12,7 @@ class ForCpWithCountriesProvider
      *
      * @return ForCpWithCountriesProvider
      */
-    public function __construct(private RestrictedWithMostMatchingCountriesProvider $restrictedWithMostMatchingCountriesProvider, private ForCpWithCountriesAndNoMatchingRangesProvider $forCpWithCountriesAndNoMatchingRangesProvider, private ForCpWithCountriesAndMultipleMatchingRangesProvider $forCpWithCountriesAndMultipleMatchingRangesProvider)
+    public function __construct(private readonly RestrictedWithMostMatchingCountriesProvider $restrictedWithMostMatchingCountriesProvider, private readonly ForCpWithCountriesAndNoMatchingRangesProvider $forCpWithCountriesAndNoMatchingRangesProvider, private readonly ForCpWithCountriesAndMultipleMatchingRangesProvider $forCpWithCountriesAndMultipleMatchingRangesProvider)
     {
     }
 

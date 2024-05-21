@@ -27,6 +27,8 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class LicenceTest extends QueryHandlerTestCase
 {
+    public $entityAccessLogger;
+    public $authorizationService;
     /**
      * @var LicenceQueryHandler
      */

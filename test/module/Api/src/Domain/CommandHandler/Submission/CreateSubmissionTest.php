@@ -1,8 +1,6 @@
 <?php
 
-/**
- * Create SubmissionSectionComment Test
- */
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
@@ -22,12 +20,9 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
-/**
- * Create Submission Test
- */
 class CreateSubmissionTest extends AbstractCommandHandlerTestCase
 {
-    protected $submissionConfig = [
+    public $submissionConfig = [
         'submissions' => [
             'sections' => [
                 'configuration' => [
@@ -52,6 +47,7 @@ class CreateSubmissionTest extends AbstractCommandHandlerTestCase
         $this->mockRepo('User', \Dvsa\Olcs\Api\Domain\Repository\User::class);
 
         $this->mockedSmServices = [
+            'config' => $this->submissionConfig,
             SubmissionGenerator::class => m::mock(SubmissionGenerator::class),
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
             IdentityProviderInterface::class => m::mock(IdentityProviderInterface::class)

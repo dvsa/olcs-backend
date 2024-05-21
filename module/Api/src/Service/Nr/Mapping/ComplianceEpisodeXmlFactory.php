@@ -25,7 +25,7 @@ class ComplianceEpisodeXmlFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ComplianceEpisodeXml
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (!isset($config['nr']['compliance_episode']['xmlNs'])) {
             throw new \RuntimeException('Missing INR service config');
         }

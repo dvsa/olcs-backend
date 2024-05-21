@@ -142,7 +142,7 @@ class TransXChangeConsumer extends AbstractConsumer
     {
         $inputDocumentName = $this->getQueueAttribute($message, 'InputDocumentName');
 
-        $ebsrId = explode(".", $inputDocumentName, -1)[0];
+        $ebsrId = explode(".", (string) $inputDocumentName, -1)[0];
 
         /**
          * @var $ebsrSubmission EbsrSubmission
@@ -349,7 +349,7 @@ class TransXChangeConsumer extends AbstractConsumer
                 'licence' => $busRegistration->getLicence()->getId(),
                 'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
                 'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
-                'filename' => basename($document),
+                'filename' => basename((string) $document),
                 'description' => $description,
                 'user' => $busRegistration->getCreatedBy()->getId(),
             ];
@@ -386,7 +386,7 @@ class TransXChangeConsumer extends AbstractConsumer
             'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd'
         );
 
-        $this->config = $config = $container->get('Config');
+        $this->config = $config = $container->get('config');
 
         $stsClient = new StsClient([
             'region' => $config['awsOptions']['region'],

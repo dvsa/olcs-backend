@@ -52,7 +52,7 @@ class CreateDocumentTest extends AbstractCommandHandlerTestCase
         $this->expectException(ValidationException::class);
 
         $data = [
-            'content' => base64_encode($this->validPdf),
+            'content' => base64_encode((string) $this->validPdf),
             'scanId' => 111
         ];
 
@@ -69,7 +69,7 @@ class CreateDocumentTest extends AbstractCommandHandlerTestCase
     public function testHandleCommand()
     {
         $data = [
-            'content' => base64_encode($this->validPdf),
+            'content' => base64_encode((string) $this->validPdf),
             'scanId' => 111,
             'filename' => 'foo.pdf'
         ];
@@ -100,7 +100,7 @@ class CreateDocumentTest extends AbstractCommandHandlerTestCase
         $result = new Result();
         $result->addMessage('Upload');
         $data = [
-            'content'          => base64_encode($this->validPdf),
+            'content'          => base64_encode((string) $this->validPdf),
             'filename'         => 'foo.pdf',
             'description'      => 'DESCRIPTION',
             'isExternal'       => false,
@@ -150,7 +150,7 @@ class CreateDocumentTest extends AbstractCommandHandlerTestCase
     public function testHandleCommandBackScan()
     {
         $data = [
-            'content' => base64_encode($this->validPdf),
+            'content' => base64_encode((string) $this->validPdf),
             'scanId' => 111,
             'filename' => 'foo.pdf'
         ];
@@ -183,7 +183,7 @@ class CreateDocumentTest extends AbstractCommandHandlerTestCase
         $result = new Result();
         $result->addMessage('Upload');
         $data = [
-            'content'          => base64_encode($this->validPdf),
+            'content'          => base64_encode((string) $this->validPdf),
             'filename'         => 'foo.pdf',
             'description'      => 'DESCRIPTION (Back scan)',
             'isExternal'       => false,

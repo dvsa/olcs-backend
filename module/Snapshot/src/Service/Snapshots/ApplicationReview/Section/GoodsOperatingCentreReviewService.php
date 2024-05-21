@@ -21,7 +21,7 @@ class GoodsOperatingCentreReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private PsvOperatingCentreReviewService $psvOperatingCentreReviewService
+        private readonly PsvOperatingCentreReviewService $psvOperatingCentreReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

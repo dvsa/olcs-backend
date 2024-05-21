@@ -30,7 +30,7 @@ class ImapTest extends TestCase
         ];
 
         $sl = new ServiceManager();
-        $sl->setService('Config', $config);
+        $sl->setService('config', $config);
 
         $this->assertSame(
             $this->imapService,
@@ -50,7 +50,7 @@ class ImapTest extends TestCase
     public function testInvokeThrowsException()
     {
         $sl = new ServiceManager();
-        $sl->setService('Config', []);
+        $sl->setService('config', []);
 
         $this->expectException(\Laminas\Mail\Exception\RuntimeException::class);
 
@@ -68,7 +68,7 @@ class ImapTest extends TestCase
         ];
 
         $sl = new ServiceManager();
-        $sl->setService('Config', $config);
+        $sl->setService('config', $config);
 
         $this->assertSame(
             $this->imapService,

@@ -50,7 +50,7 @@ class NamingServiceTest extends MockeryTestCase
                 }
             );
 
-        $sm->setService('Config', $config);
+        $sm->setService('config', $config);
 
         $this->sut = new NamingService();
         $this->sut->__invoke($sm, NamingService::class);
@@ -73,7 +73,7 @@ class NamingServiceTest extends MockeryTestCase
                 }
             );
 
-        $sm->setService('Config', $config);
+        $sm->setService('config', $config);
 
         $this->sut = new NamingService();
         $this->sut->__invoke($sm, NamingService::class);

@@ -674,7 +674,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
             $case,
             (bool) $isCompliance,
             $this->generateRefDataEntity(Complaint::COMPLAIN_STATUS_OPEN),
-            new \DateTime($complaintDate),
+            new \DateTime($complaintDate ?? 'now'),
             $contactDetails
         );
 
@@ -881,7 +881,7 @@ abstract class AbstractSubmissionSectionTest extends MockeryTestCase
     protected function generateArrayCollection($entity, $count = 1)
     {
         $ac = new ArrayCollection();
-        $method = 'generate' . ucfirst($entity);
+        $method = 'generate' . ucfirst((string) $entity);
         for ($i = 1; $i <= $count; $i++) {
             $ac->add(
                 $this->$method($i)

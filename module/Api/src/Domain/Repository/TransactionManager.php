@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
  * Class TransactionManager
  * @package Dvsa\Olcs\Api\Domain\Repository
  */
-final class TransactionManager implements TransactionManagerInterface
+final readonly class TransactionManager implements TransactionManagerInterface
 {
     public function __construct(private EntityManagerInterface $em)
     {

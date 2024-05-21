@@ -18,7 +18,7 @@ class ApplicationAnswersClearer
      *
      * @return ApplicationAnswersClearer
      */
-    public function __construct(private SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider, private QaContextFactory $qaContextFactory)
+    public function __construct(private readonly SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider, private readonly QaContextFactory $qaContextFactory)
     {
     }
 

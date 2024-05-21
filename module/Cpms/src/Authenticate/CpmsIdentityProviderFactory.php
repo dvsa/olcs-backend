@@ -6,7 +6,7 @@ namespace Dvsa\Olcs\Cpms\Authenticate;
 
 class CpmsIdentityProviderFactory
 {
-    public function __construct(private string $clientId, private string $clientSecret, private string $userId)
+    public function __construct(private readonly string $clientId, private readonly string $clientSecret, private readonly string $userId)
     {
     }
 

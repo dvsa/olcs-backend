@@ -14,7 +14,7 @@ class MotExpiryDate implements ElementInterface
      *
      * @return MotExpiryDate
      */
-    public function __construct(private $enableFileUploads, private DateWithThreshold $dateWithThreshold)
+    public function __construct(private $enableFileUploads, private readonly DateWithThreshold $dateWithThreshold)
     {
     }
 

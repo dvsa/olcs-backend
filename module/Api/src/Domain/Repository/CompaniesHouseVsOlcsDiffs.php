@@ -12,7 +12,7 @@ use Doctrine\DBAL\Result;
  */
 class CompaniesHouseVsOlcsDiffs
 {
-    public function __construct(private Connection $conn)
+    public function __construct(private readonly Connection $conn)
     {
     }
 

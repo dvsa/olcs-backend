@@ -191,7 +191,7 @@ final class Upload extends AbstractCommandHandler implements
 
         $filename = $command->getFilename();
 
-        $parts = explode('.', $filename);
+        $parts = explode('.', (string) $filename);
 
         array_pop($parts);
 
@@ -233,8 +233,8 @@ final class Upload extends AbstractCommandHandler implements
         // copy necessary target entities to the new command and clear them off from original command
         $additionalEntities = $command->getAdditionalEntities();
         foreach ($additionalEntities as $additionalEntity) {
-            $getMethod = 'get' . ucfirst($additionalEntity);
-            $setMethod = 'set' . ucfirst($additionalEntity);
+            $getMethod = 'get' . ucfirst((string) $additionalEntity);
+            $setMethod = 'set' . ucfirst((string) $additionalEntity);
             $additionalCommand->$setMethod($command->$getMethod());
             $command->$setMethod(null);
         }

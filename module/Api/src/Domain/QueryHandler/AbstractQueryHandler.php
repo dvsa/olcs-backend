@@ -280,7 +280,7 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
         }
 
         if ($this instanceof NationalRegisterAwareInterface) {
-            $this->setNationalRegisterConfig($mainServiceLocator->get('Config')['nr']);
+            $this->setNationalRegisterConfig($mainServiceLocator->get('config')['nr']);
         }
 
         if ($this instanceof CacheAwareInterface) {

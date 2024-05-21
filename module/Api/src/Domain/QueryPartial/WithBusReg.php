@@ -12,7 +12,7 @@ use Doctrine\ORM\QueryBuilder;
 /**
  * With BusReg
  */
-final class WithBusReg implements QueryPartialInterface
+final readonly class WithBusReg implements QueryPartialInterface
 {
     public function __construct(private With $with)
     {

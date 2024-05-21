@@ -250,7 +250,7 @@ final class CreateTask extends AbstractCommandHandler
             case Entity\Organisation\Organisation::ORG_TYPE_SOLE_TRADER:
                 $organisationPerson = $organisation->getOrganisationPersons()->first();
                 if ($organisationPerson) {
-                    $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
+                    $letter = strtoupper(substr((string) $organisationPerson->getPerson()->getFamilyName(), 0, 1));
                 }
                 break;
             case Entity\Organisation\Organisation::ORG_TYPE_PARTNERSHIP:
@@ -261,7 +261,7 @@ final class CreateTask extends AbstractCommandHandler
                 $organisationPerson = $organisationPersons->matching($criteria)->first();
                 // if first person exists
                 if ($organisationPerson) {
-                    $letter = strtoupper(substr($organisationPerson->getPerson()->getFamilyName(), 0, 1));
+                    $letter = strtoupper(substr((string) $organisationPerson->getPerson()->getFamilyName(), 0, 1));
                 }
                 break;
         }

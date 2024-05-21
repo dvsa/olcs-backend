@@ -86,9 +86,9 @@ final class RestoreOperatingCentre extends AbstractCommandHandler implements Tra
 
     private function splitTypeAndId($ref)
     {
-        $type = substr($ref, 0, 1);
+        $type = substr((string) $ref, 0, 1);
 
-        $id = (int)substr($ref, 1);
+        $id = (int)substr((string) $ref, 1);
 
         return [$type, $id];
     }

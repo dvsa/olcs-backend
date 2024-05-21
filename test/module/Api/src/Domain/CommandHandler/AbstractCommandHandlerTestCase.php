@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -34,14 +36,12 @@ use Laminas\Json\Json as LaminasJson;
 use LmcRbacMvc\Service\AuthorizationService;
 use Olcs\Logging\Log\Logger;
 
-/**
- * Command Handler Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
 {
     use ValidateMockRepoTypeTrait;
+
+    public $submissionConfig;
+
 
     /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler */
     protected $sut;
@@ -107,9 +107,7 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
         $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->identityProvider);
-        if (property_exists($this, 'submissionConfig')) {
-            $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
-        }
+
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);
         }
@@ -172,10 +170,10 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
         $this->validateMockRepoType($name, $class);
 
         $class
-            ->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData'])
-            ->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference'])
-            ->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference'])
-            ->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+            ->shouldReceive('getRefdataReference')->andReturnUsing($this->mapRefData(...))
+            ->shouldReceive('getReference')->andReturnUsing($this->mapReference(...))
+            ->shouldReceive('getCategoryReference')->andReturnUsing($this->mapCategoryReference(...))
+            ->shouldReceive('getSubCategoryReference')->andReturnUsing($this->mapSubCategoryReference(...));
 
         $this->repoMap[$name] = $class;
 
@@ -343,7 +341,7 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
             ->once()
             ->with(m::type($class), false)
             ->andReturnUsing(
-                function (CommandInterface $command) use ($class, $data, $exception) {
+                function (CommandInterface $command) use ($class, $data, $exception): never {
                     $this->commands[] = [$command, $data];
                     throw $exception;
                 }

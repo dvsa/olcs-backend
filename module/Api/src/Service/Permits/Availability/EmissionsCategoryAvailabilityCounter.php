@@ -22,7 +22,7 @@ class EmissionsCategoryAvailabilityCounter
      *
      * @return EmissionsCategoryAvailabilityCounter
      */
-    public function __construct(private Connection $connection, private IrhpPermitRangeRepository $irhpPermitRangeRepo, private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private IrhpPermitRepository $irhpPermitRepo, private IrhpPermitStockRepository $irhpPermitStockRepo, private IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
+    public function __construct(private readonly Connection $connection, private readonly IrhpPermitRangeRepository $irhpPermitRangeRepo, private readonly IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private readonly IrhpPermitRepository $irhpPermitRepo, private readonly IrhpPermitStockRepository $irhpPermitStockRepo, private readonly IrhpCandidatePermitRepository $irhpCandidatePermitRepo)
     {
     }
 

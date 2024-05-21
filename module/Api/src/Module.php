@@ -79,8 +79,8 @@ class Module implements BootstrapListenerInterface
     protected function logResponse(\Laminas\Stdlib\ResponseInterface $response)
     {
         $content = $response->getContent();
-        if (strlen($content) > 1000) {
-            $content = substr($content, 0, 1000) . '...';
+        if (strlen((string) $content) > 1000) {
+            $content = substr((string) $content, 0, 1000) . '...';
         }
 
         Logger::logResponse(

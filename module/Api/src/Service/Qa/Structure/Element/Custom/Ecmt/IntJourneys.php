@@ -14,7 +14,7 @@ class IntJourneys implements ElementInterface
      *
      * @return IntJourneys
      */
-    public function __construct(private $showNiWarning, private Radio $radio)
+    public function __construct(private $showNiWarning, private readonly Radio $radio)
     {
     }
 

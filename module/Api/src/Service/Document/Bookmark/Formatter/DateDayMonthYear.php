@@ -11,6 +11,6 @@ class DateDayMonthYear implements FormatterInterface
 {
     public static function format(array $data)
     {
-        return date('d F Y', strtotime(reset($data)));
+        return date('d F Y', strtotime((string) reset($data)));
     }
 }

@@ -97,7 +97,7 @@ class User extends AbstractQueryHandler
     {
         $fullContainer = $container;
 
-        $this->config = $container->get('Config');
+        $this->config = $container->get('config');
         return parent::__invoke($fullContainer, $requestedName, $options);
     }
 }

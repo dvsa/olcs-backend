@@ -15,7 +15,7 @@ class StandardFieldsGenerator implements FieldsGeneratorInterface
      *
      * @return StandardFieldsGenerator
      */
-    public function __construct(private CurrentFieldValuesGenerator $currentFieldValuesGenerator)
+    public function __construct(private readonly CurrentFieldValuesGenerator $currentFieldValuesGenerator)
     {
     }
 

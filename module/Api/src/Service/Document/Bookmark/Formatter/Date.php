@@ -11,6 +11,6 @@ class Date implements FormatterInterface
 {
     public static function format(array $data)
     {
-        return date("d/m/Y", strtotime(reset($data)));
+        return date("d/m/Y", strtotime((string) reset($data)));
     }
 }

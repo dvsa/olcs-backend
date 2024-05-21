@@ -16,6 +16,14 @@ use Dvsa\Olcs\Transfer\Query\QueryInterface;
 class DocumentToDeleteTest extends RepositoryTestCase
 {
     /**
+     * @var (\Doctrine\ORM\QueryBuilder & \Mockery\MockInterface)
+     */
+    public $mockDqb;
+    /**
+     * @var (\Dvsa\Olcs\Transfer\Query\QueryInterface & \Mockery\MockInterface)
+     */
+    public $mockQi;
+    /**
      * @var DocumentToDelete
      */
     protected $sut;

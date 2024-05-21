@@ -147,7 +147,7 @@ class LicenceChecklist extends AbstractQueryHandler
         array_walk(
             $sections,
             function (&$item) use ($filter) {
-                $item = lcfirst($filter->filter($item));
+                $item = lcfirst((string) $filter->filter($item));
             }
         );
         return $sections;

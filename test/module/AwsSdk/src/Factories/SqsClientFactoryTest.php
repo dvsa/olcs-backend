@@ -49,7 +49,7 @@ class SqsClientFactoryTest extends TestCase
         ];
         $provider = \Mockery::mock(CredentialsInterface::class);
         // Mocks
-        $this->sm->setService('Config', $config);
+        $this->sm->setService('config', $config);
 
         /**
          * @var SqsClient $sqsClient

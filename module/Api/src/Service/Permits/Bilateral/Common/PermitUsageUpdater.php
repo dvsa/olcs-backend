@@ -12,7 +12,7 @@ class PermitUsageUpdater
      *
      * @return PermitUsageUpdater
      */
-    public function __construct(private ModifiedAnswerUpdater $modifiedAnswerUpdater)
+    public function __construct(private readonly ModifiedAnswerUpdater $modifiedAnswerUpdater)
     {
     }
 

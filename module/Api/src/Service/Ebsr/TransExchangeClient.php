@@ -28,7 +28,7 @@ class TransExchangeClient implements TransExchangeClientInterface
      * @param ParseXmlString $xmlParser    olcs-xmltools xml parser
      * @param Xsd            $xsdValidator olcs-xmltools xml validator
      */
-    public function __construct(private RestClient $restClient, private MapXmlFile $xmlFilter, private ParseXmlString $xmlParser, private Xsd $xsdValidator)
+    public function __construct(private readonly RestClient $restClient, private readonly MapXmlFile $xmlFilter, private readonly ParseXmlString $xmlParser, private readonly Xsd $xsdValidator)
     {
     }
 

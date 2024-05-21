@@ -14,7 +14,7 @@ class NoOfPermitsAnswerFetcher
      *
      * @return NoOfPermitsAnswerFetcher
      */
-    public function __construct(private NamedAnswerFetcher $namedAnswerFetcher)
+    public function __construct(private readonly NamedAnswerFetcher $namedAnswerFetcher)
     {
     }
 

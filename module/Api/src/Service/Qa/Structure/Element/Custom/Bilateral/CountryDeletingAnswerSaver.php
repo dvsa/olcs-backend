@@ -15,7 +15,7 @@ class CountryDeletingAnswerSaver
      *
      * @return CountryDeletingAnswerSaver
      */
-    public function __construct(private GenericAnswerFetcher $genericAnswerFetcher, private GenericAnswerWriter $genericAnswerWriter, private ClientReturnCodeHandler $clientReturnCodeHandler)
+    public function __construct(private readonly GenericAnswerFetcher $genericAnswerFetcher, private readonly GenericAnswerWriter $genericAnswerWriter, private readonly ClientReturnCodeHandler $clientReturnCodeHandler)
     {
     }
 

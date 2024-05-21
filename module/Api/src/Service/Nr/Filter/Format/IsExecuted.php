@@ -29,7 +29,7 @@ class IsExecuted extends AbstractFilter
 
         foreach ($value['imposedErrus'] as $key => $erru) {
             //lowercase the value to make sure we always get a match
-            $executed = strtolower($erru['executed']);
+            $executed = strtolower((string) $erru['executed']);
 
             $newValue = match ($executed) {
                 'yes' => self::YES_EXECUTED_KEY,

@@ -18,7 +18,7 @@ class BilateralIpaAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInte
      *
      * @return BilateralIpaAnswersSummaryRowsAdder
      */
-    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer, private AnswersSummaryRowsAdderInterface $qaAnswersSummaryRowsAdder, private IrhpPermitStockRepository $irhpPermitStockRepo)
+    public function __construct(private readonly AnswersSummaryRowFactory $answersSummaryRowFactory, private readonly RendererInterface $viewRenderer, private readonly AnswersSummaryRowsAdderInterface $qaAnswersSummaryRowsAdder, private readonly IrhpPermitStockRepository $irhpPermitStockRepo)
     {
     }
 

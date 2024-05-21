@@ -41,7 +41,7 @@ class LicenceHistory extends AbstractQueryHandler
 
         $data = [];
         foreach ($types as $type) {
-            $formattedType = lcfirst($filter->filter($type));
+            $formattedType = lcfirst((string) $filter->filter($type));
 
             $otherLicences = $application->getOtherLicencesByType($this->getRepo()->getRefdataReference($type));
             $data['otherLicences'][$formattedType] = $this->resultList($otherLicences);

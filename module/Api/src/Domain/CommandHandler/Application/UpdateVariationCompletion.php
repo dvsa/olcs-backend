@@ -141,7 +141,7 @@ class UpdateVariationCompletion extends AbstractCommandHandler implements
         $this->data = $command->getData();
 
         $filter = new CamelCaseToUnderscore();
-        $section = strtolower($filter->filter($section));
+        $section = strtolower((string) $filter->filter($section));
 
         $this->application = $this->getRepo()->fetchUsingId($command);
         $this->licence = $this->application->getLicence();

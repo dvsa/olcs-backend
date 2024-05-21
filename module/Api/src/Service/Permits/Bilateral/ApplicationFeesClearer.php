@@ -16,7 +16,7 @@ class ApplicationFeesClearer
      *
      * @return ApplicationFeesClearer
      */
-    public function __construct(private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private FeeRepository $feeRepo)
+    public function __construct(private readonly CommandCreator $commandCreator, private readonly CommandHandlerManager $commandHandlerManager, private readonly FeeRepository $feeRepo)
     {
     }
 

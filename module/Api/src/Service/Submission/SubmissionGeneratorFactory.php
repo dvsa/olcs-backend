@@ -25,7 +25,7 @@ class SubmissionGeneratorFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SubmissionGenerator
     {
         return new SubmissionGenerator(
-            $container->get('Config')['submissions'],
+            $container->get('config')['submissions'],
             $container->get(SectionGeneratorPluginManager::class)
         );
     }

@@ -65,7 +65,7 @@ class EntityAccessLoggerTest extends MockeryTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, 'logAccessToEntity']);
+        $this->assertIsCallable($this->sut->logAccessToEntity(...));
     }
 
     /**

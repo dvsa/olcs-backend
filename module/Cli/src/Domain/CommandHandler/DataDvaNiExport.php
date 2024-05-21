@@ -80,7 +80,7 @@ final class DataDvaNiExport extends AbstractDataExport
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $exportCfg = (!empty($config['data-dva-ni-export']) ? $config['data-dva-ni-export'] : []);
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];

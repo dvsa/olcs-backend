@@ -127,7 +127,7 @@ final class CopyDocument extends AbstractCommandHandler implements Transactioned
                         'tmp_name' => $sourceDocument->getResource(),
                         'type'     => $sourceDocument->getMimeType()
                     ],
-                    'filename'         => basename($document->getIdentifier()),
+                    'filename'         => basename((string) $document->getIdentifier()),
                     'shouldUploadOnly' => true
                 ]
             );

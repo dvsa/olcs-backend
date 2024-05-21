@@ -21,6 +21,11 @@ use Mockery as m;
  */
 abstract class AbstractEcmtAnnualPermitTest extends AbstractPermitTest
 {
+    public $orgEmails;
+    public $contactDetails;
+    public $userEmail;
+    public $orgEmail1;
+    public $orgEmail2;
     /**
      * test handle command
      *

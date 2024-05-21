@@ -14,7 +14,7 @@ class Radio implements ElementInterface
      *
      * @return Radio
      */
-    public function __construct(private OptionList $optionList, private TranslateableText $notSelectedMessage, private mixed $value)
+    public function __construct(private readonly OptionList $optionList, private readonly TranslateableText $notSelectedMessage, private readonly mixed $value)
     {
     }
 

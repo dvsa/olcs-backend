@@ -96,7 +96,7 @@ class QueryTemplate extends Query
                     foreach ($fields as $subField) {
                         $this->_params['query']['bool']['must']['bool']['must']['bool']['should'][] = [
                             'terms' => [
-                                $subField => explode('|', $value),
+                                $subField => explode('|', (string) $value),
                             ],
                         ];
                     }

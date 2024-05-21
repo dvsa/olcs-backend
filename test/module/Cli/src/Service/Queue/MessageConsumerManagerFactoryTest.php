@@ -30,7 +30,7 @@ class MessageConsumerManagerFactoryTest extends MockeryTestCase
 
         // Mocks
         $container = m::mock(ContainerInterface::class);
-        $container->expects('get')->with('Config')->andReturn($config);
+        $container->expects('get')->with('config')->andReturn($config);
 
         $mcm = $this->sut->__invoke($container, MessageConsumerManager::class);
 

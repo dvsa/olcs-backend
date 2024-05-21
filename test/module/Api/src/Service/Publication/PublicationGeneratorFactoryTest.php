@@ -25,7 +25,7 @@ class PublicationGeneratorFactoryTest extends MockeryTestCase
                     $map = [
                         ContextPluginManager::class => m::mock(ContextPluginManager::class),
                         ProcessPluginManager::class => m::mock(ProcessPluginManager::class),
-                        'Config' => [
+                        'config' => [
                             'publications' => [],
                         ]
                     ];

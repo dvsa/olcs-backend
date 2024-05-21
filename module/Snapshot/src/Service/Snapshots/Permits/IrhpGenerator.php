@@ -28,7 +28,7 @@ class IrhpGenerator extends AbstractGenerator implements SnapshotGeneratorInterf
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        private AnswersSummaryGenerator $answersSummaryGenerator
+        private readonly AnswersSummaryGenerator $answersSummaryGenerator
     ) {
         parent::__construct($abstractGeneratorServices);
     }

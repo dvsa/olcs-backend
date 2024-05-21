@@ -16,6 +16,7 @@ use Mockery as m;
  */
 class PrintLetterTest extends QueryHandlerTestCase
 {
+    public $container;
     public const DOC_ID = 9999;
 
     /** @var  m\MockInterface */

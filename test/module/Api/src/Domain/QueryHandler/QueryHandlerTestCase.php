@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Query Handler Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -29,14 +24,16 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 
-/**
- * Query Handler Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class QueryHandlerTestCase extends MockeryTestCase
 {
     use ValidateMockRepoTypeTrait;
+
+    public $entityAccessLogger;
+
+    /**
+     * @var (\Mockery\MockInterface & \Psr\Container\ContainerInterface)
+     */
+    public $container;
 
     /**
      * @var AbstractQueryHandler
@@ -206,19 +203,19 @@ class QueryHandlerTestCase extends MockeryTestCase
 
         //if statements here are for BC. We have some existing tests which implement this themselves
         if (!empty($this->refData)) {
-            $class->shouldReceive('getRefdataReference')->andReturnUsing([$this, 'mapRefData']);
+            $class->shouldReceive('getRefdataReference')->andReturnUsing($this->mapRefData(...));
         }
 
         if (!empty($this->references)) {
-            $class->shouldReceive('getReference')->andReturnUsing([$this, 'mapReference']);
+            $class->shouldReceive('getReference')->andReturnUsing($this->mapReference(...));
         }
 
         if (!empty($this->categoryReferences)) {
-            $class->shouldReceive('getCategoryReference')->andReturnUsing([$this, 'mapCategoryReference']);
+            $class->shouldReceive('getCategoryReference')->andReturnUsing($this->mapCategoryReference(...));
         }
 
         if (!empty($this->subCategoryReferences)) {
-            $class->shouldReceive('getSubCategoryReference')->andReturnUsing([$this, 'mapSubCategoryReference']);
+            $class->shouldReceive('getSubCategoryReference')->andReturnUsing($this->mapSubCategoryReference(...));
         }
 
         $this->repoMap[$name] = $class;

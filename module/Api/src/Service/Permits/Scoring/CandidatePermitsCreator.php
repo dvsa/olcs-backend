@@ -17,7 +17,7 @@ class CandidatePermitsCreator
      *
      * @return CandidatePermitsCreator
      */
-    public function __construct(private IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private SystemParameterRepository $systemParameterRepo, private IrhpCandidatePermitFactory $irhpCandidatePermitFactory)
+    public function __construct(private readonly IrhpCandidatePermitRepository $irhpCandidatePermitRepo, private readonly SystemParameterRepository $systemParameterRepo, private readonly IrhpCandidatePermitFactory $irhpCandidatePermitFactory)
     {
     }
 

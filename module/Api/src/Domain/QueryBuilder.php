@@ -37,7 +37,7 @@ class QueryBuilder implements QueryBuilderInterface
      *
      * @param QueryPartialServiceManager $queryPartialServiceManager Service manager
      */
-    public function __construct(private ServiceLocatorInterface $queryPartialServiceManager)
+    public function __construct(private readonly ServiceLocatorInterface $queryPartialServiceManager)
     {
     }
 

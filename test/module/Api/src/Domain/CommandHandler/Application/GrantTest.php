@@ -52,7 +52,7 @@ class GrantTest extends AbstractCommandHandlerTestCase
     public function testHandleCommandIsDefined()
     {
         $command = new GrantApplicationCommandHandler();
-        $this->assertIsCallable([$command, 'handleCommand']);
+        $this->assertIsCallable($command->handleCommand(...));
     }
 
     public function testHandleCommandWithException()

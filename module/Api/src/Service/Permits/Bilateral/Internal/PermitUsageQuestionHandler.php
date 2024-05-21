@@ -13,7 +13,7 @@ class PermitUsageQuestionHandler implements QuestionHandlerInterface
      *
      * @return PermitUsageQuestionHandler
      */
-    public function __construct(private PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private PermitUsageUpdater $permitUsageUpdater)
+    public function __construct(private readonly PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private readonly PermitUsageUpdater $permitUsageUpdater)
     {
     }
 
