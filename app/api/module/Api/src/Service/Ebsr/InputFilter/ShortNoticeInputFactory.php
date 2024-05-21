@@ -31,7 +31,7 @@ class ShortNoticeInputFactory implements FactoryInterface
     {
         $inputName = 'short_notice';
         $service = new Input($inputName);
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $validatorChain = $service->getValidatorChain();
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {

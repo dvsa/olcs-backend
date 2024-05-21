@@ -21,7 +21,7 @@ class DvlaSearchServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): DvlaSearchService
     {
         $logger = new LaminasLogPsr3Adapter($container->get('Logger'));
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $this->options = $config['dvla_search'];
         $stack = HandlerStack::create();
         $stack->push(GuzzleRetryMiddleware::factory());

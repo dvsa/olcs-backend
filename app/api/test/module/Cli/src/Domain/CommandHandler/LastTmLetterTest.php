@@ -500,7 +500,7 @@ class LastTmLetterTest extends AbstractCommandHandlerTestCase
             $printLetterResult = $this->getPrintLetterResult($id);
             $this->expectedSideEffect(PrintLetter::class, [], $printLetterResult);
 
-            $metadata = json_decode($data['metadata'], true);
+            $metadata = json_decode((string) $data['metadata'], true);
             if (
                 $metadata['details']['sendToAddress'] === 'correspondenceAddress' &&
                 $metadata['details']['allowEmail'] === 'Y'

@@ -102,7 +102,7 @@ class ApplicationCompletion extends AbstractApplicationCompletion
         $filter = new UnderscoreToCamelCase();
 
         foreach ($required as $section) {
-            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+            $getter = 'get' . ucfirst((string) $filter->filter($section)) . 'Status';
             if ($this->$getter() !== self::STATUS_COMPLETE) {
                 $incompleteSections[] = $section;
             }

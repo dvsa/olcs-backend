@@ -16,7 +16,7 @@ class HeaderAnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
      *
      * @return HeaderAnswersSummaryRowsAdder
      */
-    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer)
+    public function __construct(private readonly AnswersSummaryRowFactory $answersSummaryRowFactory, private readonly RendererInterface $viewRenderer)
     {
     }
 

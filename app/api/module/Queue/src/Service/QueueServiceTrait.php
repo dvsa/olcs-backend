@@ -41,7 +41,7 @@ trait QueueServiceTrait
 
     protected function getQueueUrlKey($messageType): string
     {
-        $path = explode('\\', $messageType);
+        $path = explode('\\', (string) $messageType);
         $path = array_pop($path);
 
         return $path . '_URL';

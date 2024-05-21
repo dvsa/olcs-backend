@@ -35,7 +35,7 @@ class UpdateTest extends AbstractCommandHandlerTestCase
      */
     public function handleCommandIsCallable()
     {
-        $this->assertIsCallable([$this->sut, 'handleCommand']);
+        $this->assertIsCallable($this->sut->handleCommand(...));
     }
 
     /**

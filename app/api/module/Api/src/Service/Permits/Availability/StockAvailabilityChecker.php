@@ -10,7 +10,7 @@ class StockAvailabilityChecker
      *
      * @return StockAvailabilityChecker
      */
-    public function __construct(private StockAvailabilityCounter $stockAvailabilityCounter)
+    public function __construct(private readonly StockAvailabilityCounter $stockAvailabilityCounter)
     {
     }
 

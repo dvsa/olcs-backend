@@ -24,7 +24,7 @@ class FileProcessorFactoryTest extends TestCase
         $mockFilter->shouldReceive('setAdapter')->with('zip');
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('Decompress')->andReturn($mockFilter);

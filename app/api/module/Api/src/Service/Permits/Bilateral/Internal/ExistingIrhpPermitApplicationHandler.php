@@ -18,7 +18,7 @@ class ExistingIrhpPermitApplicationHandler
      *
      * @return ExistingIrhpPermitApplicationHandler
      */
-    public function __construct(private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private IrhpPermitStockRepository $irhpPermitStockRepo, private ApplicationAnswersClearer $applicationAnswersClearer, private QuestionHandlerDelegator $questionHandlerDelegator)
+    public function __construct(private readonly IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private readonly IrhpPermitStockRepository $irhpPermitStockRepo, private readonly ApplicationAnswersClearer $applicationAnswersClearer, private readonly QuestionHandlerDelegator $questionHandlerDelegator)
     {
     }
 

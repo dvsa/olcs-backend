@@ -19,7 +19,7 @@ class MemberStateCode extends AbstractFilter
      */
     public function filter($value)
     {
-        if (strtoupper($value['memberStateCode']) === 'UK') {
+        if (strtoupper((string) $value['memberStateCode']) === 'UK') {
             $value['memberStateCode'] = 'GB';
         }
 

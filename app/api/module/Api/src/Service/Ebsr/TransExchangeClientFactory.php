@@ -31,7 +31,7 @@ class TransExchangeClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransExchangeClient
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
         }

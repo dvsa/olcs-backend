@@ -42,7 +42,7 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, '__invoke']);
+        $this->assertIsCallable($this->sut->__invoke(...));
     }
 
     /**
@@ -151,14 +151,14 @@ class UpdateUserSelfserveFactoryTest extends MockeryTestCase
      */
     protected function config(): array
     {
-        if (! $this->serviceManager->has('Config')) {
+        if (! $this->serviceManager->has('config')) {
             $this->serviceManager->setService(
-                'Config',
+                'config',
                 []
             );
         }
 
-        return $this->serviceManager->get('Config');
+        return $this->serviceManager->get('config');
     }
 
 

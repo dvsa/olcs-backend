@@ -15,6 +15,8 @@ class DateTime extends \DateTime
             $now = static::getNow();
             $timezone = $now->getTimezone();
             $time = $now->format(\DateTime::ATOM);
+        } elseif ($time === null) {
+            $time = (new \DateTime())->format(\DateTime::ATOM);
         }
 
         parent::__construct($time, $timezone);

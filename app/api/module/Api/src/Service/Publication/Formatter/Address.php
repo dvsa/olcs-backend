@@ -20,12 +20,12 @@ class Address
     public static function format(AddressEntity $address, $separator = ', ')
     {
         $addressFields = [
-            'AddressLine1' => trim($address->getAddressLine1()),
-            'AddressLine2' => trim($address->getAddressLine2()),
-            'AddressLine3' => trim($address->getAddressLine3()),
-            'AddressLine4' => trim($address->getAddressLine4()),
-            'Town' => trim($address->getTown()),
-            'Postcode' => trim($address->getPostcode())
+            'AddressLine1' => trim($address->getAddressLine1() ?? ''),
+            'AddressLine2' => trim($address->getAddressLine2() ?? ''),
+            'AddressLine3' => trim($address->getAddressLine3() ?? ''),
+            'AddressLine4' => trim($address->getAddressLine4() ?? ''),
+            'Town' => trim($address->getTown() ?? ''),
+            'Postcode' => trim($address->getPostcode() ?? '')
         ];
 
         foreach ($addressFields as $field => $value) {

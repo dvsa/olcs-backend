@@ -83,7 +83,7 @@ class UpdateVariationCompletionTest extends AbstractCommandHandlerTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, 'handleCommand']);
+        $this->assertIsCallable($this->sut->handleCommand(...));
     }
 
     public function handleCommandProvider()

@@ -37,9 +37,8 @@ class DvlaSearchService
 
     /**
      * Client constructor.
-     * @param Logger|null $logger
      */
-    public function __construct(HttpClient $httpClient, private ?Logger $logger = null)
+    public function __construct(HttpClient $httpClient, private readonly ?Logger $logger = null)
     {
         $this->httpClient = $httpClient;
     }

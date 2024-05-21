@@ -12,7 +12,7 @@ class NoOfPermitsConditionalUpdater
      *
      * @return NoOfPermitsConditionalUpdater
      */
-    public function __construct(private NoOfPermitsUpdater $noOfPermitsUpdater)
+    public function __construct(private readonly NoOfPermitsUpdater $noOfPermitsUpdater)
     {
     }
 

@@ -22,7 +22,7 @@ class AnswersSummaryRowGenerator
      *
      * @return AnswersSummaryRowGenerator
      */
-    public function __construct(private AnswersSummaryRowFactory $answersSummaryRowFactory, private RendererInterface $viewRenderer, private QaContextFactory $qaContextFactory, private ElementGeneratorContextGenerator $elementGeneratorContextGenerator)
+    public function __construct(private readonly AnswersSummaryRowFactory $answersSummaryRowFactory, private readonly RendererInterface $viewRenderer, private readonly QaContextFactory $qaContextFactory, private readonly ElementGeneratorContextGenerator $elementGeneratorContextGenerator)
     {
     }
 

@@ -15,7 +15,7 @@ class PeriodArrayGenerator
      *
      * @return PeriodArrayGenerator
      */
-    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo, private PeriodGenerator $periodGenerator, private CurrentDateTimeFactory $currentDateTimeFactory)
+    public function __construct(private readonly IrhpPermitStockRepository $irhpPermitStockRepo, private readonly PeriodGenerator $periodGenerator, private readonly CurrentDateTimeFactory $currentDateTimeFactory)
     {
     }
 

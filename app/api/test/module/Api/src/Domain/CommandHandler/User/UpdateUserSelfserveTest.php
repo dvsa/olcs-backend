@@ -36,6 +36,12 @@ class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
      */
     private $mockAuthAdapter;
 
+    public $config = [
+        'auth' => [
+            'identity_provider' => JWTIdentityProvider::class
+        ]
+    ];
+
     public function setUp(): void
     {
         $this->mockRepo('User', User::class);
@@ -58,7 +64,7 @@ class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
-            'Config' => $mockConfig
+            'config' => $mockConfig
         ];
 
         $this->sut = new Sut(

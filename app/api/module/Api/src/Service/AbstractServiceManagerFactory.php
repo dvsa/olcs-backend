@@ -11,7 +11,7 @@ abstract class AbstractServiceManagerFactory extends AbstractPluginManagerFactor
 
     public function __invoke(ContainerInterface $container, $name, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $configArray = !empty($config[static::CONFIG_KEY]) ? $config[static::CONFIG_KEY] : [];
 
         return parent::__invoke($container, static::PLUGIN_MANAGER_CLASS, $configArray);

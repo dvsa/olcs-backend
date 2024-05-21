@@ -133,7 +133,7 @@ class CompanyProfileTest extends AbstractCompaniesHouseConsumerTestCase
         $this->mockedSmServices = [
             Queue::class => $queueService,
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
         $this->setupService();
 
@@ -169,7 +169,7 @@ class CompanyProfileTest extends AbstractCompaniesHouseConsumerTestCase
         $this->mockedSmServices = [
             Queue::class => $this->getMockQueueService(),
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config,
+            'config' => $this->config,
         ];
         $this->setupService();
     }

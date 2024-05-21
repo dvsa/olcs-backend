@@ -118,7 +118,7 @@ class UpdateMultipleNoOfPermits extends AbstractCommandHandler implements Transa
      */
     private function deriveMultilateralPermitsRequired(array $row, array $permitsRequiredData)
     {
-        $validToTimestamp = strtotime($row['validTo']);
+        $validToTimestamp = strtotime((string) $row['validTo']);
         $year = date('Y', $validToTimestamp);
 
         if (isset($permitsRequiredData[$year]) && is_numeric($permitsRequiredData[$year])) {

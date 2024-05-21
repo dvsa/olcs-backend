@@ -15,7 +15,7 @@ class EcmtPermitUsageRefDataSource implements SourceInterface
      *
      * @return EcmtPermitUsageRefDataSource
      */
-    public function __construct(private RefDataSource $refDataSource, private array $transformations)
+    public function __construct(private readonly RefDataSource $refDataSource, private array $transformations)
     {
     }
 

@@ -41,7 +41,7 @@ class CognitoClientFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, '__invoke']);
+        $this->assertIsCallable($this->sut->__invoke(...));
     }
 
     /**
@@ -163,6 +163,6 @@ class CognitoClientFactoryTest extends MockeryTestCase
             ]
         ];
 
-        $this->serviceManager->setService('Config', $config);
+        $this->serviceManager->setService('config', $config);
     }
 }

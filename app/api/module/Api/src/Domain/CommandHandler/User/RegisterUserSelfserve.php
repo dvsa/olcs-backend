@@ -37,7 +37,7 @@ final class RegisterUserSelfserve extends AbstractUserCommandHandler implements
     protected $extraRepos = ['ContactDetails', 'Licence', 'Organisation'];
 
 
-    public function __construct(private PasswordService $passwordService, private ?ValidatableAdapterInterface $adapter)
+    public function __construct(private readonly PasswordService $passwordService, private readonly ?ValidatableAdapterInterface $adapter)
     {
     }
 

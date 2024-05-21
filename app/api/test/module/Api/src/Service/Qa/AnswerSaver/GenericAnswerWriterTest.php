@@ -22,6 +22,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
  */
 class GenericAnswerWriterTest extends MockeryTestCase
 {
+    /**
+     * @var string
+     */
+    public $questionType;
     private $questionId;
 
     private $qaEntityId;

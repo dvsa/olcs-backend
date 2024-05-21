@@ -62,7 +62,7 @@ final class Snapshot extends AbstractCommandHandler implements TransactionedInte
         );
 
         $data = [
-            'content' => base64_encode(trim($content)),
+            'content' => base64_encode(trim((string) $content)),
             'filename' => $fileName,
             'category' => Category::CATEGORY_TRANSPORT_MANAGER,
             'subCategory' => Category::DOC_SUB_CATEGORY_TRANSPORT_MANAGER_TM1_ASSISTED_DIGITAL,

@@ -40,7 +40,7 @@ class ReverseTransactionTest extends AbstractCommandHandlerTestCase
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
-            'Config' => [],
+            'config' => [],
         ];
 
         $this->sut = new ReverseTransaction();

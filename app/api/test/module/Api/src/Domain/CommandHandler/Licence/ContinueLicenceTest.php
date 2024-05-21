@@ -53,7 +53,7 @@ class ContinueLicenceTest extends AbstractCommandHandlerTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, 'handleCommand']);
+        $this->assertIsCallable($this->sut->handleCommand(...));
     }
 
     /**
@@ -876,7 +876,7 @@ class ContinueLicenceTest extends AbstractCommandHandlerTestCase
         foreach ($entities as $entity) {
             switch ($entity::class) {
                 case Licence::class:
-                    assert(is_callable([$entity, 'getId']));
+                    assert(is_callable($entity->getId(...)));
                     $this->licenceRepository()
                         ->allows('fetchById')
                         ->withArgs(fn($licenceId) => $licenceId === $entity->getId())
@@ -884,9 +884,9 @@ class ContinueLicenceTest extends AbstractCommandHandlerTestCase
                         ->byDefault();
                     break;
                 case ContinuationDetail::class:
-                    assert(is_callable([$entity, 'getLicence']));
+                    assert(is_callable($entity->getLicence(...)));
                     if (null !== ($licence = $entity->getLicence())) {
-                        assert(is_callable([$licence, 'getId']));
+                        assert(is_callable($licence->getId(...)));
                         $this->continuationDetailRepository()
                             ->allows('fetchForLicence')
                             ->withArgs(fn($licenceId) => $licenceId === $licence->getId())

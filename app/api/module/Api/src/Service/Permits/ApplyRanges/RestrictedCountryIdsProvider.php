@@ -10,7 +10,7 @@ class RestrictedCountryIdsProvider
      *
      * @return RestrictedCountryIdsProvider
      */
-    public function __construct(private array $restrictedCountryIds)
+    public function __construct(private readonly array $restrictedCountryIds)
     {
     }
 

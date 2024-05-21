@@ -14,6 +14,10 @@ use Mockery as m;
  */
 class WithContactDetailsTest extends QueryPartialTestCase
 {
+    /**
+     * @var \Dvsa\Olcs\Api\Domain\QueryPartial\WithRefdata
+     */
+    public $withRefdata;
     /** @var m\Mock */
     private $em;
 

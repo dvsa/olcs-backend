@@ -14,7 +14,7 @@ class GenericAnswerWriter
      *
      * @return GenericAnswerWriter
      */
-    public function __construct(private GenericAnswerProvider $genericAnswerProvider, private AnswerFactory $answerFactory, private AnswerRepository $answerRepo)
+    public function __construct(private readonly GenericAnswerProvider $genericAnswerProvider, private readonly AnswerFactory $answerFactory, private readonly AnswerRepository $answerRepo)
     {
     }
 

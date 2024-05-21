@@ -22,8 +22,8 @@ class FinanceReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private FinancialStandingHelperService $financialStandingHelperService,
-        private DocumentRepository $documentRepo
+        private readonly FinancialStandingHelperService $financialStandingHelperService,
+        private readonly DocumentRepository $documentRepo
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

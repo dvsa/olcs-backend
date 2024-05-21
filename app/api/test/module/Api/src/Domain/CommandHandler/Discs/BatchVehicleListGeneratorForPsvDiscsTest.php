@@ -27,7 +27,7 @@ class BatchVehicleListGeneratorForPsvDiscsTest extends AbstractCommandHandlerTes
         $this->sut = new Batch();
 
         $this->mockedSmServices = [
-            'Config' => [
+            'config' => [
                 'disc_printing' => ['psv_vehicle_list_batch_size' => $this->batchSize]
             ]
         ];

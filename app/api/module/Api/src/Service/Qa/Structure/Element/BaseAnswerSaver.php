@@ -13,7 +13,7 @@ class BaseAnswerSaver
      *
      * @return BaseAnswerSaver
      */
-    public function __construct(private GenericAnswerWriter $genericAnswerWriter, private GenericAnswerFetcher $genericAnswerFetcher)
+    public function __construct(private readonly GenericAnswerWriter $genericAnswerWriter, private readonly GenericAnswerFetcher $genericAnswerFetcher)
     {
     }
 

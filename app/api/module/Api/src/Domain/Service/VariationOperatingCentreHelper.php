@@ -82,12 +82,12 @@ class VariationOperatingCentreHelper implements FactoryInterface
         if ($order === 'ASC') {
             usort(
                 $mergedData,
-                fn($val1, $val2) => strcmp($val1['sort'], $val2['sort'])
+                fn($val1, $val2) => strcmp((string) $val1['sort'], (string) $val2['sort'])
             );
         } else {
             usort(
                 $mergedData,
-                fn($val1, $val2) => strcmp($val2['sort'], $val1['sort'])
+                fn($val1, $val2) => strcmp((string) $val2['sort'], (string) $val1['sort'])
             );
         }
 

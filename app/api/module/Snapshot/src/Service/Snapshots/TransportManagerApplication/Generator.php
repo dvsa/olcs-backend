@@ -47,14 +47,14 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        private NiTextTranslation $niTextTranslation,
-        private TransportManagerMainReviewService $transportManagerMainReviewService,
-        private TransportManagerResponsibilityReviewService $transportManagerResponsibilityReviewService,
-        private TransportManagerOtherEmploymentReviewService $transportManagerOtherEmploymentReviewService,
-        private TransportManagerPreviousConvictionReviewService $transportManagerPreviousConvictionReviewService,
-        private TransportManagerPreviousLicenceReviewService $transportManagerPreviousLicenceReviewService,
-        private TransportManagerDeclarationReviewService $transportManagerDeclarationReviewService,
-        private TransportManagerSignatureReviewService $transportManagerSignatureReviewService
+        private readonly NiTextTranslation $niTextTranslation,
+        private readonly TransportManagerMainReviewService $transportManagerMainReviewService,
+        private readonly TransportManagerResponsibilityReviewService $transportManagerResponsibilityReviewService,
+        private readonly TransportManagerOtherEmploymentReviewService $transportManagerOtherEmploymentReviewService,
+        private readonly TransportManagerPreviousConvictionReviewService $transportManagerPreviousConvictionReviewService,
+        private readonly TransportManagerPreviousLicenceReviewService $transportManagerPreviousLicenceReviewService,
+        private readonly TransportManagerDeclarationReviewService $transportManagerDeclarationReviewService,
+        private readonly TransportManagerSignatureReviewService $transportManagerSignatureReviewService
     ) {
         parent::__construct($abstractGeneratorServices);
     }

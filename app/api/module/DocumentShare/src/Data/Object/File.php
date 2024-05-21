@@ -42,7 +42,7 @@ class File
      */
     public function __destruct()
     {
-        if (is_file($this->file)) {
+        if ($this->file !== null && is_file($this->file)) {
             unlink($this->file);
         }
     }

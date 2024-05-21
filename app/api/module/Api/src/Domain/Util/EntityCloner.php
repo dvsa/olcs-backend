@@ -48,8 +48,8 @@ class EntityCloner
 
         // Set ignored properties to their defaults
         foreach ($ignoredProperties as $ignoredProperty) {
-            $getter = 'get' . ucfirst($ignoredProperty);
-            $setter = 'set' . ucfirst($ignoredProperty);
+            $getter = 'get' . ucfirst((string) $ignoredProperty);
+            $setter = 'set' . ucfirst((string) $ignoredProperty);
 
             // check the setter exists as some properties (eg olbsKey) may get removed in the future
             if (method_exists($clone, $setter)) {

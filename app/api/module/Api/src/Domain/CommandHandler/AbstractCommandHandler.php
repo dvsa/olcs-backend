@@ -164,7 +164,7 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
 
         if ($this instanceof SubmissionGeneratorAwareInterface) {
             $this->setSubmissionGenerator($mainServiceLocator->get(SubmissionGenerator::class));
-            $this->setSubmissionConfig($mainServiceLocator->get('Config')['submissions']['sections']['configuration']);
+            $this->setSubmissionConfig($mainServiceLocator->get('config')['submissions']['sections']['configuration']);
         }
 
         if ($this instanceof AddressServiceAwareInterface) {
@@ -199,7 +199,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         }
 
         if ($this instanceof ConfigAwareInterface) {
-            $this->setConfig($mainServiceLocator->get('Config'));
+            $config = $mainServiceLocator->get('config') ?? [];
+            $this->setConfig($config);
         }
 
         if ($this instanceof FileProcessorAwareInterface) {
@@ -209,7 +210,8 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof QueueInterface) {
             $this->setQueueService($mainServiceLocator->get(Queue::class));
             $this->setMessageBuilderService($mainServiceLocator->get(MessageBuilder::class));
-            $this->setQueueConfig($mainServiceLocator->get('Config')['message_queue']);
+            $messageQueueConfig = $mainServiceLocator->get('config')['message_queue'] ?? [];
+            $this->setQueueConfig($messageQueueConfig);
         }
 
         if ($this instanceof CacheAwareInterface) {

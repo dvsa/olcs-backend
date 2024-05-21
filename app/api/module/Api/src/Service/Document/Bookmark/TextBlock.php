@@ -61,7 +61,7 @@ class TextBlock extends DynamicBookmark
         $result = "";
         foreach ($this->data as $paragraph) {
             // Data from DB is unicode, but the templates arent
-            $result .= utf8_decode($paragraph['paraText']) . "\n";
+            $result .= mb_convert_encoding($paragraph['paraText'], 'ISO-8859-1') . "\n";
         }
         return substr($result, 0, -1);
     }

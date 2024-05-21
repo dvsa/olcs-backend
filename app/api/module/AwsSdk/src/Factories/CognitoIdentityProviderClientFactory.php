@@ -22,7 +22,7 @@ class CognitoIdentityProviderClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): CognitoIdentityProviderClient
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         return  new CognitoIdentityProviderClient([
             'version' => '2016-04-18',
             'region' => $config['awsOptions']['cognito']['region'],

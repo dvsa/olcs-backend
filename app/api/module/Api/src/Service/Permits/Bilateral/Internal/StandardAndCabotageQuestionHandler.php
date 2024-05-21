@@ -15,7 +15,7 @@ class StandardAndCabotageQuestionHandler implements QuestionHandlerInterface
      *
      * @return StandardAndCabotageQuestionHandler
      */
-    public function __construct(private PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private BilateralRequiredGenerator $bilateralRequiredGenerator, private StandardAndCabotageUpdater $standardAndCabotageUpdater)
+    public function __construct(private readonly PermitUsageSelectionGenerator $permitUsageSelectionGenerator, private readonly BilateralRequiredGenerator $bilateralRequiredGenerator, private readonly StandardAndCabotageUpdater $standardAndCabotageUpdater)
     {
     }
 

@@ -38,7 +38,7 @@ class ReputeUrlTest extends QueryHandlerTestCase
         $this->mockRepo('TransportManager', TransportManagerRepo::class);
 
         $this->mockedSmServices = [
-            'Config' => $this->nationalRegisterConfig,
+            'config' => $this->nationalRegisterConfig,
         ];
 
         parent::setUp();

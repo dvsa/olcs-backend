@@ -25,7 +25,7 @@ class VariationLicenceHistoryReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private ApplicationLicenceHistoryReviewService $applicationLicenceHistoryReviewService
+        private readonly ApplicationLicenceHistoryReviewService $applicationLicenceHistoryReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

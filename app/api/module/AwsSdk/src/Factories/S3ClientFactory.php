@@ -25,7 +25,7 @@ class S3ClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): S3Client
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $s3Client = new S3Client([
             'region' => $config['awsOptions']['region'],
             'version' => $config['awsOptions']['version'],

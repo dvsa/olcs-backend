@@ -304,27 +304,27 @@ class SectionConfig
         if ($this->init === false) {
             $this->sections['financial_history']['restricted'][] = [
                 'variation',
-                [$this, 'isNotUnchanged']
+                $this->isNotUnchanged(...)
             ];
 
             $this->sections['licence_history']['restricted'][] = [
                 'variation',
-                [$this, 'isNotUnchanged']
+                $this->isNotUnchanged(...)
             ];
 
             $this->sections['convictions_penalties']['restricted'][] = [
                 'variation',
-                [$this, 'isNotUnchanged']
+                $this->isNotUnchanged(...)
             ];
 
             $this->sections['financial_evidence']['restricted'][] = [
                 'variation',
-                [$this, 'isNotUnchanged']
+                $this->isNotUnchanged(...)
             ];
 
             $this->sections['vehicles_declarations']['restricted'][] = [
                 'variation',
-                [$this, 'isNotUnchanged']
+                $this->isNotUnchanged(...)
             ];
 
             // undertakings requires all sections (except itself)
@@ -339,7 +339,7 @@ class SectionConfig
     {
         $filter = new UnderscoreToCamelCase();
 
-        $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+        $getter = 'get' . ucfirst((string) $filter->filter($section)) . 'Status';
 
         $status = $this->completion->$getter();
 

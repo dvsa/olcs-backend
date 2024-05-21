@@ -32,12 +32,12 @@ class BusRegHistory extends AbstractRepository
         $qb->setParameter('busReg', $query->getBusReg());
     }
 
-    public function save($entity)
+    public function save($entity): never
     {
         throw new \Exception('You cannot save to a view');
     }
 
-    public function delete($entity)
+    public function delete($entity): never
     {
         throw new \Exception('You delete the contents of a view');
     }

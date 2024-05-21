@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Entity\System\RefData;
 
 class EmissionsCategoriesGrantabilityChecker
 {
-    public function __construct(private EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
+    public function __construct(private readonly EmissionsCategoryAvailabilityCounter $emissionsCategoryAvailabilityCounter)
     {
     }
 

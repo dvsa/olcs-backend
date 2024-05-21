@@ -20,7 +20,7 @@ class NoOfPermitsUpdater
      *
      * @return NoOfPermitsUpdater
      */
-    public function __construct(private IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private FeeTypeRepository $feeTypeRepo, private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private ApplicationFeesClearer $applicationFeesClearer, private CurrentDateTimeFactory $currentDateTimeFactory)
+    public function __construct(private readonly IrhpPermitApplicationRepository $irhpPermitApplicationRepo, private readonly FeeTypeRepository $feeTypeRepo, private readonly CommandCreator $commandCreator, private readonly CommandHandlerManager $commandHandlerManager, private readonly ApplicationFeesClearer $applicationFeesClearer, private readonly CurrentDateTimeFactory $currentDateTimeFactory)
     {
     }
 

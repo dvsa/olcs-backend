@@ -15,7 +15,7 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\PhoneContact;
 /**
  * With Contact Details
  */
-final class WithContactDetails implements QueryPartialInterface
+final readonly class WithContactDetails implements QueryPartialInterface
 {
     public function __construct(private EntityManagerInterface $em, private With $with, private WithRefdata $withRefdata)
     {
@@ -47,7 +47,7 @@ final class WithContactDetails implements QueryPartialInterface
                 break;
         }
 
-        if (!strstr($property, '.')) {
+        if (!strstr((string) $property, '.')) {
             $property = $qb->getRootAliases()[0] . '.' . $property;
         }
 

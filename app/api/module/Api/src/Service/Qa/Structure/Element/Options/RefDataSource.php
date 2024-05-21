@@ -12,7 +12,7 @@ class RefDataSource implements SourceInterface
      *
      * @return RefDataSource
      */
-    public function __construct(private RefDataRepository $refDataRepo)
+    public function __construct(private readonly RefDataRepository $refDataRepo)
     {
     }
 

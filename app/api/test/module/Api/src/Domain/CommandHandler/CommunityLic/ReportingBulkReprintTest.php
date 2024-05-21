@@ -13,6 +13,7 @@ use Mockery as m;
 
 class ReportingBulkReprintTest extends AbstractCommandHandlerTestCase
 {
+    public $mockFileUploader;
     public function setUp(): void
     {
         $this->sut = new ReportingBulkReprint();

@@ -12,6 +12,10 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 class DocumentControllerTest extends MockeryTestCase
 {
     /**
+     * @var \Mockery\LegacyMockInterface
+     */
+    public $response;
+    /**
      * @var \Dvsa\Olcs\Scanning\Controller\DocumentController|m\Mock
      */
     protected $sut;

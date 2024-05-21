@@ -18,6 +18,10 @@ trait ProcessDateTrait
      */
     public static function processDate($date, $format = 'Y-m-d', $zeroTime = true)
     {
+        if (empty($date)) {
+            return null;
+        }
+
         $dateTime = \DateTime::createFromFormat($format, $date);
 
         if (!$dateTime instanceof \DateTime) {

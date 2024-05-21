@@ -10,7 +10,7 @@ class JsonDecodingFilteredTranslateableTextGenerator
      *
      * @return JsonDecodingFilteredTranslateableTextGenerator
      */
-    public function __construct(private FilteredTranslateableTextGenerator $filteredTranslateableTextGenerator)
+    public function __construct(private readonly FilteredTranslateableTextGenerator $filteredTranslateableTextGenerator)
     {
     }
 

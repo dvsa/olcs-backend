@@ -31,7 +31,7 @@ class CommunityLicencesTest extends QueryHandlerTestCase
     public function testHandleQueryIsDefined()
     {
         // Assert
-        $this->assertIsCallable([$this->sut, 'handleQuery']);
+        $this->assertIsCallable($this->sut->handleQuery(...));
     }
 
     /**

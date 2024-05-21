@@ -56,7 +56,7 @@ class ReportStatus extends AbstractQueryHandler implements CpmsAwareInterface
     private function parseToken($data)
     {
         $downloadUrl = $data['download_url'];
-        $queryString = parse_url($downloadUrl, PHP_URL_QUERY);
+        $queryString = parse_url((string) $downloadUrl, PHP_URL_QUERY);
         $vars = [];
         parse_str($queryString, $vars);
         return $vars['token'];

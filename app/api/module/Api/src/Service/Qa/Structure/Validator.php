@@ -12,7 +12,7 @@ class Validator
      *
      * @return Validator
      */
-    public function __construct(private string $rule, private array $params)
+    public function __construct(private readonly string $rule, private array $params)
     {
     }
 

@@ -33,7 +33,7 @@ class DateTo extends DynamicBookmark
             if ($this->data[1]['interimEnd'] instanceof \DateTime) {
                 return $this->data[1]['interimEnd']->format('d/m/Y');
             }
-            $timeStamp = strtotime($this->data[1]['interimEnd']);
+            $timeStamp = strtotime((string) $this->data[1]['interimEnd']);
             return \DateTime::createFromFormat('U', $timeStamp)->format('d/m/Y');
         }
 
@@ -41,7 +41,7 @@ class DateTo extends DynamicBookmark
             return $this->data[0]['licence']['expiryDate']->format('d/m/Y');
         }
 
-        $timeStamp = strtotime($this->data[0]['licence']['expiryDate']);
+        $timeStamp = strtotime((string) $this->data[0]['licence']['expiryDate']);
         return \DateTime::createFromFormat('U', $timeStamp)->format('d/m/Y');
     }
 }

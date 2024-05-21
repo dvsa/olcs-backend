@@ -28,7 +28,7 @@ class ChangeExpiredPassword extends AbstractCommandHandler
     public const MSG_NOT_AUTHORIZED = 'auth.change-password.not-authorized';
     public const MSG_INVALID = 'auth.change-password.invalid';
 
-    public function __construct(protected ValidatableAdapterInterface $adapter, private UserRepository $userRepository)
+    public function __construct(protected ValidatableAdapterInterface $adapter, private readonly UserRepository $userRepository)
     {
     }
 

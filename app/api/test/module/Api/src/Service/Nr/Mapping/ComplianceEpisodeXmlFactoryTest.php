@@ -26,7 +26,7 @@ class ComplianceEpisodeXmlFactoryTest extends TestCase
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->once()->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->once()->with(MapXmlFile::class)->andReturn($mockMapXmlFile);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
 
         $sut = new ComplianceEpisodeXmlFactory();
 
@@ -41,7 +41,7 @@ class ComplianceEpisodeXmlFactoryTest extends TestCase
         $this->expectExceptionMessage('Missing INR service config');
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
         $sut = new ComplianceEpisodeXmlFactory();
         $sut->__invoke($mockSl, ComplianceEpisodeXml::class);

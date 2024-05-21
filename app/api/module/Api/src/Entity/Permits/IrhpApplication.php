@@ -2420,7 +2420,7 @@ class IrhpApplication extends AbstractIrhpApplication implements
             $countryStatuses[$countryId][self::COUNTRY_PROPERTY_IPA_ID] = $irhpPermitApplication->getId();
         }
 
-        usort($countryStatuses, [$this, 'usortByCountryName']);
+        usort($countryStatuses, $this->usortByCountryName(...));
 
         $result = [];
         foreach ($countryStatuses as $properties) {

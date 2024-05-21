@@ -41,7 +41,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with(ParseXmlString::class)->andReturn($mockFilter);
         $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
 
@@ -67,7 +67,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $this->expectException($exceptionName);
         $this->expectExceptionMessage($exceptionMessage);
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn($config);
 
         $sut = new XmlStructureInputFactory();
         $sut->__invoke($mockSl, Input::class);

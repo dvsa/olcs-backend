@@ -18,10 +18,10 @@ trait BundleSerializableTrait
     /**
      * JSON serialize
      *
-     * @return array
+     * @return mixed
      * @deprecated
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         $output = [];
 

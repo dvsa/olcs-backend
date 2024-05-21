@@ -16,7 +16,7 @@ class FeeUpdater
      *
      * @return FeeUpdater
      */
-    public function __construct(private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private EcmtApplicationFeeCommandCreator $ecmtApplicationFeeCommandCreator)
+    public function __construct(private readonly CommandCreator $commandCreator, private readonly CommandHandlerManager $commandHandlerManager, private readonly EcmtApplicationFeeCommandCreator $ecmtApplicationFeeCommandCreator)
     {
     }
 

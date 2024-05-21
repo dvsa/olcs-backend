@@ -724,7 +724,7 @@ class FeeEntityTest extends EntityTester
             ->shouldReceive('getTransaction')->never()
             ->getMock();
 
-        $feeTr1 = $this->getStubFeeTransaction(5, '2017-06-05', null, null, null, '', 9001);
+        $feeTr1 = $this->getStubFeeTransaction(5, '2017-06-05', '2015-09-02', null, null, '', 9001);
         $sut->setFeeTransactions(new ArrayCollection([$feeTr1]));
 
         //  call

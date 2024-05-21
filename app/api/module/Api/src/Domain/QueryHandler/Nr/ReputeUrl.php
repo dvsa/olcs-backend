@@ -55,7 +55,7 @@ class ReputeUrl extends AbstractQueryHandler implements NationalRegisterAwareInt
             'CA' => self::FIELD_CA,
             'GivenName' => $person->getForename(),
             'FamilyName' => $person->getFamilyName(),
-            'DateOfBirth' => date(self::DATE_FORMAT, strtotime($person->getBirthDate())),
+            'DateOfBirth' => date(self::DATE_FORMAT, strtotime((string) $person->getBirthDate())),
             'PlaceOfBirth' => $person->getBirthPlace(),
             'CPCNo' => ($serialNo ?: self::FIELD_QUAL_UNKNOWN),
             'CPCIssueDate' => date(self::DATE_FORMAT, strtotime($qualification->getIssuedDate())),

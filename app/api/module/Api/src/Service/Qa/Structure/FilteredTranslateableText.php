@@ -11,7 +11,7 @@ class FilteredTranslateableText
      *
      * @return FilteredTranslateableText
      */
-    public function __construct(private $filter, private TranslateableText $translateableText)
+    public function __construct(private $filter, private readonly TranslateableText $translateableText)
     {
     }
 

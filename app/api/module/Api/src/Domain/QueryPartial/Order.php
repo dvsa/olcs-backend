@@ -29,7 +29,7 @@ final class Order implements QueryPartialInterface
 
         [$alias] = $qb->getRootAliases();
 
-        if (str_contains($sort, '.') || in_array($sort, $compositeFields)) {
+        if (str_contains((string) $sort, '.') || in_array($sort, $compositeFields)) {
             $qb->addOrderBy($sort, $order);
         } else {
             $qb->addOrderBy($alias . '.' . $sort, $order);

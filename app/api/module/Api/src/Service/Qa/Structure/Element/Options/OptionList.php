@@ -13,7 +13,7 @@ class OptionList
      *
      * @return OptionList
      */
-    public function __construct(private OptionFactory $optionFactory)
+    public function __construct(private readonly OptionFactory $optionFactory)
     {
     }
 

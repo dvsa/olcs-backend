@@ -22,6 +22,7 @@ use Laminas\I18n\Translator\TranslatorInterface;
  */
 class VariationVehiclesDeclarationsReviewServiceTest extends MockeryTestCase
 {
+    public $mockTranslator;
     protected $sut;
 
     /** @var ApplicationVehiclesDeclarationsReviewService */

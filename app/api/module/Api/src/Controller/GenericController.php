@@ -17,7 +17,7 @@ use Laminas\Mvc\Controller\AbstractRestfulController;
  */
 class GenericController extends AbstractRestfulController
 {
-    public function __construct(private QueryHandlerManager $queryHandlerManager, private CommandHandlerManager $commandHandlerManager)
+    public function __construct(private readonly QueryHandlerManager $queryHandlerManager, private readonly CommandHandlerManager $commandHandlerManager)
     {
     }
 

@@ -52,6 +52,12 @@ use LmcRbacMvc\Service\AuthorizationService;
  */
 class UpdateUserTest extends AbstractCommandHandlerTestCase
 {
+    public $config = [
+        'auth' => [
+            'identity_provider' => JWTIdentityProvider::class
+        ]
+    ];
+
     public function setUp(): void
     {
         $this->sut = new Sut();
@@ -82,7 +88,7 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class),
             ValidatableAdapterInterface::class => $mockAuthAdapter,
             PasswordService::class => $mockPasswordService,
-            'Config' => $mockConfig
+            'config' => $mockConfig
         ];
 
         parent::setUp();
@@ -926,7 +932,6 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             ->never();
 
         $this->expectException(ValidationException::class);
-
         $this->sut->handleCommand($command);
     }
 
@@ -987,7 +992,6 @@ class UpdateUserTest extends AbstractCommandHandlerTestCase
             ->never();
 
         $this->expectException(ValidationException::class);
-
         $this->sut->handleCommand($command);
     }
 

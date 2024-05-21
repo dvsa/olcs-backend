@@ -28,7 +28,7 @@ class AddressFactoryTest extends MockeryTestCase
 
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')
-            ->with('Config')
+            ->with('config')
             ->andReturn($config);
 
         $this->sut->__invoke($sm, Address::class);
@@ -46,7 +46,7 @@ class AddressFactoryTest extends MockeryTestCase
 
         $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')
-            ->with('Config')
+            ->with('config')
             ->andReturn($config);
 
         $address = $this->sut->__invoke($sm, Address::class);

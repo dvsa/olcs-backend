@@ -10,7 +10,7 @@ class WithFewestNonRequestedCountriesProvider
      *
      * @return WithFewestNonRequestedCountriesProvider
      */
-    public function __construct(private RestrictedCountryIdsProvider $restrictedCountryIdsProvider)
+    public function __construct(private readonly RestrictedCountryIdsProvider $restrictedCountryIdsProvider)
     {
     }
 

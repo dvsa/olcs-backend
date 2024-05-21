@@ -95,7 +95,7 @@ class PayloadValidationListener implements ListenerAggregateInterface
             $isXml = in_array($mediaType, $this->xmlMediaTypes);
 
             if ($mediaType === self::JSON_MEDIA_TYPE) {
-                $data = json_decode($request->getContent(), true);
+                $data = json_decode((string) $request->getContent(), true);
             } elseif ($isXml) {
                 $data = ['xml' => $request->getContent()];
             } else {

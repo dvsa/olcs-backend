@@ -46,7 +46,7 @@ class DiscSequence extends AbstractDiscSequence
 
     public function getDiscPrefix($licenceType)
     {
-        $method = 'get' . ucfirst($this->prefixes[$licenceType]);
+        $method = 'get' . ucfirst((string) $this->prefixes[$licenceType]);
         return $this->$method();
     }
 
@@ -57,13 +57,13 @@ class DiscSequence extends AbstractDiscSequence
      */
     public function setDiscStartNumber($licenceType, $startNumber)
     {
-        $method = 'set' . ucfirst($this->numbers[$licenceType]);
+        $method = 'set' . ucfirst((string) $this->numbers[$licenceType]);
         return $this->$method($startNumber);
     }
 
     public function getDiscNumber($licenceType)
     {
-        $method = 'get' . ucfirst($this->numbers[$licenceType]);
+        $method = 'get' . ucfirst((string) $this->numbers[$licenceType]);
         return $this->$method();
     }
 }

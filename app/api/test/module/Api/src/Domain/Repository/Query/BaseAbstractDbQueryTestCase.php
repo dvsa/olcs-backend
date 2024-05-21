@@ -50,7 +50,7 @@ abstract class BaseAbstractDbQueryTestCase extends MockeryTestCase
         $this->em->shouldReceive('getConnection')->andReturn($this->connection);
 
         $this->em->shouldReceive('getClassMetadata')
-            ->andReturnUsing([$this, 'getClassMetadata']);
+            ->andReturnUsing($this->getClassMetadata(...));
 
         $user = m::mock(UserEntity::class)->makePartial();
         $user->setId(1);

@@ -243,7 +243,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
                 throw new \RuntimeException('Unable to process attachment (empty document downloaded)');
             }
             $downloadedDocs[] = [
-                'fileName' => basename($doc->getFilename()),
+                'fileName' => basename((string) $doc->getFilename()),
                 'content' => $file->getContent()
             ];
         }
@@ -304,7 +304,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (isset($config['email']['from_name'])) {
             $this->setFromName($config['email']['from_name']);
         }

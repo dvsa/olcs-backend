@@ -33,7 +33,7 @@ class ApplicationOperatingCentresReviewService extends AbstractOperatingCentresR
         private ApplicationPsvOcTotalAuthReviewService $applicationPsvOcTotalAuthReviewService,
         private GoodsOperatingCentreReviewService $goodsOperatingCentreReviewService,
         private ApplicationGoodsOcTotalAuthReviewService $applicationGoodsOcTotalAuthReviewService,
-        private TrafficAreaReviewService $trafficAreaReviewService
+        private readonly TrafficAreaReviewService $trafficAreaReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

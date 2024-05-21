@@ -96,7 +96,7 @@ class PrintJob extends AbstractCommandHandler
                 }
 
                 // create a temp file
-                $fileName = $this->createTmpFile($file, $this->filesPrefix, basename($document->getFilename()));
+                $fileName = $this->createTmpFile($file, $this->filesPrefix, basename((string) $document->getFilename()));
 
                 // unset no longer needed vars
                 unset($file, $document);

@@ -29,7 +29,7 @@ class RemoveReadAuditTest extends AbstractCommandHandlerTestCase
         $this->mockRepo('TransportManagerReadAudit', Repository\TransportManagerReadAudit::class);
         $this->mockRepo('OrganisationReadAudit', Repository\OrganisationReadAudit::class);
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'batch_config' => [
                 'remove-read-audit' => [
                     'max-age' => '1 year'

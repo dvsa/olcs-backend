@@ -6,7 +6,7 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 
 class GenericAnswerFetcher
 {
-    public function __construct(private NamedAnswerFetcher $namedAnswerFetcher)
+    public function __construct(private readonly NamedAnswerFetcher $namedAnswerFetcher)
     {
     }
 

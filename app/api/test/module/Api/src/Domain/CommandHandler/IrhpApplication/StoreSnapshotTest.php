@@ -28,7 +28,7 @@ class StoreSnapshotTest extends AbstractCreateSnapshotHandlerTest
     protected $documentSubCategory = SubCategory::DOC_SUB_CATEGORY_PERMIT_APPLICATION;
     protected $documentDescription = 'Annual Irhp (EU and EEA) Application OG9654321/3 Snapshot (app submitted)';
     protected $documentLinkId = 'irhpApplication';
-    protected $documentLinkValue = 999;
+    public $documentLinkValue = 999;
     protected $generatorClass = IrhpGenerator::class;
 
     /**

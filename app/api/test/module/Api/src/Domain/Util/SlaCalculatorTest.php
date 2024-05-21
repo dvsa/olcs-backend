@@ -24,6 +24,8 @@ use Olcs\Logging\Log\Logger;
  */
 class SlaCalculatorTest extends MockeryTestCase
 {
+    public $publicHolidayRepo;
+    public $dateTimeProcessor;
     public function setUp(): void
     {
         $logWriter = new \Laminas\Log\Writer\Mock();

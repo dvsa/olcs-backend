@@ -20,6 +20,7 @@ use Mockery as m;
 
 class SendForgotPasswordTest extends AbstractCommandHandlerTestCase
 {
+    public $translationLoader;
     public function setUp(): void
     {
         $this->sut = new SendForgotPassword();

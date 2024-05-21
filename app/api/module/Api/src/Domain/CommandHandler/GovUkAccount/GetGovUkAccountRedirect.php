@@ -15,7 +15,7 @@ class GetGovUkAccountRedirect extends AbstractCommandHandler
     /**
      * Constructor.
      */
-    public function __construct(private GovUkAccountService $govUkAccountService)
+    public function __construct(private readonly GovUkAccountService $govUkAccountService)
     {
     }
 

@@ -274,6 +274,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->successSideEffects($variationBusRegId, $licenceId, $documentId, false);
 
+        $this->sut->setConfig($this->config);
+
         $this->sut->handleCommand($command);
     }
 
@@ -512,6 +514,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->expectedEmailQueueSideEffect(SendEbsrReceivedCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
 
         $this->successSideEffects($variationBusRegId, $licenceId, $documentId, $fee);
+
+        $this->sut->setConfig($this->config);
 
         $this->sut->handleCommand($command);
     }
@@ -761,7 +765,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             ->andThrow(EbsrPackException::class, 'message');
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
         $this->sut->handleCommand($command);
     }
 
@@ -797,7 +800,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
         $this->sut->handleCommand($command);
     }
 
@@ -843,7 +845,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
         $this->sut->handleCommand($command);
     }
 
@@ -962,7 +963,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
         $this->sut->handleCommand($command);
     }
 
@@ -1087,7 +1087,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->mockInputFailure(ShortNoticeInputFactory::class, $processedDataOutput, m::type('array'), ['messages']);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
         $this->sut->handleCommand($command);
     }
 

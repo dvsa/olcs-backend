@@ -66,7 +66,7 @@ final class DataGovUkExport extends AbstractDataExport
      */
     public function handleCommand(CommandInterface $command)
     {
-        $this->path = (trim($command->getPath()) ?: $this->path);
+        $this->path = trim($command->getPath() ?? '') ?: $this->path;
         $this->reportName = $command->getReportName();
 
         $this->dataGovUkRepo = $this->getRepo();
@@ -247,7 +247,7 @@ final class DataGovUkExport extends AbstractDataExport
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $exportCfg = (!empty($config['data-gov-uk-export']) ? $config['data-gov-uk-export'] : []);
         if (isset($exportCfg['path'])) {
             $this->path = $exportCfg['path'];

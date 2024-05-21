@@ -38,7 +38,7 @@ class PermitApplicationReference extends DynamicBookmark
     public function render()
     {
         if (isset($this->data['irhpPermitApplication']['relatedApplication']['applicationRef'])) {
-            return trim($this->data['irhpPermitApplication']['relatedApplication']['applicationRef']);
+            return trim((string) $this->data['irhpPermitApplication']['relatedApplication']['applicationRef']);
         }
 
         return '';

@@ -13,7 +13,7 @@ class SupplementedApplicationStepsProvider
      *
      * @return SupplementedApplicationStepsProvider
      */
-    public function __construct(private FormControlServiceManager $formControlServiceManager, private SupplementedApplicationStepFactory $supplementedApplicationStepFactory)
+    public function __construct(private readonly FormControlServiceManager $formControlServiceManager, private readonly SupplementedApplicationStepFactory $supplementedApplicationStepFactory)
     {
     }
 

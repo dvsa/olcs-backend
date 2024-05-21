@@ -15,7 +15,7 @@ class AnswersSummaryRowsAdder implements AnswersSummaryRowsAdderInterface
      *
      * @return AnswersSummaryRowsAdder
      */
-    public function __construct(private SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider, private AnswersSummaryRowGenerator $answersSummaryRowGenerator)
+    public function __construct(private readonly SupplementedApplicationStepsProvider $supplementedApplicationStepsProvider, private readonly AnswersSummaryRowGenerator $answersSummaryRowGenerator)
     {
     }
 

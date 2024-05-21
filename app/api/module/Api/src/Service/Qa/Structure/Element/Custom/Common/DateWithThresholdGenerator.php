@@ -15,7 +15,7 @@ class DateWithThresholdGenerator
      *
      * @return DateWithThresholdGenerator
      */
-    public function __construct(private DateWithThresholdFactory $dateWithThresholdFactory, private CurrentDateTimeFactory $currentDateTimeFactory, private DateIntervalFactory $dateIntervalFactory, private DateGenerator $dateGenerator)
+    public function __construct(private readonly DateWithThresholdFactory $dateWithThresholdFactory, private readonly CurrentDateTimeFactory $currentDateTimeFactory, private readonly DateIntervalFactory $dateIntervalFactory, private readonly DateGenerator $dateGenerator)
     {
     }
 

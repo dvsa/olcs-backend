@@ -26,7 +26,7 @@ class AcquiredRightsClientFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): AcquiredRightsClient
     {
 
-        $config = $container->get('Config');
+        $config = $container->get('config');
 
         $httpClient = new Client($this->getAcquiredRightsClientConfiguration($config));
         return new AcquiredRightsClient(

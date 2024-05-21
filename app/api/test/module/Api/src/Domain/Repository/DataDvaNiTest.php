@@ -14,6 +14,7 @@ use Mockery as m;
  */
 class DataDvaNiTest extends MockeryTestCase
 {
+    public $mockResult;
     /** @var  m\MockInterface */
     private $mockStmt;
     /** @var  m\MockInterface */

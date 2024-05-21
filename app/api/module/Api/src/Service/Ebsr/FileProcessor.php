@@ -29,7 +29,7 @@ class FileProcessor implements FileProcessorInterface
      * @param Decompress            $decompressFilter decompression filter
      * @param string                $tmpDir           the temporary directory
      */
-    public function __construct(private FileUploaderInterface $fileUploader, private Filesystem $fileSystem, private Decompress $decompressFilter, private $tmpDir)
+    public function __construct(private readonly FileUploaderInterface $fileUploader, private readonly Filesystem $fileSystem, private readonly Decompress $decompressFilter, private $tmpDir)
     {
     }
 

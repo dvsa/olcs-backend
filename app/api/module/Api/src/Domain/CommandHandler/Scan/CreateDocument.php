@@ -62,7 +62,7 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
 
     protected function validateFile(Cmd $command)
     {
-        $content = base64_decode($command->getContent());
+        $content = base64_decode((string) $command->getContent());
 
         $finfo = new \finfo(FILEINFO_MIME_TYPE);
         $mime = $finfo->buffer($content);
@@ -103,7 +103,7 @@ final class CreateDocument extends AbstractCommandHandler implements Transaction
         }
 
         $data = [
-            'content'       => base64_encode($content),
+            'content'       => base64_encode((string) $content),
             'filename'      => $command->getFilename(),
             'description'   => $scan->getDescription() . $descriptionPostfix,
             'isExternal'    => false,

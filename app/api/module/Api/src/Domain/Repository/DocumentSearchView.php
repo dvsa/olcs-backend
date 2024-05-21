@@ -176,7 +176,7 @@ class DocumentSearchView extends AbstractReadonlyRepository
             $expr = $qb->expr();
 
             $qb->andWhere(
-                call_user_func_array([$expr, 'orX'], $idExpressions)
+                call_user_func_array($expr->orX(...), $idExpressions)
             );
         }
     }

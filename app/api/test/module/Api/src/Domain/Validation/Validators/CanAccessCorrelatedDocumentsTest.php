@@ -16,6 +16,7 @@ use Mockery as m;
  */
 class CanAccessCorrelatedDocumentsTest extends AbstractValidatorsTestCase
 {
+    public $cache;
     /**
      * @var CanAccessCorrelatedDocuments|m\MockInterface
      */

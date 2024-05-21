@@ -28,7 +28,7 @@ class ResetPassword extends AbstractCommandHandler
     public const MSG_FAIL_DEBUG_LOG = '%s failed to reset password using cognito';
     public const MSG_FAIL_COGNITO_EXCEPTION = '%s failed to reset password due to cognito exception: %s';
 
-    public function __construct(private ValidatableAdapterInterface $adapter, private EventHistoryCreator $eventHistoryCreator)
+    public function __construct(private readonly ValidatableAdapterInterface $adapter, private readonly EventHistoryCreator $eventHistoryCreator)
     {
     }
 

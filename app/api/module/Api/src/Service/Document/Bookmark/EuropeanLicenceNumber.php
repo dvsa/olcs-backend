@@ -21,7 +21,7 @@ class EuropeanLicenceNumber extends DynamicBookmark
 
     public function render()
     {
-        $issueNo = str_pad($this->data['issueNo'], self::ISSUE_NO_PAD_LENGTH, '0', STR_PAD_LEFT);
+        $issueNo = str_pad((string) $this->data['issueNo'], self::ISSUE_NO_PAD_LENGTH, '0', STR_PAD_LEFT);
 
         return $this->data['licence']['licNo'] . '/' . $issueNo;
     }

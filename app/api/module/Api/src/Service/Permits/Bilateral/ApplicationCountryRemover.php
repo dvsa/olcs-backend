@@ -15,7 +15,7 @@ class ApplicationCountryRemover
      *
      * @return ApplicationCountryRemover
      */
-    public function __construct(private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager)
+    public function __construct(private readonly CommandCreator $commandCreator, private readonly CommandHandlerManager $commandHandlerManager)
     {
     }
 

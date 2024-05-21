@@ -11,7 +11,7 @@ class PermitTypeConfig
      *
      * @return PermitTypeConfig
      */
-    public function __construct(private $restrictedCountriesQuestionKey, private array $restrictedCountryIds)
+    public function __construct(private $restrictedCountriesQuestionKey, private readonly array $restrictedCountryIds)
     {
     }
 

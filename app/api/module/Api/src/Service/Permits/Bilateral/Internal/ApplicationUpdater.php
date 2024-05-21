@@ -12,7 +12,7 @@ class ApplicationUpdater
      *
      * @return ApplicationUpdater
      */
-    public function __construct(private ApplicationCountryUpdater $applicationCountryUpdater)
+    public function __construct(private readonly ApplicationCountryUpdater $applicationCountryUpdater)
     {
     }
 

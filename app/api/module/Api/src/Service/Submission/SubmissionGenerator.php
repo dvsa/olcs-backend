@@ -24,7 +24,7 @@ class SubmissionGenerator
      *
      * @return void
      */
-    public function __construct(private array $submissionConfig, private SectionGeneratorPluginManager $sectionGeneratorPluginManager)
+    public function __construct(private array $submissionConfig, private readonly SectionGeneratorPluginManager $sectionGeneratorPluginManager)
     {
     }
 
@@ -49,7 +49,8 @@ class SubmissionGenerator
 
         $requiredSections = $this->getRequiredSections($sectionTypeId, $sections, $isTm);
 
-        $snapshot = json_decode($submissionEntity->getDataSnapshot(), true);
+        $snapshotData = $submissionEntity->getDataSnapshot();
+        $snapshot = json_decode($snapshotData ?? '[]', true);
 
         //  store and set new limit of execution time
         $timeLimit = ini_get('MAX_EXECUTION_TIME');

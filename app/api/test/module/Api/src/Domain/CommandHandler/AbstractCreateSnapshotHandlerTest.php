@@ -16,6 +16,7 @@ use Mockery as m;
  */
 abstract class AbstractCreateSnapshotHandlerTest extends AbstractCommandHandlerTestCase
 {
+    public $documentLinkValue;
     protected $cmdClass = 'changeMe';
     protected $sutClass = 'changeMe';
     protected $repoServiceName = 'changeMe';

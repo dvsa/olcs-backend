@@ -204,7 +204,7 @@ class AddressTest extends MockeryTestCase
 
         $this->client->shouldReceive('setUri')
             ->once()
-            ->with('address/' . urlencode($postcode))
+            ->with('address/' . urlencode((string) $postcode))
             ->shouldReceive('send')
             ->once()
             ->andReturn($response);

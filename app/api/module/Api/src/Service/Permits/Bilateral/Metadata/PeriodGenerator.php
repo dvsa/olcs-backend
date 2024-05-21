@@ -17,7 +17,7 @@ class PeriodGenerator
      *
      * @return PeriodGenerator
      */
-    public function __construct(private IrhpPermitStockRepository $irhpPermitStockRepo)
+    public function __construct(private readonly IrhpPermitStockRepository $irhpPermitStockRepo)
     {
     }
 

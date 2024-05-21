@@ -35,7 +35,7 @@ class Snapshot extends AbstractSurrenderCommandHandler implements TransactionedI
     {
 
         $data = [
-            'content' => base64_encode(trim($snapshot)),
+            'content' => base64_encode(trim((string) $snapshot)),
             'filename' => 'Surrender Snapshot.html',
             'category' => Category::CATEGORY_APPLICATION,
             'subCategory' => Category::TASK_SUB_CATEGORY_APPLICATION_SURRENDER,

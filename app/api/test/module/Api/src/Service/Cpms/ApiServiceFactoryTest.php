@@ -64,7 +64,7 @@ class ApiServiceFactoryTest extends TestCase
 
             $mockSl
                 ->shouldReceive('get')
-                ->with('Config')
+                ->with('config')
                 ->andReturn($config)
                 ->shouldReceive('get')
                 ->with(AuthorizationService::class)

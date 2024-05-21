@@ -21,7 +21,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
         $this->setUpSut();
 
         // Assert
-        $this->assertIsCallable([$this->sut, '__invoke']);
+        $this->assertIsCallable($this->sut->__invoke(...));
     }
 
     /**
@@ -104,7 +104,7 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
      */
     protected function config(array $config = []): array
     {
-        if (! $this->serviceManager->has('Config') || !empty($config)) {
+        if (! $this->serviceManager->has('config') || !empty($config)) {
             if (empty($config)) {
                 $config = [
                     'acquired_rights' => [
@@ -121,9 +121,9 @@ class AcquiredRightsClientFactoryTest extends MockeryTestCase
                 ];
             }
 
-            $this->serviceManager->setService('Config', $config);
+            $this->serviceManager->setService('config', $config);
         }
 
-        return $this->serviceManager->get('Config');
+        return $this->serviceManager->get('config');
     }
 }

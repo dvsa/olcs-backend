@@ -12,7 +12,7 @@ class ForCpWithCountriesAndMultipleMatchingRangesProvider
      *
      * @return ForCpWithCountriesAndMultipleMatchingRangesProvider
      */
-    public function __construct(private WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider, private HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector)
+    public function __construct(private readonly WithFewestNonRequestedCountriesProvider $withFewestNonRequestedCountriesProvider, private readonly HighestAvailabilityRangeSelector $highestAvailabilityRangeSelector)
     {
     }
 

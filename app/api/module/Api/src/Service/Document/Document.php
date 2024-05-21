@@ -25,7 +25,7 @@ class Document
      *
      * @return Document
      */
-    public function __construct(private DateService $dateSrvHlpr, private DocumentStoreInterface $documentStore, private TranslatorInterface $translator)
+    public function __construct(private readonly DateService $dateSrvHlpr, private readonly DocumentStoreInterface $documentStore, private readonly TranslatorInterface $translator)
     {
     }
 

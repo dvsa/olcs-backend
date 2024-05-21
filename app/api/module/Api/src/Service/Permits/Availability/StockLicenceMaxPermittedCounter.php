@@ -18,7 +18,7 @@ class StockLicenceMaxPermittedCounter
      *
      * @return StockLicenceMaxPermittedCounter
      */
-    public function __construct(private IrhpPermitRepository $irhpPermitRepo)
+    public function __construct(private readonly IrhpPermitRepository $irhpPermitRepo)
     {
     }
 

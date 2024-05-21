@@ -66,7 +66,7 @@ abstract class AbstractDiscList extends DynamicBookmark
      */
     protected function splitString($str)
     {
-        return str_split($str, static::MAX_LINE_LENGTH);
+        return str_split((string) $str, static::MAX_LINE_LENGTH);
     }
 
     /**

@@ -28,6 +28,14 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
      */
     protected $mockHttpClient;
 
+    protected $config = [
+        'top-report-link' => [
+            'targetUrl' => 'apiurl',
+            'apiKey' => '123',
+            'proxy' => 'http://proxy:123'
+        ]
+    ];
+
     /**
      * @return void
      */
@@ -39,7 +47,7 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class),
         ];
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'top-report-link' => [
                 'targetUrl' => 'apiurl',
                 'apiKey' => '123',

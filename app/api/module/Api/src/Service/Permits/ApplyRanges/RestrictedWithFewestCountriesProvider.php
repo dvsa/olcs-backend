@@ -12,7 +12,7 @@ class RestrictedWithFewestCountriesProvider
      *
      * @return RestrictedWithFewestCountriesProvider
      */
-    public function __construct(private RestrictedRangesProvider $restrictedRangesProvider)
+    public function __construct(private readonly RestrictedRangesProvider $restrictedRangesProvider)
     {
     }
 

@@ -999,10 +999,12 @@ class TransferToTest extends AbstractCommandHandlerTestCase
         $licence1 = new Licence($fromOrganisation, new RefData());
         $licence1->setId(1);
         $licence1->setLicNo('UA123');
-        $fromOrganisation->addLicences($licence1);
+
         $licence2 = new Licence($fromOrganisation, new RefData());
         $licence2->setId(2);
-        $fromOrganisation->addLicences($licence2);
+        $licence2->setLicNo('UA124');
+
+        $fromOrganisation->addLicences(new ArrayCollection([$licence1, $licence2]));
 
         $this->repoMap['Organisation']->shouldReceive('fetchUsingId')->with($command)->once()
             ->andReturn($fromOrganisation);

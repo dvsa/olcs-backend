@@ -60,6 +60,7 @@ class ApproveIrfoPsvAuthTest extends AbstractCommandHandlerTestCase
             'irfoPsvAuthType' => 22,
             'journeyFrequency' => IrfoPsvAuthEntity::JOURNEY_FREQ_DAILY,
             'irfoPsvAuthNumbers' => [],
+            'inForceDate' => '2015-01-01',
         ];
 
         $command = Cmd::create($data);

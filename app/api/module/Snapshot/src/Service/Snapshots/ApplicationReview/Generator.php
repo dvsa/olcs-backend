@@ -238,10 +238,10 @@ class Generator extends AbstractGenerator
      */
     public function __construct(
         AbstractGeneratorServices $abstractGeneratorServices,
-        private SectionAccessService $sectionAccessService,
-        private NiTextTranslation $niTextTranslation,
-        private SignatureReviewService $signatureReviewService,
-        private ContainerInterface $services
+        private readonly SectionAccessService $sectionAccessService,
+        private readonly NiTextTranslation $niTextTranslation,
+        private readonly SignatureReviewService $signatureReviewService,
+        private readonly ContainerInterface $services
     ) {
         parent::__construct($abstractGeneratorServices);
 
@@ -322,14 +322,14 @@ class Generator extends AbstractGenerator
 
     protected function buildReadonlyConfigForSections($sections, $reviewData)
     {
-        $entity = ucfirst($this->lva);
+        $entity = ucfirst((string) $this->lva);
 
         $filter = new UnderscoreToCamelCase();
 
         $sectionConfig = [];
 
         foreach ($sections as $section) {
-            $serviceName = 'Review\\' . $entity . ucfirst($filter->filter($section));
+            $serviceName = 'Review\\' . $entity . ucfirst((string) $filter->filter($section));
 
             $config = null;
             $header = 'review-' . $section;
@@ -382,7 +382,7 @@ class Generator extends AbstractGenerator
         $filter = new UnderscoreToCamelCase();
 
         foreach ($sections as $key => $section) {
-            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+            $getter = 'get' . ucfirst((string) $filter->filter($section)) . 'Status';
 
             if (
                 array_search($section, $this->displayedAlwaysVariationSections) === false &&

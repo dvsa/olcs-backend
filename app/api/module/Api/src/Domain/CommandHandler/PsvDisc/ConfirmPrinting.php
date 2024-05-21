@@ -59,7 +59,7 @@ final class ConfirmPrinting extends AbstractCommandHandler implements Transactio
         $queueRepo = $this->getRepo('Queue');
         $queueRepo->disableSoftDeleteable();
         $queueWithDisc = $queueRepo->fetchById($command->getQueueId());
-        $options = json_decode($queueWithDisc->getOptions(), true);
+        $options = json_decode((string) $queueWithDisc->getOptions(), true);
         if (!isset($options['discs'])) {
             throw new RuntimeException('Unable to fetch discs form the queue');
         }

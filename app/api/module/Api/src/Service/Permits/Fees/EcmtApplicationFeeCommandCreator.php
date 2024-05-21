@@ -17,7 +17,7 @@ class EcmtApplicationFeeCommandCreator
      *
      * @return CreateFee
      */
-    public function __construct(private FeeTypeRepository $feeTypeRepo, private CommandCreator $commandCreator, private CurrentDateTimeFactory $currentDateTimeFactory)
+    public function __construct(private readonly FeeTypeRepository $feeTypeRepo, private readonly CommandCreator $commandCreator, private readonly CurrentDateTimeFactory $currentDateTimeFactory)
     {
     }
 

@@ -47,6 +47,6 @@ class DownloadGuide extends AbstractDownload
     protected function getIdentifierFromSlug(string $slug)
     {
         $docTemplate = $this->getRepo('DocTemplate')->fetchByTemplateSlug($slug);
-        return basename($docTemplate->getDocument()->getIdentifier());
+        return basename((string) $docTemplate->getDocument()->getIdentifier());
     }
 }

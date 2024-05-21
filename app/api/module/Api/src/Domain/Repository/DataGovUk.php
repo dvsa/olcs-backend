@@ -20,7 +20,7 @@ class DataGovUk
      *
      * @param Connection $conn Database connection
      */
-    public function __construct(private Connection $conn)
+    public function __construct(private readonly Connection $conn)
     {
     }
 

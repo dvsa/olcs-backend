@@ -98,7 +98,7 @@ class ApplicationTracking extends AbstractApplicationTracking
     public function exchangeStatusArray(array $data)
     {
         foreach ($this->sections as $section) {
-            $key = lcfirst($section) . 'Status';
+            $key = lcfirst((string) $section) . 'Status';
             if (isset($data[$key])) {
                 $method = 'set' . $section . 'Status';
                 $this->$method($data[$key]);
@@ -121,7 +121,7 @@ class ApplicationTracking extends AbstractApplicationTracking
         $validStatuses = [self::STATUS_ACCEPTED, self::STATUS_NOT_APPLICABLE];
 
         foreach ($sections as $section) {
-            $getter = 'get' . ucfirst($filter->filter($section)) . 'Status';
+            $getter = 'get' . ucfirst((string) $filter->filter($section)) . 'Status';
             if (!in_array($this->$getter(), $validStatuses)) {
                 return false;
             }

@@ -42,7 +42,7 @@ class LoginTest extends AbstractCommandHandlerTestCase
     public function handleCommandIsCallable()
     {
         // Assert
-        $this->assertIsCallable([$this->sut, 'handleCommand']);
+        $this->assertIsCallable($this->sut->handleCommand(...));
     }
 
     /**

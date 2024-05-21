@@ -17,7 +17,7 @@ class AbstractConsumerServices
      *
      * @return AbstractConsumerServices
      */
-    public function __construct(private CommandHandlerManager $commandHandlerManager)
+    public function __construct(private readonly CommandHandlerManager $commandHandlerManager)
     {
     }
 

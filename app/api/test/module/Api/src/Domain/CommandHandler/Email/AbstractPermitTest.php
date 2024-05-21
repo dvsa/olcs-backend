@@ -21,6 +21,26 @@ use Laminas\I18n\Translator\Translator;
  */
 abstract class AbstractPermitTest extends AbstractCommandHandlerTestCase
 {
+    /**
+     * @var string
+     */
+    public $userEmail;
+    /**
+     * @var string
+     */
+    public $orgEmail1;
+    /**
+     * @var string
+     */
+    public $orgEmail2;
+    /**
+     * @var string[]
+     */
+    public $orgEmails;
+    /**
+     * @var (\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails & \Mockery\MockInterface)
+     */
+    public $contactDetails;
     /** @var string */
     protected $commandClass = 'changeMe';
 

@@ -22,7 +22,7 @@ use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 
 class RefreshSubmissionSectionsTest extends AbstractCommandHandlerTestCase
 {
-    protected $submissionConfig = [
+    public $submissionConfig = [
         'submissions' => [
             'sections' => [
                 'configuration' => [
@@ -67,7 +67,7 @@ class RefreshSubmissionSectionsTest extends AbstractCommandHandlerTestCase
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn(m::mock(TransactionManagerInterface::class));
         $sm->expects('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
-        $sm->shouldReceive('get')->with('Config')->andReturn($this->submissionConfig);
+        $sm->shouldReceive('get')->with('config')->andReturn($this->submissionConfig);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
             $sm->shouldReceive('get')->with($serviceName)->andReturn($service);

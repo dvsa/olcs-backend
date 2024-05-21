@@ -1051,7 +1051,7 @@ class CpmsV2HelperService implements FactoryInterface, CpmsHelperInterface
      */
     protected function send($method, $endPoint, $scope, $params, $fee = null, $schemaId = null)
     {
-        $method = strtolower($method);
+        $method = strtolower((string) $method);
 
         $this->debug(
             "CPMS $scope request",

@@ -7,7 +7,7 @@ namespace Dvsa\Olcs\Api\Domain\Util\DateTime;
 use Dvsa\Olcs\Api\Domain\Repository\PublicHoliday;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 
-final class PublicHolidayDateProvider implements DateProviderInterface
+final readonly class PublicHolidayDateProvider implements DateProviderInterface
 {
     public function __construct(private PublicHoliday $repository, private ?TrafficArea $trafficArea)
     {

@@ -50,7 +50,7 @@ class UpdateMyAccountTest extends AbstractCommandHandlerTestCase
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             ValidatableAdapterInterface::class => m::mock(ValidatableAdapterInterface::class),
-            'Config' => $mockConfig
+            'config' => $mockConfig
         ];
 
         parent::setUp();

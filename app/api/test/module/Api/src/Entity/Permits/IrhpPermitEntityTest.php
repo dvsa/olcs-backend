@@ -21,6 +21,10 @@ use Mockery as m;
 class IrhpPermitEntityTest extends EntityTester
 {
     /**
+     * @var (\DateTime & \Mockery\MockInterface)
+     */
+    public $expiryDate;
+    /**
      * Define the entity to test
      *
      * @var string

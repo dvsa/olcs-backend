@@ -8,6 +8,8 @@ class StubClearPropertiesWithCollectionsTrait
 {
     use ClearPropertiesWithCollectionsTrait;
 
+    public $property;
+
     public function setProperty($property)
     {
         $this->property = $property;

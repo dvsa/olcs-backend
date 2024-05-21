@@ -25,7 +25,7 @@ class ApplicationPeopleReviewService extends AbstractReviewService
      */
     public function __construct(
         AbstractReviewServiceServices $abstractReviewServiceServices,
-        private PeopleReviewService $peopleReviewService
+        private readonly PeopleReviewService $peopleReviewService
     ) {
         parent::__construct($abstractReviewServiceServices);
     }

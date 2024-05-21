@@ -12,7 +12,7 @@ class SuccessfulCandidatePermitsFacade
      *
      * @return SuccessfulCandidatePermitsFacade
      */
-    public function __construct(private SuccessfulCandidatePermitsGenerator $successfulCandidatePermitsGenerator, private SuccessfulCandidatePermitsWriter $successfulCandidatePermitsWriter, private SuccessfulCandidatePermitsLogger $successfulCandidatePermitsLogger)
+    public function __construct(private readonly SuccessfulCandidatePermitsGenerator $successfulCandidatePermitsGenerator, private readonly SuccessfulCandidatePermitsWriter $successfulCandidatePermitsWriter, private readonly SuccessfulCandidatePermitsLogger $successfulCandidatePermitsLogger)
     {
     }
 

@@ -21,7 +21,7 @@ class Client extends HttpClient
 
     public function __construct($baseUri)
     {
-        $this->baseUri = rtrim($baseUri, '/');
+        $this->baseUri = rtrim((string) $baseUri, '/');
         $this->setMethod('GET');
     }
 

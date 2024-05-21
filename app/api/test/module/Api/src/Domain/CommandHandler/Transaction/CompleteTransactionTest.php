@@ -39,7 +39,7 @@ class CompleteTransactionTest extends AbstractCommandHandlerTestCase
         $this->mockCpmsService = m::mock(CpmsHelper::class);
         $this->mockedSmServices = [
             'CpmsHelperService' => $this->mockCpmsService,
-            'Config' => [],
+            'config' => [],
         ];
 
         $this->sut = new CompleteTransaction();

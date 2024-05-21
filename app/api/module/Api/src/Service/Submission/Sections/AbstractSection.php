@@ -44,8 +44,8 @@ abstract class AbstractSection implements SectionGeneratorInterface
     }
 
     public function __construct(
-        private QueryHandlerManager $queryHandler,
-        private PhpRenderer $viewRenderer
+        private readonly QueryHandlerManager $queryHandler,
+        private readonly PhpRenderer $viewRenderer
     ) {
     }
 

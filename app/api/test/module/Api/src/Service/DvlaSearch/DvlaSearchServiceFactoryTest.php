@@ -23,7 +23,7 @@ class DvlaSearchServiceFactoryTest extends TestCase
         $logger = new \Laminas\Log\Logger();
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('Logger')->andReturn($logger);
 
         $sut = new DvlaSearchServiceFactory();

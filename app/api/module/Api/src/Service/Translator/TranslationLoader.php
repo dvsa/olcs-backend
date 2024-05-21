@@ -24,7 +24,7 @@ class TranslationLoader implements RemoteLoaderInterface
     /**
      * TranslationLoader constructor.
      */
-    public function __construct(private CacheEncryption $cache, private TranslationKeyTextRepo $translationKeyRepo, private ReplacementRepo $replacementRepo)
+    public function __construct(private readonly CacheEncryption $cache, private readonly TranslationKeyTextRepo $translationKeyRepo, private readonly ReplacementRepo $replacementRepo)
     {
     }
 

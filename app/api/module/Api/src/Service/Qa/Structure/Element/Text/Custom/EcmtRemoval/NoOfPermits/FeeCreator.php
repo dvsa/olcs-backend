@@ -20,7 +20,7 @@ class FeeCreator
      *
      * @return FeeCreator
      */
-    public function __construct(private FeeTypeRepository $feeTypeRepo, private CommandCreator $commandCreator, private CommandHandlerManager $commandHandlerManager, private CurrentDateTimeFactory $currentDateTimeFactory)
+    public function __construct(private readonly FeeTypeRepository $feeTypeRepo, private readonly CommandCreator $commandCreator, private readonly CommandHandlerManager $commandHandlerManager, private readonly CurrentDateTimeFactory $currentDateTimeFactory)
     {
     }
 

@@ -149,7 +149,7 @@ class UpdateApplicationCompletionTest extends AbstractCommandHandlerTestCase
         $result1 = new Result();
         $result1->addMessage('Tol updated');
         $this->expectedSideEffect(
-            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update' . ucfirst($section) . 'Status',
+            'Dvsa\\Olcs\\Api\\Domain\\Command\\ApplicationCompletion\\Update' . ucfirst((string) $section) . 'Status',
             ['id' => 111],
             $result1
         );
