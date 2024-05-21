@@ -42,7 +42,7 @@ class UserTest extends QueryHandlerTestCase
 
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            'Config' => $mockedConfig
+            'config' => $mockedConfig
         ];
 
         parent::setUp();

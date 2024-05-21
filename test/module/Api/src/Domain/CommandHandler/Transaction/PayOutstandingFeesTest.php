@@ -69,7 +69,7 @@ class PayOutstandingFeesTest extends AbstractCommandHandlerTestCase
             'CpmsHelperService' => $this->mockCpmsService,
             'FeesHelperService' => $this->mockFeesHelperService,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
-            'Config' => [],
+            'config' => [],
         ];
 
         $this->sut = new PayOutstandingFees();

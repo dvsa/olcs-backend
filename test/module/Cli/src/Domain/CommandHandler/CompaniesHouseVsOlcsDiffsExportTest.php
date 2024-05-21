@@ -31,7 +31,7 @@ class CompaniesHouseVsOlcsDiffsExportTest extends AbstractCommandHandlerTestCase
         //  mock config
         $this->tmpPath = vfsStream::setup('root')->url() . '/unit';
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'ch-vs-olcs-export' => [
                 'path' => 'unit_CfgPath',
             ],

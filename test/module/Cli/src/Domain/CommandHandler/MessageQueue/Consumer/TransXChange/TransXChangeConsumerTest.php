@@ -400,7 +400,7 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
         $this->mockedSmServices = [
             Queue::class => m::mock(Queue::class),
             MessageBuilder::class => m::mock(MessageBuilder::class),
-            'Config' => $this->config
+            'config' => $this->config
         ];
 
         $this->repoManager = m::mock(RepositoryServiceManager::class);

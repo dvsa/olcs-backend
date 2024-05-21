@@ -697,8 +697,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             true
         );
 
-        $this->sut->setConfig($this->config);
-
         $this->sut->handleCommand($command);
     }
 
@@ -767,9 +765,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             ->andThrow(EbsrPackException::class, 'message');
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
-        $this->sut->setConfig($this->config);
-
         $this->sut->handleCommand($command);
     }
 
@@ -805,9 +800,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
-        $this->sut->setConfig($this->config);
-
         $this->sut->handleCommand($command);
     }
 
@@ -853,9 +845,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
-        $this->sut->setConfig($this->config);
-
         $this->sut->handleCommand($command);
     }
 
@@ -974,9 +963,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->fileProcessor($docIdentifier, $xmlName);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
-        $this->sut->setConfig($this->config);
-
         $this->sut->handleCommand($command);
     }
 
@@ -1101,9 +1087,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $this->mockInputFailure(ShortNoticeInputFactory::class, $processedDataOutput, m::type('array'), ['messages']);
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
-
-        $this->sut->setConfig($this->config);
-
         $this->sut->handleCommand($command);
     }
 

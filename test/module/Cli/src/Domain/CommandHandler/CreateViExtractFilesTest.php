@@ -22,7 +22,7 @@ class CreateViExtractFilesTest extends AbstractCommandHandlerTestCase
         $this->mockRepo('ViTnmView', Repository\ViTnmView::class);
         $this->mockRepo('ViVhlView', Repository\ViVhlView::class);
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'vi_extract_files' => [
                 'export_path' => '/tmp/ViExtract'
             ]

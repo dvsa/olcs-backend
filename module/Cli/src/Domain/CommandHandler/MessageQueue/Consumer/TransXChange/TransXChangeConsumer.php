@@ -386,7 +386,7 @@ class TransXChangeConsumer extends AbstractConsumer
             'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd'
         );
 
-        $this->config = $config = $container->get('Config');
+        $this->config = $config = $container->get('config');
 
         $stsClient = new StsClient([
             'region' => $config['awsOptions']['region'],

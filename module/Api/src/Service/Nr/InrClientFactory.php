@@ -25,7 +25,7 @@ class InrClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): InrClient
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (!isset($config['nr']['inr_service'])) {
             throw new \RuntimeException('Missing INR service config');
         }

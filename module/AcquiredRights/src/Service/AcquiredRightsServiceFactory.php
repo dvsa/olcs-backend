@@ -28,8 +28,8 @@ class AcquiredRightsServiceFactory implements FactoryInterface
     {
 
         $logger = $container->get('Logger');
-        $acquiredRightsExpiry = $this->getAcquiredRightsExpiryFromConfig($container->get('Config'));
-        $acquiredRightsCheckEnabled = $this->getAcquiredRightsCheckEnabledFromConfig($container->get('Config'));
+        $acquiredRightsExpiry = $this->getAcquiredRightsExpiryFromConfig($container->get('config'));
+        $acquiredRightsCheckEnabled = $this->getAcquiredRightsCheckEnabledFromConfig($container->get('config'));
         $acquiredRightsClient = $container->get(AcquiredRightsClient::class);
 
         return new AcquiredRightsService($logger, $acquiredRightsClient, $acquiredRightsExpiry, $acquiredRightsCheckEnabled);

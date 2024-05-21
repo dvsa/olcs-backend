@@ -50,7 +50,7 @@ class DataDvaNiExportTest extends AbstractCommandHandlerTestCase
         $this->mockDbalResult = m::mock(Result::class);
 
         //  mock config
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'data-dva-ni-export' => [
                 'path' => 'unit_CfgPath',
             ],

@@ -59,7 +59,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             TemplateBuilder::class => m::mock(TemplateBuilder::class),
             FileProcessorInterface::class => m::mock(FileProcessor::class)->makePartial(),
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
-            'Config' => $config,
+            'config' => $config,
             'FileUploader' => m::mock(ContentStoreFileUploader::class)
         ];
 

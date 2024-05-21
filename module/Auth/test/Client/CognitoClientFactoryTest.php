@@ -163,6 +163,6 @@ class CognitoClientFactoryTest extends MockeryTestCase
             ]
         ];
 
-        $this->serviceManager->setService('Config', $config);
+        $this->serviceManager->setService('config', $config);
     }
 }

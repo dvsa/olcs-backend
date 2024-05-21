@@ -25,7 +25,7 @@ class CleanUpAbandonedVariationsTest extends AbstractCommandHandlerTestCase
         $this->sut = new CommandHandler();
         $this->mockRepo('Application', Application::class);
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'batch_config' => [
                 'clean-abandoned-variations' => [
                     'older-than' => '4 hours'

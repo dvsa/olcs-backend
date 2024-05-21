@@ -43,7 +43,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockValidator = m::mock(\Laminas\Validator\AbstractValidator::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -78,7 +78,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->andReturn($mockFilter);
 
@@ -109,7 +109,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 
@@ -137,7 +137,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 
@@ -166,7 +166,7 @@ class XmlStructureInputFactoryTest extends TestCase
         $mockFilter = m::mock(\Laminas\Filter\AbstractFilter::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->once()->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->once()->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->once()->andReturnSelf();
         $mockSl->shouldReceive('get')->with(ParseXml::class)->once()->andReturn($mockFilter);
 

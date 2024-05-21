@@ -64,7 +64,7 @@ class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
             CacheEncryption::class => m::mock(CacheEncryption::class),
             AuthorizationService::class => m::mock(AuthorizationService::class),
             'EventHistoryCreator' => m::mock(EventHistoryCreator::class),
-            'Config' => $mockConfig
+            'config' => $mockConfig
         ];
 
         $this->sut = new Sut(
@@ -172,7 +172,6 @@ class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
             ->once();
 
         $this->expectedUserCacheClear([$userId]);
-        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [
@@ -281,7 +280,6 @@ class UpdateUserSelfserveTest extends AbstractCommandHandlerTestCase
             ->once();
 
         $this->expectedUserCacheClear([$userId]);
-        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

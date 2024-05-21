@@ -19,7 +19,7 @@ class InrClientFactoryTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
         $sut = new InrClientFactory();
         $sut->__invoke($mockSl, InrClient::class);
@@ -38,7 +38,7 @@ class InrClientFactoryTest extends TestCase
         ];
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
 
         $sut = new InrClientFactory();
 

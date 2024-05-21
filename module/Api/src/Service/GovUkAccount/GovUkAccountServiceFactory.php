@@ -22,7 +22,7 @@ class GovUkAccountServiceFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): GovUkAccountService
     {
-        $config = $container->get('Config')['govuk_account'];
+        $config = $container->get('config')['govuk_account'];
 
         return new GovUkAccountService($config, new GovUkAccount($config));
     }

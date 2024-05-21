@@ -304,7 +304,7 @@ class SendEmail extends AbstractCommandHandler implements UploaderAwareInterface
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (isset($config['email']['from_name'])) {
             $this->setFromName($config['email']['from_name']);
         }

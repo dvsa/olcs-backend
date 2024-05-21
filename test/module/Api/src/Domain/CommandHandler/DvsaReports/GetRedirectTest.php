@@ -47,7 +47,7 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
             AuthorizationService::class => m::mock(AuthorizationService::class),
         ];
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'top-report-link' => [
                 'targetUrl' => 'apiurl',
                 'apiKey' => '123',
@@ -110,7 +110,6 @@ class GetRedirectTest extends AbstractCommandHandlerTestCase
         $this->mockHttpClient->shouldReceive('send')->once()->withNoArgs()->andReturn($apiResponse);
         $apiResponse->shouldReceive('getContent')->once()->andReturn('{"redirectUrl": "somenewurl"}');
 
-        $this->sut->setConfig($this->config);
         $result = $this->sut->handleCommand($command);
 
         $expected = [

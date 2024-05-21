@@ -181,7 +181,7 @@ final class CreateViExtractFiles extends AbstractCommandHandler
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (isset($config['vi_extract_files']['export_path'])) {
             $this->exportPath = $config['vi_extract_files']['export_path'];
         }

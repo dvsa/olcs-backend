@@ -40,7 +40,7 @@ class BusRegistrationInputFactory implements FactoryInterface
     {
         $inputName = 'bus_registration';
         $service = new Input($inputName);
-        $config = $container->get('Config');
+        $config = $container->get('config');
         /** @var ContainerInterface $filterManager */
         $filterManager = $container->get('FilterManager');
         /** @var MapXmlFile $mapXmlFile */

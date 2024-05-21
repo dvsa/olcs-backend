@@ -18,7 +18,7 @@ class SectionGeneratorPluginManagerFactoryTest extends MockeryTestCase
         /** @var  \Laminas\ServiceManager\ServiceLocatorInterface $mockSl */
         $mockSl = m::mock(ContainerInterface::class)
             ->shouldReceive('get')
-            ->with('Config')
+            ->with('config')
             ->andReturn(
                 [
                     'submissions' => [

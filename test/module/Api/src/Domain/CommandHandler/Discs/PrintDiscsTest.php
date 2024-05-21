@@ -31,7 +31,7 @@ class PrintDiscsTest extends AbstractCommandHandlerTestCase
         $this->mockRepo('GoodsDisc', GoodsDiscRepo::class);
 
         $this->mockedSmServices = [
-            'Config' => [
+            'config' => [
                 'disc_printing' => ['disc_batch_size' => $this->batchSize]
             ]
         ];

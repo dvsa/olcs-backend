@@ -35,7 +35,7 @@ class S3FileOptionsFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): S3FileOptions
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $s3Client = $container->get('S3Client');
         [$awsOptions, $s3Options, $bucket, $key] = $this->extractConfig($config);
         $s3fileOptions = new S3FileOptions([

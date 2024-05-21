@@ -37,7 +37,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
 
@@ -96,7 +96,7 @@ class BusRegistrationInputFactoryTest extends TestCase
         $mockMapFilter->shouldReceive('setMapping')->with($mockMappings);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
 
         $mockSl->shouldReceive('get')->with('TransExchangeXmlMapping')->andReturn($mockMappings);

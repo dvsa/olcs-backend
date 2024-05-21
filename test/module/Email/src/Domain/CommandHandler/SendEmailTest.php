@@ -30,7 +30,7 @@ class SendEmailTest extends AbstractCommandHandlerTestCase
         $this->sut = new SendEmail();
         $this->mockRepo('Document', DocumentRepo::class);
 
-        $this->mockedSmServices['Config'] = [
+        $this->mockedSmServices['config'] = [
             'email' => [
                 'from_name' => 'Terry',
                 'from_email' => 'terry.valtech@gmail.com',

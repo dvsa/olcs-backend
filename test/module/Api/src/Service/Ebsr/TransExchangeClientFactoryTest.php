@@ -19,7 +19,7 @@ class TransExchangeClientFactoryTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
         $sut = new TransExchangeClientFactory();
         $sut->__invoke($mockSl, TransExchangeClient::class);
@@ -49,7 +49,7 @@ class TransExchangeClientFactoryTest extends TestCase
             ->with(TransExchangeClientFactory::PUBLISH_XSD);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn(['ebsr' => $config]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn(['ebsr' => $config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('TransExchangePublisherXmlMapping')->andReturn($mockSpec);

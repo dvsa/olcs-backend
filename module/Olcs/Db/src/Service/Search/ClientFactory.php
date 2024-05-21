@@ -28,7 +28,7 @@ class ClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Client
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         if (!isset($config['elastic_search'])) {
             throw new Exception\InvalidServiceException('Elastic search config not found');
         }

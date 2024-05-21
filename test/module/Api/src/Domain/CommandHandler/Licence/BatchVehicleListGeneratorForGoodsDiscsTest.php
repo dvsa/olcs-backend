@@ -25,7 +25,7 @@ class BatchVehicleListGeneratorForGoodsDiscsTest extends AbstractCommandHandlerT
         $this->sut = new Batch();
 
         $this->mockedSmServices = [
-            'Config' => [
+            'config' => [
                 'disc_printing' => ['gv_vehicle_list_batch_size' => $this->batchSize]
             ]
         ];

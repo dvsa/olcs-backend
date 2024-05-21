@@ -76,7 +76,7 @@ class ProcessPackTestCase extends AbstractCommandHandlerTestCase
             BusRegistrationInputFactory::class => $busRegInput,
             ProcessedDataInputFactory::class => $processedDataInput,
             ShortNoticeInputFactory::class => $shortNoticeInput,
-            'Config' => $config,
+            'config' => $config,
             'FileUploader' => m::mock(ContentStoreFileUploader::class),
             'FilterManager' => $filterManager,
             FileProcessorInterface::class => $fileProcessor

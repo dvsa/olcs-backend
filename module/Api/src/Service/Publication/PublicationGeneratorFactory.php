@@ -26,7 +26,7 @@ class PublicationGeneratorFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): PublicationGenerator
     {
         return new PublicationGenerator(
-            $container->get('Config')['publications'],
+            $container->get('config')['publications'],
             $container->get(ContextPluginManager::class),
             $container->get(ProcessPluginManager::class)
         );

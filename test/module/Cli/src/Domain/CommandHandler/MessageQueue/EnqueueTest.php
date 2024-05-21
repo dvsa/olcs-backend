@@ -32,7 +32,7 @@ class EnqueueTest extends AbstractCommandHandlerTestCase
         $this->mockedSmServices = [
             MessageBuilder::class => m::mock(MessageBuilder::class),
             Queue::class => m::mock(Queue::class),
-            'Config' => [
+            'config' => [
                 'message_queue' => ['companies_house_initial_queue_url' => '_URL_']
             ]
         ];
@@ -69,7 +69,7 @@ class EnqueueTest extends AbstractCommandHandlerTestCase
                 [456]
             ],
             'messageType' => 'CompanyProfile',
-            $this->mockedSmServices['Config']
+            $this->mockedSmServices['config']
         ]);
 
         /**
@@ -109,7 +109,7 @@ class EnqueueTest extends AbstractCommandHandlerTestCase
                 [456]
             ],
             'messageType' => 'CompanyProfile',
-            $this->mockedSmServices['Config']
+            $this->mockedSmServices['config']
         ]);
 
         $result = $this->sut->handleCommand($command);

@@ -6,8 +6,9 @@ use Dvsa\Olcs\Api\Entity\Traits\ClearPropertiesWithCollectionsTrait;
 
 class StubClearPropertiesWithCollectionsTrait
 {
-    public $property;
     use ClearPropertiesWithCollectionsTrait;
+
+    public $property;
 
     public function setProperty($property)
     {

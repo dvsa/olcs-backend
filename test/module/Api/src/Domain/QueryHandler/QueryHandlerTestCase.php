@@ -1,15 +1,10 @@
 <?php
 
-/**
- * Query Handler Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
-use Dvsa\Olcs\Api\Domain\QueryHandler\QueryHandlerInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
@@ -29,19 +24,16 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
 
-/**
- * Query Handler Test Case
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class QueryHandlerTestCase extends MockeryTestCase
 {
+    use ValidateMockRepoTypeTrait;
+
     public $entityAccessLogger;
+
     /**
      * @var (\Mockery\MockInterface & \Psr\Container\ContainerInterface)
      */
     public $container;
-    use ValidateMockRepoTypeTrait;
 
     /**
      * @var AbstractQueryHandler

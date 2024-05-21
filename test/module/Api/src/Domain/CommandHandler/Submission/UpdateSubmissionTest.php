@@ -1,12 +1,9 @@
 <?php
 
-/**
- * Create SubmissionSectionComment Test
- */
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
-use Doctrine\ORM\Query;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\UpdateSubmission;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
@@ -15,17 +12,12 @@ use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
 use Dvsa\Olcs\Transfer\Command\Submission\UpdateSubmission as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Transfer\Command\Submission\CreateSubmissionSectionComment as CommentCommand;
 use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TmApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TmLicenceRepo;
 
-/**
- * Create Submission Test
- */
 class UpdateSubmissionTest extends AbstractCommandHandlerTestCase
 {
     public $submissionConfig = [
@@ -58,6 +50,7 @@ class UpdateSubmissionTest extends AbstractCommandHandlerTestCase
             ->andReturn(m::mock(SubmissionEntity::class)->shouldReceive('getId')->andReturn(111)->getMock());
 
         $this->mockedSmServices = [
+            'config' => $this->submissionConfig,
             SubmissionGenerator::class => $mockSubmissionGenerator,
             AuthorizationService::class => m::mock(AuthorizationService::class)->makePartial(),
             IdentityProviderInterface::class => m::mock(IdentityProviderInterface::class)

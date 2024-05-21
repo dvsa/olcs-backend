@@ -38,7 +38,7 @@ class CognitoClientFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Client
     {
-        $config = $container->get('Config')[static::CONFIG_NAMESPACE][static::CONFIG_ADAPTERS][static::CONFIG_ADAPTER];
+        $config = $container->get('config')[static::CONFIG_NAMESPACE][static::CONFIG_ADAPTERS][static::CONFIG_ADAPTER];
 
         $this->validateConfig($config);
 

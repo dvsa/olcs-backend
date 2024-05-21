@@ -23,7 +23,7 @@ class SubmissionGeneratorFactoryTest extends MockeryTestCase
                 function ($class) {
                     $map = [
                         SectionGeneratorPluginManager::class => m::mock(SectionGeneratorPluginManager::class),
-                        'Config' => [
+                        'config' => [
                             'submissions' => [],
                         ]
                     ];

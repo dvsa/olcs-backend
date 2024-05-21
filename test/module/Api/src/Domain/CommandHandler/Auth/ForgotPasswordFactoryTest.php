@@ -108,13 +108,13 @@ class ForgotPasswordFactoryTest extends MockeryTestCase
      */
     protected function config(): array
     {
-        if (! $this->serviceManager->has('Config')) {
+        if (! $this->serviceManager->has('config')) {
             $this->serviceManager->setService(
-                'Config',
+                'config',
                 []
             );
         }
 
-        return $this->serviceManager->get('Config');
+        return $this->serviceManager->get('config');
     }
 }

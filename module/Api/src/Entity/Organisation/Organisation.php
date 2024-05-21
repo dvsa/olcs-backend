@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Entity\Organisation;
 
-use _PHPStan_49641e245\Nette\Utils\Paginator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +10,6 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser as OrganisationUserEntity;
 use Dvsa\Olcs\Api\Entity\OrganisationProviderInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
@@ -601,7 +599,7 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
         $criteria = Criteria::create();
         $criteria->where($criteria->expr()->contains('licNo', 'U'));
 
-        return !empty($this->getLicences()->matching($criteria)->toArray());
+        return !empty($licences->matching($criteria)->toArray());
     }
 
     /**
@@ -632,10 +630,6 @@ class Organisation extends AbstractOrganisation implements ContextProviderInterf
 
     /**
      * Get licences eligible to apply for the specified irhp permit type/stock indexed by licence id
-     *
-     * @param IrhpPermitStock $stock permit stock
-     *
-     * @return array
      */
     public function getEligibleIrhpLicencesForStock(IrhpPermitStock $stock): array
     {

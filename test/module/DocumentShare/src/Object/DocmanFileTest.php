@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\DocumentShare\Data\object;
+namespace Dvsa\OlcsTest\DocumentShare\Data\Object;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use org\bovigo\vfs\vfsStream;
@@ -26,7 +26,6 @@ class DocmanFileTest extends TestCase
             str_repeat('x', intval(File::CHUNK_SIZE - strlen('content') / 2)) .
             '"content":"' . base64_encode($streamContent) . '"' .
             str_repeat('aftercontent', 3);
-
 
         $stream = vfsStream::newFile('stream')
             ->withContent($streamBody)

@@ -25,7 +25,7 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
         ];
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $sut = new NysiisRestClientFactory();
         $this->assertInstanceOf(NysiisRestClient::class, $sut->__invoke($mockSl, NysiisRestClient::class));
     }
@@ -50,7 +50,7 @@ class NysiisRestClientFactoryTest extends MockeryTestCase
         ];
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn($config);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $sut = new NysiisRestClientFactory();
         $sut->__invoke($mockSl, NysiisRestClient::class);
     }
