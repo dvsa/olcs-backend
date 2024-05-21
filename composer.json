@@ -123,8 +123,7 @@
         "mockery/mockery": "^1.6",
         "johnkary/phpunit-speedtrap": "^4.0",
         "mikey179/vfsstream": "^1.6",
-        "dms/phpunit-arraysubset-asserts": "^0.5.0",
-        "rector/rector": "^1.0"
+        "dms/phpunit-arraysubset-asserts": "^0.5.0"
     },
     "extra" : {
       "bamarni-bin": {
