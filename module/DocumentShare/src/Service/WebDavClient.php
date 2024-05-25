@@ -7,9 +7,6 @@ use League\Flysystem\FileExistsException;
 use League\Flysystem\FileNotFoundException;
 use League\Flysystem\FilesystemInterface;
 
-/**
- * Class Client
- */
 class WebDavClient implements DocumentStoreInterface
 {
     public const DS_DOWNLOAD_FILE_PREFIX = 'ds_dwnld_';
@@ -43,10 +40,8 @@ class WebDavClient implements DocumentStoreInterface
      * Read content from document store
      *
      * @param string $path Path
-     *
-     * @return File|bool
      */
-    public function read($path)
+    public function read($path): File | false
     {
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 

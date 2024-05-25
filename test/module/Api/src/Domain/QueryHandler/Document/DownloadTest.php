@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Document\Download;
@@ -7,6 +9,8 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Laminas\Http\Response\Stream;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 
 /**
@@ -22,6 +26,10 @@ class DownloadTest extends QueryHandlerTestCase
         $this->sut = m::mock(Download::class . '[download, setIsInline]')
             ->shouldAllowMockingProtectedMethods();
 
+        $this->mockedSmServices = [
+            AuthorizationService::class => m::mock(AuthorizationService::class),
+        ];
+
         $this->mockRepo('Document', \Dvsa\Olcs\Api\Domain\Repository\Document::class);
 
         $this->mockedSmServices['config'] = [];
@@ -30,8 +38,12 @@ class DownloadTest extends QueryHandlerTestCase
         parent::setUp();
     }
 
-    public function testHandleQuery()
+    /**
+     * @dataProvider dpTestHandleQuery
+     */
+    public function testHandleQuery(bool $isInternalUser, string $documentDescription, ?string $chosenFilename): void
     {
+        $this->setupIsInternalUser($isInternalUser);
         $identifier = 20062016;
 
         $query = TransferQry\Document\Download::create(
@@ -43,18 +55,32 @@ class DownloadTest extends QueryHandlerTestCase
 
         $fileName = 'foo/bar/12345.pdf';
 
+        $document = m::mock(Document::class);
+        $document->expects('getIdentifier')->withNoArgs()->andReturn($fileName);
+        $document->expects('getDescription')->withNoArgs()->times($isInternalUser ? 1 : 0)->andReturn($documentDescription);
+
         $this->repoMap['Document']
-            ->shouldReceive('fetchById')
+            ->expects('fetchById')
             ->with($identifier)
-            ->once()
-            ->andReturn(new Document($fileName));
+            ->andReturn($document);
+
+        $download = m::mock(Stream::class);
 
         $this->sut
             ->shouldReceive('setIsInline')->once()->with(true)
-            ->shouldReceive('download')->once()->with($fileName)->andReturn('EXPECTED');
+            ->shouldReceive('download')->once()->with($fileName, null, $chosenFilename)->andReturn($download);
 
         $actual = $this->sut->handleQuery($query);
 
-        static::assertEquals('EXPECTED', $actual);
+        static::assertEquals($download, $actual);
+    }
+
+    public function dpTestHandleQuery(): array
+    {
+        return [
+            [false, 'description', null],
+            [true, 'description', 'description'],
+            [true, '', null],
+        ];
     }
 }

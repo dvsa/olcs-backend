@@ -9,6 +9,7 @@ use Dvsa\Olcs\Transfer\Query as TransferQry;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\DocTemplate as DocTemplateRepo;
+use Laminas\Http\Response\Stream;
 use Mockery as m;
 
 /**
@@ -49,13 +50,14 @@ class DownloadGuideTest extends QueryHandlerTestCase
     public function testHandleQuery()
     {
         $fileName = 'unit_file1.pdf';
+        $file = m::mock(Stream::class);
 
         $this->sut
             ->shouldReceive('setIsInline')->once()->with(false)
             ->shouldReceive('download')
             ->once()
             ->with($fileName, '/guides/' . $fileName)
-            ->andReturn('EXPECTED');
+            ->andReturn($file);
 
         $query = TransferQry\Document\DownloadGuide::create(
             [
@@ -65,13 +67,14 @@ class DownloadGuideTest extends QueryHandlerTestCase
         );
         $actual = $this->sut->handleQuery($query);
 
-        static::assertEquals('EXPECTED', $actual);
+        static::assertEquals($file, $actual);
     }
 
     public function testHandleQueryIsSlug()
     {
         $templateSlug = 'some-template-slug';
         $fileName = 'someFile.txt';
+        $file = m::mock(Stream::class);
 
         $docTemplate = m::mock(DocTemplate::class);
 
@@ -88,7 +91,7 @@ class DownloadGuideTest extends QueryHandlerTestCase
             ->shouldReceive('download')
             ->once()
             ->with($fileName, '/guides/' . $fileName)
-            ->andReturn('EXPECTED');
+            ->andReturn($file);
 
         $query = TransferQry\Document\DownloadGuide::create(
             [
@@ -99,6 +102,6 @@ class DownloadGuideTest extends QueryHandlerTestCase
         );
         $actual = $this->sut->handleQuery($query);
 
-        static::assertEquals('EXPECTED', $actual);
+        static::assertEquals($file, $actual);
     }
 }

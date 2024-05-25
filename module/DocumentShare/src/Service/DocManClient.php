@@ -111,10 +111,8 @@ class DocManClient implements DocumentStoreInterface
      * Read content from document store
      *
      * @param string $path Path
-     *
-     * @return File|null
      */
-    public function read($path): ?File
+    public function read($path): File | false
     {
         $tmpFileName = tempnam(sys_get_temp_dir(), self::DS_DOWNLOAD_FILE_PREFIX);
 
@@ -132,7 +130,7 @@ class DocManClient implements DocumentStoreInterface
             if (!$response->isSuccess()) {
                 $message = json_encode(["error" => self::ERR_RESP_FAIL, "reason" => $response->getStatusCode(), "path" => $path]);
                 Logger::logResponse($response->getStatusCode(), $message);
-                return null;
+                return false;
             }
 
             $file = new File();
@@ -158,7 +156,7 @@ class DocManClient implements DocumentStoreInterface
             Logger::logResponse(Response::STATUS_CODE_404, $errMssg);
         }
 
-        return null;
+        return false;
     }
 
     /**
