@@ -91,6 +91,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -160,6 +161,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -234,6 +236,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->once()
             ->andReturn('apsts_consideration');
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -305,6 +308,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn('apsts_consideration');
 
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn([])->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -368,6 +372,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -435,6 +440,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -504,6 +510,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -565,6 +572,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([$this->createMock(Entity\Cases\Cases::class), $this->createMock(Entity\Cases\Cases::class)]);
 
         $this->mockAppRepo->shouldReceive('fetchUsingId')
             ->once()
@@ -645,6 +653,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -719,6 +728,7 @@ class SummaryTest extends QueryHandlerTestCase
             ->andReturn('apsts_consideration');
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -775,6 +785,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -832,6 +843,7 @@ class SummaryTest extends QueryHandlerTestCase
 
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([]);
 
         $result = $this->sut->handleQuery($query);
 
@@ -888,7 +900,7 @@ class SummaryTest extends QueryHandlerTestCase
         $this->mockAppRepo->shouldReceive('getRefdataReference->getId')
             ->once()
             ->andReturn('apsts_consideration');
-        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn(["case", "case2"]);
+        $this->mockCaseRepo->shouldReceive('fetchOpenCasesForApplication')->with(111)->andReturn([$this->createMock(Entity\Cases\Cases::class), $this->createMock(Entity\Cases\Cases::class)]);
         $mockFee = m::mock()->shouldReceive('getLatestPaymentRef')->andReturn('ref')->once()->getMock();
         $this->mockFeeRepo->shouldReceive('fetchLatestPaidFeeByApplicationId')->with(111)->andReturn($mockFee)->once();
 

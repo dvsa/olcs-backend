@@ -225,15 +225,16 @@ class Summary extends AbstractQueryHandler
         $underConsideration = $this->getRepo()->getRefdataReference($application::APPLICATION_STATUS_UNDER_CONSIDERATION)->getId();
         $isUnderConsideration = ($status === $underConsideration);
 
-        try {
-            $openCases = $this->getRepo('Cases')->fetchOpenCasesForApplication($application->getId());
+        /**
+         * @var Repository\Cases $caseRepository
+         */
+        $caseRepository = $this->getRepo('Cases');
 
-            if (count($openCases) > 0) {
-                return false;
-            }
-            return $isUnderConsideration;
-        } catch (\Exception) {
-            return $isUnderConsideration;
+        $openCases = $caseRepository->fetchOpenCasesForApplication($application->getId());
+
+        if (count($openCases) > 0) {
+            return false;
         }
+        return $isUnderConsideration;
     }
 }
