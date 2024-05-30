@@ -219,11 +219,11 @@ class Cases extends AbstractRepository
     }
 
     /**
+     * @return Entity\Cases\Cases[]
      *
-     * @return mixed
      * @throws Exception\NotFoundException
      */
-    public function fetchOpenCasesForApplication(int $id)
+    public function fetchOpenCasesForApplication(int $id): array
     {
         $qb = $this->createQueryBuilder();
 
@@ -237,10 +237,6 @@ class Cases extends AbstractRepository
             $expr->isNull($this->alias . '.closedDate')
         );
 
-        $result = $qb->getQuery()->getResult();
-        if (!$result) {
-            throw new Exception\NotFoundException('Resource not found');
-        }
-        return $result[0];
+        return $qb->getQuery()->getResult();
     }
 }
