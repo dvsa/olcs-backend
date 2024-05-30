@@ -5,6 +5,7 @@ namespace Olcs\Db\Service\Search;
 use DomainException;
 use Elastica\Query;
 use InvalidArgumentException;
+use Olcs\Db\Service\Search\Indices\AbstractIndex;
 use Olcs\Db\Service\Search\Indices\Terms\ComplexTermInterface;
 use RuntimeException;
 
@@ -20,6 +21,9 @@ class QueryTemplate extends Query
     public const FILTER_TYPE_COMPLEX = 'COMPLEX';
     public const FILTER_TYPE_BOOLEAN = 'BOOLEAN';
 
+    /**
+     * @param AbstractIndex[] $searchTypes
+     */
     public function __construct(
         string $filename,
         string $searchTerm,
@@ -75,19 +79,12 @@ class QueryTemplate extends Query
 
             switch ($filterTypes[$field]) {
                 case self::FILTER_TYPE_COMPLEX:
-                    $filter = null;
                     foreach ($this->searchTypes as $searchType) {
-                        try {
-                            $filter = $searchType->getFilter($field);
-                        } catch (InvalidArgumentException) {
-                            continue;
-                        }
+                        $filters = $searchType->getFilters();
 
-                        if (!($filter instanceof ComplexTermInterface)) {
-                            continue;
+                        foreach ($filters as $filter) {
+                            $filter->applySearch($this->_params['query']['bool']);
                         }
-
-                        $filter->applySearch($this->_params['query']['bool']);
                     }
                     break;
 

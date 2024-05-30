@@ -31,15 +31,15 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
 
     public function queryTemplateDataProvider()
     {
-        $tmls = m::mock(TransportManagerLicenceStatus::class);
-        $tmls->shouldReceive('applySearch')
-             ->andReturnUsing(function (&$params) {
-                 $params['apple'] = 'banana';
-             });
-        $searchType = m::mock(Person::class);
-        $searchType->shouldReceive('getFilter')
-                   ->with('field_6')
-                   ->andReturn($tmls);
+        $transportManagerLicenceStatus = $this->createMock(TransportManagerLicenceStatus::class);
+        $transportManagerLicenceStatus->expects($this->once())->method('applySearch')->willReturnCallback(
+            function (&$params) {
+                $params['apple'] = 'banana';
+            }
+        );
+
+        $personSearchType = $this->createMock(Person::class);
+        $personSearchType->method('getFilters')->willReturn([$transportManagerLicenceStatus]);
 
         return [
             // simple query
@@ -255,7 +255,7 @@ class QueryTemplateTest extends m\Adapter\Phpunit\MockeryTestCase
                     'field_6' => 'COMPLEX',
                 ],
                 [],
-                [$searchType],
+                [$personSearchType],
                 [
                     'bool' => [
                         'must' => [
