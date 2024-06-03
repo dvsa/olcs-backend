@@ -49,12 +49,13 @@ class ContentStoreFileUploaderTest extends MockeryTestCase
 
     public function testDownload()
     {
+        $returnedFile = m::mock(DsFile::class);
         $this->mockContentStoreCli->shouldReceive('read')
             ->once()
             ->with(self::IDENTIFIER)
-            ->andReturn('EXPECT');
+            ->andReturn($returnedFile);
 
-        static::assertEquals('EXPECT', $this->sut->download(self::IDENTIFIER));
+        static::assertEquals($returnedFile, $this->sut->download(self::IDENTIFIER));
     }
 
     public function testRemove()

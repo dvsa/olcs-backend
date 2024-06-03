@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheByIdQry;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -309,12 +310,12 @@ class QueryHandlerTestCase extends MockeryTestCase
         $this->expectedQuery(MyAccount::class, [], $result, $times);
     }
 
-    public function expectedTrafficAreaRbacOverride()
+    protected function setupIsInternalUser($isInternalUser = true)
     {
-        $userData = [
-            'dataAccess' => [
-                'trafficAreas' => ["A", "B"],
-            ],
-        ];
+        $this->mockedSmServices[AuthorizationService::class]
+            ->shouldReceive('isGranted')
+            ->with(Permission::INTERNAL_USER, null)
+            ->atLeast()->once()
+            ->andReturn($isInternalUser);
     }
 }

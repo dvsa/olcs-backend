@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -46,7 +48,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
             ->shouldReceive('download')
             ->once()
             ->with($path)
-            ->andReturn(null);
+            ->andReturnFalse();
 
         $this->sut->download($path);
     }
@@ -54,7 +56,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
     /**
      * @dataProvider dpTestDownload
      */
-    public function testDownload($identifier, $path, $isInline, $expect)
+    public function testDownload($identifier, $path, $isInline, $chosenFileName, $expect)
     {
         $this->sut->setIsInline($isInline);
 
@@ -79,7 +81,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
             ->andReturn($mockFile);
 
         //  call & check
-        $actual = $this->sut->download($identifier, $path);
+        $actual = $this->sut->download($identifier, $path, $chosenFileName);
 
         static::assertInstanceOf(\Laminas\Http\Response\Stream::class, $actual);
         static::assertEquals($tmpFilePath, $actual->getStreamName());
@@ -101,6 +103,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                 'identifier' => 'unit_file.ext',
                 'path' => '/unit_dir/unit_file1.pdf',
                 'isInline' => false,
+                null,
                 'expect' => [
                     'mime' => self::MIME_TYPE,
                     'isDownload' => true,
@@ -112,6 +115,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                 'identifier' => 'unit_file.html',
                 'path' => null,
                 'isInline' => false,
+                null,
                 'expect' => [
                     'mime' => self::MIME_TYPE,
                     'isDownload' => false,
@@ -123,6 +127,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                 'identifier' => 'dir/dir/unit_file.unit_excl_ext',
                 'path' => null,
                 'isInline' => false,
+                null,
                 'expect' => [
                     'mime' => self::MIME_TYPE_EXCLUDE,
                     'isDownload' => true,
@@ -134,6 +139,7 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                 'identifier' => 'unit_file.ext',
                 'path' => 'unti_path',
                 'isInline' => true,
+                null,
                 'expect' => [
                     'mime' => self::MIME_TYPE,
                     'isDownload' => false,
@@ -145,11 +151,72 @@ class AbstractDownloadTest extends QueryHandlerTestCase
                 'identifier' => '/foo/bar',
                 'path' => null,
                 'isInline' => false,
+                null,
                 'expect' => [
                     'mime' => self::MIME_TYPE,
                     'isDownload' => true,
                     'path' => '/foo/bar',
                     'filename' => 'bar.txt',
+                ],
+            ],
+            [
+                'identifier' => 'unit_file.ext',
+                'path' => '/unit_dir/unit_file1.pdf',
+                'isInline' => false,
+                'chosen_filename',
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => true,
+                    'path' => '/unit_dir/unit_file1.pdf',
+                    'filename' => 'chosen_filename.ext',
+                ],
+            ],
+            [
+                'identifier' => 'unit_file.html',
+                'path' => null,
+                'isInline' => false,
+                'chosen_filename',
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => false,
+                    'path' => 'unit_file.html',
+                    'filename' => 'chosen_filename.html',
+                ],
+            ],
+            [
+                'identifier' => 'dir/dir/unit_file.unit_excl_ext',
+                'path' => null,
+                'isInline' => false,
+                'chosen_filename',
+                'expect' => [
+                    'mime' => self::MIME_TYPE_EXCLUDE,
+                    'isDownload' => true,
+                    'path' => 'dir/dir/unit_file.unit_excl_ext',
+                    'filename' => 'chosen_filename.unit_excl_ext',
+                ],
+            ],
+            [
+                'identifier' => 'unit_file.ext',
+                'path' => 'unti_path',
+                'isInline' => true,
+                'chosen_filename.txt',
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => false,
+                    'path' => 'unti_path',
+                    'filename' => 'chosen_filename.txt.ext',
+                ],
+            ],
+            [
+                'identifier' => '/foo/bar',
+                'path' => null,
+                'isInline' => false,
+                'chosen_filename',
+                'expect' => [
+                    'mime' => self::MIME_TYPE,
+                    'isDownload' => true,
+                    'path' => '/foo/bar',
+                    'filename' => 'chosen_filename.txt',
                 ],
             ],
         ];
