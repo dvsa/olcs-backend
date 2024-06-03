@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Laminas\Http\Response\Stream;
 
 /**
  * Download a guide document, these are located in a "/guides/" directory in the content store
@@ -13,14 +14,11 @@ class DownloadGuide extends AbstractDownload
     protected $extraRepos = ['DocTemplate'];
 
     /**
-     * Handle query
-     *
      * @param \Dvsa\Olcs\Transfer\Query\Document\DownloadGuide $query DTO
      *
-     * @return array
      * @throws NotFoundException
      */
-    public function handleQuery(QueryInterface $query)
+    public function handleQuery(QueryInterface $query): Stream
     {
         $this->setIsInline($query->isInline());
 

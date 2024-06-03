@@ -8,6 +8,8 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as ContentStoreFile;
 use Dvsa\Olcs\Utils\Helper\FileHelper;
+use Laminas\Http\Response\Stream;
+use Olcs\Logging\Log\Logger;
 use Psr\Container\ContainerInterface;
 use Laminas\Http\Response;
 use Psr\Container\ContainerExceptionInterface;
@@ -31,24 +33,28 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
     /**
      * Process downloading file
      *
-     * @param string      $identifier File name
-     * @param string|null $path       Path to file
-     *
-     * @return Response\Stream
      * @throws NotFoundException
      */
-    protected function download($identifier, $path = null)
+    protected function download(string $identifier, ?string $path = null, ?string $chosenFileName = null): Stream
     {
         if ($path === null) {
             $path = $identifier;
         }
 
         $file = $this->getUploader()->download($path);
-        if ($file === null) {
+
+        if ($file === false) {
+            $logInfo = [
+                'identifier' => $identifier,
+                'path' => $path,
+                'filename' => $chosenFileName,
+            ];
+
+            Logger::info('File could not be downloaded', $logInfo);
             throw new NotFoundException();
         }
 
-        $response = new \Laminas\Http\Response\Stream();
+        $response = new Stream();
         $response->setStatusCode(Response::STATUS_CODE_200);
 
         $fileName = $file->getResource();
@@ -59,15 +65,26 @@ abstract class AbstractDownload extends AbstractQueryHandler implements Uploader
         $response->setContentLength($fileSize);
         $response->setCleanup(true);
 
+        $extension = FileHelper::getExtension($identifier);
+
         $isInline = (
             $this->isInline === true
-            || 'html' === FileHelper::getExtension($identifier)
+            || 'html' === $extension
         );
 
-        // OLCS-14910 If file doesn't have an extension then add a '.txt' extension
         $downloadFileName = basename($identifier);
-        if (empty(FileHelper::getExtension($downloadFileName))) {
+
+        // OLCS-14910 If file doesn't have an extension then add a '.txt' extension
+        if (empty($extension)) {
+            //used in case of the original identifier being used
             $downloadFileName .= '.txt';
+
+            //used in the case of a user chosen filename
+            $extension = 'txt';
+        }
+
+        if ($chosenFileName !== null) {
+            $downloadFileName = $chosenFileName . '.' . $extension;
         }
 
         $headers = $response->getHeaders();
