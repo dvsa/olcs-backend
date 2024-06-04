@@ -7,8 +7,11 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
+use Admin\Data\Mapper\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessRequestMap;
@@ -59,8 +62,12 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             TemplateBuilder::class => m::mock(TemplateBuilder::class),
             FileProcessorInterface::class => m::mock(FileProcessor::class)->makePartial(),
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
-            'config' => $config,
-            'FileUploader' => m::mock(ContentStoreFileUploader::class)
+
+            'Config' => $config,
+            'FileUploader' => m::mock(ContentStoreFileUploader::class),
+            EbsrProcessingChain::class => m::mock(EbsrProcessingChain::class),
+            ToggleService::class => m::mock(ToggleService::class)
+
         ];
 
         parent::setUp();
@@ -73,6 +80,8 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      */
     public function testHandleCommandCancellation($fromNewEbsr, $state, $getStatusTimes)
     {
+
+        $this->mocktoggle(false);
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
@@ -165,6 +174,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $busRegStatus,
         $getStatusTimes
     ) {
+        $this->mocktoggle(false);
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
@@ -267,6 +277,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      */
     public function testHandleCommandDocumentsFailing()
     {
+        $this->mocktoggle(false);
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
@@ -367,12 +378,6 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 
         $this->busEntity($command, $busReg);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->once()
-            ->with($documentIdentifier, true)
-            ->andThrow($fileProcessorException);
-
         $this->sut->handleCommand($command);
     }
 
@@ -433,11 +438,11 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 
         $this->busEntity($command, $busReg);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
+        $this->mockedSmServices[EbsrProcessingChain::class]
+            ->shouldReceive('process')
             ->once()
-            ->with($documentIdentifier, true)
-            ->andReturn($xmlFilename);
+            ->with($documentIdentifier, ['isTransXchange' => true])
+            ->andReturn(['xmlFilename'=> $xmlFilename]);
 
         $taskDesc = 'New pdf files created: '
             . $busRegNo . "\n"
@@ -522,12 +527,6 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 
         $this->busEntity($command, $busReg);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->once()
-            ->with($documentIdentifier, true)
-            ->andReturn($xmlFilename);
-
         $this->mockedSmServices[TemplateBuilder::class]
             ->shouldReceive('buildTemplate')
             ->times($numRequests)
@@ -538,6 +537,12 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             ->times($numRequests)
             ->with($xmlTemplate)
             ->andReturn($returnDocument ? $transXchangeDocument : []);
+
+        $this->mockedSmServices[EbsrProcessingChain::class]
+            ->shouldReceive('process')
+            ->once()
+            ->with($documentIdentifier, ['isTransXchange' => true])
+            ->andReturn(['xmlFilename'=> $xmlFilename]);
     }
 
     /**
@@ -558,6 +563,13 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 
             $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, $txcPdfData, new Result());
         }
+    }
+
+    public function testToggleOn()
+    {
+        // add test for is toggleService->isEnabled true
+        $this->mocktoggle(true);
+        $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, [], new Result(),0);
     }
 
     /**
@@ -600,5 +612,10 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         ];
 
         $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
+    }
+
+    private function mocktoggle($enabled): void
+    {
+        $this->mockedSmServices[ToggleService::class]->shouldReceive('isEnabled')->with(\Dvsa\Olcs\Api\Entity\System\FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn($enabled);
     }
 }

@@ -7,6 +7,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
@@ -71,6 +72,8 @@ class ProcessPackTestCase extends AbstractCommandHandlerTestCase
             ->with(SubmissionResultFilter::class)
             ->andReturn($submissionResultFilter);
 
+        $ebsrProcessingChain =m::mock(EbsrProcessingChain::class);
+
         $this->mockedSmServices = [
             XmlStructureInputFactory::class => $xmlStructureInput,
             BusRegistrationInputFactory::class => $busRegInput,
@@ -79,7 +82,8 @@ class ProcessPackTestCase extends AbstractCommandHandlerTestCase
             'config' => $config,
             'FileUploader' => m::mock(ContentStoreFileUploader::class),
             'FilterManager' => $filterManager,
-            FileProcessorInterface::class => $fileProcessor
+            FileProcessorInterface::class => $fileProcessor,
+            EbsrProcessingChain::class => $ebsrProcessingChain
         ];
 
         parent::setUp();

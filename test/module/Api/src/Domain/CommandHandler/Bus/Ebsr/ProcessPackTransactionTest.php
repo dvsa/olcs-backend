@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
+use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPackException;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPackTransaction;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Bus\BusServiceType as BusServiceTypeEntity;
 use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LocalAuthorityEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -16,10 +18,12 @@ use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
+use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPackTransaction as ProcessPackTransactionCmd;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
@@ -172,7 +176,12 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         unset($busRegFromData['documents']);
         unset($busRegFromData['variationNo']);
 
+       $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
+
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
+
         $ebsrSubmission->shouldReceive('beginValidating')
             ->once()
             ->with($this->refData[EbsrSubmissionEntity::VALIDATING_STATUS])
@@ -193,9 +202,12 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             ->once()
             ->andReturnSelf();
 
+
         $this->ebsrSubmissionRepo($command, $ebsrSubmission, 3);
 
         $this->mockInput(XmlStructureInputFactory::class, $xmlName, $xmlDocContext, $xmlDocument);
+
+
 
         $busRegInputContext = [
             'submissionType' => $submissionTypeId,
@@ -240,7 +252,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockInput(BusRegistrationInputFactory::class, $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
+
 
         $processedContext = [
             'busReg' => $previousBusReg,
@@ -419,6 +431,10 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         unset($busRegFromData['documents']);
         unset($busRegFromData['variationNo']);
 
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
+
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
         $ebsrSubmission->shouldReceive('beginValidating')
             ->once()
@@ -486,7 +502,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockInput(BusRegistrationInputFactory::class, $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
+        
 
         $processedContext = [
             'busReg' => $previousBusReg,
@@ -536,7 +552,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
      */
     public function testHandleCommandNewApplication(): void
     {
-        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
         $ebsrSubId = 1234;
         $organisationId = 5678;
@@ -600,6 +617,10 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             'otherServiceNumbers' => ['123', '456']
         ];
 
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
+
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
         $ebsrSubmission->shouldReceive('beginValidating')
             ->once()
@@ -643,7 +664,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockInput(BusRegistrationInputFactory::class, $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
+        
 
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getLicNo')->twice()->andReturn($parsedLicenceNumber);
@@ -735,6 +756,11 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
      */
     public function testFailedDocumentRetrieval(): void
     {
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
+        $xmlDocument = "<xml></xml>";
+        $xmlDocContext = ['xml_filename' => $xmlName];
+
         $ebsrSubId = 1234;
         $organisationId = 5678;
         $organisation = m::mock(OrganisationEntity::class);
@@ -754,15 +780,10 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('setSubDirPath')
-            ->with('root')
-            ->once();
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->with($docIdentifier)
-            ->once()
-            ->andThrow(EbsrPackException::class, 'message');
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andThrow(ProcessPackException::class, 'message');
+
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
         $this->sut->handleCommand($command);
@@ -773,7 +794,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
      */
     public function testFailedXmlStructure(): void
     {
-        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
         $ebsrSubId = 1234;
         $organisationId = 5678;
         $documentDescription = 'document description';
@@ -795,9 +817,14 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
+
+
         $this->mockInputFailure(XmlStructureInputFactory::class, $xmlName, $xmlDocContext, ['message']);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
+        
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
         $this->sut->handleCommand($command);
@@ -808,7 +835,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
      */
     public function testFailedBusRegInput(): void
     {
-        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
         $ebsrSubId = 1234;
         $organisationId = 5678;
@@ -833,6 +861,10 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->ebsrSubmissionRepo($command, $ebsrSubmission, 2);
 
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
+
         $this->mockInput(XmlStructureInputFactory::class, $xmlName, $xmlDocContext, $xmlDocument);
 
         $busRegInputContext = [
@@ -842,7 +874,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockInputFailure(BusRegistrationInputFactory::class, $xmlDocument, $busRegInputContext, ['messages']);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
+        
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
         $this->sut->handleCommand($command);
@@ -853,7 +885,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
      */
     public function testFailedProcessDataInput(): void
     {
-        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
         $ebsrSubId = 1234;
         $organisationId = 5678;
@@ -912,6 +945,10 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             ],
             'otherServiceNumbers' => ['123', '456']
         ];
+
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
         $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
         $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
@@ -960,7 +997,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockInputFailure(ProcessedDataInputFactory::class, $processedDataInput, $processedContext, ['messages']);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
+        
 
         $this->expectedEmailQueueSideEffect(SendEbsrErrorsCmd::class, ['id' => $ebsrSubId], $ebsrSubId, new Result());
         $this->sut->handleCommand($command);
@@ -971,7 +1008,8 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
      */
     public function testFailedShortNoticeInput(): void
     {
-        $xmlName = 'tmp/directory/path/xml-file-name.xml';
+        $filePath = 'vfs://root';
+        $xmlName = $filePath . '/xml-file-name.xml';
         $xmlDocument = "<xml></xml>";
         $ebsrSubId = 1234;
         $organisationId = 5678;
@@ -1031,6 +1069,10 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
             'otherServiceNumbers' => ['123', '456']
         ];
 
+        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
+            ->with('doc/identifier')
+            ->andReturn(['xmlFilename' => $xmlName ]);
+
         $ebsrSubmission = $this->failedEbsrSubmission($ebsrSubId, $organisation, $document);
         $ebsrSubmission->shouldReceive('getEbsrSubmissionType->getId')->once()->andReturn($submissionTypeId);
         $ebsrSubmission->shouldReceive('setLicenceNo')->with($parsedLicenceNumber)->once()->andReturnSelf();
@@ -1052,7 +1094,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockInput(BusRegistrationInputFactory::class, $xmlDocument, $busRegInputContext, $parsedEbsrData);
 
-        $this->fileProcessor($docIdentifier, $xmlName);
 
         $licence = m::mock(LicenceEntity::class);
         $licence->shouldReceive('getLicNo')->twice()->andReturn($parsedLicenceNumber);
@@ -1102,7 +1143,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
     private function failedEbsrSubmission($ebsrSubId, $organisation, $document): m\MockInterface
     {
         $ebsrSubmission = m::mock(EbsrSubmissionEntity::class);
-
         $ebsrSubmission->shouldReceive('getId')->andReturn($ebsrSubId);
         $ebsrSubmission->shouldReceive('getOrganisation')->once()->andReturn($organisation);
         $ebsrSubmission->shouldReceive('getDocument')->once()->andReturn($document);
@@ -1154,25 +1194,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $document->shouldReceive('getDescription')->once()->andReturn($documentDescription);
 
         return $document;
-    }
-
-    /**
-     * Common assertions for file processor
-     *
-     * @param $docIdentifier
-     * @param $xmlName
-     */
-    private function fileProcessor($docIdentifier, $xmlName): void
-    {
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('setSubDirPath')
-            ->with('root')
-            ->once();
-        $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->with($docIdentifier)
-            ->once()
-            ->andReturn($xmlName);
     }
 
     /**

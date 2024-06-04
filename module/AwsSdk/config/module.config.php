@@ -3,6 +3,7 @@
 use Aws\CognitoIdentityProvider\CognitoIdentityProviderClient;
 use Dvsa\Olcs\AwsSdk\Factories\CognitoIdentityProviderClientFactory;
 use Dvsa\Olcs\AwsSdk\Factories\S3ClientFactory;
+use Dvsa\Olcs\AwsSdk\Factories\SecretsManagerFactory;
 use Dvsa\Olcs\AwsSdk\Factories\SqsClientFactory;
 
 return [
@@ -11,6 +12,7 @@ return [
             'S3Client' => S3ClientFactory::class,
             'SqsClient' => SqsClientFactory::class,
             CognitoIdentityProviderClient::class => CognitoIdentityProviderClientFactory::class,
+            'SecretsManagerClient' => SecretsManagerFactory::class,
         ],
     ]
 ];

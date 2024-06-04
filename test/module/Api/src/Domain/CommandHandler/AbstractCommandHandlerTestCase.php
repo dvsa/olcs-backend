@@ -11,6 +11,7 @@ use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate as GenerateCacheCmd;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessRequestMap;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
 use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
@@ -29,6 +30,7 @@ use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\Repository\ValidateMockRepoTypeTrait;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
@@ -43,8 +45,8 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
     public $submissionConfig;
 
 
-    /** @var \Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler */
-    protected $sut;
+
+    protected ProcessRequestMap $sut;
 
     /**
      * @var m\MockInterface|CommandHandlerManager
@@ -85,6 +87,9 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
     /** @var  m\MockInterface | TransactionManagerInterface */
     protected $mockTransationMngr;
 
+    /**
+     * @throws ContainerExceptionInterface
+     */
     public function setUp(): void
     {
         $this->repoManager = m::mock(RepositoryServiceManager::class);
@@ -503,7 +508,7 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
      *
      * @return @void
      */
-    protected function setupIsExternalUser($isExternalUser = true)
+    protected function setupIsExternalUser($isExternalUser = true):void
     {
         $this->mockedSmServices[\LmcRbacMvc\Service\AuthorizationService::class]
             ->shouldReceive('isGranted')

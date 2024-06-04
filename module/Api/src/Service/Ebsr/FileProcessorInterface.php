@@ -17,10 +17,10 @@ interface FileProcessorInterface
     public function fetchXmlFileNameFromDocumentStore($identifier);
 
     /**
-     * Sets the sub directory path
+     * Sets the subdirectory path
      *
      * @param string $subDirPath
-     * @return string
+     * @return void
      */
-    public function setSubDirPath($subDirPath);
+    public function setSubDirPath($subDirPath): void;
 }
