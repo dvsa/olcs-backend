@@ -13,4 +13,6 @@ interface TransExchangeClientInterface
      * @return array
      */
     public function makeRequest($content);
+
+    public function getCorrelationId(): string;
 }

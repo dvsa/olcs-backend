@@ -23,7 +23,7 @@ class Filesystem extends BaseFileSystem
      * @param bool $cleanup
      * @return string
      */
-    public function createTmpDir($path, $prefix = '', $cleanup = true)
+    public function createTmpDir($path, string $prefix = '', bool $cleanup = true)
     {
         $lock = $this->getLock($path);
         $lock->acquire(true);

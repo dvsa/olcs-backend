@@ -10,6 +10,8 @@ use Dvsa\Olcs\Api\Entity\Doc\Document;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingInterface;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueue;
 

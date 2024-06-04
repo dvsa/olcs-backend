@@ -21,15 +21,16 @@ class TransExchangeClient implements TransExchangeClientInterface
     public const TRANSXCHANGE_INVALID_XML = 'TransXchange response did not validate against the schema: ';
 
     /**
-     * TransExchangeClient constructor.
-     *
-     * @param RestClient     $restClient   Laminas rest client
-     * @param MapXmlFile     $xmlFilter    olcs-xmltools xml filter
-     * @param ParseXmlString $xmlParser    olcs-xmltools xml parser
-     * @param Xsd            $xsdValidator olcs-xmltools xml validator
+     * @param RestClient $restClient
+     * @param MapXmlFile $xmlFilter
+     * @param ParseXmlString $xmlParser
+     * @param Xsd $xsdValidator
+     * @param string $correlationId
      */
-    public function __construct(private readonly RestClient $restClient, private readonly MapXmlFile $xmlFilter, private readonly ParseXmlString $xmlParser, private readonly Xsd $xsdValidator)
+
+    public function __construct(private readonly RestClient $restClient, private readonly MapXmlFile $xmlFilter, private readonly ParseXmlString $xmlParser, private readonly Xsd $xsdValidator, private readonly string $correlationId)
     {
+
     }
 
     /**
@@ -45,10 +46,16 @@ class TransExchangeClient implements TransExchangeClientInterface
         Logger::info('TransXchange request', ['data' => $content]);
 
         $this->restClient->getRequest()->setContent($content);
+        $this->restClient->getRequest()->getHeaders()->addHeaders(
+            [
+                'X-Correlation-Id' => $this->getCorrelationId()
+            ]
+        );
         $response = $this->restClient->send();
         $body = $response->getContent();
 
         Logger::info('TransXchange response', ['data' => $response->toString()]);
+
 
         //security check, and parse into dom document
         $dom = $this->xmlParser->filter($body);
@@ -61,5 +68,9 @@ class TransExchangeClient implements TransExchangeClientInterface
         }
 
         return $this->xmlFilter->filter($dom);
+    }
+    public function getCorrelationId(): string
+    {
+        return $this->correlationId;
     }
 }

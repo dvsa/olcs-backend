@@ -17,7 +17,8 @@ trait TransExchangeAwareTrait
      */
     private $transExchange;
 
-    public function setTransExchange(TransExchangeClientInterface $transExchange)
+
+    public function setTransExchange(TransExchangeClientInterface $transExchange): void
     {
         $this->transExchange = $transExchange;
     }
@@ -25,7 +26,7 @@ trait TransExchangeAwareTrait
     /**
      * @return TransExchangeClientInterface
      */
-    public function getTransExchange()
+    public function getTransExchange(): TransExchangeClientInterface
     {
         return $this->transExchange;
     }

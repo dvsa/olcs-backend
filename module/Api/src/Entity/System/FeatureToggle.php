@@ -26,6 +26,8 @@ class FeatureToggle extends AbstractFeatureToggle
     public const BACKEND_SURRENDER = 'back_surrender';
     public const MESSAGING = 'messaging';
 
+    const BACKEND_TRANSXCHANGE = 'back_transxchange';
+
     public static function create(/*string*/ $configName, /*string*/ $friendlyName, RefData $status)/*: FeatureToggle */
     {
         $instance = new self();

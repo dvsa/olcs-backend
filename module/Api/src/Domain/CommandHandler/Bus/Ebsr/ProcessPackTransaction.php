@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
+use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareInterface;
+use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -12,6 +13,8 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Olcs\Logging\Log\Logger;
+
 
 final class ProcessPackTransaction extends AbstractProcessPack implements
     TransactionedInterface
@@ -37,15 +40,13 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
 
-        //set the sub directory of /tmp where we extract the EBSR files
-        $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
 
         try {
-            $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
-        } catch (EbsrPackException $e) {
+            $filesProcessed = $this->getEbsrProcessing()->process($doc->getIdentifier());
+            $xmlName = $filesProcessed['xmlFilename'];
+        } catch (\Exception $e) {
             //process the validation failure information
             $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
-
             return $this->result;
         }
 
