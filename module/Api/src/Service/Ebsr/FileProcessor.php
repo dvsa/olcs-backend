@@ -15,9 +15,11 @@ use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
 {
 
+
     public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
-    const OUTPUT_TYPE = 'xmlFileName';
+    const OUTPUT_TYPE = 'xmlFilename';
+
 
 
     /**

@@ -71,7 +71,7 @@ class ZipProcessorTest extends TestCase
             $this->mockLogger,
             m::mock(\Symfony\Component\Finder\Finder::class)
         );
-        $this->assertEquals('xmlFileName', $sut->getOutputType());
+        $this->assertEquals('xmlFilename', $sut->getOutputType());
     }
 
     /**

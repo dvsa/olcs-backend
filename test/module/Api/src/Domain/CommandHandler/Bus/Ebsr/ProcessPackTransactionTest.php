@@ -177,7 +177,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
        $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(
             m::mock(ContentStoreFile::class)->shouldReceive('getContent')->andReturn($xmlDocument)->getMock()
@@ -437,7 +437,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(
             m::mock(ContentStoreFile::class)->shouldReceive('getContent')->andReturn($xmlDocument)->getMock()
@@ -627,7 +627,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(
             m::mock(ContentStoreFile::class)->shouldReceive('getContent')->andReturn($xmlDocument)->getMock()
@@ -834,7 +834,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(
@@ -881,7 +881,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(
@@ -970,7 +970,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(
@@ -1096,7 +1096,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $this->mockedSmServices[EbsrProcessingChain::class]->shouldReceive('process')
             ->with('doc/identifier')
-            ->andReturn(['xmlFileName' => $xmlName ]);
+            ->andReturn(['xmlFilename' => $xmlName ]);
 
 
         $this->mockedSmServices['FileUploader']->shouldReceive('download')->with($xmlName)->andReturn(

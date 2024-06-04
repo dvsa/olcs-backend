@@ -46,7 +46,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
         try {
             $filesProcessed = $this->getEbsrProcessing()->process($doc->getIdentifier());
-            $xmlName = $filesProcessed['xmlFileName'];
+            $xmlName = $filesProcessed['xmlFilename'];
         } catch (\Exception $e) {
             //process the validation failure information
             $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], $doc->getIdentifier(), []);
