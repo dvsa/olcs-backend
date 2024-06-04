@@ -18,7 +18,7 @@ class ZipProcessor implements EbsrProcessingInterface
 
     const BUS_REGISTRATION_FILE_LOCATION = '/documents/Bus_Registration/TransXChange_File/';
 
-    const OUTPUT_TYPE = 'xmlFileName';
+    const OUTPUT_TYPE = 'xmlFilename';
     /**
      * @var Filesystem
      */
