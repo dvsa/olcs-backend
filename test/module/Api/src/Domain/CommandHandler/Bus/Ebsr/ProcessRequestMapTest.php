@@ -4,13 +4,13 @@
  * ProcessRequestMap Test
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
-
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Admin\Data\Mapper\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
+use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMapCmd;
@@ -57,10 +57,16 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
                 'tmp_extra_path' => '/tmp/file/path'
             ]
         ];
-
+        $mockFileProcessor = new FileProcessor(
+            m::mock(ContentStoreFileUploader::class),
+            m::mock(\Dvsa\Olcs\Api\Filesystem\Filesystem::class),
+            m::mock(\Laminas\Filter\Decompress::class),
+            m::mock(ZipProcessor::class),
+            '/tmp/file/path'
+        );
         $this->mockedSmServices = [
             TemplateBuilder::class => m::mock(TemplateBuilder::class),
-            FileProcessorInterface::class => m::mock(FileProcessor::class)->makePartial(),
+            FileProcessorInterface::class => $mockFileProcessor,
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
 
             'Config' => $config,

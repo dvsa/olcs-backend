@@ -21,6 +21,12 @@ use Psr\Container\ContainerInterface;
  */
 class TransExchangeClientFactory implements FactoryInterface
 {
+
+
+    protected $toggleConfig = [
+        'default' => FeatureToggle::BACKEND_TRANSXCHANGE
+    ];
+
     public const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
 
     /**
