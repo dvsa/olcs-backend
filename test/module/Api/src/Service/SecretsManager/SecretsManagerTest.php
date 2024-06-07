@@ -14,6 +14,9 @@ use Psr\SimpleCache\InvalidArgumentException;
  */
 class SecretsManagerTest extends TestCase
 {
+    private SecretsManager $sut;
+    private $mockClient;
+    private $mockCache;
     public function setUp(): void
     {
         $this->mockClient = m::mock(SecretsManagerClient::class);

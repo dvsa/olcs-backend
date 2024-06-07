@@ -69,7 +69,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             FileProcessorInterface::class => $mockFileProcessor,
             TransExchangeClient::class => m::mock(TransExchangeClient::class),
 
-            'Config' => $config,
+            'config' => $config,
             'FileUploader' => m::mock(ContentStoreFileUploader::class),
             EbsrProcessingChain::class => m::mock(EbsrProcessingChain::class),
             ToggleService::class => m::mock(ToggleService::class)

@@ -20,6 +20,8 @@ use Mockery as m;
 class TransXChangeAppRegistrationServiceTest extends TestCase
 {
     protected TransXChangeAppRegistrationService $sut;
+    protected Client $client;
+    private $mockLogger;
 
     public function setUp(): void
     {
