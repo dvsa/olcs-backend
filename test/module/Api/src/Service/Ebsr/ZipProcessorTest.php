@@ -49,7 +49,6 @@ class ZipProcessorTest extends TestCase
             'unit_TmpDir',
             $this->mockLogger,
             m::mock(\Symfony\Component\Finder\Finder::class)
-
         );
         $sut->setSubDirPath('unit_SubDirPath');
         $this->assertEquals('unit_SubDirPath', $sut->getSubDirPath());
