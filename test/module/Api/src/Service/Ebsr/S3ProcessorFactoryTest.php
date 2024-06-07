@@ -51,8 +51,6 @@ class S3ProcessorFactoryTest extends TestCase
         ];
 
         m::mock('overload:\Aws\Sts\StsClient')->shouldReceive('AssumeRole')->andReturn($stsAssumeRoleResult);
-
-
         $mockLogger = m::mock(\Laminas\Log\Logger::class);
         $mockSl->shouldReceive('get')->with('S3Client')->andReturn($mockClient);
         $mockSl->shouldReceive('get')->with('FileUploader')->andReturn($mockFileUploader);

@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 
-
 class S3ProcessorTest extends TestCase
 {
     private S3Processor $sut;
@@ -22,7 +21,6 @@ class S3ProcessorTest extends TestCase
     {
          parent::setUp();
     }
-
 
     /**
      * @throws ProcessPackException
@@ -55,8 +53,6 @@ class S3ProcessorTest extends TestCase
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('debug')->with('Sending transxchange file to S3', ['identifier' => $fileIdentifier]);
         $sut = new S3Processor($mockS3Client, $mockBucketName, $mockFileUploader, $mockLogger);
-
-
         $this->assertEquals('testurl', $sut->process($fileIdentifier, []));
     }
 

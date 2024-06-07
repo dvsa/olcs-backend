@@ -13,7 +13,6 @@ use Laminas\Log\LoggerInterface;
 
 class ZipProcessorFactoryTest extends TestCase
 {
-
     public function testCreateService()
     {
         $sut = new ZipProcessorFactory();

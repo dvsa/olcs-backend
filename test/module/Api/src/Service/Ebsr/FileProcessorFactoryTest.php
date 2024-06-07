@@ -26,25 +26,16 @@ class FileProcessorFactoryTest extends TestCase
     public function testCreateService()
     {
         $mockUploader = m::mock(FileUploaderInterface::class);
-
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setAdapter')->with('zip');
-
-
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
-
         $mockZipProcessor = m::mock(ZipProcessor::class);
-
-
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('Decompress')->andReturn($mockFilter);
-
         $mockSl->shouldReceive('get')->with('FileUploader')->andReturn($mockUploader);
         $mockSl->shouldReceive('get')->with(ZipProcessor::class)->andReturn($mockZipProcessor);
-
         $sut = new FileProcessorFactory();
-
         $this->assertInstanceOf(FileProcessor::class, $sut->__invoke($mockSl, FileProcessor::class));
     }
 }

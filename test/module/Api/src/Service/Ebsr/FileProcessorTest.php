@@ -55,7 +55,7 @@ class FileProcessorTest extends TestCase
         $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
         $mockZipProcessor->shouldReceive('process')->andReturn($xmlFilename);
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter,$mockZipProcessor,$tmpDir);
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
         $sut->setSubDirPath($extraPath);
 
         $this->assertEquals(
@@ -104,7 +104,7 @@ class FileProcessorTest extends TestCase
             'ebsr pack exception'
         );
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter,$mockZipProcessor,$tmpDir);
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
 
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
@@ -145,7 +145,7 @@ class FileProcessorTest extends TestCase
             'ebsr pack exception'
         );
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter,$mockZipProcessor,$tmpDir);
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
@@ -188,7 +188,7 @@ class FileProcessorTest extends TestCase
             'ebsr pack exception'
         );
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter,$mockZipProcessor,$tmpDir);
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
@@ -217,7 +217,7 @@ class FileProcessorTest extends TestCase
 
         $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
         $mockZipProcessor->shouldReceive('process')->andReturn('ebsr.xml');
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter,$mockZipProcessor,$tmpDir);
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
 
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }

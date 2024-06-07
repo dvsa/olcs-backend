@@ -14,11 +14,8 @@ use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 
-
-
 class ZipProcessorTest extends TestCase
 {
-
     protected string $subDirPath;
     protected string $xmlFilename;
     protected string $extractDir;
@@ -41,9 +38,6 @@ class ZipProcessorTest extends TestCase
         $this->xmlFilename = vfsStream::url('root/ebsr.xml');
         $this->mockLogger = m::mock(LoggerInterface::class);
         $this->subDirPath = '/extra/path';
-
-
-
         parent::setUp();
     }
     public function testSubDir()
@@ -96,13 +90,11 @@ class ZipProcessorTest extends TestCase
             m::mock(File::class)->shouldReceive('getIdentifier')->andReturn($this->xmlFilename)->getMock()
         );
 
-
         $mockFileSystem = m::mock(Filesystem::class);
         $mockFileSystem->shouldReceive('exists')->with($this->tmpDir . $this->subDirPath)->andReturn(true);
         $mockFileSystem->shouldReceive('createTmpFile')->with($this->tmpDir . $this->subDirPath, 'zip')->andReturn($this->tmpEbsrFile);
         $mockFileSystem->shouldReceive('dumpFile')->with($this->tmpEbsrFile, $this->fileContent);
         $mockFileSystem->shouldReceive('createTmpDir')->with($this->tmpDir . $this->subDirPath, 'ebsr')->andReturn($this->extractDir);
-
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setTarget')->with($this->extractDir);
         $mockFilter->shouldReceive('filter')->with($this->tmpEbsrFile);
@@ -124,6 +116,5 @@ class ZipProcessorTest extends TestCase
             $this->xmlFilename,
             str_replace("\\", "/", $sut->process($this->fileIdentifier))
         );
-
     }
 }
