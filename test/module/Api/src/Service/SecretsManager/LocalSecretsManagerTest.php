@@ -29,7 +29,7 @@ class LocalSecretsManagerTest extends TestCase
 
     public function testMultipleSecrets()
     {
-        $this->sut = new LocalSecretsManager(['secret' =>['testSecret1' => 'testValue1'], 'secret2' => ['testSecret2' => 'testValue2']]);
+        $this->sut = new LocalSecretsManager(['secret' => ['testSecret1' => 'testValue1'], 'secret2' => ['testSecret2' => 'testValue2']]);
         $actual = $this->sut->getSecrets(['secret', 'secret2']);
         $this->assertCount(2, $actual);
         $this->assertEquals('testValue1', $actual['secret']['testSecret1']);
