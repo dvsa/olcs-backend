@@ -4,6 +4,7 @@
  * ProcessRequestMap Test
  * @author Ian Lindsay <ian@hemera-business-services.co.uk>
  */
+
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Admin\Data\Mapper\FeatureToggle;
@@ -448,7 +449,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('process')
             ->once()
             ->with($documentIdentifier, ['isTransXchange' => true])
-            ->andReturn(['xmlFilename'=> $xmlFilename]);
+            ->andReturn(['xmlFilename' => $xmlFilename]);
 
         $taskDesc = 'New pdf files created: '
             . $busRegNo . "\n"
@@ -548,7 +549,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('process')
             ->once()
             ->with($documentIdentifier, ['isTransXchange' => true])
-            ->andReturn(['xmlFilename'=> $xmlFilename]);
+            ->andReturn(['xmlFilename' => $xmlFilename]);
     }
 
     /**
@@ -575,7 +576,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     {
         // add test for is toggleService->isEnabled true
         $this->mocktoggle(true);
-        $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, [], new Result(),0);
+        $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, [], new Result(), 0);
     }
 
     /**

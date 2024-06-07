@@ -3,6 +3,7 @@
 /**
  * Request new Ebsr map
  */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -118,7 +119,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $fileProcessor = $this->getFileProcessor();
         $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
 
-
         try {
             $filesProcessed = $this->getEbsrProcessing()->process($submission->getDocument()->getIdentifier(), ['isTransXchange' => true]);
             $xmlFilename = $filesProcessed['s3Filename'] ?? $filesProcessed['xmlFilename'];
@@ -150,7 +150,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
                 continue;
             }
 
-            if( $this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE) ) {
+            if ($this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
                 return $result;
             }
             if (!isset($documents['files'])) {
@@ -344,7 +344,6 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $fullContainer = $container;
-
 
         if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
             $container = $container->getServiceLocator();

@@ -546,7 +546,7 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
      */
     protected function getTestingLicence(
         Organisation $organisation = null,
-                     $status = null
+        $status = null
     ) {
         if ($organisation === null) {
             $organisation = new Organisation();

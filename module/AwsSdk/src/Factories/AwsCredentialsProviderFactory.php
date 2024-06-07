@@ -46,6 +46,4 @@ class AwsCredentialsProviderFactory implements FactoryInterface
         $credentialsProvider = $envCredentialsFlag ? $this->getEnvCredentialProvider() : $this->getInstanceProfileCredentialProvider();
         return CredentialProvider::memoize($credentialsProvider);
     }
-
-
 }

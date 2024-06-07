@@ -21,8 +21,6 @@ use Psr\Container\ContainerInterface;
  */
 class TransExchangeClientFactory implements FactoryInterface
 {
-
-
     protected $toggleConfig = [
         'default' => FeatureToggle::BACKEND_TRANSXCHANGE
     ];
@@ -55,7 +53,7 @@ class TransExchangeClientFactory implements FactoryInterface
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
         $config = $config['ebsr']['transexchange_publisher'];
-        if ( $toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE) ) {
+        if ($toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
             $config['uri'] = $config['new_uri'];
         }
         $httpClient = new RestClient($config['uri'], $config['options']);

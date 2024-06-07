@@ -8,15 +8,12 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-
-
 /**
  * Class FileProcessorFactory
  * @package Dvsa\Olcs\Api\Service\Ebsr
  */
 class FileProcessorFactory implements FactoryInterface
 {
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)

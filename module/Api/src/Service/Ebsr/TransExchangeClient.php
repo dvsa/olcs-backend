@@ -30,7 +30,6 @@ class TransExchangeClient implements TransExchangeClientInterface
 
     public function __construct(private readonly RestClient $restClient, private readonly MapXmlFile $xmlFilter, private readonly ParseXmlString $xmlParser, private readonly Xsd $xsdValidator, private readonly string $correlationId)
     {
-
     }
 
     /**
@@ -55,7 +54,6 @@ class TransExchangeClient implements TransExchangeClientInterface
         $body = $response->getContent();
 
         Logger::info('TransXchange response', ['data' => $response->toString()]);
-
 
         //security check, and parse into dom document
         $dom = $this->xmlParser->filter($body);

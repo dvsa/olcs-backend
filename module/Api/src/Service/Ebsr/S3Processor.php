@@ -8,7 +8,6 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPackException;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Psr\Log\LoggerInterface;
 
-
 class S3Processor implements EbsrProcessingInterface
 {
     const OUTPUT_TYPE = 's3Filename';
@@ -46,7 +45,6 @@ class S3Processor implements EbsrProcessingInterface
         }
         $fileContent = $file->getContent();
 
-
         try {
             $result = $this->s3Client->putObject([
                 'Bucket' => $this->bucketName,
@@ -56,9 +54,8 @@ class S3Processor implements EbsrProcessingInterface
 
             return $result['ObjectURL'];
         } catch (S3Exception $e) {
-            $this->logger->info('Cannot send transxchange file from content store to s3 '. $e->getAwsErrorMessage(), ['identifier' => $identifier]);
+            $this->logger->info('Cannot send transxchange file from content store to s3 ' . $e->getAwsErrorMessage(), ['identifier' => $identifier]);
             throw new ProcessPackException('Cannot process transxchange file');
-
         }
     }
 

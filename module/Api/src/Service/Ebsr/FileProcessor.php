@@ -14,8 +14,6 @@ use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
  */
 class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
 {
-
-
     public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
     const OUTPUT_TYPE = 'xmlFilename';
@@ -32,11 +30,11 @@ class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
      */
 
     public function __construct(
-        private  FileUploaderInterface $fileUploader,
-        private readOnly Filesystem $fileSystem,
-        private  Decompress $decompressFilter,
-        private readOnly ZipProcessor $zipProcessor,
-        private readOnly string $tmpDir
+        private FileUploaderInterface $fileUploader,
+        private readonly Filesystem $fileSystem,
+        private Decompress $decompressFilter,
+        private readonly ZipProcessor $zipProcessor,
+        private readonly string $tmpDir
     ) {
     }
 
@@ -68,18 +66,16 @@ class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
         $targetDir = $this->tmpDir . $this->subDirPath;
         try {
             $xmlFilename = $this->zipProcessor->process($identifier);
-            if(!$this->fileSystem->exists($targetDir)) {
+            if (!$this->fileSystem->exists($targetDir)) {
                 throw new \RuntimeException('The specified tmp directory does not exist');
             }
-
 
             //transxchange runs through tomcat, therefore tomcat needs permissions on the files we've just created
             if ($isTransXchange) {
                 $execCmd = 'setfacl -bR -m u:tomcat:rwx ' . dirname($xmlFilename);
                 exec(escapeshellcmd($execCmd));
             }
-        }
-        catch (LaminasFilterRuntimeException $e) {
+        } catch (LaminasFilterRuntimeException $e) {
             throw new EbsrPackException('Cannot unzip file : ' . $e->getMessage());
         }
         return $xmlFilename;

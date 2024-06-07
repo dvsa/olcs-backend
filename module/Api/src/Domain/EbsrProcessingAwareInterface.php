@@ -16,5 +16,4 @@ interface EbsrProcessingAwareInterface
      * @return EbsrProcessingChain
      */
     public function getEbsrProcessing(): EbsrProcessingChain;
-
 }

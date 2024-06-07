@@ -24,7 +24,6 @@ class SecretsManager extends AbstractSecretsManager implements SecretsManagerInt
 
 
     /**
-     * @throws InvalidArgumentException
      * @throws \JsonException
      * @throws \Exception
      */
