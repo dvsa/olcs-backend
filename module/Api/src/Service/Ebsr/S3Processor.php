@@ -10,7 +10,7 @@ use Psr\Log\LoggerInterface;
 
 class S3Processor implements EbsrProcessingInterface
 {
-    const OUTPUT_TYPE = 's3Filename';
+    private const OUTPUT_TYPE = 's3Filename';
 
     private S3Client $s3Client;
 

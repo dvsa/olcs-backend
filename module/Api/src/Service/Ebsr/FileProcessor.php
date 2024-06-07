@@ -15,8 +15,7 @@ use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
 {
     public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
-
-    const OUTPUT_TYPE = 'xmlFilename';
+    private const OUTPUT_TYPE = 'xmlFilename';
     private string $subDirPath = '';
 
 
@@ -76,7 +75,7 @@ class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
                 exec(escapeshellcmd($execCmd));
             }
         } catch (LaminasFilterRuntimeException $e) {
-            throw new EbsrPackException('Cannot unzip file : ' . $e->getMessage());
+            throw new EbsrPackException('Cannot unzip file : ' . $e->getMessage() . self::DECOMPRESS_ERROR_PREFIX . $identifier);
         }
         return $xmlFilename;
     }

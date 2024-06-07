@@ -44,7 +44,8 @@ class EbsrProcessorChainFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateServiceWithToggleDisabled() {
+    public function testCreateServiceWithToggleDisabled()
+    {
         $mockToggleService = m::mock(ToggleService::class);
     ;
         $mockToggleService->shouldReceive('isEnabled')->with(FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn(false);
@@ -58,6 +59,4 @@ class EbsrProcessorChainFactoryTest extends TestCase
 
         $this->assertInstanceOf(EbsrProcessingChain::class, $service);
     }
-
-
 }

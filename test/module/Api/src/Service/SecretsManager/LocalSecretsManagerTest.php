@@ -12,9 +12,7 @@ class LocalSecretsManagerTest extends TestCase
 
     public function setUp(): void
     {
-        $this->sut = new LocalSecretsManager(
-           ['secret' => ["testSecret" => "testSecretValue"]]
-        );
+        $this->sut = new LocalSecretsManager(['secret' => ["testSecret" => "testSecretValue"]]);
         parent::setUp();
     }
 
@@ -29,13 +27,9 @@ class LocalSecretsManagerTest extends TestCase
         $this->sut->getSecret("testSecretNotFound");
     }
 
-    /**
-     * @throws InvalidArgumentException
-     * @throws \JsonException
-     */
     public function testMultipleSecrets()
     {
-        $this->sut = new LocalSecretsManager(['secret' =>['testSecret1' => 'testValue1'], 'secret2'=>['testSecret2' => 'testValue2']]);
+        $this->sut = new LocalSecretsManager(['secret' =>['testSecret1' => 'testValue1'], 'secret2' => ['testSecret2' => 'testValue2']]);
         $actual = $this->sut->getSecrets(['secret', 'secret2']);
         $this->assertCount(2, $actual);
         $this->assertEquals('testValue1', $actual['secret']['testSecret1']);

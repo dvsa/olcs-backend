@@ -14,11 +14,11 @@ use Psr\Log\LoggerInterface;
 
 class ZipProcessor implements EbsrProcessingInterface
 {
-    const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
+    private const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
-    const BUS_REGISTRATION_FILE_LOCATION = '/documents/Bus_Registration/TransXChange_File/';
+    public const BUS_REGISTRATION_FILE_LOCATION = '/documents/Bus_Registration/TransXChange_File/';
 
-    const OUTPUT_TYPE = 'xmlFilename';
+    private const OUTPUT_TYPE = 'xmlFilename';
     /**
      * @var Filesystem
      */
@@ -105,7 +105,7 @@ class ZipProcessor implements EbsrProcessingInterface
         try {
             $this->decompressFilter->filter($filePath);
         } catch (LaminasFilterRuntimeException $e) {
-            throw new EbsrPackException(self::DECOMPRESS_ERROR_PREFIX . $e->getMessage());
+            throw new EbsrPackException(self::DECOMPRESS_ERROR_PREFIX . $identifier . $e->getMessage());
         }
 
         return $this->extractedXmlFile();

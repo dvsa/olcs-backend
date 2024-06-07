@@ -14,7 +14,7 @@ class AppRegistrationSecretTest extends TestCase
     public function setUp(): void
     {
         $mockSecretsManager = m::mock(SecretsManagerInterface::class);
-        $mockSecretsManager->shouldReceive('getSecret')->with('txc_client_secret')->andReturn(['client_secret'=>'client_secret']);
+        $mockSecretsManager->shouldReceive('getSecret')->with('txc_client_secret')->andReturn(['client_secret' => 'client_secret']);
         $this->sut = new AppRegistrationSecret($mockSecretsManager);
         parent::setUp();
     }
