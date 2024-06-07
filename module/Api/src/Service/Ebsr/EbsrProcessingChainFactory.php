@@ -12,10 +12,8 @@ use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-
 class EbsrProcessingChainFactory implements FactoryInterface
 {
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -30,7 +28,7 @@ class EbsrProcessingChainFactory implements FactoryInterface
     {
         $logger = new LaminasLogPsr3Adapter($container->get('Logger'));
         $toggleService = $container->get(ToggleService::class);
-        if( $toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
+        if ($toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
             $logger->info('TXC toggle on');
             return new EbsrProcessingChain($logger, $container->get(ZipProcessor::class), $container->get(S3Processor::class));
         }

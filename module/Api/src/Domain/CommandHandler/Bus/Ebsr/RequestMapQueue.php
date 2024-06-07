@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Request new Ebsr map
  */

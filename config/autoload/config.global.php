@@ -595,6 +595,6 @@ return [
         'max_retry_attempts' => 3,
     ],
     'localSecretsManager' => [
-        'txc_client_secret'=> ['client_secret' => '%olcs_txc_client_secret%'],
+        'txc_client_secret' => ['client_secret' => '%olcs_txc_client_secret%'],
     ]
 ];

@@ -3,9 +3,9 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
-use Interop\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Laminas\Log\PsrLoggerAdapter;
-use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;

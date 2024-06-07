@@ -72,9 +72,7 @@ class ProcessPackTestCase extends AbstractCommandHandlerTestCase
             ->with(SubmissionResultFilter::class)
             ->andReturn($submissionResultFilter);
 
-
-
-        $ebsrProcessingChain =m::mock(EbsrProcessingChain::class);
+        $ebsrProcessingChain = m::mock(EbsrProcessingChain::class);
 
         $this->mockedSmServices = [
             XmlStructureInputFactory::class => $xmlStructureInput,

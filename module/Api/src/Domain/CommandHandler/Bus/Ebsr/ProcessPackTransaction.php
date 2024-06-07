@@ -15,9 +15,9 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Laminas\Log\LoggerInterface;
 
-
 final class ProcessPackTransaction extends AbstractProcessPack implements
-    TransactionedInterface,  UploaderAwareInterface
+    TransactionedInterface,
+    UploaderAwareInterface
 {
     use UploaderAwareTrait;
 
@@ -148,7 +148,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
     private function getTempNameFromXml(string $xmlName): string
     {
-        $fileParts =explode('_', $xmlName);
+        $fileParts = explode('_', $xmlName);
         $tmpName = implode('/', $fileParts);
         return DIRECTORY_SEPARATOR . $tmpName;
     }

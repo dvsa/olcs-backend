@@ -22,9 +22,9 @@ class EbsrProcessingChain
         // processors are called in the order they are added to the chain (see constructor)
         // important to note that the identifier is passed so that it can be modified by the processors
         foreach ($this->processors as $processor) {
-            $this->logger->info('Processing file with ' . get_class($processor). ' input: ' . $identifier);
+            $this->logger->info('Processing file with ' . get_class($processor) . ' input: ' . $identifier);
             $identifier = $processor->process($identifier, $options);
-            $this->logger->info('File processed with ' . get_class($processor). ' output: ' . $identifier);
+            $this->logger->info('File processed with ' . get_class($processor) . ' output: ' . $identifier);
             $this->files[$processor->getOutputType()] = $identifier;
         }
         $this->logger->info('processing outputs ' . json_encode($this->files));

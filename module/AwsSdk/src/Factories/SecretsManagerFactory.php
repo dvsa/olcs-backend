@@ -42,7 +42,6 @@ class SecretsManagerFactory implements FactoryInterface
     {
         $config = $container->get('Config');
 
-
         // get the cache
         $cache = $container->get(CacheEncryption::class);
 

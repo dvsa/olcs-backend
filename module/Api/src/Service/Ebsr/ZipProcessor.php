@@ -108,9 +108,7 @@ class ZipProcessor implements EbsrProcessingInterface
             throw new EbsrPackException(self::DECOMPRESS_ERROR_PREFIX . $e->getMessage());
         }
 
-
         return $this->extractedXmlFile();
-
     }
 
     /**
@@ -131,20 +129,17 @@ class ZipProcessor implements EbsrProcessingInterface
         return $this->storeXmlFile((string) key($files));
     }
 
-    private function storeXmlFile( string $tmpfile ): string
+    private function storeXmlFile(string $tmpfile): string
     {
         $this->logger->debug('Storing transxchange xml file in content store', ['tmpfile' => $tmpfile]);
         $file = new File();
         $file->setContent(file_get_contents($tmpfile));
         $file->setMimeType('text/xml');
-        $filename = self::BUS_REGISTRATION_FILE_LOCATION.date_format(new DateTime(), 'Y\/m\/').str_replace('/', '_', $tmpfile);
+        $filename = self::BUS_REGISTRATION_FILE_LOCATION . date_format(new DateTime(), 'Y\/m\/') . str_replace('/', '_', $tmpfile);
         return $this->fileUploader->upload($filename, $file)->getIdentifier();
     }
     public function getOutputType(): string
     {
         return self::OUTPUT_TYPE;
     }
-
-
-
 }
