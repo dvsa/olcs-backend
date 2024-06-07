@@ -4,12 +4,8 @@ namespace Dvsa\Olcs\Api\Service\SecretsManager;
 
 use Psr\SimpleCache\InvalidArgumentException;
 
-abstract class AbstractSecretsManager
+abstract class AbstractSecretsManager implements SecretsManagerInterface
 {
-    /**
-     * @throws InvalidArgumentException
-     * @throws \JsonException
-     */
     public function getSecrets(array $secretNames): array
     {
         $secrets = [];
