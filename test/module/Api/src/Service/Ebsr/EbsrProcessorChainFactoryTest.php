@@ -47,9 +47,7 @@ class EbsrProcessorChainFactoryTest extends TestCase
     public function testCreateServiceWithToggleDisabled()
     {
         $mockToggleService = m::mock(ToggleService::class);
-    ;
         $mockToggleService->shouldReceive('isEnabled')->with(FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn(false);
-
         $mockContainer = m::mock(ServiceLocatorInterface::class);
         $mockContainer->shouldReceive('get')->with(ToggleService::class)->andReturn($mockToggleService);
         $mockContainer->shouldReceive('get')->with(FileProcessor::class)->andReturn(m::mock(FileProcessor::class));

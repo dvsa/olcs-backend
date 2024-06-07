@@ -59,8 +59,6 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockToggle = m::mock(ToggleService::class);
         $mockToggle->shouldReceive('getToggleService')->andReturn($mockToggle);
         $mockToggle->shouldReceive('isEnabled')->with(FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn(false);
-
-
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('config')->andReturn(['ebsr' => $config]);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
@@ -124,5 +122,4 @@ class TransExchangeClientFactoryTest extends TestCase
 
         $this->assertInstanceOf(TransExchangeClient::class, $service);
     }
-
 }

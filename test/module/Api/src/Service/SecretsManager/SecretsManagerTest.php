@@ -52,7 +52,7 @@ class SecretsManagerTest extends TestCase
         $this->mockCache->shouldReceive('getCustomItem')->with(CacheEncryption::SECRETS_MANAGER_IDENTIFIER, $secretName)
             ->andReturn(null);
         $this->mockCache->shouldReceive('setCustomItem')->with(CacheEncryption::SECRETS_MANAGER_IDENTIFIER, '{"testSecret":{"client_secret":"testSecretValue"}}', $secretName);
-        $this->mockClient->shouldReceive('getSecretValue')->with(['SecretId' => $secretName,])->andReturn(['SecretString' => json_encode([ $secretName =>["client_secret" => $secretValue]])]);
+        $this->mockClient->shouldReceive('getSecretValue')->with(['SecretId' => $secretName,])->andReturn(['SecretString' => json_encode([ $secretName => ["client_secret" => $secretValue]])]);
         self::assertEquals([$secretName => ['client_secret' => $secretValue]], $this->sut->getSecret($secretName));
     }
 }
