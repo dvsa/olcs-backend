@@ -9,6 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 class AppRegistrationSecretTest extends TestCase
 {
+    private AppRegistrationSecret $sut;
+
     public function setUp(): void
     {
         $mockSecretsManager = m::mock(SecretsManagerInterface::class);

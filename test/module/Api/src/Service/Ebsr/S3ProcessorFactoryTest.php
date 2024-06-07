@@ -20,6 +20,8 @@ use Psr\Container\NotFoundExceptionInterface;
  */
 class S3ProcessorFactoryTest extends TestCase
 {
+    private S3ProcessorFactory $sut;
+
     public function setUp(): void
     {
         $this->sut = new S3ProcessorFactory();

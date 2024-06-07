@@ -580,5 +580,21 @@ return [
     'targetUrl' => '%operator_reports_api_url%',
         'apiKey' => '%dvsa_reports_api_key%',
         'proxy' => 'http://%shd_proxy%',
+    ],
+    'app-registrations' => [
+
+        'secrets' => ['provider' => \Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager::class],
+        'transxchange' => [
+            'token_url' => '%olcs_txc_token_url%',
+            'client_id' => '%olcs_txc_client_id%',
+            'scope' => '%olcs_txc_scope%',
+            'secret_name' => 'txc_client_secret',
+        ],
+
+        'proxy' => 'http://%shd_proxy%',
+        'max_retry_attempts' => 3,
+    ],
+    'localSecretsManager' => [
+        'txc_client_secret'=> ['client_secret' => '%olcs_txc_client_secret%'],
     ]
 ];

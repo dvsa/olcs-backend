@@ -19,7 +19,7 @@ class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
     public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
 
     const OUTPUT_TYPE = 'xmlFilename';
-
+    private string $subDirPath = '';
 
 
     /**

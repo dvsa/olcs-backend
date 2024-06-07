@@ -22,20 +22,20 @@ class EbsrProcessorChainFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateService()
+    public function testInvoke()
     {
         $mockToggleService = m::mock(ToggleService::class);
         $mockToggleService->shouldReceive('isEnabled')->with(FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn(true);
-        $logger = m::mock(Logger::class);
+        $logger = new Logger();
+        $logger->addWriter(new \Laminas\Log\Writer\Noop());
 
-        $logger->shouldReceive('log')->with(logger::INFO, 'TXC toggle on', []);
         $mockContainer = m::mock(ServiceLocatorInterface::class);
         $mockContainer->shouldReceive('get')->with(ToggleService::class)->andReturn($mockToggleService);
         $mockContainer->shouldReceive('get')->with(ZipProcessor::class)->andReturn(m::mock(ZipProcessor::class));
         $mockContainer->shouldReceive('get')->with(S3Processor::class)->andReturn(m::mock(S3Processor::class));
         $mockContainer->shouldReceive('get')->with('Logger')->andReturn($logger);
         $sut = new EbsrProcessingChainFactory();
-        $service = $sut->createService($mockContainer);
+        $service = $sut->__invoke($mockContainer, EbsrProcessingChain::class);
 
         $this->assertInstanceOf(EbsrProcessingChain::class, $service);
     }
@@ -54,7 +54,7 @@ class EbsrProcessorChainFactoryTest extends TestCase
         $mockContainer->shouldReceive('get')->with(FileProcessor::class)->andReturn(m::mock(FileProcessor::class));
         $mockContainer->shouldReceive('get')->with('Logger')->andReturn(m::mock(Logger::class));
         $sut = new EbsrProcessingChainFactory();
-        $service = $sut->createService($mockContainer);
+        $service = $sut->__invoke($mockContainer, EbsrProcessingChain::class);
 
         $this->assertInstanceOf(EbsrProcessingChain::class, $service);
     }
