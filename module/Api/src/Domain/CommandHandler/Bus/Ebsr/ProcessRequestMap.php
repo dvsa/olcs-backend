@@ -60,16 +60,16 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use EbsrProcessingAwareTrait;
     use ToggleAwareTrait;
 
-    private const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
-    private const MISSING_PACK_FILE_ERROR = 'Could not fetch EBSR pack file';
-    private const MISSING_TEMPLATE_ERROR = 'Missing template: %s';
+    public const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
+    public const MISSING_PACK_FILE_ERROR = 'Could not fetch EBSR pack file';
+    public const MISSING_TEMPLATE_ERROR = 'Missing template: %s';
 
-    private const TASK_DESC = '%s created: %s';
-    private const SCALE_DESC = ' (%s Scale)';
-    private const PDF_GENERATED = "The following PDFs %s: %s";
+    public const TASK_DESC = '%s created: %s';
+    public const SCALE_DESC = ' (%s Scale)';
+    public const PDF_GENERATED = "The following PDFs %s: %s";
 
-    private const TXC_INBOX_TYPE_ROUTE = 'Route';
-    private const TXC_INBOX_TYPE_PDF = 'Pdf';
+    public const TXC_INBOX_TYPE_ROUTE = 'Route';
+    public const TXC_INBOX_TYPE_PDF = 'Pdf';
 
     protected $repoServiceName = 'Bus';
 
