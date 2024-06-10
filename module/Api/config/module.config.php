@@ -737,7 +737,6 @@ return [
             'Country' => RepositoryFactory::class,
             'PresidingTc' => RepositoryFactory::class,
             'RefData' => RepositoryFactory::class,
-            'HistoricTm' => RepositoryFactory::class,
             'SlaTargetDate' => RepositoryFactory::class,
             'ViOcView' => RepositoryFactory::class,
             'ViOpView' => RepositoryFactory::class,
