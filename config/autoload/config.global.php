@@ -266,6 +266,9 @@ return [
         's3Options' => $isProductionAccount ? null : [
             'roleArn' => '%olcs_aws_s3_role_arn%',
             'roleSessionName' => '%olcs_aws_s3_role_session_name%'
+        ],
+        'sts' => [
+            'sts_regional_endpoints' => 'regional'
         ]
     ]),
     'mail' => $isProductionAccount ? [] : [
@@ -297,7 +300,8 @@ return [
     'ebsr' => [
     'transexchange_publisher' => [
         'uri' => 'http://localhost:8080/txc-%transxchange_version%/publisherService',
-        'options' => [
+        'new_uri' => '%transxchange_uri%',
+            'options' => [
             'timeout' => 30
         ]
     ],
