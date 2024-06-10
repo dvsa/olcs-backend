@@ -313,8 +313,10 @@ return [
         'processed_data' => true,
         'short_notice' => true
     ],
-    // The output bucket for TransXChange. This bucket will container the resulting PDFs.
-    'output_s3_bucket' => '%transxchange_aws_s3_output_bucket%',
+        // the input bucket for TransXChange, where the xml is placed
+        'input_s3_bucket' => '%transxchange_aws_s3_input_bucket%',
+        // The output bucket for TransXChange. This bucket will container the resulting PDFs.
+        'output_s3_bucket' => '%transxchange_aws_s3_output_bucket%',
         // The cross account role that VOL will assume to access the output bucket and output SQS queue.
         'txc_consumer_role_arn' => '%transxchange_aws_consumer_role%',
         // The maximum number of SQS message to consume per run.
