@@ -53,7 +53,6 @@ return [
   ],
   'document_share' => [
     'client' => [
-      'baseuri' => "http://docman.qa.olcs.dev-dvsacloud.uk:8080/hfs/",
       'webdav_baseuri' => 'http://webdav.qa.olcs.dev-dvsacloud.uk:8080/documents/',
       'password' => ''
     ],

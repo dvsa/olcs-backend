@@ -94,10 +94,6 @@ class RefData extends AbstractRefData
     public const INTER_JOURNEY_60_90 = 'inter_journey_60_90';
     public const INTER_JOURNEY_MORE_90 = 'inter_journey_more_90';
 
-    // user operating system
-    public const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
-    public const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
-
     // journey
     public const JOURNEY_SINGLE = 'journey_single';
     public const JOURNEY_MULTIPLE = 'journey_multiple';

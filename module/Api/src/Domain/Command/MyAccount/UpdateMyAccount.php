@@ -42,21 +42,6 @@ final class UpdateMyAccount extends AbstractCommand
     protected $contactDetails;
 
     /**
-     * @Transfer\Filter("Laminas\Filter\StringTrim")
-     * @Transfer\Validator("Laminas\Validator\InArray", options={"haystack": {"windows_7", "windows_10"}})
-     * @Transfer\Optional
-     */
-    protected $osType = null;
-
-    /**
-     * @return mixed
-     */
-    public function getOsType()
-    {
-        return $this->osType;
-    }
-
-    /**
      * @return int
      */
     public function getId()

@@ -5,13 +5,7 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Document;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Laminas\Http\Response;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Download
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class Download extends AbstractDownload
 {
     /**

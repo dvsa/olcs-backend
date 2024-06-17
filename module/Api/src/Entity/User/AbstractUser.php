@@ -29,7 +29,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
  *        @ORM\Index(name="ix_user_created_by", columns={"created_by"}),
  *        @ORM\Index(name="ix_user_last_modified_by", columns={"last_modified_by"}),
  *        @ORM\Index(name="ix_user_local_authority_id", columns={"local_authority_id"}),
- *        @ORM\Index(name="ix_user_os_type", columns={"os_type"}),
  *        @ORM\Index(name="ix_user_partner_contact_details_id",
      *     columns={"partner_contact_details_id"}),
  *        @ORM\Index(name="ix_user_team_id", columns={"team_id"}),
@@ -146,16 +145,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
      * @ORM\Column(type="string", name="login_id", length=40, nullable=true)
      */
     protected $loginId;
-
-    /**
-     * Os type
-     *
-     * @var \Dvsa\Olcs\Api\Entity\System\RefData
-     *
-     * @ORM\ManyToOne(targetEntity="Dvsa\Olcs\Api\Entity\System\RefData", fetch="LAZY")
-     * @ORM\JoinColumn(name="os_type", referencedColumnName="id", nullable=true)
-     */
-    protected $osType;
 
     /**
      * Partner contact details
@@ -518,30 +507,6 @@ abstract class AbstractUser implements BundleSerializableInterface, JsonSerializ
     public function getLoginId()
     {
         return $this->loginId;
-    }
-
-    /**
-     * Set the os type
-     *
-     * @param \Dvsa\Olcs\Api\Entity\System\RefData $osType entity being set as the value
-     *
-     * @return User
-     */
-    public function setOsType($osType)
-    {
-        $this->osType = $osType;
-
-        return $this;
-    }
-
-    /**
-     * Get the os type
-     *
-     * @return \Dvsa\Olcs\Api\Entity\System\RefData
-     */
-    public function getOsType()
-    {
-        return $this->osType;
     }
 
     /**

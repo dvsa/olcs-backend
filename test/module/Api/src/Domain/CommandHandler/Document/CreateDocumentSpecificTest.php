@@ -95,12 +95,6 @@ class CreateDocumentSpecificTest extends AbstractCommandHandlerTestCase
                 }
             );
 
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
@@ -157,12 +151,6 @@ class CreateDocumentSpecificTest extends AbstractCommandHandlerTestCase
                 }
             );
 
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
         $this->expectedSideEffect(CreateEbsrSubmissionCmd::class, ['document' => 111], $result);
@@ -213,12 +201,6 @@ class CreateDocumentSpecificTest extends AbstractCommandHandlerTestCase
                 }
             );
 
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
-
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
 
@@ -266,12 +248,6 @@ class CreateDocumentSpecificTest extends AbstractCommandHandlerTestCase
                     $this->assertNull($document->getLicence());
                 }
             );
-
-        $osType = new RefData('windows_7');
-        $currentUser = m::mock(UserEntity::class);
-        $currentUser->shouldReceive('getOsType')->andReturn($osType);
-        $this->mockedSmServices[AuthorizationService::class]->shouldReceive('getIdentity->getUser')
-            ->andReturn($currentUser);
 
         $result = new Result();
         $this->expectedSideEffect(UpdateDocumentLinks::class, ['id' => 111, 'application' => 123], $result);
