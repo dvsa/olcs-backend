@@ -56,7 +56,8 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
         $isPsv,
         $niFlag,
         $template,
-        $subCategory
+        $subCategory,
+        $isLgv
     ) {
         $licenceId = 1;
         $identifier = null;
@@ -74,6 +75,8 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('isPsv')
             ->andReturn($isPsv)
             ->twice()
+            ->shouldReceive('isLgv')
+            ->andReturn($isLgv)
             ->shouldReceive('getNiFlag')
             ->andReturn($niFlag)
             ->shouldReceive('getId')
@@ -147,7 +150,8 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
         $isPsv,
         $niFlag,
         $template,
-        $subCategory
+        $subCategory,
+        $isLgv
     ) {
         $licenceId = 1;
         $identifier = 2;
@@ -170,6 +174,8 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('isPsv')
             ->andReturn($isPsv)
             ->twice()
+            ->shouldReceive('isLgv')
+            ->andReturn($isLgv)
             ->shouldReceive('getNiFlag')
             ->andReturn($niFlag)
             ->shouldReceive('getId')
@@ -246,6 +252,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 'PSV_European_Community_Licence',
                 SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
+                false
             ],
             'reprint of GV NI with new template switched off' => [
                 1,
@@ -255,6 +262,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'Y',
                 'GV_NI_European_Community_Licence',
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'reprint of GV GB with new template switched off' => [
                 1,
@@ -264,6 +272,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 'GV_GB_European_Community_Licence',
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'new PSV with new template switched off' => [
                 1,
@@ -273,6 +282,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 'PSV_European_Community_Licence',
                 SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
+                false
             ],
             'new GV NI with new template switched off' => [
                 1,
@@ -282,6 +292,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'Y',
                 'GV_NI_European_Community_Licence',
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'new GV GB with new template switched off' => [
                 1,
@@ -291,6 +302,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 'GV_GB_European_Community_Licence',
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'reprint PSV with new template switched on' => [
                 0,
@@ -300,6 +312,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 Document::GV_UK_COMMUNITY_LICENCE_PSV,
                 SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
+                false
             ],
             'reprint GV NI with new template switched on' => [
                 0,
@@ -309,6 +322,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'Y',
                 Document::GV_UK_COMMUNITY_LICENCE_NI,
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'reprint GV GB with new template switched on' => [
                 0,
@@ -318,6 +332,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 Document::GV_UK_COMMUNITY_LICENCE_GB,
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'new PSV with new template switched on' => [
                 0,
@@ -327,6 +342,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 Document::GV_UK_COMMUNITY_LICENCE_PSV,
                 SubCategory::DOC_SUB_CATEGORY_PSV_CERTIFIED_COPY,
+                false
             ],
             'new GV NI with new template switched on' => [
                 0,
@@ -336,6 +352,7 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'Y',
                 Document::GV_UK_COMMUNITY_LICENCE_NI,
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
             ],
             'new GV GB with new template switched on' => [
                 0,
@@ -345,6 +362,27 @@ class GenerateBatchTest extends AbstractCommandHandlerTestCase
                 'N',
                 Document::GV_UK_COMMUNITY_LICENCE_GB,
                 SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                false
+            ],
+            'new LGV GB with new template switched on' => [
+                0,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                false,
+                'N',
+                Document::LGV_UK_COMMUNITY_LICENCE_GB,
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                true
+            ],
+            'new LGV NI with new template switched on' => [
+                0,
+                false,
+                SystemParameter::DISABLE_UK_COMMUNITY_LIC_OFFICE,
+                false,
+                'Y',
+                Document::LGV_UK_COMMUNITY_LICENCE_NI,
+                SubCategory::DOC_SUB_CATEGORY_COMMUNITY_LICENCE,
+                true
             ],
         ];
     }
