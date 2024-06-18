@@ -176,7 +176,14 @@ final class GenerateBatch extends AbstractCommandHandler implements Transactione
         }
 
         if ($entity->getNiFlag() === 'Y') {
+            if ($entity->isLgv()) {
+                return DocumentEntity::LGV_UK_COMMUNITY_LICENCE_NI;
+            }
             return DocumentEntity::GV_UK_COMMUNITY_LICENCE_NI;
+        }
+
+        if ($entity->isLgv()) {
+            return DocumentEntity::LGV_UK_COMMUNITY_LICENCE_GB;
         }
 
         return DocumentEntity::GV_UK_COMMUNITY_LICENCE_GB;
