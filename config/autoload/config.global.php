@@ -98,10 +98,6 @@ return [
     // Document service
     'document_share' => [
         'client' => [
-            // Document service URI *Environment specific*
-            'baseuri' => "%olcs_docman%",
-            // Document service user ID *Environment specific*
-            'uuid' => 'uD12345',
             // Document service workspace "olcs"
             'workspace' => 'olcs',
             'webdav_baseuri' => '%olcs_webdav%',
