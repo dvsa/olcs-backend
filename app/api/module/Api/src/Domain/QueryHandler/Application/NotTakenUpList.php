@@ -35,7 +35,6 @@ class NotTakenUpList extends AbstractQueryHandler
 
     protected function getApplicationsForNtu($now)
     {
-
         $trafficAreas = $this->getRepo('TrafficArea')->fetchAll();
         $applications = $this->getRepo()->fetchForNtu();
 
