@@ -18,7 +18,6 @@ final class PendingList extends AbstractQueryHandler
 
     public function handleQuery(QueryInterface $query)
     {
-        $userOsType = $this->getCurrentUser()->getOsType();
         /**
          * @var PublicationRepo $repo
          */
@@ -34,7 +33,6 @@ final class PendingList extends AbstractQueryHandler
                     'document'
                 ]
             ),
-            'userOsType' => $userOsType,
             'count' => $result['count']
         ];
     }

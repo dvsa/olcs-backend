@@ -45,11 +45,6 @@ class User extends AbstractUser implements OrganisationProviderInterface
     public const ERROR_ADMIN_USER_ALREADY_EXISTS = 'err_admin_user_already_exists';
     public const ERR_ANON_USERNAME = 'ERR_ANON_USERNAME';
 
-    // user operating system
-    public const USER_OS_TYPE_WINDOWS_7 = 'windows_7';
-    public const USER_OS_TYPE_WINDOWS_10 = 'windows_10';
-    public const USER_OS_TYPE_NORTHERN_I = 'northern_i';
-
     public const ANON_USERNAME = 'anon';
 
     /**
@@ -334,10 +329,6 @@ class User extends AbstractUser implements OrganisationProviderInterface
     {
         if (isset($data['team'])) {
             $this->team = $data['team'];
-        }
-
-        if (isset($data['osType'])) {
-            $this->osType = $data['osType'];
         }
 
         return $this;

@@ -25,8 +25,6 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
     use CacheAwareTrait;
     use AuthAwareTrait;
 
-    public const DEFAULT_OS = 'windows_7';
-
     /**
      * @var string
      */
@@ -119,10 +117,6 @@ final class CreateDocumentSpecific extends AbstractCommandHandler implements Aut
         if ($command->getMetadata() !== null) {
             $document->setMetadata($command->getMetadata());
         }
-
-        $osType = $this->getCurrentUser()->getOsType() ??
-            $this->getRepo()->getRefdataReference(static::DEFAULT_OS);
-        $document->setOsType($osType);
     }
 
     /**
