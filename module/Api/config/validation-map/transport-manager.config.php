@@ -21,8 +21,6 @@ return [
 
     QueryHandler\Tm\TransportManager::class                        => Misc\IsInternalUser::class,
 
-    QueryHandler\Tm\HistoricTm::class => Misc\IsInternalUser::class,
-
     // Commands
     CommandHandler\TransportManagerApplication\Create::class => Handler\TransportManagerApplication\Create::class,
     CommandHandler\TransportManagerApplication\CreateForResponsibilities::class => Misc\IsInternalUser::class,
