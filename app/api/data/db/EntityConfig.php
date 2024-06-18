@@ -2115,14 +2115,6 @@ return array(
             'ignore' => true
         )
     ),
-    'historic_tm' => array(
-        'seen_contract' => array(
-            'type' => 'yesno'
-        ),
-        'seen_qualification' => array(
-            'type' => 'yesno'
-        )
-    ),
     'sla_target_date' => array(
         'document_id' => array(
             'inversedBy' => array(
