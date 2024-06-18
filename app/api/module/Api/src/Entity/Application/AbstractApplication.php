@@ -63,6 +63,15 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     protected $administration;
 
     /**
+     * Application Referred to PI
+     *
+     * @var string
+     *
+     * @ORM\Column(type="yesnonull", name="application_referred_to_pi", nullable=true)
+     */
+    protected $applicationReferredToPi;
+
+    /**
      * Applied via
      *
      * @var \Dvsa\Olcs\Api\Entity\System\RefData
@@ -978,6 +987,30 @@ abstract class AbstractApplication implements BundleSerializableInterface, JsonS
     public function setAdministration($administration)
     {
         $this->administration = $administration;
+
+        return $this;
+    }
+
+    /**
+     * Get applicationReferredToPi
+     *
+     * @return string
+     */
+    public function getApplicationReferredToPi()
+    {
+        return $this->applicationReferredToPi;
+    }
+
+    /**
+     * Set applicationReferredToPi
+     *
+     * @param string $applicationReferredToPi new value being set
+     *
+     * @return Application
+     */
+    public function setApplicationReferredToPi($applicationReferredToPi)
+    {
+        $this->applicationReferredToPi = $applicationReferredToPi;
 
         return $this;
     }

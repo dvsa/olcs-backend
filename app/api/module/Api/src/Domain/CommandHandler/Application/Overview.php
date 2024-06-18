@@ -48,6 +48,8 @@ final class Overview extends AbstractCommandHandler implements TransactionedInte
 
         $application->setOverrideOoo($command->getOverrideOppositionDate());
 
+        $application->setApplicationReferredToPi($command->getApplicationReferredToPi());
+
         $this->getRepo()->save($application);
 
         $result
