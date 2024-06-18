@@ -30,13 +30,6 @@
                         }
                      },
                      {
-                        "terms": {
-                           "found_as": [
-                              "Historical TM"
-                           ]
-                        }
-                     },
-                     {
                         "bool": {
                            "must": [
                               {
