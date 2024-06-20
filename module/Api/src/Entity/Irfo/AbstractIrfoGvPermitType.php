@@ -57,6 +57,15 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     protected $description;
 
     /**
+     * Display until
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(type="date", name="display_until", nullable=true)
+     */
+    protected $displayUntil;
+
+    /**
      * Identifier - Id
      *
      * @var int
@@ -154,6 +163,37 @@ abstract class AbstractIrfoGvPermitType implements BundleSerializableInterface, 
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set the display until
+     *
+     * @param \DateTime $displayUntil new value being set
+     *
+     * @return IrfoGvPermitType
+     */
+    public function setDisplayUntil($displayUntil)
+    {
+        $this->displayUntil = $displayUntil;
+
+        return $this;
+    }
+
+    /**
+     * Get the display until date
+     *
+     * @param bool $asDateTime If true will always return a \DateTime (or null) never a string datetime
+     *
+     * @return \DateTime|string
+
+     */
+    public function getDisplayUntil($asDateTime = false)
+    {
+        if ($asDateTime === true) {
+            return $this->asDateTime($this->displayUntil);
+        }
+
+        return $this->displayUntil;
     }
 
     /**

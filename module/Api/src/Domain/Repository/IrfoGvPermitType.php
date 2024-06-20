@@ -31,4 +31,19 @@ class IrfoGvPermitType extends AbstractRepository
     {
         $qb->orderBy($this->alias . '.description', 'ASC');
     }
+
+    public function fetchActiveRecords()
+    {
+        $doctrineQb = $this->createQueryBuilder();
+
+        $doctrineQb->where($doctrineQb->expr()->orX(
+            $doctrineQb->expr()->isNull($this->alias . '.displayUntil'),
+            $doctrineQb->expr()->gte($this->alias . '.displayUntil', ':today')
+        ))
+            ->setParameter('today', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
+
+        $doctrineQb->orderBy($this->alias . '.description', 'ASC');
+
+        return $doctrineQb->getQuery()->getResult();
+    }
 }
