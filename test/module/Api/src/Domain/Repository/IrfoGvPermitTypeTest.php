@@ -47,7 +47,6 @@ class IrfoGvPermitTypeTest extends RepositoryTestCase
                 ->andReturn(['Mocked Result'])
                 ->getMock());
 
-
         $this->assertEquals(['Mocked Result'], $this->sut->fetchActiveRecords('ORG1'));
 
         $actualQuery = $this->query;
