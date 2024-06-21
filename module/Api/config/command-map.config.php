@@ -1300,4 +1300,7 @@ return [
     Command\Messaging\Conversation\StoreEnhancedSnapshot::class  => CommandHandler\Messaging\Conversation\StoreEnhancedSnapshot::class,
     TransferCommand\Messaging\Message\Create::class      => CommandHandler\Messaging\Message\Create::class,
     TransferCommand\Messaging\Conversation\Create::class => CommandHandler\Messaging\Conversation\Create::class,
+
+    // Local Authority
+    TransferCommand\LocalAuthority\Update::class => CommandHandler\LocalAuthority\Update::class,
 ];

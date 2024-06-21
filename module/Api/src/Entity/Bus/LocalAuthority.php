@@ -18,4 +18,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class LocalAuthority extends AbstractLocalAuthority
 {
+    public function update(string $description, ?string $emailAddress): LocalAuthority
+    {
+        $this->description = $description;
+        $this->emailAddress = $emailAddress;
+        return $this;
+    }
 }

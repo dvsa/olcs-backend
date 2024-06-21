@@ -529,6 +529,7 @@ return [
 
     TransferQuery\RefData\RefDataList::class => QueryHandler\RefData\RefDataList::class,
     TransferQuery\LocalAuthority\LocalAuthorityList::class => QueryHandler\LocalAuthority\LocalAuthorityList::class,
+    TransferQuery\LocalAuthority\ById::class => QueryHandler\LocalAuthority\ById::class,
 
     // SystemParameter
     TransferQuery\SystemParameter\SystemParameter::class => QueryHandler\SystemParameter\SystemParameter::class,
