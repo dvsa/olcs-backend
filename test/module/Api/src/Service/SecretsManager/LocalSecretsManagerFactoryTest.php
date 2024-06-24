@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\SecretsManager;
 
+use Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager;
 use Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManagerFactory;
-use PHPUnit\Framework\TestCase;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class LocalSecretsManagerFactoryTest extends TestCase
+class LocalSecretsManagerFactoryTest extends MockeryTestCase
 {
     private LocalSecretsManagerFactory $sut;
 
@@ -20,14 +24,14 @@ class LocalSecretsManagerFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateService()
+    public function testInvoke(): void
     {
         $config = ['localSecretsManager' => ['testSecret' => 'testValue']];
-        $sm = \Mockery::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')->with('Config')->andReturn($config);
+        $sm = \Mockery::mock(ContainerInterface::class);
+        $sm->shouldReceive('get')->with('config')->andReturn($config);
         $this->assertInstanceOf(
-            \Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager::class,
-            $this->sut->createService($sm)
+            LocalSecretsManager::class,
+            $this->sut->__invoke($sm, LocalSecretsManager::class)
         );
     }
 }

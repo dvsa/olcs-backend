@@ -2,13 +2,10 @@
 
 namespace Dvsa\Olcs\AwsSdk\Factories;
 
-use Aws\Credentials\AssumeRoleCredentialProvider;
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\InstanceProfileProvider;
-use Aws\Sts\StsClient;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Interop\Container\ContainerInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class AwsCredentailsProviderFactory
@@ -18,24 +15,12 @@ use Interop\Container\ContainerInterface;
  */
 class AwsCredentialsProviderFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return mixed
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator)
-    {
-        return $this->__invoke($serviceLocator, CredentialProvider::class);
-    }
-
     protected function getEnvCredentialProvider()
     {
         return CredentialProvider::env();
     }
 
-    protected function getInstanceProfileCredentialProvider()
+    protected function getInstanceProfileCredentialProvider(): InstanceProfileProvider
     {
         return CredentialProvider::instanceProfile();
     }

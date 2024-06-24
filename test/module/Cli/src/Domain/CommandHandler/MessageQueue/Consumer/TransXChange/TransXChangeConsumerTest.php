@@ -25,7 +25,6 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Exception;
 use Laminas\Filter\FilterPluginManager;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
@@ -33,6 +32,7 @@ use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
@@ -416,7 +416,7 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);

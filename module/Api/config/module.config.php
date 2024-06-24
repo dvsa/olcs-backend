@@ -527,7 +527,7 @@ return [
             TransXChangeAppRegistrationService::class => AppRegistrationServiceFactory::class,
             ApiSrv\SecretsManager\SecretsManager::class => SecretsManagerFactory::class,
             ApiSrv\SecretsManager\LocalSecretsManager::class => ApiSrv\SecretsManager\LocalSecretsManagerFactory::class,
-            ApiSrv\AppRegistration\Adapter\AppRegistrationSecret::class => Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecretsFactory::class,
+            ApiSrv\AppRegistration\Adapter\AppRegistrationSecret::class => Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecretFactory::class,
             ApiSrv\Ebsr\S3Processor::class => ApiSrv\Ebsr\S3ProcessorFactory::class,
             ApiSrv\Ebsr\ZipProcessor::class => ApiSrv\Ebsr\ZipProcessorFactory::class,
             EbsrProcessingChain::class => EbsrProcessingChainFactory::class,

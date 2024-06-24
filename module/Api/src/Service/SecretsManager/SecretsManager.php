@@ -6,9 +6,6 @@ namespace Dvsa\Olcs\Api\Service\SecretsManager;
 
 use Aws\SecretsManager\SecretsManagerClient;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Laminas\Http\Client\Adapter\AdapterInterface;
-use Psr\SimpleCache\CacheInterface;
-use Psr\SimpleCache\InvalidArgumentException;
 
 class SecretsManager extends AbstractSecretsManager implements SecretsManagerInterface
 {
@@ -20,8 +17,6 @@ class SecretsManager extends AbstractSecretsManager implements SecretsManagerInt
         $this->client = $client;
         $this->cache = $cache;
     }
-
-
 
     /**
      * @throws \JsonException

@@ -1,13 +1,9 @@
 <?php
 
-/**
- * ProcessRequestMap Test
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus\Ebsr;
 
-use Admin\Data\Mapper\FeatureToggle;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
@@ -34,10 +30,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use org\bovigo\vfs\vfsStream;
 
-/**
- * ProcessRequestMap Test
- * @author Ian Lindsay <ian@hemera-business-services.co.uk>
- */
 class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 {
     protected $templatePath;
@@ -85,10 +77,10 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      *
      * @dataProvider handleCommandCancellationProvider
      */
-    public function testHandleCommandCancellation($fromNewEbsr, $state, $getStatusTimes)
+    public function testHandleCommandCancellation($fromNewEbsr, $state, $getStatusTimes): void
     {
 
-        $this->mocktoggle(false);
+        $this->mockToggle(false);
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
@@ -160,7 +152,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     /**
      * data provider for testHandleCommandCancellation
      */
-    public function handleCommandCancellationProvider()
+    public function handleCommandCancellationProvider(): array
     {
         return [
             [true, 'cancellation', 1],
@@ -180,8 +172,8 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $state,
         $busRegStatus,
         $getStatusTimes
-    ) {
-        $this->mocktoggle(false);
+    ): void {
+        $this->mockToggle(false);
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
@@ -269,7 +261,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     /**
      * data provider for testHandleCommandNotCancellation
      */
-    public function handleCommandNotCancellationProvider()
+    public function handleCommandNotCancellationProvider(): array
     {
         return [
             [true, false, 1, 'variation', BusRegEntity::STATUS_VAR, 1],
@@ -282,9 +274,9 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     /**
      * testHandleCommand where documents are failing
      */
-    public function testHandleCommandDocumentsFailing()
+    public function testHandleCommandDocumentsFailing(): void
     {
-        $this->mocktoggle(false);
+        $this->mockToggle(false);
         //use different config from the rest of the tests
         $config = [
             'ebsr' => [
@@ -351,7 +343,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      *
      * @dataProvider missingEbsrPackProvider
      */
-    public function testHandleCommandMissingEbsrPack($fileProcessorException)
+    public function testHandleCommandMissingEbsrPack(): void
     {
         $this->expectException(TransxchangeException::class);
         $this->expectExceptionMessage(ProcessRequestMap::MISSING_PACK_FILE_ERROR);
@@ -391,7 +383,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     /**
      * @return array
      */
-    public function missingEbsrPackProvider()
+    public function missingEbsrPackProvider(): array
     {
         return [
             [EbsrPackException::class],
@@ -402,7 +394,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     /**
      * test handleCommand when template config is not found
      */
-    public function testHandleCommandMissingTemplateConfig()
+    public function testHandleCommandMissingTemplateConfig(): void
     {
         $config = [
             'ebsr' => [
@@ -462,7 +454,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
     /**
      * test handleCommand throws an exception when config not found
      */
-    public function testHandleCommandMissingFilePathConfig()
+    public function testHandleCommandMissingFilePathConfig(): void
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\TransxchangeException::class);
         $this->expectExceptionMessage('No tmp directory specified in config');
@@ -479,7 +471,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      *
      * @return string
      */
-    private function taskSuccessDesc($state, $regNo, $desc)
+    private function taskSuccessDesc($state, $regNo, $desc): string
     {
         return 'New ' . $state . ' created: ' . $regNo . "\n" . 'The following PDFs were generated: ' . $desc;
     }
@@ -488,7 +480,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      * @param $uploadedDocumentId
      * @return Result
      */
-    private function docUploadResult($uploadedDocumentId)
+    private function docUploadResult($uploadedDocumentId): Result
     {
         $docUploadResult = new Result();
         $docUploadResult->addId('document', $uploadedDocumentId);
@@ -500,7 +492,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      * @param $command
      * @param $busReg
      */
-    private function busEntity($command, $busReg)
+    private function busEntity($command, $busReg): void
     {
         $this->repoMap['Bus']->shouldReceive('fetchUsingId')
             ->once()
@@ -521,7 +513,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $transxchangeFilename,
         $numRequests,
         $returnDocument = true
-    ) {
+    ): void {
         $xmlFilename = 'filename.xml';
 
         $transXchangeDocument = [
@@ -559,7 +551,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      * @param $uploadedDocumentId
      * @param $pdfType
      */
-    private function txcInboxSideEffect($id, $uploadedDocumentId, $pdfType)
+    private function txcInboxSideEffect($id, $uploadedDocumentId, $pdfType): void
     {
         if ($pdfType !== '') {
             $txcPdfData = [
@@ -572,10 +564,10 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         }
     }
 
-    public function testToggleOn()
+    public function testToggleOn(): void
     {
         // add test for is toggleService->isEnabled true
-        $this->mocktoggle(true);
+        $this->mockToggle(true);
         $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, [], new Result(), 0);
     }
 
@@ -586,7 +578,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      * @param $documentDesc
      * @param $uploadResult
      */
-    private function documentSideEffect($transxchangeFilename, $busRegId, $licenceId, $documentDesc, $uploadResult)
+    private function documentSideEffect($transxchangeFilename, $busRegId, $licenceId, $documentDesc, $uploadResult): void
     {
         $documentData = [
             'content' => base64_encode(file_get_contents($transxchangeFilename)),
@@ -607,7 +599,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      * @param $licenceId
      * @param $taskDesc
      */
-    private function taskSideEffect($busRegId, $licenceId, $taskDesc)
+    private function taskSideEffect($busRegId, $licenceId, $taskDesc): void
     {
         $taskData = [
             'category' => TaskEntity::CATEGORY_BUS,
@@ -621,7 +613,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
     }
 
-    private function mocktoggle($enabled): void
+    private function mockToggle($enabled): void
     {
         $this->mockedSmServices[ToggleService::class]->shouldReceive('isEnabled')->with(\Dvsa\Olcs\Api\Entity\System\FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn($enabled);
     }

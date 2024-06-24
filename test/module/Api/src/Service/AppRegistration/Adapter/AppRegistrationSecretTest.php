@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\AppRegistration\Adapter;
 
 use Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecret;
 use Dvsa\Olcs\Api\Service\SecretsManager\SecretsManagerInterface;
 use Mockery as m;
-use PHPUnit\Framework\TestCase;
 
-class AppRegistrationSecretTest extends TestCase
+class AppRegistrationSecretTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     private AppRegistrationSecret $sut;
 
@@ -19,7 +20,7 @@ class AppRegistrationSecretTest extends TestCase
         parent::setUp();
     }
 
-    public function testGetClientSecret()
+    public function testGetClientSecret(): void
     {
         $this->assertEquals('client_secret', $this->sut->getClientSecret('txc_client_secret'));
     }

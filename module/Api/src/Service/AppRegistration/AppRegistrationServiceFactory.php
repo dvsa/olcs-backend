@@ -5,17 +5,14 @@ declare(strict_types=1);
 namespace Dvsa\Olcs\Api\Service\AppRegistration;
 
 use Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecret;
-use Exception;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleRetry\GuzzleRetryMiddleware;
-use Interop\Container\ContainerInterface;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Psr\SimpleCache\InvalidArgumentException;
 use RuntimeException;
 
 class AppRegistrationServiceFactory implements FactoryInterface
@@ -72,15 +69,5 @@ class AppRegistrationServiceFactory implements FactoryInterface
         }
 
         return $options;
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     * @deprecated remove following laminas v3 upgrade
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator, $name = null, $requestedName = null)
-    {
-        return $this->__invoke($serviceLocator, $requestedName);
     }
 }

@@ -26,17 +26,23 @@ trait QueueServiceTrait
      */
     public function setMessageBuilderService(MessageBuilder $messageBuilderService): void
     {
-        $this->messageBuilderService = $messageBuilderService;
+        if ($this->messageBuilderService === null) {
+            $this->messageBuilderService = $messageBuilderService;
+        }
     }
 
     public function setQueueService(Queue $queueService): void
     {
-        $this->queueService = $queueService;
+        if ($this->queueService === null) {
+            $this->queueService = $queueService;
+        }
     }
 
     public function setQueueConfig(array $config): void
     {
-        $this->queueConfig = $config;
+        if ($this->queueConfig === null) {
+            $this->queueConfig = $config;
+        }
     }
 
     protected function getQueueUrlKey($messageType): string

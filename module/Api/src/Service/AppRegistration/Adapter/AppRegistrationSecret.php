@@ -10,8 +10,6 @@ class AppRegistrationSecret
 {
     private SecretsManagerInterface $secretsManager;
 
-
-
     public function __construct(SecretsManagerInterface $secretsManager)
     {
         $this->secretsManager = $secretsManager;

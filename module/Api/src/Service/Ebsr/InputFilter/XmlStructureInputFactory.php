@@ -9,14 +9,9 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
-use Olcs\XmlTools\Filter\ParseXml;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Psr\Container\ContainerInterface;
 
-/**
- * Class XmlStructureInputFactory
- * @package Dvsa\Olcs\Api\Service\Ebsr\InputFilter
- */
 class XmlStructureInputFactory implements FactoryInterface
 {
     public const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';

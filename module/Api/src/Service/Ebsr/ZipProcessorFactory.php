@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Psr\Container\ContainerInterface;
 use Laminas\Log\PsrLoggerAdapter;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\Finder\Finder;
@@ -19,7 +18,7 @@ class ZipProcessorFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): ZipProcessor
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $tmpDir = ($config['tmpDirectory'] ?? sys_get_temp_dir());
         $decompressFilter = $container->get('FilterManager')->get('Decompress');
         $decompressFilter->setAdapter('zip');
@@ -31,10 +30,5 @@ class ZipProcessorFactory implements FactoryInterface
             $zipProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
         }
         return $zipProcessor;
-    }
-
-    public function createService(ServiceLocatorInterface $serviceLocator): ZipProcessor
-    {
-        return $this->__invoke($serviceLocator, ZipProcessor::class);
     }
 }

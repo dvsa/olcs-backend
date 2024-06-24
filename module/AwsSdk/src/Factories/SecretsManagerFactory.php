@@ -6,27 +6,13 @@ use Aws\SecretsManager\SecretsManagerClient;
 use Dvsa\Olcs\Api\Service\SecretsManager\SecretsManager;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Exception;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 class SecretsManagerFactory implements FactoryInterface
 {
-    /**
-     * Create service
-     *
-     * @param ServiceLocatorInterface $serviceLocator
-     *
-     * @return mixed
-     * @throws ContainerExceptionInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): SecretsManager
-    {
-        return $this->__invoke($serviceLocator, Secretsmanager::class);
-    }
-
     /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -40,7 +26,7 @@ class SecretsManagerFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): SecretsManager
     {
-        $config = $container->get('Config');
+        $config = $container->get('config');
 
         // get the cache
         $cache = $container->get(CacheEncryption::class);

@@ -8,7 +8,6 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareInterface;
 use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
@@ -343,13 +342,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
         $this->templateBuilder = $container->get(TemplateBuilder::class);
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

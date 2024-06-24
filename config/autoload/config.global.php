@@ -298,21 +298,24 @@ return [
     ],
 
     'ebsr' => [
-    'transexchange_publisher' => [
-        'uri' => 'http://localhost:8080/txc-%transxchange_version%/publisherService',
-        'new_uri' => '%transxchange_uri%',
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc-%transxchange_version%/publisherService',
+            'new_uri' => '%transxchange_uri%',
             'options' => [
-            'timeout' => 30
-        ]
-    ],
-    'tmp_extra_path' => '/EBSR', //extra path to ebsr files within /tmp
-    //debug only - validation must always be set to true in production
-    'validate' => [
-        'xml_structure' => true,
-        'bus_registration' => true,
-        'processed_data' => true,
-        'short_notice' => true
-    ],
+                'adapter' => \Laminas\Http\Client\Adapter\Proxy::class,
+                'proxy_host' => 'proxy.%domain%',
+                'proxy_port' => 3128,
+                'timeout' => 30
+            ]
+        ],
+        'tmp_extra_path' => '/EBSR', //extra path to ebsr files within /tmp
+        //debug only - validation must always be set to true in production
+        'validate' => [
+            'xml_structure' => true,
+            'bus_registration' => true,
+            'processed_data' => true,
+            'short_notice' => true
+        ],
         // the input bucket for TransXChange, where the xml is placed
         'input_s3_bucket' => '%transxchange_aws_s3_input_bucket%',
         // The output bucket for TransXChange. This bucket will container the resulting PDFs.

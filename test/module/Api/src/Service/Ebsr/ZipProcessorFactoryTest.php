@@ -1,29 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
 use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessorFactory;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Laminas\Filter\Decompress;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Laminas\Log\LoggerInterface;
+use Psr\Container\ContainerInterface;
 
-class ZipProcessorFactoryTest extends TestCase
+class ZipProcessorFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
-    public function testCreateService()
+    public function testInvoke(): void
     {
         $sut = new ZipProcessorFactory();
-        $service = $sut->createService($this->mockContainer());
+        $service = $sut->__invoke($this->mockContainer(), ZipProcessor::class);
         $this->assertInstanceOf(ZipProcessor::class, $service);
     }
 
-    private function mockContainer()
+    private function mockContainer(): m\MockInterface
     {
-        $mockContainer = m::mock(ServiceLocatorInterface::class);
-        $mockContainer->shouldReceive('get')->with('Config')->andReturn(
+        $mockContainer = m::mock(ContainerInterface::class);
+        $mockContainer->shouldReceive('get')->with('config')->andReturn(
             [
                 "tmpDirectory" => "test",
                 "ebsr" => [

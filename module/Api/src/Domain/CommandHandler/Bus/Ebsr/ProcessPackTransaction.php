@@ -13,14 +13,12 @@ use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
-use Laminas\Log\LoggerInterface;
 
 final class ProcessPackTransaction extends AbstractProcessPack implements
     TransactionedInterface,
     UploaderAwareInterface
 {
     use UploaderAwareTrait;
-
 
     public function handleCommand(CommandInterface $command)
     {
@@ -42,7 +40,6 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
-        $ebsrDoc = false;
 
         try {
             $filesProcessed = $this->getEbsrProcessing()->process($doc->getIdentifier());

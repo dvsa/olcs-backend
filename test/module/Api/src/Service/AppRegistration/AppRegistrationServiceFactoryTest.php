@@ -4,19 +4,17 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Service\AppRegistration;
 
-use Aws\SecretsManager\SecretsManagerClient;
 use Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecret;
 use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
 use Dvsa\Olcs\Api\Service\AppRegistration\AppRegistrationServiceFactory;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Laminas\Log\Logger as Logger;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
+use Psr\Container\ContainerInterface;
 
-class AppRegistrationServiceFactoryTest extends TestCase
+class AppRegistrationServiceFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $config = [
             'cache-encryption' => ['secrets' => ['shared' => 'test']],
@@ -34,7 +32,7 @@ class AppRegistrationServiceFactoryTest extends TestCase
 
         $logger = new Logger();
 
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockAppRegistrationSecret = m::mock(AppRegistrationSecret::class);
         $mockCache = m::mock(CacheEncryption::class);
         $mockCache->shouldReceive('setEncryptionKey')->with('test');

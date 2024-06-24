@@ -9,16 +9,15 @@ use Dvsa\Olcs\Api\Service\Ebsr\S3Processor;
 use Dvsa\Olcs\Api\Service\Ebsr\S3ProcessorFactory;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface as FileUploaderInterfaceAlias;
 use Laminas\Config\Config;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * @property S3ProcessorFactory $sut
  */
-class S3ProcessorFactoryTest extends TestCase
+class S3ProcessorFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     private S3ProcessorFactory $sut;
 
@@ -32,9 +31,9 @@ class S3ProcessorFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateService()
+    public function testInvoke(): void
     {
-        $mockSl = m::mock(ServiceLocatorInterface::class);
+        $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('config')->andReturn([
             'ebsr' => ['input_s3_bucket' => "test",'txc_consumer_role_arn' => 'test-arn-role-123456789'],
             'awsOptions' => ['region' => 'test']
@@ -56,6 +55,6 @@ class S3ProcessorFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with('FileUploader')->andReturn($mockFileUploader);
         $mockSl->shouldReceive('get')->with('Config')->andReturn($mockConfig);
         $mockSl->shouldReceive('get')->with('Logger')->andReturn($mockLogger);
-        $this->assertInstanceOf(S3Processor::class, $this->sut->createService($mockSl));
+        $this->assertInstanceOf(S3Processor::class, $this->sut->__invoke($mockSl, S3Processor::class));
     }
 }

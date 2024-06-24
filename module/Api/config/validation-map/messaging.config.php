@@ -2,6 +2,7 @@
 
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Document\CanAccessDocumentsWithIds;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanAccessCorrelatedDocuments;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanCloseConversationWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Messaging\CanCreateConversationForOrganisation;

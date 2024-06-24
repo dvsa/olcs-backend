@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -19,18 +21,18 @@ use Psr\Container\NotFoundExceptionInterface;
 
 class TransExchangeClientFactoryTest extends TestCase
 {
-    public function testInvokeNoConfig()
+    public function testInvokeNoConfig(): void
     {
         $this->expectException(\RuntimeException::class);
 
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
 
         $sut = new TransExchangeClientFactory();
         $sut->__invoke($mockSl, TransExchangeClient::class);
     }
 
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $config = [
             'transexchange_publisher' => [
@@ -80,14 +82,19 @@ class TransExchangeClientFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateServiceToggleOn()
+    public function tesInvokeToggleOn(): void
     {
         $config = [
-            'transexchange_publisher' => [
-                'uri' => 'http://localhost:8080/txc/',
-                'new_uri' => 'http://txc.dev/',
-                'options' => ['argseparator' => '~'],
-                'template_file' => 'template.xml'
+            'ebsr' => [
+                'transexchange_publisher' => [
+                    'uri' => 'http://localhost:8080/txc/',
+                    'new_uri' => 'http://txc.dev/',
+                    'options' => ['argseparator' => '~'],
+                    'template_file' => 'template.xml'
+                ]
+            ],
+            'app-registrations' => [
+                'proxy' => 'http://localhost',
             ]
         ];
         $mockToggle = m::mock(ToggleService::class);
@@ -108,7 +115,7 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockTxcAppRegService = m::mock(TransXChangeAppRegistrationService::class);
         $mockTxcAppRegService->shouldReceive('getToken')->once()->andReturn('token');
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('config')->andReturn(['ebsr' => $config]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('ValidatorManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('TransExchangePublisherXmlMapping')->andReturn($mockSpec);

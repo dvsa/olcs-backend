@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Queue\Exception\NoMessagesException;
 use Dvsa\Olcs\Queue\Service\QueueInterface;
 use Dvsa\Olcs\Queue\Service\QueueServiceTrait;
 

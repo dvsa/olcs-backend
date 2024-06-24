@@ -1,18 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\SecretsManager;
 
 use Aws\SecretsManager\SecretsManagerClient;
 use Dvsa\Olcs\Api\Service\SecretsManager\SecretsManager;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Psr\SimpleCache\InvalidArgumentException;
 
 /**
  * @property SecretsManager $sut
  */
-class SecretsManagerTest extends TestCase
+class SecretsManagerTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     private SecretsManager $sut;
     private $mockClient;
