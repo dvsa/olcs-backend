@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
@@ -10,11 +12,10 @@ use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Laminas\Filter\Decompress;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamFile;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 
-class ZipProcessorTest extends TestCase
+class ZipProcessorTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     protected string $subDirPath;
     protected string $xmlFilename;
@@ -40,7 +41,7 @@ class ZipProcessorTest extends TestCase
         $this->subDirPath = '/extra/path';
         parent::setUp();
     }
-    public function testSubDir()
+    public function testSubDir(): void
     {
         $sut = new ZipProcessor(
             m::mock(FileUploaderInterface::class),
@@ -54,7 +55,7 @@ class ZipProcessorTest extends TestCase
         $this->assertEquals('unit_SubDirPath', $sut->getSubDirPath());
     }
 
-    public function testOutputType()
+    public function testOutputType(): void
     {
         $sut = new ZipProcessor(
             m::mock(FileUploaderInterface::class),
@@ -70,7 +71,7 @@ class ZipProcessorTest extends TestCase
     /**
      * @throws EbsrPackException
      */
-    public function testProcess()
+    public function testProcess(): void
     {
         // test process of zip file
         $file = new vfsStreamFile($this->xmlFilename);

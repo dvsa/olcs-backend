@@ -60,8 +60,6 @@ class ZipProcessor implements EbsrProcessingInterface
         $this->subDirPath = $subDirPath;
     }
 
-
-
     public function __construct(
         FileUploaderInterface $fileUploader,
         Filesystem $fileSystem,
@@ -117,7 +115,6 @@ class ZipProcessor implements EbsrProcessingInterface
      */
     private function extractedXmlFile(): string
     {
-
         $files = iterator_to_array($this->finder->files()->name('*.xml')->in($this->targetDir));
 
         if (count($files) > 1) {

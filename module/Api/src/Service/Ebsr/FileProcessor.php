@@ -8,16 +8,11 @@ use Laminas\Filter\Decompress;
 use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 
-/**
- * Class FileProcessor
- * @package Dvsa\Olcs\Api\Service\Ebsr
- */
 class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
 {
     public const DECOMPRESS_ERROR_PREFIX = 'There was a problem with the pack file: ';
     private const OUTPUT_TYPE = 'xmlFilename';
     private string $subDirPath = '';
-
 
     /**
      * FileProcessor constructor.
@@ -95,6 +90,6 @@ class FileProcessor implements FileProcessorInterface, EbsrProcessingInterface
 
     public function getOutputType(): string
     {
-        return  self::OUTPUT_TYPE;
+        return self::OUTPUT_TYPE;
     }
 }

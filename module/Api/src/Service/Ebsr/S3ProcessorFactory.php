@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
-use Aws\Credentials\AssumeRoleCredentialProvider;
-use Aws\Credentials\CredentialProvider;
 use Aws\S3\S3Client;
 use Aws\Sts\StsClient;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\Logging\Log\LaminasLogPsr3Adapter;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
@@ -18,23 +15,14 @@ use Psr\Container\NotFoundExceptionInterface;
 class S3ProcessorFactory implements FactoryInterface
 {
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function createService(ServiceLocatorInterface $serviceLocator): S3Processor
-    {
-        return $this->__invoke($serviceLocator, S3Processor::class);
-    }
-
-    /**
      * invoke method
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      * @param ContainerInterface $container
      * @param $requestedName
      * @param array|null $options
      * @return S3Processor
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): S3Processor
     {

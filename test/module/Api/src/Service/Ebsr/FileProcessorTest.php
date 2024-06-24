@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
@@ -15,10 +18,6 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use org\bovigo\vfs\vfsStream;
 
-/**
- * Class FileProcessorTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr
- */
 class FileProcessorTest extends TestCase
 {
     public function testFetchXmlFileNameFromDocumentStore()
@@ -67,7 +66,7 @@ class FileProcessorTest extends TestCase
 
     public function testFetchXmlFileNameFromDocumentStoreExGt1()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+        $this->expectException(EbsrPackException::class);
 
         vfsStream::setup();
 
@@ -101,7 +100,7 @@ class FileProcessorTest extends TestCase
 
         $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
         $mockZipProcessor->shouldReceive('process')->andThrow(
-            \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class,
+            EbsrPackException::class,
             'ebsr pack exception'
         );
 
@@ -112,7 +111,7 @@ class FileProcessorTest extends TestCase
 
     public function testFetchXmlFileNameFromDocumentStoreEx0()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+        $this->expectException(EbsrPackException::class);
 
         vfsStream::setup();
 
@@ -142,7 +141,7 @@ class FileProcessorTest extends TestCase
 
         $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
         $mockZipProcessor->shouldReceive('process')->andThrow(
-            \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class,
+            EbsrPackException::class,
             'ebsr pack exception'
         );
 
@@ -152,7 +151,7 @@ class FileProcessorTest extends TestCase
 
     public function testFetchXmlFileNameFromDocumentStoreWithCorruptZip()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+        $this->expectException(EbsrPackException::class);
 
         vfsStream::setup();
 
@@ -185,7 +184,7 @@ class FileProcessorTest extends TestCase
 
         $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
         $mockZipProcessor->shouldReceive('process')->andThrow(
-            \Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class,
+            EbsrPackException::class,
             'ebsr pack exception'
         );
 

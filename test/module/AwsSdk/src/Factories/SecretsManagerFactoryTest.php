@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\AwsSdk\Factories;
 
 use Aws\Credentials\CredentialsInterface;
@@ -7,10 +9,10 @@ use Aws\SecretsManager\SecretsManagerClient;
 use Dvsa\Olcs\Api\Service\SecretsManager\SecretsManager;
 use Dvsa\Olcs\AwsSdk\Factories\SecretsManagerFactory;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use PHPUnit\Framework\TestCase;
-use Psr\Container\ContainerExceptionInterface;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
-class SecretsManagerFactoryTest extends TestCase
+class SecretsManagerFactoryTest extends MockeryTestCase
 {
     protected $sm;
 
@@ -21,10 +23,7 @@ class SecretsManagerFactoryTest extends TestCase
         $this->sut = new SecretsManagerFactory();
     }
 
-    /**
-     * @throws ContainerExceptionInterface
-     */
-    public function testCreateService()
+    public function testInvoke(): void
     {
         // Params
         $config = [
@@ -35,8 +34,8 @@ class SecretsManagerFactoryTest extends TestCase
         ];
         $provider = \Mockery::mock(CredentialsInterface::class);
         // Mocks
-        $sm = \Mockery::mock(\Laminas\ServiceManager\ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')->with('Config')->andReturn($config);
+        $sm = \Mockery::mock(ContainerInterface::class);
+        $sm->shouldReceive('get')->with('config')->andReturn($config);
         $sm->shouldReceive('get')->with('AwsCredentialsProvider')->andReturn($provider);
         $sm->shouldReceive('get')->with(CacheEncryption::class)->andReturn(\Mockery::mock(CacheEncryption::class));
         $sm->shouldReceive('get')->with('SecretsManagerClient')->andReturn(new SecretsManagerClient([
@@ -44,7 +43,7 @@ class SecretsManagerFactoryTest extends TestCase
             'version' => $config['awsOptions']['version'],
             'credentials' => $provider
         ]));
-        $secretsManager = $this->sut->createService($sm);
+        $secretsManager = $this->sut->__invoke($sm, SecretsManager::class);
         $this->assertInstanceOf(SecretsManager::class, $secretsManager);
     }
 }

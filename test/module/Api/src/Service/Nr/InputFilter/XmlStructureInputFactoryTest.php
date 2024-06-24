@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Nr\InputFilter;
 
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
@@ -12,10 +14,7 @@ use Psr\Container\ContainerInterface;
 
 class XmlStructureInputFactoryTest extends TestCase
 {
-    /**
-     * Tests create service
-     */
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $xmlExclude = ['strings'];
         $maxSchemaErrors = 10;
@@ -62,7 +61,7 @@ class XmlStructureInputFactoryTest extends TestCase
      *
      * @dataProvider invokeErrorProvider
      */
-    public function testInvokeMissingConfig($config, $exceptionName, $exceptionMessage)
+    public function testInvokeMissingConfig($config, $exceptionName, $exceptionMessage): void
     {
         $this->expectException($exceptionName);
         $this->expectExceptionMessage($exceptionMessage);

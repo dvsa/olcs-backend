@@ -14,7 +14,7 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
-final class ProcessPackTransaction extends AbstractProcessPack implements
+final class ProcessPackEbsrPack extends AbstractProcessPack implements
     TransactionedInterface,
     UploaderAwareInterface
 {
@@ -42,7 +42,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         $doc = $ebsrSub->getDocument();
 
         try {
-            $filesProcessed = $this->processingChain->process($doc->getIdentifier());
+            $filesProcessed = $this->getEbsrProcessing()->process($doc->getIdentifier());
             $xmlName = $filesProcessed['xmlFilename'];
         } catch (\Exception $e) {
             //process the validation failure information

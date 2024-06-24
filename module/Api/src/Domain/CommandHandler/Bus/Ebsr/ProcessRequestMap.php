@@ -1,19 +1,13 @@
 <?php
 
-/**
- * Request new Ebsr map
- */
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
-use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareInterface;
-use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -30,14 +24,11 @@ use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareTrait;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
-use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
-use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\Logging\Log\Logger;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -48,16 +39,12 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     UploaderAwareInterface,
     TransExchangeAwareInterface,
     ConfigAwareInterface,
-    FileProcessorAwareInterface,
-    EbsrProcessingAwareInterface,
     ToggleAwareInterface
 {
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
     use ConfigAwareTrait;
-    use FileProcessorAwareTrait;
     use QueueAwareTrait;
-    use EbsrProcessingAwareTrait;
     use ToggleAwareTrait;
 
     public const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
@@ -73,6 +60,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Bus';
 
+    private EbsrProcessingChain $processingChain;
 
     protected array $documentDescriptions = [
         TransExchangeClient::REQUEST_MAP_TEMPLATE => "Route Track Map PDF",
@@ -115,16 +103,27 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $ebsrSubmissions = $busReg->getEbsrSubmissions();
         $submission = $ebsrSubmissions->first();
 
-        /** @var FileProcessor $fileProcessor */
-        $fileProcessor = $this->getFileProcessor();
-        $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
+        $processorOptions = [
+            'isTransXchange' => true,
+            's3Filename' => $submission->getId() . '.xml',
+        ];
 
         try {
-            $filesProcessed = $this->getEbsrProcessing()->process($submission->getDocument()->getIdentifier(), ['isTransXchange' => true]);
+            $filesProcessed = $this->processingChain->process($submission->getDocument()->getIdentifier(), $processorOptions);
             $xmlFilename = $filesProcessed['s3Filename'] ?? $filesProcessed['xmlFilename'];
         } catch (\Exception $e) {
-            Logger::info('TransXchange error', ['data' => self::MISSING_PACK_FILE_ERROR]);
-            throw new TransxchangeException(self::MISSING_PACK_FILE_ERROR . $e->getMessage());
+            $message = $e->getMessage();
+
+            Logger::info(
+                'TransXchange file processor error',
+                [
+                    'data' => self::MISSING_PACK_FILE_ERROR,
+                    'processor_message' => $message,
+                    'exception_class' => $e::class,
+                ]
+            );
+
+            throw new TransxchangeException(self::MISSING_PACK_FILE_ERROR . ' ' . $message);
         }
 
         //decide which template files we need
@@ -150,9 +149,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
                 continue;
             }
 
+            //the rest of this block is moved to the TransXchange consumer under new Txc
             if ($this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
-                return $result;
+                continue;
             }
+
             if (!isset($documents['files'])) {
                 $failedMaps[$documentDesc] = $documentDesc;
                 continue;
@@ -173,8 +174,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             }
         }
 
-        $sideEffects[] = $this->createTaskCmd($busReg, $processedMaps, $failedMaps, $command->getFromNewEbsr());
-        $result->merge($this->handleSideEffects($sideEffects));
+        //moved to the TransXchange consumer under new Txc
+        if (!$this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
+            $sideEffects[] = $this->createTaskCmd($busReg, $processedMaps, $failedMaps, $command->getFromNewEbsr());
+            $result->merge($this->handleSideEffects($sideEffects));
+        }
 
         return $result;
     }
@@ -343,13 +347,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-
-        if (method_exists($container, 'getServiceLocator') && $container->getServiceLocator()) {
-            $container = $container->getServiceLocator();
-        }
-
+        $this->processingChain = $container->get(EbsrProcessingChain::class);
         $this->templateBuilder = $container->get(TemplateBuilder::class);
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

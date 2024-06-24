@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\AppRegistration;
 
 use Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecret;
@@ -11,13 +13,13 @@ use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
+use Psr\Log\LoggerInterface;
 
 /**
  * @property m\LegacyMockInterface|m\MockInterface|\Psr\Log\LoggerInterface|(\Psr\Log\LoggerInterface&m\LegacyMockInterface)|(\Psr\Log\LoggerInterface&m\MockInterface)|Psr\Log\LoggerInterface|(Psr\Log\LoggerInterface&\Mockery\LegacyMockInterface)|(Psr\Log\LoggerInterface&\Mockery\MockInterface) $mockLogger
  */
-class TransXChangeAppRegistrationServiceTest extends TestCase
+class TransXChangeAppRegistrationServiceTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     protected TransXChangeAppRegistrationService $sut;
     protected Client $client;
@@ -31,15 +33,17 @@ class TransXChangeAppRegistrationServiceTest extends TestCase
         ]);
         $handlerStack = HandlerStack::create($mock);
         $this->client = new Client(['handler' => $handlerStack]);
-        $this->mockLogger = m::mock('Psr\Log\LoggerInterface');
+        $this->mockLogger = m::mock(LoggerInterface::class);
+
+        parent::setUp();
     }
 
     /**
      * @dataProvider getConfig()
      */
-    public function testGetToken($config)
+    public function testGetToken(array $config): void
     {
-        $mockLogger = m::mock('Psr\Log\LoggerInterface');
+        $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('info')->once()->with('Access Token requested from TransXChange App Registration');
         $mockLogger->shouldReceive('debug')->once()->with('Access Token received from TransXChange App Registration test');
         $mockedSecret = m::mock(AppRegistrationSecret::class);
@@ -58,7 +62,7 @@ class TransXChangeAppRegistrationServiceTest extends TestCase
      * @dataProvider getConfig()
      *
      */
-    public function testTokenThrowsException($config)
+    public function testTokenThrowsException(array $config): void
     {
         $this->expectException(RequestException::class);
         // set up mock handler to throw exception
@@ -95,8 +99,8 @@ class TransXChangeAppRegistrationServiceTest extends TestCase
                     ],
                     'proxy' => 'http://localhost',
                     'max_retry_attempts' => 3,
-                ]
-            ]
+                ],
+            ],
         ];
     }
 }

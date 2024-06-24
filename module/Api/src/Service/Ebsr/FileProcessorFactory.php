@@ -21,13 +21,13 @@ class FileProcessorFactory implements FactoryInterface
      * @param $requestedName
      * @param array|null $options
      * @return FileProcessor
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FileProcessor
     {
 
-        $config = $container->get('Config');
+        $config = $container->get('config');
         $tmpDir = ($config['tmpDirectory'] ?? sys_get_temp_dir());
         $decompressFilter = $container->get('FilterManager')->get('Decompress');
         $decompressFilter->setAdapter('zip');
@@ -38,14 +38,5 @@ class FileProcessorFactory implements FactoryInterface
             $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
         }
         return  $fileProcessor;
-    }
-
-    /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function createService(ContainerInterface $serviceLocator): FileProcessor
-    {
-        return $this->__invoke($serviceLocator, FileProcessor::class);
     }
 }

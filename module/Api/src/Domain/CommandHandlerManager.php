@@ -2,6 +2,8 @@
 
 namespace Dvsa\Olcs\Api\Domain;
 
+use Dvsa\Olcs\Api\Domain\Command\Queue\Complete;
+use Dvsa\Olcs\Api\Domain\Command\Queue\Delete;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\HandlerInterface as ValidationHandlerInterface;
@@ -20,6 +22,11 @@ class CommandHandlerManager extends AbstractPluginManager
     protected $instanceOf = CommandHandlerInterface::class;
     private readonly ValidationHandlerManager $validationHandlerManager;
 
+    private array $commandLoggingExcluded = [
+        Delete::class,
+        Complete::class,
+    ];
+
     public function __construct(ContainerInterface $container, array $config = [])
     {
         $this->validationHandlerManager = $container->get('ValidationHandlerManager');
@@ -31,6 +38,7 @@ class CommandHandlerManager extends AbstractPluginManager
         $start = microtime(true);
 
         $commandFqcn = $command::class;
+        $shouldLogCommand = !in_array($commandFqcn, $this->commandLoggingExcluded);
 
         $commandHandler = $this->get($commandFqcn);
 
@@ -46,10 +54,12 @@ class CommandHandlerManager extends AbstractPluginManager
             $data = $command->getArrayCopy();
         }
 
-        Logger::debug(
-            'Command Received: ' . $commandFqcn,
-            ['data' => ['commandData' => $data]]
-        );
+        if ($shouldLogCommand) {
+            Logger::debug(
+                'Command Received: ' . $commandFqcn,
+                ['data' => ['commandData' => $data]],
+            );
+        }
 
         $commandHandlerFqcn = $validateCommandHandler::class;
 
@@ -61,15 +71,17 @@ class CommandHandlerManager extends AbstractPluginManager
 
         $response = $commandHandler->handleCommand($command);
 
-        Logger::debug(
-            'Command Handler Response: ' . $commandHandlerFqcn,
-            [
-                'data' => [
-                    'response' => (array)$response,
-                    'time' => round(microtime(true) - $start, 5),
-                ]
-            ]
-        );
+        if ($shouldLogCommand) {
+            Logger::debug(
+                'Command Handler Response: ' . $commandHandlerFqcn,
+                [
+                    'data' => [
+                        'response' => (array)$response,
+                        'time' => round(microtime(true) - $start, 5),
+                    ]
+                ],
+            );
+        }
 
         return $response;
     }

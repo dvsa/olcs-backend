@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
@@ -10,26 +12,25 @@ use Dvsa\Olcs\Api\Service\Ebsr\S3Processor;
 use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Laminas\Log\Logger;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Mockery as m;
 
-class EbsrProcessorChainFactoryTest extends TestCase
+class EbsrProcessingChainFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testInvoke()
+    public function testInvoke(): void
     {
         $mockToggleService = m::mock(ToggleService::class);
         $mockToggleService->shouldReceive('isEnabled')->with(FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn(true);
         $logger = new Logger();
         $logger->addWriter(new \Laminas\Log\Writer\Noop());
 
-        $mockContainer = m::mock(ServiceLocatorInterface::class);
+        $mockContainer = m::mock(ContainerInterface::class);
         $mockContainer->shouldReceive('get')->with(ToggleService::class)->andReturn($mockToggleService);
         $mockContainer->shouldReceive('get')->with(ZipProcessor::class)->andReturn(m::mock(ZipProcessor::class));
         $mockContainer->shouldReceive('get')->with(S3Processor::class)->andReturn(m::mock(S3Processor::class));
@@ -44,11 +45,11 @@ class EbsrProcessorChainFactoryTest extends TestCase
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateServiceWithToggleDisabled()
+    public function testInvokeWithToggleDisabled(): void
     {
         $mockToggleService = m::mock(ToggleService::class);
         $mockToggleService->shouldReceive('isEnabled')->with(FeatureToggle::BACKEND_TRANSXCHANGE)->andReturn(false);
-        $mockContainer = m::mock(ServiceLocatorInterface::class);
+        $mockContainer = m::mock(ContainerInterface::class);
         $mockContainer->shouldReceive('get')->with(ToggleService::class)->andReturn($mockToggleService);
         $mockContainer->shouldReceive('get')->with(FileProcessor::class)->andReturn(m::mock(FileProcessor::class));
         $mockContainer->shouldReceive('get')->with('Logger')->andReturn(m::mock(Logger::class));

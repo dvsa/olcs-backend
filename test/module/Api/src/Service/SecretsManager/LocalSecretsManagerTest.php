@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\SecretsManager;
 
 use Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager;
-use PHPUnit\Framework\TestCase;
-use Psr\SimpleCache\InvalidArgumentException;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
-class LocalSecretsManagerTest extends TestCase
+class LocalSecretsManagerTest extends MockeryTestCase
 {
     private LocalSecretsManager $sut;
 

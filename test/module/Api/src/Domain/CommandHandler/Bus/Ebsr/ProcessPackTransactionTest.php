@@ -18,7 +18,6 @@ use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea as TrafficAreaEntity;
 use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
@@ -35,7 +34,6 @@ use Dvsa\Olcs\Api\Domain\Command\Bus\CreateBusFee as CreateBusFeeCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendEbsrErrors as SendEbsrErrorsCmd;
 use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use org\bovigo\vfs\vfsStream;
 
 /**

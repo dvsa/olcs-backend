@@ -6,6 +6,7 @@ use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Laminas\Filter\FilterPluginManager;
+use Laminas\Http\Request;
 use Laminas\Log\Processor\RequestId;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Olcs\XmlTools\Filter\ParseXmlString;
@@ -41,7 +42,7 @@ class TransExchangeClientFactory implements FactoryInterface
     {
         $config = $container->get('config');
         $transXChangeAppRegistrationService = $container->get(TransXChangeAppRegistrationService::class);
-        /** @var RequestId $tequestId */
+
         $correlationId = (new RequestId())->process([])['extra']['requestId'];
         $token = $transXChangeAppRegistrationService->getToken();
         $headers = ['Authorization' => 'Bearer ' . $token];
@@ -53,11 +54,18 @@ class TransExchangeClientFactory implements FactoryInterface
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
         $config = $config['ebsr']['transexchange_publisher'];
+
         if ($toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
             $config['uri'] = $config['new_uri'];
+            $method = Request::METHOD_POST;
+        } else {
+            //ensure we exactly preserve the old behaviour by removing the new config
+            unset($config['options']['adapter'], $config['options']['proxy_host'], $config['options']['proxy_port']);
+            $method = Request::METHOD_GET;
         }
         $httpClient = new RestClient($config['uri'], $config['options']);
         $httpClient->setHeaders($headers);
+        $httpClient->setMethod($method);
         $wrapper = new ClientAdapterLoggingWrapper();
         $wrapper->wrapAdapter($httpClient);
         /**

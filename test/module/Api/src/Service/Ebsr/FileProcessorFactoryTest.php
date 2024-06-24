@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
@@ -13,23 +15,19 @@ use Mockery as m;
 use Laminas\Filter\Decompress;
 use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class FileProcessorFactoryTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr
- */
 class FileProcessorFactoryTest extends TestCase
 {
     /**
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function testCreateService()
+    public function testInvoke(): void
     {
         $mockUploader = m::mock(FileUploaderInterface::class);
         $mockFilter = m::mock(Decompress::class);
         $mockFilter->shouldReceive('setAdapter')->with('zip');
         $mockSl = m::mock(ContainerInterface::class);
-        $mockSl->shouldReceive('get')->with('Config')->andReturn([]);
+        $mockSl->shouldReceive('get')->with('config')->andReturn([]);
         $mockZipProcessor = m::mock(ZipProcessor::class);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
         $mockSl->shouldReceive('get')->with('Decompress')->andReturn($mockFilter);

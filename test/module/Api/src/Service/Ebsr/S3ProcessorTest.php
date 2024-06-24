@@ -1,31 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessPackException;
 use Dvsa\Olcs\Api\Service\Ebsr\S3Processor;
-use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use org\bovigo\vfs\vfsStream;
-use PHPUnit\Framework\TestCase;
 use Mockery as m;
 use Psr\Log\LoggerInterface;
 
-class S3ProcessorTest extends TestCase
+class S3ProcessorTest extends m\Adapter\Phpunit\MockeryTestCase
 {
-    private S3Processor $sut;
-
-    public function setUp(): void
-    {
-         parent::setUp();
-    }
-
     /**
      * @throws ProcessPackException
      */
-    public function testProcess()
+    public function testProcess(): void
     {
         $mockS3Client = m::mock(S3Client::class);
         $mockBucketName = 'testbucket';
@@ -56,7 +49,7 @@ class S3ProcessorTest extends TestCase
         $this->assertEquals('testurl', $sut->process($fileIdentifier, []));
     }
 
-    public function testException()
+    public function testException(): void
     {
         $this->expectException(ProcessPackException::class);
         $mockS3Client = m::mock(S3Client::class);

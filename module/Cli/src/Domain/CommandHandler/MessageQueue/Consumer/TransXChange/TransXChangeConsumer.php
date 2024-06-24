@@ -22,12 +22,10 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Exception;
 use RuntimeException;
 use Psr\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\Logging\Log\Logger;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
-use Psr\Container\ContainerExceptionInterface;
 
 class TransXChangeConsumer extends AbstractConsumer
 {
@@ -60,6 +58,7 @@ class TransXChangeConsumer extends AbstractConsumer
      */
     public function handleCommand(CommandInterface $command): Result
     {
+        Logger::debug('Processing TransXchange Consumer');
         $allMessages = [];
 
         $maxMessagesPerRun = $this->config['ebsr']['max_messages_per_run'] ?? 100;
@@ -72,6 +71,8 @@ class TransXChangeConsumer extends AbstractConsumer
             }
 
             $batch = $this->fetchMessages(10, 60);
+
+            Logger::debug('Fetched TransXchange messages', $batch);
 
             if (empty($batch)) {
                 break;
@@ -140,6 +141,7 @@ class TransXChangeConsumer extends AbstractConsumer
      */
     protected function processMessage(array $message): array
     {
+        Logger::debug('TransXchange queue attributes', $message);
         $inputDocumentName = $this->getQueueAttribute($message, 'InputDocumentName');
 
         $ebsrId = explode(".", (string) $inputDocumentName, -1)[0];
@@ -158,6 +160,8 @@ class TransXChangeConsumer extends AbstractConsumer
         $documentDescription = $this->getDocumentDescription($message);
 
         $body = $this->parseMessageBody($message);
+
+        Logger::debug('TransXchange message body', $body);
 
         if (isset($body['error'])) {
             return [$this->createTaskCmd($busRegistration, $documentDescription, true)];
@@ -344,7 +348,7 @@ class TransXChangeConsumer extends AbstractConsumer
 
         foreach ($documents as $document) {
             $data = [
-                'content' => $this->getFromS3($document),
+                'content' => base64_encode($this->getFromS3($document)),
                 'busReg' => $busRegistration->getId(),
                 'licence' => $busRegistration->getLicence()->getId(),
                 'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
@@ -408,6 +412,10 @@ class TransXChangeConsumer extends AbstractConsumer
                 'secret' => $result['Credentials']['SecretAccessKey'],
                 'token'  => $result['Credentials']['SessionToken']
             ],
+            'http'    => [
+                'proxy' => $config['app-registrations']['proxy'],
+                'timeout' => 30,
+            ]
         ] + ($config['awsOptions']['s3'] ?? []) + ($config['awsOptions']['global'] ?? []);
 
         $sqsClientConfiguration = [
@@ -418,6 +426,10 @@ class TransXChangeConsumer extends AbstractConsumer
                 'secret' => $result['Credentials']['SecretAccessKey'],
                 'token'  => $result['Credentials']['SessionToken']
             ],
+            'http'    => [
+                'proxy' => $config['app-registrations']['proxy'],
+                'timeout' => 30,
+            ]
         ] + ($config['awsOptions']['sqs'] ?? []) + ($config['awsOptions']['global'] ?? []);
 
         $this->s3Client = new S3Client($s3ClientConfiguration);

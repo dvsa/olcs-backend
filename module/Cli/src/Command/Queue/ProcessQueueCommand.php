@@ -69,7 +69,6 @@ class ProcessQueueCommand extends AbstractOlcsCommand
                 $response = $this->queueProcessor->processNextItem($includeTypes, $excludeTypes);
 
                 if ($response === null) {
-                    $this->logAndWriteVerboseMessage('No items queued, waiting for items...', \Laminas\Log\Logger::NOTICE);
                     usleep($this->sleepFor);
                 } else {
                     $this->logAndWriteVerboseMessage("Processed: {$response}", \Laminas\Log\Logger::INFO);

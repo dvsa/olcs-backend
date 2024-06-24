@@ -48,7 +48,7 @@ class S3Processor implements EbsrProcessingInterface
         try {
             $result = $this->s3Client->putObject([
                 'Bucket' => $this->bucketName,
-                'Key' =>  basename($identifier),
+                'Key' =>  $options['s3Filename'] ?? basename($identifier),
                 'Body' => $fileContent
             ]);
 
