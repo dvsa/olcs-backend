@@ -19,11 +19,11 @@ final class IrfoGvPermitTypeList extends AbstractQueryHandler
     {
         $repo = $this->getRepo();
 
+        $records = $repo->fetchActiveRecords();
+
         return [
-            'result' => $this->resultList(
-                $repo->fetchList($query, Query::HYDRATE_OBJECT)
-            ),
-            'count' => $repo->fetchCount($query),
+            'result' => $this->resultList($records),
+            'count' => count($records),
         ];
     }
 }

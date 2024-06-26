@@ -35,17 +35,16 @@ class IrfoGvPermitTypeListTest extends QueryHandlerTestCase
             ->getMock();
 
         $this->repoMap['IrfoGvPermitType']
-            ->shouldReceive('fetchList')
-            ->with($query, \Doctrine\ORM\Query::HYDRATE_OBJECT)
+            ->shouldReceive('fetchActiveRecords')
             ->andReturn([$entity])
             //
             ->shouldReceive('fetchCount')
             ->with($query)
-            ->andReturn(2);
+            ->andReturn(1);
 
         $actual = $this->sut->handleQuery($query);
 
-        static::assertEquals(2, $actual['count']);
+        static::assertEquals(1, $actual['count']);
         static::assertEquals(['SERIALIZED'], $actual['result']);
     }
 }
