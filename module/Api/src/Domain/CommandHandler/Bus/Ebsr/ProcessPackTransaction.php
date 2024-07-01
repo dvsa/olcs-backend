@@ -3,7 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -14,8 +15,11 @@ use Dvsa\Olcs\Api\Domain\Repository\Licence as LicenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 
 final class ProcessPackTransaction extends AbstractProcessPack implements
-    TransactionedInterface
+    TransactionedInterface,
+    UploaderAwareInterface
 {
+    use UploaderAwareTrait;
+
     public function handleCommand(CommandInterface $command)
     {
         /** @var EbsrSubmissionEntity $ebsrSub */
@@ -37,21 +41,20 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         /** @var DocumentEntity $doc */
         $doc = $ebsrSub->getDocument();
 
-        //set the sub directory of /tmp where we extract the EBSR files
-        $this->getFileProcessor()->setSubDirPath($config['ebsr']['tmp_extra_path']);
-
         try {
-            $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
-        } catch (EbsrPackException $e) {
+            $filesProcessed = $this->getEbsrProcessing()->process($doc->getIdentifier());
+            $xmlName = $filesProcessed['xmlFilename'];
+        } catch (\Exception $e) {
             //process the validation failure information
-            $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
-
+            $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], $doc->getIdentifier(), []);
             return $this->result;
         }
 
         //validate the xml structure
-        $xmlDocContext = ['xml_filename' => $xmlName];
-        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlName, $xmlDocContext);
+        $xmlDocContext = ['xml_filename' => $this->getTempNameFromXml(basename($xmlName))];
+
+        $xmlContent = $this->getUploader()->download($xmlName)->getContent();
+        $ebsrDoc = $this->validateInput('xmlStructure', $ebsrSub, $doc, $xmlName, $xmlContent, $xmlDocContext);
 
         if ($ebsrDoc === false) {
             return $this->result;
@@ -62,8 +65,9 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
             'organisation' => $organisation
         ];
 
+        $xmlTempName =  $this->getTempNameFromXml($xmlName);
         //do some pre-doctrine data processing
-        $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlName, $ebsrDoc, $busRegInputContext);
+        $ebsrData = $this->validateInput('busReg', $ebsrSub, $doc, $xmlTempName, $ebsrDoc, $busRegInputContext);
 
         if ($ebsrData === false) {
             return $this->result;
@@ -91,7 +95,7 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
             'busRegNoExclusions' => $previousBusRegNoExclusions,
         ];
 
-        $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $xmlName, $ebsrData, $processedContext);
+        $ebsrData = $this->validateInput('processedData', $ebsrSub, $doc, $this->getTempNameFromXml($xmlName), $ebsrData, $processedContext);
 
         if ($ebsrData === false) {
             return $this->result;
@@ -137,5 +141,12 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
         );
 
         return $this->result;
+    }
+
+    private function getTempNameFromXml(string $xmlName): string
+    {
+        $fileParts = explode('_', $xmlName);
+        $tmpName = implode('/', $fileParts);
+        return DIRECTORY_SEPARATOR . $tmpName;
     }
 }

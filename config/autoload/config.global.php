@@ -266,6 +266,9 @@ return [
         's3Options' => $isProductionAccount ? null : [
             'roleArn' => '%olcs_aws_s3_role_arn%',
             'roleSessionName' => '%olcs_aws_s3_role_session_name%'
+        ],
+        'sts' => [
+            'sts_regional_endpoints' => 'regional'
         ]
     ]),
     'mail' => $isProductionAccount ? [] : [
@@ -295,22 +298,28 @@ return [
     ],
 
     'ebsr' => [
-    'transexchange_publisher' => [
-        'uri' => 'http://localhost:8080/txc-%transxchange_version%/publisherService',
-        'options' => [
-            'timeout' => 30
-        ]
-    ],
-    'tmp_extra_path' => '/EBSR', //extra path to ebsr files within /tmp
-    //debug only - validation must always be set to true in production
-    'validate' => [
-        'xml_structure' => true,
-        'bus_registration' => true,
-        'processed_data' => true,
-        'short_notice' => true
-    ],
-    // The output bucket for TransXChange. This bucket will container the resulting PDFs.
-    'output_s3_bucket' => '%transxchange_aws_s3_output_bucket%',
+        'transexchange_publisher' => [
+            'uri' => 'http://localhost:8080/txc-%transxchange_version%/publisherService',
+            'new_uri' => '%transxchange_uri%',
+            'options' => [
+                'adapter' => \Laminas\Http\Client\Adapter\Proxy::class,
+                'proxy_host' => 'proxy.%domain%',
+                'proxy_port' => 3128,
+                'timeout' => 30
+            ]
+        ],
+        'tmp_extra_path' => '/EBSR', //extra path to ebsr files within /tmp
+        //debug only - validation must always be set to true in production
+        'validate' => [
+            'xml_structure' => true,
+            'bus_registration' => true,
+            'processed_data' => true,
+            'short_notice' => true
+        ],
+        // the input bucket for TransXChange, where the xml is placed
+        'input_s3_bucket' => '%transxchange_aws_s3_input_bucket%',
+        // The output bucket for TransXChange. This bucket will container the resulting PDFs.
+        'output_s3_bucket' => '%transxchange_aws_s3_output_bucket%',
         // The cross account role that VOL will assume to access the output bucket and output SQS queue.
         'txc_consumer_role_arn' => '%transxchange_aws_consumer_role%',
         // The maximum number of SQS message to consume per run.
@@ -580,5 +589,21 @@ return [
     'targetUrl' => '%operator_reports_api_url%',
         'apiKey' => '%dvsa_reports_api_key%',
         'proxy' => 'http://%shd_proxy%',
+    ],
+    'app-registrations' => [
+
+        'secrets' => ['provider' => \Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager::class],
+        'transxchange' => [
+            'token_url' => '%olcs_txc_token_url%',
+            'client_id' => '%olcs_txc_client_id%',
+            'scope' => '%olcs_txc_scope%',
+            'secret_name' => 'txc_client_secret',
+        ],
+
+        'proxy' => 'http://%shd_proxy%',
+        'max_retry_attempts' => 3,
+    ],
+    'localSecretsManager' => [
+        'txc_client_secret' => ['client_secret' => '%olcs_txc_client_secret%'],
     ]
 ];

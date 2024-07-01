@@ -1,22 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
+use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
+use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
 use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
 use Laminas\Filter\Decompress;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Psr\Log\LoggerInterface;
 use org\bovigo\vfs\vfsStream;
 use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
 
-/**
- * Class FileProcessorTest
- * @package Dvsa\OlcsTest\Api\Service\Ebsr
- */
 class FileProcessorTest extends TestCase
 {
     public function testFetchXmlFileNameFromDocumentStore()
@@ -49,7 +49,12 @@ class FileProcessorTest extends TestCase
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')->with($tmpEbsrFile);
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+        $mockZipProcessor = m::mock(ZipProcessor::class);
+
+        $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
+        $mockZipProcessor->shouldReceive('process')->andReturn($xmlFilename);
+
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
         $sut->setSubDirPath($extraPath);
 
         $this->assertEquals(
@@ -60,7 +65,7 @@ class FileProcessorTest extends TestCase
 
     public function testFetchXmlFileNameFromDocumentStoreExGt1()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+        $this->expectException(EbsrPackException::class);
 
         vfsStream::setup();
 
@@ -90,14 +95,22 @@ class FileProcessorTest extends TestCase
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')->with($tmpEbsrFile);
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+        $mockZipProcessor = m::mock(ZipProcessor::class);
+
+        $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
+        $mockZipProcessor->shouldReceive('process')->andThrow(
+            EbsrPackException::class,
+            'ebsr pack exception'
+        );
+
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
 
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
     public function testFetchXmlFileNameFromDocumentStoreEx0()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+        $this->expectException(EbsrPackException::class);
 
         vfsStream::setup();
 
@@ -123,14 +136,21 @@ class FileProcessorTest extends TestCase
         $mockFilter->shouldReceive('setTarget')->with($extractDir);
         $mockFilter->shouldReceive('filter')->with($tmpEbsrFile);
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+        $mockZipProcessor = m::mock(ZipProcessor::class);
 
+        $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
+        $mockZipProcessor->shouldReceive('process')->andThrow(
+            EbsrPackException::class,
+            'ebsr pack exception'
+        );
+
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
     public function testFetchXmlFileNameFromDocumentStoreWithCorruptZip()
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\EbsrPackException::class);
+        $this->expectException(EbsrPackException::class);
 
         vfsStream::setup();
 
@@ -159,8 +179,15 @@ class FileProcessorTest extends TestCase
             ->with($tmpEbsrFile)
             ->andThrow(LaminasFilterRuntimeException::class, $exceptionMessage);
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+        $mockZipProcessor = m::mock(ZipProcessor::class);
 
+        $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
+        $mockZipProcessor->shouldReceive('process')->andThrow(
+            EbsrPackException::class,
+            'ebsr pack exception'
+        );
+
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }
 
@@ -176,11 +203,20 @@ class FileProcessorTest extends TestCase
         $mockFileUploader = m::mock(FileUploaderInterface::class);
 
         $mockFileSystem = m::mock(Filesystem::class);
+        $mockFileSystem->shouldReceive('createTmpDir')->with($tmpDir)->andReturn(false);
+
         $mockFileSystem->shouldReceive('exists')->with($tmpDir)->andReturn(false);
 
         $mockFilter = m::mock(Decompress::class);
+        $mockLogger = m::mock(LoggerInterface::class);
 
-        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir);
+        $mockFinder = m::mock(\Symfony\Component\Finder\Finder::class);
+
+        $mockZipProcessor = m::mock(ZipProcessor::class, [$mockFileUploader, $mockFileSystem, $mockFilter, $tmpDir, $mockLogger,$mockFinder])->makePartial();
+
+        $mockZipProcessor->shouldReceive('getXmlFileName')->andReturn('ebsr.xml');
+        $mockZipProcessor->shouldReceive('process')->andReturn('ebsr.xml');
+        $sut = new FileProcessor($mockFileUploader, $mockFileSystem, $mockFilter, $mockZipProcessor, $tmpDir);
 
         $sut->fetchXmlFileNameFromDocumentStore($fileIdentifier);
     }

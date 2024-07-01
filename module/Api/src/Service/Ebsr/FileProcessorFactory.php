@@ -4,7 +4,9 @@ namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Laminas\ServiceManager\Factory\FactoryInterface;
+use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\ContainerInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class FileProcessorFactory
@@ -19,15 +21,22 @@ class FileProcessorFactory implements FactoryInterface
      * @param $requestedName
      * @param array|null $options
      * @return FileProcessor
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): FileProcessor
     {
+
         $config = $container->get('config');
         $tmpDir = ($config['tmpDirectory'] ?? sys_get_temp_dir());
         $decompressFilter = $container->get('FilterManager')->get('Decompress');
         $decompressFilter->setAdapter('zip');
-        return new FileProcessor($container->get('FileUploader'), new Filesystem(), $decompressFilter, $tmpDir);
+
+        $fileProcessor = new FileProcessor($container->get('FileUploader'), new Filesystem(), $decompressFilter, $container->get(ZipProcessor::class), $tmpDir);
+
+        if (isset($config['ebsr']['tmp_extra_path'])) {
+            $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
+        }
+        return  $fileProcessor;
     }
 }

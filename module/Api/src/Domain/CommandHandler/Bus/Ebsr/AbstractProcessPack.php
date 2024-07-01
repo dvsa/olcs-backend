@@ -8,6 +8,8 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareInterface;
+use Dvsa\Olcs\Api\Domain\EbsrProcessingAwareTrait;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
@@ -47,13 +49,13 @@ use Psr\Container\ContainerInterface;
 
 abstract class AbstractProcessPack extends AbstractCommandHandler implements
     UploaderAwareInterface,
-    FileProcessorAwareInterface,
-    ConfigAwareInterface
+    ConfigAwareInterface,
+    EbsrProcessingAwareInterface
 {
     use QueueAwareTrait;
     use UploaderAwareTrait;
-    use FileProcessorAwareTrait;
     use ConfigAwareTrait;
+    use EbsrProcessingAwareTrait;
 
     protected $repoServiceName = 'Bus';
 
@@ -92,7 +94,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      * @param EbsrSubmissionEntity $ebsrSub ebsr submission entity
      * @param DocumentEntity       $doc     document entity
      * @param string               $xmlName name of the xml file
-     * @param array                $value   input value
+     * @param string | array       $value   input value
      * @param array                $context input context
      *
      * @return array|bool
