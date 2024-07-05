@@ -3,6 +3,7 @@
 use Dvsa\Olcs\Api\Domain\QueryHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsInternalUser;
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\IsSideEffect;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\NoValidationRequired;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanAccessTxcInboxRecordWithId;
 use Dvsa\Olcs\Api\Domain\Validation\Handlers\Bus\Ebsr\CanUpdateTxcInboxRecords;
@@ -22,4 +23,6 @@ return [
     QueryHandler\Bus\Ebsr\BusRegWithTxcInbox::class                             => CanAccessTxcInboxRecordWithId::class,
     QueryHandler\Bus\RegistrationHistoryList::class                             => NoValidationRequired::class,
     QueryHandler\Bus\Bus::class                                                 => NoValidationRequired::class,
+
+    CommandHandler\Email\SendBSRNotificationToLTAs::class                      => IsSideEffect::class,
 ];
