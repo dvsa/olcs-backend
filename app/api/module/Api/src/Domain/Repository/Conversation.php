@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Domain\Repository;
 
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingConversation as Entity;
 use Dvsa\Olcs\Api\Entity\Messaging\MessagingMessage;
@@ -56,35 +57,36 @@ class Conversation extends AbstractRepository
     {
         $subQuery = $this->getEntityManager()->createQueryBuilder();
         $subQuery->select('1')
-                 ->from(MessagingUserMessageRead::class, 'inner_read')
-                 ->leftJoin('inner_read.user', 'inner_user')
-                 ->leftJoin('inner_user.roles', 'inner_role')
-                 ->where('inner_read.messagingMessage = irmm.id')
-                 ->andWhere($qb->expr()->in('inner_role.role', ':roleNames'));
+            ->from(MessagingUserMessageRead::class, 'inner_read')
+            ->join('inner_read.user', 'inner_user')
+            ->join('inner_user.roles', 'inner_role')
+            ->where('inner_read.messagingMessage = irmm.id')
+            ->andWhere($qb->expr()->in('inner_role.role', ':roleNames'));
 
-        $unreadQueryBuilder = $this->getEntityManager()->createQueryBuilder();
-        $unreadQueryBuilder->select('1')
-            ->from(MessagingMessage::class, 'irmm')
+        $qb->leftJoin(MessagingMessage::class, 'irmm', Join::WITH, 'irmm.messagingConversation = ' . $this->alias . '.id')
             ->leftJoin('irmm.messagingConversation', 'inner_conversation')
             ->leftJoin('inner_conversation.task', 'inner_task')
-            ->groupBy('irmm.messagingConversation')
-            ->where('inner_conversation.isClosed = 0')
-            ->andWhere($unreadQueryBuilder->expr()->not($unreadQueryBuilder->expr()->exists($subQuery)))
-            ->andWhere($unreadQueryBuilder->expr()->eq($this->alias . '.id', 'irmm.messagingConversation'));
-
-        $lastReadQuery = $this->getEntityManager()->createQueryBuilder();
-        $lastReadQuery->select('MAX(lrmm.createdOn)')
-                      ->from(MessagingMessage::class, 'lrmm')
-                      ->where($lastReadQuery->expr()->eq('lrmm.messagingConversation', $this->alias . '.id'))
-                      ->groupBy('lrmm.messagingConversation');
-
-        $qb->addSelect('(' . $lastReadQuery->getDQL() . ') AS last_read');
-        $qb->addSelect('(' . $unreadQueryBuilder->getDQL() . ') AS has_unread');
-        $qb->addOrderBy($this->alias . '.isClosed', 'ASC');
-        $qb->addOrderBy('has_unread', 'DESC');
-        $qb->addOrderBy('last_read', 'DESC');
-
-        $qb->setParameter('roleNames', $roleNames);
+            ->addSelect('MAX(irmm.createdOn) AS last_read')
+            ->addSelect('CASE WHEN ' . $this->alias . '.isClosed = 0 AND NOT EXISTS (' . $subQuery->getDQL() . ') THEN 1 ELSE 0 END AS has_unread')
+            ->groupBy($this->alias . '.id')
+            ->addOrderBy($this->alias . '.isClosed', 'ASC')
+            ->addOrderBy('has_unread', 'DESC')
+            ->addOrderBy('last_read', 'DESC')
+            ->andWhere($qb->expr()->orX(
+                $qb->expr()->eq($this->alias . '.isClosed', ':closed'),
+                $qb->expr()->exists(
+                    $this->getEntityManager()->createQueryBuilder()
+                        ->select('1')
+                        ->from(MessagingUserMessageRead::class, 'filter_read')
+                        ->join('filter_read.user', 'filter_user')
+                        ->join('filter_user.roles', 'filter_role')
+                        ->where('filter_read.messagingMessage = irmm.id')
+                        ->andWhere($qb->expr()->in('filter_role.role', ':roleNames'))
+                        ->getDQL()
+                )
+            ))
+            ->setParameter('roleNames', $roleNames)
+            ->setParameter('closed', false);
 
         return $qb;
     }
