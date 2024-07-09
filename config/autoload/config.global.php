@@ -381,7 +381,7 @@ return [
                         'priority' => [
                             'name' => 'priority',
                             'options' => [
-                                'priority' => \Laminas\Log\Logger::DEBUG
+                                'priority' => \Laminas\Log\Logger::WARN
                             ]
                         ],
                     ]
