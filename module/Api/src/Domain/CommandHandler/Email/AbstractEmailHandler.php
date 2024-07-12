@@ -82,8 +82,8 @@ abstract class AbstractEmailHandler extends AbstractCommandHandler implements Em
         $this->message->setCc($recipients['cc']);
         $this->message->setBcc($recipients['bcc']);
         $this->message->setTranslateToWelsh($this->getTranslateToWelsh($recordObject));
-        if ($docs = $command->getDocs() ?? null) {
-            $this->message->setDocs($docs);
+        if (method_exists($command, 'getDocs') && $command->getDocs() !== null) {
+            $this->message->setDocs($command->getDocs());
         }
 
         $this->sendEmailTemplate($this->message, $this->template, $templateVariables);
