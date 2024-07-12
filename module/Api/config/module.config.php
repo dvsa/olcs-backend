@@ -789,6 +789,7 @@ return [
             Repository\Task::class => RepositoryFactory::class,
             Repository\MessagingUserMessageRead::class => RepositoryFactory::class,
             Repository\User::class => RepositoryFactory::class,
+            Repository\Bus::class => RepositoryFactory::class
         ],
         'aliases' => [
             'Conversation' => Repository\Conversation::class,

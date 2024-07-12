@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\Command\Document\GenerateAndStore;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendBSRNotificationToLTAs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
@@ -71,11 +72,20 @@ class PrintLetter extends AbstractCommandHandler implements TransactionedInterfa
             'subCategory' => Category::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
             'isExternal' => false,
             'dispatch' => true,
-            'printCopiesCount' => $command->getPrintCopiesCount(),
-            'isEnforcePrint' => $command->getIsEnforcePrint(),
+            'isEnforcePrint' => 'N',
         ];
 
-        return $this->handleSideEffect(GenerateAndStore::create($dtoData));
+        $generatedDocument = $this->handleSideEffect(GenerateAndStore::create($dtoData));
+
+        if ($this->busReg->isFromEbsr() === false) {
+            $emailDtoData = [
+                'id' => $busRegId,
+                'docs' => [$generatedDocument->getIds()['document']]
+            ];
+            $this->handleSideEffect(SendBSRNotificationToLTAs::create($emailDtoData));
+        }
+
+        return $generatedDocument;
     }
 
     /**
