@@ -49,8 +49,8 @@ final class SendBSRNotificationToLTAs extends AbstractEmailHandler implements Em
             'category'        => Category::CATEGORY_BUS_REGISTRATION,
             'subCategory'     => Category::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
             'description'     => sprintf(
-                'Unable to send BSR Notification email - No associated LTAs have an email addresses!' .
-                ' - Please update the Local Authority records to ensure all have email addresses.',
+                'Unable to send BSR Notification email for Reg No: %s - No associated LTAs have an email addresses!' .
+                '- Please update the Local Authority records to ensure all have email addresses.',
                 $recordObject->getRegNo(),
             ),
             'actionDate'      => (new DateTimeImmutable())->format('Y-m-d'),
