@@ -1303,4 +1303,6 @@ return [
 
     // Local Authority
     TransferCommand\LocalAuthority\Update::class => CommandHandler\LocalAuthority\Update::class,
+
+    Command\Email\SendBSRNotificationToLTAs::class => CommandHandler\Email\SendBSRNotificationToLTAs::class,
 ];

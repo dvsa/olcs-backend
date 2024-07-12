@@ -3,6 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Bus;
 
 use Dvsa\Olcs\Api\Domain\Command as DomainCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendBSRNotificationToLTAs;
+use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\PrintLetter;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
@@ -78,19 +80,16 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
     /**
      * @dataProvider dpTestHandleCommand
      */
-    public function testHandleCommand($status, $isVariation, $isShortNoticeRefused, array $docCmdData)
+    public function testHandleCommand($status, $isVariation, $isShortNoticeRefused, array $docCmdData, $isFromEbsr)
     {
-        $cmd = TransferCmd\Bus\PrintLetter::create(
-            [
-                'printCopiesCount' => 999,
-            ]
-        );
+        $cmd = TransferCmd\Bus\PrintLetter::create([]);
 
         $mockBusReg = m::mock(Entity\Bus\BusReg::class);
         $mockBusReg->shouldReceive('getLicence->getId')->once()->andReturn(self::LIC_ID);
         $mockBusReg->shouldReceive('getStatus->getId')->times(2)->andReturn($status);
         $mockBusReg->shouldReceive('getId')->once()->andReturn(self::BUS_REG_ID);
         $mockBusReg->shouldReceive('isShortNoticeRefused')->times(2)->andReturn($isShortNoticeRefused);
+        $mockBusReg->shouldReceive('isFromEbsr')->once()->andReturn($isFromEbsr);
 
         if ($isVariation !== null) {
             $mockBusReg->shouldReceive('isVariation')->times(2)->andReturn($isVariation);
@@ -111,13 +110,24 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                 'subCategory' => Category::BUS_SUB_CATEGORY_OTHER_DOCUMENTS,
                 'isExternal' => false,
                 'dispatch' => true,
-                'printCopiesCount' => 999,
+                'printCopiesCount' => null,
             ] +
             $docCmdData;
 
-        $this->expectedSideEffect(DomainCmd\Document\GenerateAndStore::class, $cmdData, 'EXPECT');
+        $docResult = new Result();
+        $docResult ->addId('document', 123);
 
-        static::assertEquals('EXPECT', $this->sut->handleCommand($cmd));
+        $this->expectedSideEffect(DomainCmd\Document\GenerateAndStore::class, $cmdData, $docResult);
+
+        if (!$isFromEbsr) {
+            $emailDtoData = [
+                'id' => self::BUS_REG_ID,
+                'docs' => [123]
+            ];
+            $this->expectedSideEffect(SendBSRNotificationToLTAs::class, $emailDtoData, new Result());
+        }
+
+        static::assertEquals($docResult, $this->sut->handleCommand($cmd));
     }
 
     public function dpTestHandleCommand()
@@ -131,6 +141,7 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                     'template' => Entity\Doc\Document::BUS_REG_NEW,
                     'description' => 'Bus registration letter',
                 ],
+                true
             ],
             [
                 'status' => Entity\Bus\BusReg::STATUS_REGISTERED,
@@ -140,6 +151,7 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                     'template' => Entity\Doc\Document::BUS_REG_NEW_REFUSE_SHORT_NOTICE,
                     'description' => 'Bus registration letter with refused short notice',
                 ],
+                true
             ],
             [
                 'status' => Entity\Bus\BusReg::STATUS_REGISTERED,
@@ -149,6 +161,7 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                     'template' => Entity\Doc\Document::BUS_REG_VARIATION,
                     'description' => 'Bus variation letter',
                 ],
+                true
             ],
             [
                 'status' => Entity\Bus\BusReg::STATUS_REGISTERED,
@@ -158,6 +171,7 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                     'template' => Entity\Doc\Document::BUS_REG_VARIATION_REFUSE_SHORT_NOTICE,
                     'description' => 'Bus variation letter with refused short notice',
                 ],
+                true
             ],
             [
                 'status' => Entity\Bus\BusReg::STATUS_CANCELLED,
@@ -167,6 +181,7 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                     'template' => Entity\Doc\Document::BUS_REG_CANCELLATION,
                     'description' => 'Bus cancelled letter',
                 ],
+                true
             ],
             [
                 'status' => Entity\Bus\BusReg::STATUS_CANCELLED,
@@ -176,6 +191,17 @@ class PrintLetterTest extends AbstractCommandHandlerTestCase
                     'template' => Entity\Doc\Document::BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE,
                     'description' => 'Bus cancelled letter with refused short notice',
                 ],
+                true
+            ],
+            [
+                'status' => Entity\Bus\BusReg::STATUS_CANCELLED,
+                'isVariation' => null,
+                'isShortNoticeRefused' => true,
+                'docCmdData' => [
+                    'template' => Entity\Doc\Document::BUS_REG_CANCELLATION_REFUSE_SHORT_NOTICE,
+                    'description' => 'Bus cancelled letter with refused short notice',
+                ],
+                false
             ],
         ];
     }

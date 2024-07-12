@@ -140,8 +140,8 @@ class GrantBusRegTest extends AbstractCommandHandlerTestCase
             BusPrintLetterCmd::class,
             [
                 'id' => self::BUS_REG_ID,
-                'printCopiesCount' => 5,
-                'isEnforcePrint' => 'Y',
+                'printCopiesCount' => null,
+                'isEnforcePrint' => null,
             ],
             new Result()
         );
