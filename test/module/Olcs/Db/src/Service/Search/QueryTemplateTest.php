@@ -1,10 +1,10 @@
 <?php
 
-namespace OlcsTest\Db\Service\Search;
+namespace Dvsa\OlcsTest\Db\Traits\Search;
 
-use Olcs\Db\Service\Search\Indices\Person;
-use Olcs\Db\Service\Search\Indices\Terms\TransportManagerLicenceStatus;
-use Olcs\Db\Service\Search\QueryTemplate;
+use Dvsa\Olcs\Db\Service\Search\Indices\Person;
+use Dvsa\Olcs\Db\Service\Search\Indices\Terms\TransportManagerLicenceStatus;
+use Dvsa\Olcs\Db\Service\Search\QueryTemplate;
 use Mockery as m;
 
 /**

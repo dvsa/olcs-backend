@@ -4,9 +4,9 @@ namespace OlcsTest\Db\Controller;
 
 use Laminas\Mvc\Controller\Plugin\Params;
 use Laminas\Mvc\Controller\PluginManager;
-use Olcs\Db\Controller\SearchController;
+use Dvsa\Olcs\Db\Controller\SearchController;
 use Mockery as m;
-use Olcs\Db\Service\Search\Search;
+use Dvsa\Olcs\Db\Service\Search\Search;
 
 class SearchControllerTest extends m\Adapter\Phpunit\MockeryTestCase
 {

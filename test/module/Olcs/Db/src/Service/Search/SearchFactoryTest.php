@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace OlcsTest\Db\Service\Search;
+namespace Dvsa\OlcsTest\Db\Traits\Search;
 
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Db\Service\Search\Search;
+use Dvsa\Olcs\Db\Service\Search\SearchFactory;
 use Elastica\Client as ElasticaClient;
 use Elasticsearch\Client;
-use Psr\Container\ContainerInterface;
-use Mockery as m;
-use Olcs\Db\Service\Search\Search;
-use Olcs\Db\Service\Search\SearchFactory;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
 class SearchFactoryTest extends MockeryTestCase
 {

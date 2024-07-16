@@ -1,18 +1,17 @@
 <?php
 
-namespace OlcsTest\Db\Service\Search;
+namespace Dvsa\OlcsTest\Db\Service\Search;
 
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
+use Dvsa\Olcs\Api\Entity\User\Permission;
+use Dvsa\Olcs\Db\Service\Search\Search as SearchService;
 use Elastica\Request;
-use Olcs\Db\Service\Search\Indices\Terms\ComplexTermInterface;
-use Olcs\Db\Service\Search\Search as SearchService;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use LmcRbacMvc\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\User\Permission;
 
 /**
- * @covers \Olcs\Db\Service\Search\Search
+ * @covers \Dvsa\Olcs\Db\Service\Search\Search
  */
 class SearchTest extends MockeryTestCase
 {
@@ -354,7 +353,7 @@ class SearchTest extends MockeryTestCase
      */
     public function testInvalidDateFilter($data)
     {
-        $this->expectException(\Olcs\Db\Exceptions\SearchDateFilterParseException::class);
+        $this->expectException(\Dvsa\Olcs\Db\Exceptions\SearchDateFilterParseException::class);
 
         $this->sut->setDateRanges($data);
     }
