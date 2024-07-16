@@ -2,16 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\AnswersSummary;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummary;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRow;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\HeaderAnswersSummaryRowsAdder;
+use Laminas\View\Renderer\RendererInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\View\Renderer\RendererInterface;
 
 /**
  * HeaderAnswersSummaryRowsAdderTest

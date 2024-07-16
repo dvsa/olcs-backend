@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ShortNotice;
 
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason;
 
 /**
  * Class MissingReasonTest

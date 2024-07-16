@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\Bilateral\PermitUsageGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace module\Api\src\Domain\CommandHandler\Email;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendFailedOrganisationsList as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;

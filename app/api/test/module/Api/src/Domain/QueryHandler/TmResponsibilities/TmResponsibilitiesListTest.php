@@ -6,16 +6,16 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmResonsibilities;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TmResponsibilities;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\TmResponsibilities\TmResponsibilitiesList as QueryHandler;
-use Dvsa\Olcs\Transfer\Query\TmResponsibilities\TmResponsibilitiesList as Query;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerApplication as TransportMangerApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportMangerLicenceRepo;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Transfer\Query\TmResponsibilities\TmResponsibilitiesList as Query;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

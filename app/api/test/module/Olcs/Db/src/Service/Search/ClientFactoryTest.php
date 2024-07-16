@@ -1,12 +1,12 @@
 <?php
 
-namespace OlcsTest\Db\Service\Search;
+namespace Dvsa\OlcsTest\Db\Service\Search;
 
+use Dvsa\Olcs\Db\Service\Search\ClientFactory;
 use Elastica\Client;
-use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Exception\InvalidServiceException;
-use Olcs\Db\Service\Search\ClientFactory;
 use Mockery as m;
+use Psr\Container\ContainerInterface;
 
 class ClientFactoryTest extends m\Adapter\Phpunit\MockeryTestCase
 {

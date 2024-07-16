@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\DocumentShare\Data\Object;
+namespace Dvsa\OlcsTest\DocumentShare\Object;
 
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use org\bovigo\vfs\vfsStream;

@@ -5,15 +5,14 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUserFactory;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\Repository\MocksUserRepositoryTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\OlcsTest\MocksServicesTrait;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * @see DeleteUserFactory

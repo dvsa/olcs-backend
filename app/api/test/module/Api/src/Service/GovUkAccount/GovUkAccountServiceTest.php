@@ -5,8 +5,8 @@ namespace Dvsa\OlcsTest\Api\Service\GovUkAccount;
 use Dvsa\GovUkAccount\Provider\GovUkAccount;
 use Dvsa\Olcs\Api\Service\GovUkAccount\GovUkAccountService;
 use Dvsa\Olcs\Api\Service\GovUkAccount\Response\GetAuthorisationUrlResponse;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 class GovUkAccountServiceTest extends MockeryTestCase
 {

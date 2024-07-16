@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Domain\Query as DomainQry;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\TotalContFee;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\Query as DomainQry;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\TotalContFee

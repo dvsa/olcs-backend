@@ -5,10 +5,10 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorFactory;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
 use Laminas\Filter\Decompress;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class FileProcessorFactoryTest

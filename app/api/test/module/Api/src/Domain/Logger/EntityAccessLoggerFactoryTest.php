@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\OlcsTest\Api\Logger;
+namespace Dvsa\OlcsTest\Api\Domain\Logger;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory;
-use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
-use LmcRbacMvc\Service\AuthorizationService;
-use Dvsa\OlcsTest\MocksServicesTrait;
-use Mockery\MockInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
+use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
+use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLoggerFactory;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Laminas\ServiceManager\ServiceManager;
+use LmcRbacMvc\Service\AuthorizationService;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Mockery\MockInterface;
 
 /**
  * @see EntityAccessLoggerFactory

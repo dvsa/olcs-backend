@@ -6,15 +6,14 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Trailer;
 
-use Mockery as m;
-use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Trailer\DeleteTrailer;
+use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Api\Entity\Licence\Trailer;
 use Dvsa\Olcs\Transfer\Command\Trailer\DeleteTrailer as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class DeleteTrailerTest

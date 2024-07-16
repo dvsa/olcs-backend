@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging\Conversations;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Conversations\ByApplicationToLicence as Handler;
 use Dvsa\Olcs\Api\Domain\Repository;

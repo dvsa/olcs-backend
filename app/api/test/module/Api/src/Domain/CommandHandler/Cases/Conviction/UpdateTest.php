@@ -4,11 +4,10 @@
  * Update Conviction Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Conviction;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Conviction;
 
 use DateTime;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Conviction\Update as UpdateCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity;

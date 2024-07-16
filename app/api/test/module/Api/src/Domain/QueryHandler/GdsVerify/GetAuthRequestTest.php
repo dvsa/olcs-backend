@@ -1,11 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GracePeriod;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\GdsVerify;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\GdsVerify\GetAuthRequest;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Transfer\Query\GdsVerify\GetAuthRequest as Query;
 use Dvsa\Olcs\GdsVerify\Service;
+use Dvsa\Olcs\Transfer\Query\GdsVerify\GetAuthRequest as Query;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

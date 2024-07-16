@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Messaging\Subjects;
 
-use ArrayIterator;
-use Doctrine\ORM\QueryBuilder;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Messaging\Subjects\All;
 use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Entity\User\Permission;
-use Dvsa\Olcs\Transfer\Query\Messaging\Subjects\All as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 
 class AllTest extends QueryHandlerTestCase

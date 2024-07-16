@@ -3,9 +3,9 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText;
 
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\FilteredTranslateableText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\JsonDecodingFilteredTranslateableTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;

@@ -6,7 +6,7 @@
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\Command\ConditionUndertaking;
+namespace Dvsa\OlcsTest\Api\Domain\Command\OperatingCentre;
 
 use Dvsa\Olcs\Api\Domain\Command\OperatingCentre\DeleteConditionUndertakings;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;

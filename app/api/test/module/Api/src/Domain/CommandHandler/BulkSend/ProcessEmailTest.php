@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\BulkSend;
 
 use Dvsa\Olcs\Api\Domain\Command\BulkSend\ProcessEmail as SendEmailCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;

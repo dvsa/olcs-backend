@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace module\Api\src\Domain\CommandHandler\Email;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Email;
 
 use Dvsa\Olcs\Api\Domain\Command\Email\SendPtrNotificationForRegisteredUser as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;

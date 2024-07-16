@@ -6,15 +6,14 @@
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Tm;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\System;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\System\SlaTargetDate as QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate as SlaTargetDateRepo;
 use Dvsa\Olcs\Transfer\Query\System\SlaTargetDate as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\SlaTargetDate as SlaTargetDateRepo;
-use Dvsa\Olcs\Api\Entity\System\SlaTargetDate as SlaTargetDateEntity;
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 
 /**
  * SlaTargetDate Query Handler Test

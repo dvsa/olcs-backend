@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Publication;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousLicencePublicationNo;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousLicencePublicationNo;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class PreviousApplicationPublicationNoTest

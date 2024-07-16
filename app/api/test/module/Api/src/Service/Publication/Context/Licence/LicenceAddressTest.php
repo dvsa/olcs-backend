@@ -1,15 +1,15 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Bus;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Licence;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
+use Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceAddress;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class LicenceAddressTest

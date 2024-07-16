@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Nr;
+namespace Dvsa\OlcsTest\Api\Service\ConvertToPdf;
 
-use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory;
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClientFactory;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
 class WebServiceClientFactoryTest extends MockeryTestCase
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Bus;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Context\BusReg;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceTypes;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusServiceType;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Service\Publication\Context\BusReg\ServiceTypes;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class ServiceTypesTest

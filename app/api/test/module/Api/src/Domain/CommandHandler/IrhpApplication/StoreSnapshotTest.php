@@ -1,13 +1,13 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\IrhpApplication;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\StoreSnapshot as Sut;
 use Dvsa\Olcs\Api\Domain\Command\IrhpApplication\StoreSnapshot as Cmd;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication  as IrhpApplicationEntity;
+use Dvsa\Olcs\Api\Domain\CommandHandler\IrhpApplication\StoreSnapshot as Sut;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Snapshot\Service\Snapshots\Permits\IrhpGenerator;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCreateSnapshotHandlerTest;
 use Mockery as m;

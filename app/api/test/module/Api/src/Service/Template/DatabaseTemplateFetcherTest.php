@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Template;
 
+use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Template as TemplateRepo;
 use Dvsa\Olcs\Api\Entity\Template\Template;
 use Dvsa\Olcs\Api\Service\Template\DatabaseTemplateFetcher;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 
 /**
  * DatabaseTemplateFetcherTest

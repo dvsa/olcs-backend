@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate;
 
 /**
  * Class EndDateTest

@@ -6,7 +6,6 @@ use Dvsa\Olcs\Api\Domain\Command\Email\SendFailedOrganisationsList;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\MessageFailures as MessageFailuresRepo;
 use Dvsa\Olcs\Api\Domain\Repository\Organisation as OrganisationRepo;
-use Dvsa\Olcs\Api\Entity\MessageFailures;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Cli\Domain\Command\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq as ProcessInsolvencyDlqCmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\MessageQueue\Consumer\CompaniesHouse\ProcessInsolvencyDlq;

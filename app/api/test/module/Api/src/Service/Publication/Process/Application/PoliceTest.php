@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Application;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
+use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class PoliceTest

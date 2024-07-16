@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\LicenceVehicle;
+namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Organisation;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\Organisation\FixIsUnlicenced;
 use Dvsa\Olcs\Api\Entity;

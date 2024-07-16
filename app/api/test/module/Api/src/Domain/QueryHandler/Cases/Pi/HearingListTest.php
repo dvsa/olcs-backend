@@ -9,9 +9,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Pi;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi\HearingList;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Impounding\ImpoundingList as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

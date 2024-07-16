@@ -10,11 +10,11 @@ use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
-use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerWriter;
 use Dvsa\Olcs\Api\Service\Qa\Common\ArrayCollectionFactory;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\RestrictedCountriesAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

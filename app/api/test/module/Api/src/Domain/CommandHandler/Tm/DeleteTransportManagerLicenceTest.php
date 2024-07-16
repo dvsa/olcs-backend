@@ -6,16 +6,16 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\DeleteTransportManagerLicence;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Domain\Command\Tm\DeleteTransportManagerLicence as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\DeleteTransportManagerLicence;
+use Dvsa\Olcs\Api\Domain\Repository\TransportManagerLicence as TransportManagerLicenceRepo;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class DeleteTransportManagerLicenceTest

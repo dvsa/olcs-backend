@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\BaseAnswerSaver;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadAnswerSaver;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

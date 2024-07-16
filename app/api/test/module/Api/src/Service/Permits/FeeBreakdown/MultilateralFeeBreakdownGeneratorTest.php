@@ -12,7 +12,6 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Service\Permits\FeeBreakdown\MultilateralFeeBreakdownGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use RuntimeException;
 
 /**
  * MultilateralFeeBreakdownGeneratorTest

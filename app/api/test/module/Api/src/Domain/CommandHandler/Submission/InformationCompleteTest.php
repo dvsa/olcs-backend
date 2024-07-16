@@ -6,17 +6,17 @@
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Submission;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Doctrine\ORM\Query;
-use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\InformationComplete;
 use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Submission\InformationCompleteSubmission as Cmd;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
-use Dvsa\Olcs\Api\Domain\Command\System\GenerateSlaTargetDate as GenerateSlaTargetDateCmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Transfer\Command\Submission\InformationCompleteSubmission as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  *  Submission InformationComplete Test

@@ -6,13 +6,12 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TeamPrinter;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Printer;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TeamPrinter\DeleteTeamPrinter as DeleteTeamPrinter;
 use Dvsa\Olcs\Api\Domain\Repository\TeamPrinter as TeamPrinterRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Transfer\Command\TeamPrinter\DeleteTeamPrinter as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Delete TeamPrinter Test

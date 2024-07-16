@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Common;
 
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
 use Dvsa\Olcs\Api\Service\Permits\Common\PermitTypeConfig;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedPermitTypeConfigProvider;
 use Dvsa\Olcs\Api\Service\Permits\Common\TypeBasedPermitTypeConfigProvider;

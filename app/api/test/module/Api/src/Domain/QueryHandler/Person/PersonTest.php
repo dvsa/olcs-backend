@@ -1,10 +1,10 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Person;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Person\Person as QueryHandler;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\Person\Person as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

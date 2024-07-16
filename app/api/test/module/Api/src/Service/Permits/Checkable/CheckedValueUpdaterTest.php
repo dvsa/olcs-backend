@@ -1,11 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Permits;
+namespace Dvsa\OlcsTest\Api\Service\Permits\Checkable;
 
 use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepository;
+use Dvsa\Olcs\Api\Entity\Task\Task;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckableApplicationInterface;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckedValueUpdater;
-use Dvsa\Olcs\Api\Entity\Task\Task;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

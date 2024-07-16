@@ -6,12 +6,11 @@ use Dvsa\Olcs\Api\Filesystem\Filesystem;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Service\File\File;
 use Dvsa\Olcs\Api\Service\File\FileUploaderInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
 use Laminas\Filter\Decompress;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use org\bovigo\vfs\vfsStream;
 use Laminas\Filter\Exception\RuntimeException as LaminasFilterRuntimeException;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use org\bovigo\vfs\vfsStream;
 
 /**
  * Class FileProcessorTest

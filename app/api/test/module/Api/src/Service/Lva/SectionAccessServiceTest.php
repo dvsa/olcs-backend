@@ -10,9 +10,9 @@ use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Service\Lva\RestrictionService;
 use Dvsa\Olcs\Api\Service\Lva\SectionAccessService;
 use Laminas\ServiceManager\ServiceManager;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Lva\SectionAccessService

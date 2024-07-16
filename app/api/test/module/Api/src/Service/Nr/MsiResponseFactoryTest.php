@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr;
 
-use Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory;
 use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Dvsa\Olcs\Api\Service\Nr\MsiResponseFactory;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\XmlTools\Xml\XmlNodeBuilder;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class MsiResponseFactoryTest

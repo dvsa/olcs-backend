@@ -3,12 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Nr\InputFilter;
 
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\XmlStructureInputFactory;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
+use Psr\Container\ContainerInterface;
 
 class XmlStructureInputFactoryTest extends TestCase
 {

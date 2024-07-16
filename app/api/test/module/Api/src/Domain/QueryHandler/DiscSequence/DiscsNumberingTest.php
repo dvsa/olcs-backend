@@ -6,14 +6,14 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DiscsNumbering;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\DiscSequence;
 
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\DiscSequence\DiscsNumbering as QueryHandler;
 use Dvsa\Olcs\Api\Domain\Repository\DiscSequence as DiscSequenceRepo;
 use Dvsa\Olcs\Api\Domain\Repository\GoodsDisc as GoodsDiscRepo;
 use Dvsa\Olcs\Api\Domain\Repository\PsvDisc as PsvDiscRepo;
 use Dvsa\Olcs\Transfer\Query\DiscSequence\DiscsNumbering as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

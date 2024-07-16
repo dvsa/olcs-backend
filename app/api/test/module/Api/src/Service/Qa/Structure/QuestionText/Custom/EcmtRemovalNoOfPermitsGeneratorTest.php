@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\QuestionText\Custom;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
-use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Domain\Repository\FeeType as FeeTypeRepository;
 use Dvsa\Olcs\Api\Entity\Fee\FeeType as FeeTypeEntity;
+use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\Custom\EcmtRemovalNoOfPermitsGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

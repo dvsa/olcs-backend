@@ -7,16 +7,16 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList as ListDto;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\EbsrSubmissionList;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\EbsrSubmissionList as Qry;
-use Dvsa\Olcs\Api\Domain\Query\Bus\EbsrSubmissionList as ListDto;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\EbsrSubmissionList as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * EbsrSubmissionListTest

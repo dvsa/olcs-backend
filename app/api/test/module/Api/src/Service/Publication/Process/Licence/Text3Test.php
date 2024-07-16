@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Licence;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text3 as LicenceText3;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\Licence\Text3 as LicenceText3;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class Text3Test

@@ -7,20 +7,20 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Domain\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
-use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
-use Dvsa\Olcs\Auth\Exception\DeleteUserException;
-use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
 use Dvsa\Olcs\Api\Domain\Repository\OrganisationUser as OrganisationUserRepo;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser as Sut;
+use Dvsa\Olcs\Api\Domain\Repository\Task as TaskRepo;
+use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Entity\User\Permission as PermissionEntity;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
+use Dvsa\Olcs\Auth\Exception\DeleteUserException;
 use Dvsa\Olcs\Transfer\Command\User\DeleteUser as Cmd;
+use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\DeleteUser as Sut;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * Class Delete User Test

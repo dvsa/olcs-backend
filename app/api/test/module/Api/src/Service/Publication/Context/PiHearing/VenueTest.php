@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\PiHearing;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
+use Dvsa\Olcs\Api\Service\Publication\Context\PiHearing\Venue;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class VenueTest

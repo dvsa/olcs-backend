@@ -6,7 +6,7 @@
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
+namespace Dvsa\OlcsTest\Api\Domain\Command\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\CancelFee;
 

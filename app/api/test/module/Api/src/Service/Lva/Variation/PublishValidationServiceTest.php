@@ -2,11 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Lva\Variation;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Lva\Variation\PublishValidationService;
+use Mockery as m;
 
 /**
  * PublishValidationServiceTest

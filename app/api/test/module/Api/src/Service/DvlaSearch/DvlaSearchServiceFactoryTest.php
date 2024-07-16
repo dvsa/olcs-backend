@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\DvlaSearch;
 
-use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService as DvlaSearchServiceClient;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Psr\Container\ContainerInterface;
 
 class DvlaSearchServiceFactoryTest extends TestCase
 {

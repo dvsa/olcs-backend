@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Nr\InputFilter;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Dvsa\Olcs\Api\Service\Nr\Filter;
 use Dvsa\Olcs\Api\Service\Nr\InputFilter\ComplianceEpisodeInputFactory;
-use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class ComplianceEpisodeInputFactoryTest

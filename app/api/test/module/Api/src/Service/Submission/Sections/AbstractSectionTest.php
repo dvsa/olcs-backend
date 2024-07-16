@@ -2,14 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails;
 use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\OlcsTest\Api\Service\Submission\Sections\Stub\AbstractSectionStub;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Submission\Sections\AbstractSection

@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits\Availability;
 
 use DateTime;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepository;
-use Dvsa\Olcs\Api\Service\Permits\Availability\WindowAvailabilityChecker;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockAvailabilityChecker;
+use Dvsa\Olcs\Api\Service\Permits\Availability\WindowAvailabilityChecker;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr\Filter;
 
-use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory;
-use Mockery as m;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm;
+use Dvsa\Olcs\Api\Service\Nr\Filter\VrmFactory;
+use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class VrmFactoryTest

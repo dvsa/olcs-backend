@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use PHPUnit\Framework\TestCase as TestCase;
-use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class ApplicationTypeTest

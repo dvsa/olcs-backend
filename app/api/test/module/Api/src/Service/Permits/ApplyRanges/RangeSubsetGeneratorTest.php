@@ -2,14 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\ApplyRanges;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\RangeSubsetGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use RuntimeException;
 
 /**
  * RangeSubsetGeneratorTest

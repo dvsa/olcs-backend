@@ -3,13 +3,13 @@
 namespace Dvsa\OlcsTest\Api\Service\Nr\InputFilter;
 
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory;
-use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDatesFilter;
 use Dvsa\Olcs\Api\Service\Nr\Filter\Format\IsExecuted;
+use Dvsa\Olcs\Api\Service\Nr\Filter\Format\SiDates as SiDatesFilter;
+use Dvsa\Olcs\Api\Service\Nr\InputFilter\SeriousInfringementInputFactory;
 use Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Psr\Container\ContainerInterface;
 
 /**
  * Class SeriousInfringementInputFactoryTest

@@ -6,12 +6,12 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\OperatingCentre;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\CorrespondenceInbox;
 
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\CorrespondenceInbox\CanAccessCorrespondenceInboxWithId;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\CorrespondenceInbox\CanAccessCorrespondenceInboxWithId;
 
 /**
  * @covers Dvsa\Olcs\Api\Domain\Validation\Handlers\CorrespondenceInbox\CanAccessCorrespondenceInboxWithId

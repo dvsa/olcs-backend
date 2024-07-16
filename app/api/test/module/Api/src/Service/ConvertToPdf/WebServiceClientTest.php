@@ -1,14 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Nr;
+namespace Dvsa\OlcsTest\Api\Service\ConvertToPdf;
 
 use Dvsa\Olcs\Api\Service\ConvertToPdf\WebServiceClient;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
 use Laminas\Http\Client as HttpClient;
-use Laminas\Http\Request;
 use Laminas\Http\Response;
-use Laminas\ServiceManager\ServiceLocatorInterface;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
 
 /**

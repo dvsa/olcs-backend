@@ -6,13 +6,13 @@
  * @author Joshua Curtis <josh.curtis@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Trailer;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Trailers;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Trailer\Trailer;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Trailer as TrailerRepo;
 use Dvsa\Olcs\Transfer\Query\Trailer\Trailer as Qry;
-use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**
