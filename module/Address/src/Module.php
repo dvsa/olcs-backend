@@ -2,13 +2,17 @@
 
 namespace Dvsa\Olcs\Address;
 
-/**
- * Module
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
+use Dvsa\Olcs\DvsaAddressService\Service\DvsaAddressService;
+
 class Module
 {
+    public function onBootstrap($e): void
+    {
+        $this->overwriteAddressServiceIfToggleDisabled($e);
+    }
+
     public function getConfig()
     {
         return include __DIR__ . '/../config/module.config.php';
@@ -19,5 +23,16 @@ class Module
      */
     public function getAutoloaderConfig()
     {
+    }
+
+    private function overwriteAddressServiceIfToggleDisabled($e): void
+    {
+        $toggleService = $e->getApplication()->getServiceManager()->get(ToggleService::class);
+
+        // Overwrite the DvsaAddressService alias with the legacy AddressService if toggle is disabled
+        if ($toggleService->isDisabled(FeatureToggle::USE_NEW_ADDRESS_SERVICE)) {
+            $serviceManager = $e->getApplication()->getServiceManager();
+            $serviceManager->setAlias('AddressService', DvsaAddressService::class);
+        }
     }
 }
