@@ -2,9 +2,9 @@
 
 namespace Dvsa\Olcs\Address;
 
+use Dvsa\Olcs\Address\Service\Address;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
-use Dvsa\Olcs\DvsaAddressService\Service\DvsaAddressService;
 
 class Module
 {
@@ -32,7 +32,7 @@ class Module
         // Overwrite the DvsaAddressService alias with the legacy AddressService if toggle is disabled
         if ($toggleService->isDisabled(FeatureToggle::USE_NEW_ADDRESS_SERVICE)) {
             $serviceManager = $e->getApplication()->getServiceManager();
-            $serviceManager->setAlias('AddressService', DvsaAddressService::class);
+            $serviceManager->setAlias('AddressService', Address::class);
         }
     }
 }
