@@ -11,7 +11,7 @@ class AddressHelperServiceFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): AddressHelperService
     {
         return new AddressHelperService(
-            $container->get(AddressHelperService::class),
+            $container->get('AddressService'),
             $container->get(Repository\PostcodeEnforcementArea::class),
             $container->get(Repository\AdminAreaTrafficArea::class)
         );
