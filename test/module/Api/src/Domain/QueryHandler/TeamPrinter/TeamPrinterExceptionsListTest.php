@@ -6,14 +6,14 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Team;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\TeamPrinter;
 
+use Doctrine\ORM\Query as DoctrineQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\TeamPrinter\TeamPrinterExceptionsList as QueryHandler;
+use Dvsa\Olcs\Api\Domain\Repository\TeamPrinter as TeamPrinterRepo;
 use Dvsa\Olcs\Transfer\Query\TeamPrinter\TeamPrinterExceptionsList as Query;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\TeamPrinter as TeamPrinterRepo;
 use Mockery as m;
-use Doctrine\ORM\Query as DoctrineQuery;
 
 /**
  * Team Printer Exceptions List Test

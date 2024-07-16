@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\InsufficientFeeTable;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Insufficient Fee Table test

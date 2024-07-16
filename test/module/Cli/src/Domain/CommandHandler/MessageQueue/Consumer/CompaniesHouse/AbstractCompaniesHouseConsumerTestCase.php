@@ -8,8 +8,8 @@ use Dvsa\Olcs\Api\Domain\Repository\TransactionManagerInterface;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Psr\Container\ContainerInterface;
 use Mockery as m;
+use Psr\Container\ContainerInterface;
 
 abstract class AbstractCompaniesHouseConsumerTestCase extends AbstractCommandHandlerTestCase
 {

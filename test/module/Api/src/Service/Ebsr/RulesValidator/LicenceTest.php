@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class LicenceTest

@@ -2,14 +2,13 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Query\Permits\DeviationData as DeviationDataQuery;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\InitialiseScope as InitialiseScopeCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\InitialiseScope as InitialiseScopeHandler;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**

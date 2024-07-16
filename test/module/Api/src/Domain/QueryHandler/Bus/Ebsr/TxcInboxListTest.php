@@ -8,16 +8,15 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Tests\Common\Collections\ArrayCollectionTest;
-use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\TxcInboxList;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Ebsr\TxcInbox as TxcInboxEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
-use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxList as Qry;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
+use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\TxcInboxList as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * TxcInboxListTest

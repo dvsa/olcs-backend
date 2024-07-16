@@ -1,14 +1,14 @@
 <?php
 
-namespace OlcsTest\Queue\Service;
+namespace Dvsa\OlcsTest\Queue\Service;
 
 use Aws\Command;
 use Aws\Exception\AwsException;
 use Aws\Result;
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Service\Queue;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Olcs\Logging\Log\Logger;
 
 class QueueTest extends MockeryTestCase

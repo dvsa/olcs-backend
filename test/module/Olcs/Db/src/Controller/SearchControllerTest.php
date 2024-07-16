@@ -1,12 +1,12 @@
 <?php
 
-namespace OlcsTest\Db\Controller;
+namespace Dvsa\OlcsTest\Db\Controller;
 
+use Dvsa\Olcs\Db\Controller\SearchController;
+use Dvsa\Olcs\Db\Service\Search\Search;
 use Laminas\Mvc\Controller\Plugin\Params;
 use Laminas\Mvc\Controller\PluginManager;
-use Dvsa\Olcs\Db\Controller\SearchController;
 use Mockery as m;
-use Dvsa\Olcs\Db\Service\Search\Search;
 
 class SearchControllerTest extends m\Adapter\Phpunit\MockeryTestCase
 {

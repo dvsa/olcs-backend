@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceOperatingCentres;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\LicenceOperatingCentres;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

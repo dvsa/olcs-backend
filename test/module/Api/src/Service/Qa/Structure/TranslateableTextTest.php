@@ -4,8 +4,6 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextParameter;
-use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextFactory;
-use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;

@@ -3,8 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationValidation;
-use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Validator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

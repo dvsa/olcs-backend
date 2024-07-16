@@ -5,8 +5,8 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Scoring;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepository;
-use Dvsa\Olcs\Api\Service\Permits\Scoring\EmissionsCategoryAvailabilityCounter;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Permits\Scoring\EmissionsCategoryAvailabilityCounter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

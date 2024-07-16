@@ -6,27 +6,27 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
+use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\Service\UpdateOperatingCentreHelper;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Laminas\ServiceManager\ServiceManager;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateOperatingCentres as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\OlcsTest\MocksServicesTrait;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
-use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
-use LmcRbacMvc\Service\AuthorizationService;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\ProvidesOperatingCentreVehicleAuthorizationConstraintsTrait;
-use Hamcrest\Core\AllOf;
-use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\Api\Domain\Repository\MocksLicenceRepositoryTrait;
+use Dvsa\OlcsTest\Api\Entity\Licence\LicenceBuilder;
+use Dvsa\OlcsTest\MocksServicesTrait;
+use Hamcrest\Arrays\IsArrayContainingKeyValuePair;
+use Hamcrest\Core\AllOf;
+use Laminas\ServiceManager\ServiceManager;
+use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * @see \Dvsa\Olcs\Api\Domain\CommandHandler\Licence\UpdateOperatingCentres

@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Domain\CommandHandler\Auth\LoginFactory;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUser;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUserFactory;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserve;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\RegisterUserSelfserveFactory;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreateUser;
 use Laminas\ServiceManager\ServiceManager;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\OlcsTest\MocksServicesTrait;
-use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * Class CreateUserFactoryTest

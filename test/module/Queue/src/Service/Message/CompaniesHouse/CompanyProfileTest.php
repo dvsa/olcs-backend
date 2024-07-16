@@ -1,6 +1,6 @@
 <?php
 
-namespace OlcsTest\Queue\Service\Message\CompaniesHouse;
+namespace Dvsa\OlcsTest\Queue\Service\Message\CompaniesHouse;
 
 use Dvsa\Olcs\Queue\Service\Message\CompaniesHouse\CompanyProfile;
 use PHPUnit\Framework\TestCase;

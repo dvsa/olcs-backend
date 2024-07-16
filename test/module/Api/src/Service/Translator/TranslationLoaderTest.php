@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Domain\Repository\Replacement;
 use Dvsa\Olcs\Api\Domain\Repository\TranslationKeyText;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Laminas\I18n\Translator\TextDomain;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\I18n\Translator\TextDomain;
 use Olcs\Logging\Log\Logger;
 
 /**

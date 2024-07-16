@@ -12,10 +12,9 @@ use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
 use Dvsa\Olcs\Api\Service\Document\ContextProviderInterface;
+use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
-use Dvsa\Olcs\Api\Service\Document\NamingService;
-use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

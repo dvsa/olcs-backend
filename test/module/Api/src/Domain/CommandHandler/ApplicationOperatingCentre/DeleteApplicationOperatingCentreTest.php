@@ -6,16 +6,15 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\ConditionUndertaking;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\ApplicationOperatingCentre;
 
-use Doctrine\ORM\Query;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Application\S4;
-use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\ApplicationOperatingCentre\DeleteApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
+use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
+use Dvsa\Olcs\Api\Entity\Application\S4;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\ApplicationOperatingCentre\DeleteApplicationOperatingCentre as Cmd;
+use Mockery as m;
 
 /**
  * Class DeleteApplicationOperatingCentreTest

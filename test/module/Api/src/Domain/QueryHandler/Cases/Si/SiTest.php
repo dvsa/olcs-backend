@@ -4,14 +4,14 @@
  * Si Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Si\Applied;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Si;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Si\Si as SiHandler;
-use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\SeriousInfringement as SiRepo;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Transfer\Query\Cases\Si\Si as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * Si Test

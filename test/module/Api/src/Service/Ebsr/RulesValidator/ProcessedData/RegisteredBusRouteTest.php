@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\RegisteredBusRoute;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class RegisteredBusRouteTest

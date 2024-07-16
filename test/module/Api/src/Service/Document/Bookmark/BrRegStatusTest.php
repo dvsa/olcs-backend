@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\BrRegStatus;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\BrRegStatus;
 
 /**
  * BrRegStatus test

@@ -6,10 +6,9 @@ use Dvsa\Olcs\Api\Service\Date as DateService;
 use Dvsa\Olcs\Api\Service\Document\Document;
 use Dvsa\Olcs\DocumentShare\Data\Object\File;
 use Dvsa\Olcs\DocumentShare\Service\DocumentStoreInterface;
+use Laminas\I18n\Translator\TranslatorInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Laminas\I18n\Translator\TranslatorInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Document

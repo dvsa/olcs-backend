@@ -4,9 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication as IrhpPermitApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\NoOfPermitsAnswerFetcher;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\NamedAnswerFetcher;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

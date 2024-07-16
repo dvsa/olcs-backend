@@ -5,12 +5,12 @@ namespace Dvsa\OlcsTest\Api\Service\Nr;
 use Dvsa\Olcs\Api\Service\Nr\InrClient;
 use Dvsa\Olcs\Api\Service\Nr\InrClientFactory;
 use Dvsa\Olcs\Api\Service\Nr\InrClientInterface;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
-use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
+use Laminas\Http\Client as RestClient;
 use Laminas\Http\Client\Adapter\Curl;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Psr\Container\ContainerInterface;
 
 class InrClientFactoryTest extends TestCase
 {

@@ -1,8 +1,9 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Formatter;
 
 use Dvsa\Olcs\Api\Service\Document\Bookmark\IrhpApplicationReference;
+use Dvsa\OlcsTest\Api\Service\Document\Bookmark\SingleValueTestAbstract;
 
 /**
  * IrhpApplicationReferenceTest

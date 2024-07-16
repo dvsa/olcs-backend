@@ -3,25 +3,25 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\ExistingRegNo;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Subsidy;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\Via;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectIsTxcApp;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectNaptanCodes;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\InjectReceivedDate;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\NoticePeriod;
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ApplicationType;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
-use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
-use Olcs\XmlTools\Filter\MapXmlFile;
-use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
-use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
-use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\MiscSnJustification;
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EndDate;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\Licence;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ServiceNo;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Olcs\XmlTools\Filter\MapXmlFile;
+use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
+use Psr\Container\ContainerInterface;
 
 class BusRegistrationInputFactoryTest extends TestCase
 {

@@ -1,13 +1,13 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity\Bus;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as LicenceRouteNoQuery;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\RegistrationHistoryList;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
-use Dvsa\Olcs\Api\Domain\Query\Bus\ByLicenceRoute as LicenceRouteNoQuery;
-use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as RegListQuery;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusEntity;
+use Dvsa\Olcs\Transfer\Query\Bus\RegistrationHistoryList as RegListQuery;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

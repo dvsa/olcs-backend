@@ -2,17 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
+use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Operator;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\XmlStructureInputFactory;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\XmlTools\Filter\ParseXml;
 use Olcs\XmlTools\Validator\Xsd;
+use Psr\Container\ContainerInterface;
 
 class XmlStructureInputFactoryTest extends TestCase
 {

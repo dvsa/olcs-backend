@@ -6,7 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace module\Api\src\Domain\CommandHandler\Organisation;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Organisation\ChangeBusinessType;
 use Dvsa\Olcs\Api\Domain\Exception\RequiresConfirmationException;

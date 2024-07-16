@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\TransportManager;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\Person as Sut;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TmEntity;
+use Dvsa\Olcs\Api\Service\Publication\Context\TransportManager\Person as Sut;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class PersonTest

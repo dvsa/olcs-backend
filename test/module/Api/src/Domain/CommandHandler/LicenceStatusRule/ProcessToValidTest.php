@@ -6,15 +6,15 @@
  * @author Mat Evans <mat.evans@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\LicenceStatusRule;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as Repo;
-use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\ProcessToValid as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\LicenceStatusRule\ProcessToValid as Command;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as LicenceStatusRule;
+use Dvsa\Olcs\Api\Domain\CommandHandler\LicenceStatusRule\ProcessToValid as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository\LicenceStatusRule as Repo;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as Licence;
+use Dvsa\Olcs\Api\Entity\Licence\LicenceStatusRule as LicenceStatusRule;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * ProcessToValidTest

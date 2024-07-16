@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\PolicePeople;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\PolicePeopleBundle;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\PolicePeople;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

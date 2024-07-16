@@ -1,10 +1,10 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Facade\SubmittedApplicationSteps;
+namespace Dvsa\OlcsTest\Api\Service\Qa\Facade\SupplementedApplicationSteps;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep;
-use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Api\Service\Qa\Facade\SupplementedApplicationSteps\SupplementedApplicationStep;
+use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

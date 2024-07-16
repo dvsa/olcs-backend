@@ -1,12 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Email;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Template;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Template\PreviewTemplateSource;
 use Dvsa\Olcs\Api\Domain\Repository\Template as TemplateRepo;
-use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
+use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Transfer\Query\Template\PreviewTemplateSource as PreviewTemplateSourceQry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;

@@ -6,7 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Licence;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query;

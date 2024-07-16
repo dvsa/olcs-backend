@@ -4,10 +4,10 @@ namespace Dvsa\OlcsTest\Api\Service\Publication\Context;
 
 use Dvsa\Olcs\Api\Service\Publication\Context\ContextInterface;
 use Dvsa\Olcs\Api\Service\Publication\Context\PluginManager;
-use Psr\Container\ContainerInterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\Exception\InvalidServiceException;
+use Psr\Container\ContainerInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Publication\Context\PluginManager

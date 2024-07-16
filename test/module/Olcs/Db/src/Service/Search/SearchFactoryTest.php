@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\OlcsTest\Db\Traits\Search;
+namespace Dvsa\OlcsTest\Db\Service\Search;
 
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter;
 use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;

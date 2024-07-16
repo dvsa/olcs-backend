@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Internal;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\NoOfPermitsConditionalUpdater;
-use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\PermitUsageSelectionGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\BilateralRequiredGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\NumberOfPermitsQuestionHandler;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\PermitUsageSelectionGenerator;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

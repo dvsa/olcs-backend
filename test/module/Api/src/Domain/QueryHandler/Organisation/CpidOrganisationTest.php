@@ -6,7 +6,7 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 
-namespace module\Api\src\Domain\QueryHandler\Organisation;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Organisation;
 
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Organisation\CpidOrganisation;

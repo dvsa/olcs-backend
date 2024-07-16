@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Publication;
 
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

@@ -6,7 +6,7 @@
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
+namespace Dvsa\OlcsTest\Api\Domain\Command\Fee;
 
 use Dvsa\Olcs\Api\Domain\Command\Fee\PayFee;
 

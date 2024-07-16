@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\ApplyRanges;
 
-use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\RestrictedWithFewestCountriesProvider;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\RestrictedRangesProvider;
+use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\RestrictedWithFewestCountriesProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Permits;
+namespace Dvsa\OlcsTest\Api\Service\Permits\Checkable;
 
+use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CheckableApplicationInterface;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandFactory;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\CreateTaskCommandGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Checkable\SubmissionTaskProperties;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

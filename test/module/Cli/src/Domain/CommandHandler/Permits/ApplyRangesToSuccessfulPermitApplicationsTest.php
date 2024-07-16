@@ -4,19 +4,17 @@ namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepo;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitRange as IrhpPermitRangeRepo;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\ForCpProvider;
 use Dvsa\Olcs\Api\Service\Permits\ApplyRanges\StockBasedForCpProviderFactory;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications
-    as ApplyRangesToSuccessfulPermitApplicationsCommand;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications
-    as ApplyRangesToSuccessfulPermitApplicationsHandler;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\ApplyRangesToSuccessfulPermitApplications as ApplyRangesToSuccessfulPermitApplicationsCommand;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\ApplyRangesToSuccessfulPermitApplications as ApplyRangesToSuccessfulPermitApplicationsHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 

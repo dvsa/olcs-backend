@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository\Answer as AnswerRepository;
 use Dvsa\Olcs\Api\Entity\Generic\Answer;
+use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerClearer;
-use Dvsa\Olcs\Api\Service\Qa\AnswerSaver\GenericAnswerProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

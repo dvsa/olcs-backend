@@ -9,9 +9,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Impounding;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding\ImpoundingList;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Impounding\ImpoundingList as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

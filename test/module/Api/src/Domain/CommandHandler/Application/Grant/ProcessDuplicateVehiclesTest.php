@@ -8,13 +8,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository;
-use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ProcessDuplicateVehicles as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessDuplicateVehicles as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ProcessDuplicateVehicles as CommandHandler;
+use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Entity;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Process Duplicate Vehicles Test

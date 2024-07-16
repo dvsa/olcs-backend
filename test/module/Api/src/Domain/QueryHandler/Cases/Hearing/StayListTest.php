@@ -9,9 +9,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Hearing;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing\StayList;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Hearing as StayRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Hearing\StayList as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

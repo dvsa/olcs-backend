@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator\ProcessedData;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ProcessedData\LocalAuthorityMissing;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Entity\Bus\LocalAuthority as LaEntity;
 
 /**
  * Class LocalAuthorityMissingTest

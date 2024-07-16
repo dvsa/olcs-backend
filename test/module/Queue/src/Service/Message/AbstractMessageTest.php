@@ -1,6 +1,6 @@
 <?php
 
-namespace OlcsTest\Queue\Service\Message;
+namespace Dvsa\OlcsTest\Queue\Service\Message;
 
 use Dvsa\Olcs\Queue\Service\Message\AbstractMessage;
 use PHPUnit\Framework\TestCase;

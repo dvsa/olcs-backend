@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dvsa\OlcsTest\Cli\Domain\Command\Permits;
+namespace Dvsa\OlcsTest\Api\Domain\Command\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Permits\GenerateReport as GenerateReportCmd;
 

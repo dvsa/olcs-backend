@@ -4,13 +4,13 @@ namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
+use Psr\Container\ContainerInterface;
 
 class TransExchangeClientFactoryTest extends TestCase
 {

@@ -4,9 +4,8 @@
  * Create Conviction Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Conviction;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Conviction;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Conviction\Create as CreateCommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity;

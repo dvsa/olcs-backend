@@ -4,9 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Nr\Filter;
 
 use Dvsa\Olcs\Api\Service\Nr\Filter\Vrm;
 use Dvsa\Olcs\Transfer\Filter\Vrm as TransferVrmFilter;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class VrmTest

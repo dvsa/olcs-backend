@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Email\Transport;
+namespace Dvsa\OlcsTest\Email\View\Helper;
 
 use Dvsa\Olcs\Email\View\Helper\EmailStyle;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

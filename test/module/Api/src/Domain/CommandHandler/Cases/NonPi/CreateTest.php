@@ -4,15 +4,15 @@
  * Create NonPi Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\NonPi;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\NonPi;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi\Create as CreateCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
-use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
+use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Create as CreateCommand;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Create NonPi Test

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Db\Traits\Search;
+namespace Dvsa\OlcsTest\Db\Service\Search;
 
 use Dvsa\Olcs\Db\Service\Search\ClientFactory;
 use Elastica\Client;

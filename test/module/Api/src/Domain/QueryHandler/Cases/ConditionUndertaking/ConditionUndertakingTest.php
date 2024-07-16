@@ -9,9 +9,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\ConditionUndertaking;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ConditionUndertaking\ConditionUndertaking;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\ConditionUndertaking\ConditionUndertaking as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

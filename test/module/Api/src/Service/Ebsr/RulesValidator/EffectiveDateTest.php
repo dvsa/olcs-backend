@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\RulesValidator;
 
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\EffectiveDate;
 use PHPUnit\Framework\TestCase;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 
 /**
  * Class EffectiveDateTest

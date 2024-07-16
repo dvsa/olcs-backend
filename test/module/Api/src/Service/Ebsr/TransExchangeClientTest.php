@@ -3,16 +3,15 @@
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Laminas\Http\Client as RestClient;
+use Laminas\Http\Request;
+use Laminas\Http\Response;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\Logging\Log\Logger;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
-use Laminas\Http\Client as RestClient;
-use Laminas\Http\Request;
-use Laminas\Http\Response;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * Class TransExchangeClientTest
