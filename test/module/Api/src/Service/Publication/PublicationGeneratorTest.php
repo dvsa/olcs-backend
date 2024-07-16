@@ -7,9 +7,9 @@ use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\Publication;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Publication\PublicationGenerator

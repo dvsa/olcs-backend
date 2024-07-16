@@ -6,12 +6,12 @@
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Impounding\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Impounding;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Impounding\Impounding;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Impounding as ImpoundingRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Impounding\Impounding as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

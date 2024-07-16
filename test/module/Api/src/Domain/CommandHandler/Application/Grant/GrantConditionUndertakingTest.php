@@ -9,16 +9,15 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantConditionUndertaking as GrantConditionUndertakingCmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\User\User;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantConditionUndertaking as GrantConditionUndertakingCmd;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * Grant Condition Undertaking Test

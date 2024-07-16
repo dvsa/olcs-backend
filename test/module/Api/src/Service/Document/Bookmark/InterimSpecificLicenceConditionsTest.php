@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\InterimSpecificLicenceConditions;
 use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\InterimSpecificLicenceConditions;
 
 /**
  * Interim Conditions test

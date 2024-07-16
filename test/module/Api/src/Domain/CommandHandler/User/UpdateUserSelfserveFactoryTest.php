@@ -6,21 +6,21 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory;
-use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\User;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
 use Dvsa\Olcs\Auth\Service\PasswordService;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\MocksAbstractCommandHandlerServicesTrait;
 use Dvsa\OlcsTest\MocksRepositoriesTrait;
+use Dvsa\OlcsTest\MocksServicesTrait;
 use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use Laminas\ServiceManager\ServiceManager;
+use LmcRbacMvc\Service\AuthorizationService;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\OlcsTest\MocksServicesTrait;
-use LmcRbacMvc\Service\AuthorizationService;
 
 /**
- * @covers \Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory
+ * @covers \Dvsa\OlcsTest\Api\Domain\CommandHandler\User\UpdateUserSelfserveFactory
  */
 class UpdateUserSelfserveFactoryTest extends MockeryTestCase
 {

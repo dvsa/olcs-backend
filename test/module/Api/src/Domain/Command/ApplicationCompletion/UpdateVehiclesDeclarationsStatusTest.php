@@ -6,7 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\Command\Application;
+namespace Dvsa\OlcsTest\Api\Domain\Command\ApplicationCompletion;
 
 use Dvsa\Olcs\Api\Domain\Command\ApplicationCompletion\UpdateVehiclesDeclarationsStatus;
 

@@ -7,10 +7,10 @@ use Dvsa\Olcs\Api\Service\File\Exception;
 use Dvsa\Olcs\Api\Service\File\MimeNotAllowedException;
 use Dvsa\Olcs\DocumentShare\Data\Object\File as DsFile;
 use Dvsa\Olcs\DocumentShare\Service\WebDavClient as ContentStoreClient;
+use Laminas\Http\Response;
 use Laminas\ServiceManager\ServiceManager;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\Http\Response;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader

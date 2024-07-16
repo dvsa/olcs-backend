@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\InputFilter;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 /**
  * Class InputTest

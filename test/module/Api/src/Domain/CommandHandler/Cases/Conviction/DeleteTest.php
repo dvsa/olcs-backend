@@ -4,17 +4,14 @@
  * Create Conviction Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Conviction;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Conviction;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Conviction\Delete as DeleteCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\Conviction\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\Conviction;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction as ConvictionEntity;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Command\Cases\Conviction\Delete as DeleteCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity;
+use Mockery as m;
 
 /**
  * Create Conviction Test

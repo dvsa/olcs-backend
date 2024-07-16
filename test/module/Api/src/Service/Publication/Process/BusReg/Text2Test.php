@@ -2,15 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\BusReg;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2 as BusRegText2;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\BusReg\Text2 as BusRegText2;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class Text2Test

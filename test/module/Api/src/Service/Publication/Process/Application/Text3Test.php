@@ -2,19 +2,19 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Application;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3 as ApplicationText3;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\Application\Text3 as ApplicationText3;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class Text3Test

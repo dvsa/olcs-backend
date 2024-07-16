@@ -6,15 +6,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameSingle as SendUsernameSingleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameMultiple as SendUsernameMultipleCmd;
+use Dvsa\Olcs\Api\Domain\Command\Email\SendUsernameSingle as SendUsernameSingleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\RemindUsernameSelfserve as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\User as UserRepo;
 use Dvsa\Olcs\Api\Entity\User\User;
 use Dvsa\Olcs\Transfer\Command\User\RemindUsernameSelfserve as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\RemindUsernameSelfserve as Sut;
+use Mockery as m;
 
 /**
  * Remind Username Selfserve Test

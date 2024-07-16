@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Strategy;
 
-use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\AnswersSummary\AnswerSummaryProviderInterface;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
+use Dvsa\Olcs\Api\Service\Qa\Strategy\BaseFormControlStrategy;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerClearerInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\AnswerSaverInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
@@ -13,7 +13,6 @@ use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionTextGeneratorInterface;
-use Dvsa\Olcs\Api\Service\Qa\Strategy\BaseFormControlStrategy;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;

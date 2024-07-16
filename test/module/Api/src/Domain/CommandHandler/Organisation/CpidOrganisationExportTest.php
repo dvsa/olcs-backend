@@ -7,7 +7,7 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace module\Api\src\Domain\CommandHandler\Organisation;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Organisation;
 
 use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;

@@ -4,17 +4,15 @@
  * Create NonPi Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\NonPi;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\NonPi;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\NonPi\Delete as DeleteCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\NonPi;
 use Dvsa\Olcs\Api\Entity\Cases\Hearing as NonPiEntity;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Command\Cases\NonPi\Delete as DeleteCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity;
+use Mockery as m;
 
 /**
  * Create NonPi Test

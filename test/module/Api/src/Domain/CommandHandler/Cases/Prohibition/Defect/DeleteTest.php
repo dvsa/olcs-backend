@@ -4,17 +4,14 @@
  * Create Prohibition\Defect Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Prohibition\Defect;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Prohibition\Defect;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition\Defect\Delete as DeleteCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Delete as DeleteCommand;
 use Dvsa\Olcs\Api\Domain\Repository\ProhibitionDefect;
 use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as ProhibitionDefectEntity;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Delete as DeleteCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity;
+use Mockery as m;
 
 /**
  * Create Prohibition Defect Delete Test

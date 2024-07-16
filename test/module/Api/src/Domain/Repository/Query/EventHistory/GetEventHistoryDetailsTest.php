@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\Continuations;
+namespace Dvsa\OlcsTest\Api\Domain\Repository\Query\EventHistory;
 
 use Dvsa\Olcs\Api\Domain\Repository\Query\EventHistory\GetEventHistoryDetails;
 use Dvsa\OlcsTest\Api\Domain\Repository\Query\AbstractDbQueryTestCase;

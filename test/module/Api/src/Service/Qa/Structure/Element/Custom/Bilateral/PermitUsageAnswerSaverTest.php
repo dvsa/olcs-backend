@@ -7,7 +7,6 @@ use Dvsa\Olcs\Api\Service\Permits\Bilateral\Common\PermitUsageUpdater;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\PermitUsageAnswerSaver;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerFetcher;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\GenericAnswerSaver;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

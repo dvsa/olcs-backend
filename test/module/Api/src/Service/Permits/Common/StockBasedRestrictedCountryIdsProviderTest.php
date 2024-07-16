@@ -3,8 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits\Common;
 
 use Dvsa\Olcs\Api\Service\Permits\Common\PermitTypeConfig;
-use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedPermitTypeConfigProvider;
+use Dvsa\Olcs\Api\Service\Permits\Common\StockBasedRestrictedCountryIdsProvider;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

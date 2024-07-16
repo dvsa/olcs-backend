@@ -9,9 +9,9 @@
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Hearing;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Hearing\Appeal;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Appeal as AppealRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\Hearing\Appeal as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

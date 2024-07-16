@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Licence;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Entity\Person\Person;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class PeopleTest

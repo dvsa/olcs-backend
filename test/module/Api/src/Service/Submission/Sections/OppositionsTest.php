@@ -2,8 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Class OppositionsTest
  * @author Shaun Lizzio <shaun@valtech.co.uk>

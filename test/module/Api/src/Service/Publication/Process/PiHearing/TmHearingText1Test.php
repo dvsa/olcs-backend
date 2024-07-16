@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\PiHearing;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\TmHearingText1;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class TmHearingText1Test

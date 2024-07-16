@@ -4,11 +4,11 @@ namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
 use Dvsa\Olcs\Api\Domain\Query as DomainQry;
 use Dvsa\Olcs\Api\Service\Document\Parser\ParserInterface;
+use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 use Dvsa\OlcsTest\Api\Service\Document\Bookmark\Stub\AbstractPublicationLinkSectionStub;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use org\bovigo\vfs\vfsStream;
-use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\AbstractPublicationLinkSection

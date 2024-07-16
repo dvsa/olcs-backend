@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\UpdatePrivateHireLicence as CommandHandler;
 use Dvsa\Olcs\Transfer\Command\Application\UpdatePrivateHireLicence as Command;

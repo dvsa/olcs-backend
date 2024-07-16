@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Service\DvlaSearch;
 
+use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\BadRequestException;
 use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\BadResponseException;
 use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\ForbiddenException;
@@ -10,12 +11,11 @@ use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\ServiceException;
 use Dvsa\Olcs\Api\Service\DvlaSearch\Exception\VehicleUnavailableException;
 use Dvsa\Olcs\Api\Service\DvlaSearch\Model\DvlaVehicle;
 use GuzzleHttp\Client as GuzzleHttpClient;
-use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Psr\Log\LoggerInterface;
 
 class DvlaSearchServiceTest extends MockeryTestCase

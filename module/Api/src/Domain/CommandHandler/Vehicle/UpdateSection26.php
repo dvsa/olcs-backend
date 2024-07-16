@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\Api\Domain\CommandHandler\Vehicle;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Db\Service\Search\Search;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Psr\Container\ContainerInterface;
 
@@ -17,7 +18,7 @@ final class UpdateSection26 extends AbstractCommandHandler implements Transactio
     protected $repoServiceName = 'Vehicle';
 
     /**
-     * @var \Olcs\Db\Service\Search\Search
+     * @var Search
      */
     private $searchService;
 

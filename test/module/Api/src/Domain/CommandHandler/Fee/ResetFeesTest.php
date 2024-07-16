@@ -8,16 +8,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Fee\ResetFees as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Fee\ResetFees;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity\Fee\Fee as FeeEntity;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * Reset Fees Test
@@ -27,7 +26,7 @@ use LmcRbacMvc\Service\AuthorizationService;
 class ResetFeesTest extends AbstractCommandHandlerTestCase
 {
     /**
-     * @var (\Dvsa\OlcsTest\Api\Domain\CommandHandler\Fee\FeesHelper & \Mockery\MockInterface)
+     * @var (\Dvsa\OlcsTest\Api\Domain\CommandHandler\Trailer\FeesHelper & \Mockery\MockInterface)
      */
     public $mockFeesHelperService;
     public function setUp(): void

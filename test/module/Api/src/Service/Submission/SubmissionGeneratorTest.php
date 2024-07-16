@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission;
 
-use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
+use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
 use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefdataEntity;
-use Dvsa\Olcs\Api\Entity\Cases\Cases as CaseEntity;
+use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
+use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator

@@ -7,10 +7,8 @@ use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitSectorQuota as IrhpPermitSectorQuotaRepo;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications
-    as MarkSuccessfulSectorPermitApplicationsCommand;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulSectorPermitApplications
-    as MarkSuccessfulSectorPermitApplicationsHandler;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulSectorPermitApplications as MarkSuccessfulSectorPermitApplicationsCommand;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulSectorPermitApplications as MarkSuccessfulSectorPermitApplicationsHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 

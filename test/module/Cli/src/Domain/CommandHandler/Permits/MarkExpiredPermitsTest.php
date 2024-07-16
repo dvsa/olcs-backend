@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
+use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
 use Dvsa\Olcs\Api\Entity\IrhpInterface;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkExpiredPermits as MarkExpiredPermitsCommand;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkExpiredPermits;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepo;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 

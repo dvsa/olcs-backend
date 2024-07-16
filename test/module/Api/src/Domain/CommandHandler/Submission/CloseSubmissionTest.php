@@ -6,16 +6,16 @@
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Submission;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Submission;
 
 use Doctrine\ORM\Query;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Submission\CloseSubmission;
-use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\Submission\CloseSubmission as Cmd;
-use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Repository\Submission as SubmissionRepo;
+use Dvsa\Olcs\Api\Entity\Submission\Submission as SubmissionEntity;
+use Dvsa\Olcs\Transfer\Command\Submission\CloseSubmission as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Close Submission Test

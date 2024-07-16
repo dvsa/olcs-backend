@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Scoring;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsLogger;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

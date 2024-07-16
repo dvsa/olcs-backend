@@ -6,12 +6,12 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Si\Applied;
 
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Si\Applied\Penalty as PenaltyHandler;
-use Dvsa\Olcs\Api\Entity\Si\SiPenalty;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\SiPenalty as SiPenaltyRepo;
+use Dvsa\Olcs\Api\Entity\Si\SiPenalty;
 use Dvsa\Olcs\Transfer\Query\Cases\Si\Applied\Penalty as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * Penalty Test

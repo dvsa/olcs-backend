@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Licence;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceCancelled;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
+use Dvsa\Olcs\Api\Service\Publication\Context\Licence\LicenceCancelled;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class LicenceCancelledTest

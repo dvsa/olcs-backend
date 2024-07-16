@@ -8,18 +8,17 @@ namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\BusRegWithTxcInbox;
+use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
+use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationUser;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\TxcInbox as TxcInboxRepo;
-use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\BusRegWithTxcInbox as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
-use LmcRbacMvc\Service\AuthorizationService;
 
 /**
  * BusRegWithTxcInboxTest

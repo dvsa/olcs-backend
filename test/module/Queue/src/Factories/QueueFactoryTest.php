@@ -1,13 +1,13 @@
 <?php
 
-namespace OlcsTest\Queue\Factories;
+namespace Dvsa\OlcsTest\Queue\Factories;
 
 use Aws\Sqs\SqsClient;
 use Dvsa\Olcs\Queue\Factories\QueueFactory;
 use Dvsa\Olcs\Queue\Service\Queue;
 use Laminas\ServiceManager\ServiceManager;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 
 class QueueFactoryTest extends TestCase
 {

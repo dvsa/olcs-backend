@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Application;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication as TransportManagerApplicationEntity;
+use Dvsa\Olcs\Api\Service\Publication\Context\Application\TransportManagers;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class TransportManagersTest

@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Publication\Context\PiHearing;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Publication;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Service\Publication\Context\Publication\PreviousApplicationPublicationNo;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class PreviousApplicationPublicationNoTest

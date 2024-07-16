@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Cases\Conviction;
 
 /**

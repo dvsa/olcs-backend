@@ -6,15 +6,15 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdatePartner;
-use Dvsa\Olcs\Api\Domain\Repository\Partner;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\Partner;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\User\UpdatePartner as Cmd;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdatePartner;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * UpdatePartner Test

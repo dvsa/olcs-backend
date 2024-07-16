@@ -3,14 +3,12 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitJurisdictionQuota as IrhpPermitJurisdictionQuotaRepo;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\SuccessfulCandidatePermitsFacade;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulDaPermitApplications
-    as MarkSuccessfulDaPermitApplicationsCommand;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulDaPermitApplications
-    as MarkSuccessfulDaPermitApplicationsHandler;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsCommand;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\MarkSuccessfulDaPermitApplications as MarkSuccessfulDaPermitApplicationsHandler;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 

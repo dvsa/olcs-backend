@@ -14,8 +14,8 @@ use Dvsa\Olcs\Transfer\Command\User\DeleteUserSelfserve as Cmd;
 use Dvsa\Olcs\Transfer\Result\Auth\DeleteUserResult;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Mockery as m;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * Class Delete User Selfserve Test

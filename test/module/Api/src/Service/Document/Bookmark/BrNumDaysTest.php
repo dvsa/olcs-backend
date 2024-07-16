@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\BrNumDays as BrNumDays;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Domain\Query\Bookmark\BusRegBundle as Qry;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\Base\DynamicBookmark;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\BrNumDays as BrNumDays;
 
 /**
  * BrNumDays test

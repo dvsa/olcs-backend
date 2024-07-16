@@ -1,15 +1,15 @@
 <?php
 
-namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
+namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\CommunityLic;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic\Activate;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspension as CommunityLicSuspensionRepo;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLicSuspensionReason as CommunityLicSuspensionReasonRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Cli\Domain\Command\CommunityLic\Activate as Cmd;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic\Activate;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**

@@ -9,18 +9,16 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords as CreateDiscRecordsCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Command\Vehicle\CreateGoodsDiscs;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\CreateDiscRecords;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceVehicle;
 use Dvsa\Olcs\Transfer\Command\Licence\CreatePsvDiscs;
-use Dvsa\Olcs\Transfer\Command\Licence\PrintLicence;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords as CreateDiscRecordsCmd;
+use Mockery as m;
 
 /**
  * Create Disc Records Test

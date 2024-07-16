@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service\Publication\Process;
 
 use Dvsa\Olcs\Api\Service\Publication\Process\PluginManager as ProcessPluginManager;
 use Dvsa\Olcs\Api\Service\Publication\Process\ProcessInterface;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Psr\Container\ContainerInterface;
 
 /**

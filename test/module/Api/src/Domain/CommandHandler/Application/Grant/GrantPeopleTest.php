@@ -8,9 +8,10 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostAddPeopleGrantTask;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreatePostDeletePeopleGrantTask;
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\GrantPeople;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
@@ -18,9 +19,8 @@ use Dvsa\Olcs\Api\Entity\Application\ApplicationOrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson;
 use Dvsa\Olcs\Api\Entity\Person\Person;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople as GrantPeopleCmd;
+use Mockery as m;
 
 /**
  * Grant People Test

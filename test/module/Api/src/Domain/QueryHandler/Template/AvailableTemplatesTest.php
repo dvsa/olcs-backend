@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Permits;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Template;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Template\AvailableTemplates as Handler;
 use Dvsa\Olcs\Api\Domain\Repository\Template as Repo;

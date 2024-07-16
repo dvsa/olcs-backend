@@ -2,15 +2,15 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;
 use Dvsa\Olcs\Api\Service\Permits\Fees\DaysToPayIssueFeeProvider;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\WithdrawUnpaidIrhp as WithdrawUnpaidIrhpHandler;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\WithdrawUnpaidIrhp as WithdrawUnpaidIrhpCmd;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\WithdrawUnpaidIrhp as WithdrawUnpaidIrhpHandler;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\Withdraw as WithdrawCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**

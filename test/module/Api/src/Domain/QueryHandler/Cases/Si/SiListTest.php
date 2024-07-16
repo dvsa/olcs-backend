@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Si;
 
+use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Si\SiList as QueryHandler;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Doctrine\ORM\Query;
 use Mockery as m;
 
 /**

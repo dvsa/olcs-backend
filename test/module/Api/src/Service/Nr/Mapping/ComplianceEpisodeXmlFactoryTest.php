@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr\Mapping;
 
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory;
 use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXml;
+use Dvsa\Olcs\Api\Service\Nr\Mapping\ComplianceEpisodeXmlFactory;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
 use Olcs\XmlTools\Filter\MapXmlFile;
+use Psr\Container\ContainerInterface;
 
 class ComplianceEpisodeXmlFactoryTest extends TestCase
 {

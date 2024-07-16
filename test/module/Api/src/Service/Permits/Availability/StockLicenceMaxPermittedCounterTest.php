@@ -1,11 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
+namespace Dvsa\OlcsTest\Api\Service\Permits\Availability;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service\Permits\Availability\StockLicenceMaxPermittedCounter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

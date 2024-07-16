@@ -6,12 +6,12 @@
  * @author Shaun Lizzio <shaun@lizzio.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\ConditionUndertaking;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ConditionUndertaking\ConditionUndertakingList;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\ConditionUndertaking\ConditionUndertakingList as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Mockery as m;
 
 /**

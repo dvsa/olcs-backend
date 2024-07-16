@@ -1,18 +1,18 @@
 <?php
 
-namespace OlcsTest\Api;
+namespace Dvsa\OlcsTest\Api;
 
+use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
 use Dvsa\Olcs\Api\Module;
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Olcs\Logging\Log\Logger;
-use phpseclib\Crypt\Base;
 use Laminas\EventManager\Event;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\ResponseSender\SendResponseEvent;
 use Laminas\ServiceManager\ServiceManager;
 use LmcRbacMvc\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Entity\Types\EncryptedStringType;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\Logging\Log\Logger;
+use phpseclib\Crypt\Base;
 
 /**
  * Tests the Api Module php

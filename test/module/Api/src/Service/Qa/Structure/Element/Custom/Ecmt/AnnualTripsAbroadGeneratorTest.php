@@ -3,10 +3,10 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication as IrhpApplicationEntity;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroad;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\AnnualTripsAbroadGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Text;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\TextGenerator;
 use Mockery as m;

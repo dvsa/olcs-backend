@@ -4,9 +4,9 @@ namespace Dvsa\OlcsTest\Api\Service;
 
 use Dvsa\OlcsTest\Api\Service\Stub\AbstractServiceManagerFactoryStub;
 use Dvsa\OlcsTest\Api\Service\Stub\ServiceManagerStub;
-use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\AbstractServiceManagerFactory

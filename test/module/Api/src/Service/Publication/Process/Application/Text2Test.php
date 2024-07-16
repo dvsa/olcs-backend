@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Application;
 
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Service\Publication\Process\Application\Text2 as ApplicationText2;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 
 /**
  * Class Text2Test

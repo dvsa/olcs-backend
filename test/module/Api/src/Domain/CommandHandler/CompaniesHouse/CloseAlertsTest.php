@@ -6,13 +6,13 @@
  * @author Dan Eggleston <dan@stolenegg.com>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Task;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\CompaniesHouse;
 
-use Dvsa\Olcs\Transfer\Command\CompaniesHouse\CloseAlerts as Cmd;
 use Dvsa\Olcs\Api\Domain\CommandHandler\CompaniesHouse\CloseAlerts;
 use Dvsa\Olcs\Api\Domain\Repository\CompaniesHouseAlert as AlertRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity\CompaniesHouse\CompaniesHouseAlert as AlertEntity;
+use Dvsa\Olcs\Transfer\Command\CompaniesHouse\CloseAlerts as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**

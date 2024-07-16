@@ -6,15 +6,14 @@
  * @author Josh Curtis <josh.curtis@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\GracePeriod;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Correspondence;
 
-use Mockery as m;
-use Doctrine\ORM\Query;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\GracePeriod as CorrespondenceRepo;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Correspondence\AccessCorrespondence;
+use Dvsa\Olcs\Api\Domain\Repository\GracePeriod as CorrespondenceRepo;
 use Dvsa\Olcs\Api\Entity\Organisation\CorrespondenceInbox;
 use Dvsa\Olcs\Transfer\Command\Correspondence\AccessCorrespondence as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class AccessCorrespondenceTest

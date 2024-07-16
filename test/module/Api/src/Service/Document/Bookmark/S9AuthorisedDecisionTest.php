@@ -8,9 +8,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\S9AuthorisedDecision;
-use Dvsa\Olcs\Api\Service\Document\Bookmark\StatementFlatAbstract;
-
 /**
  * Class
  *

@@ -1,15 +1,15 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Merge as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
 use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
+use Dvsa\Olcs\Transfer\Command\Tm\Merge as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class MergeTest

@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use DateTime;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpApplication as IrhpApplicationRepo;
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitWindow as IrhpPermitWindowRepo;
@@ -12,10 +11,11 @@ use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitWindow;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\CancelUnsubmittedBilateral as CancelUnsubmittedBilateralHandler;
 use Dvsa\Olcs\Cli\Domain\Command\Permits\CancelUnsubmittedBilateral as CancelUnsubmittedBilateralCmd;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\CancelUnsubmittedBilateral as CancelUnsubmittedBilateralHandler;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\CancelApplication as CancelApplicationCmd;
 use Dvsa\Olcs\Transfer\Command\IrhpApplication\UpdateCountries as UpdateCountriesCmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**

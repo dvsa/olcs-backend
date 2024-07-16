@@ -2,17 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Nr;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\PersistentCollection;
-use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
-use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
-use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
 use Dvsa\Olcs\Api\Entity\Cases\Cases as CasesEntity;
+use Dvsa\Olcs\Api\Entity\Si\ErruRequest as ErruRequestEntity;
+use Dvsa\Olcs\Api\Entity\Si\SeriousInfringement as SiEntity;
 use Dvsa\Olcs\Api\Entity\Si\SiPenalty as SiPenaltyEntity;
-use Olcs\XmlTools\Xml\XmlNodeBuilder;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Service\Nr\MsiResponse;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Olcs\XmlTools\Xml\XmlNodeBuilder;
 
 /**
  * Class MsiResponseTest

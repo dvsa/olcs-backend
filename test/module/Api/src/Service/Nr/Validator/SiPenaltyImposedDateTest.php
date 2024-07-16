@@ -4,7 +4,6 @@ namespace Dvsa\OlcsTest\Api\Service\Nr\Validator;
 
 use Dvsa\Olcs\Api\Service\Nr\Validator\SiPenaltyImposedDate;
 use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
 
 /**
  * Class SiPenaltyImposedDateTest

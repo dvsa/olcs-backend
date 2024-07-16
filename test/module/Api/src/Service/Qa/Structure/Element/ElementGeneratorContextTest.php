@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
-use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
+use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

@@ -6,10 +6,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Helper;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * FormatAddressTest

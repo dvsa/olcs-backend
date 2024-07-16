@@ -2,10 +2,10 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Options;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\RepoQuerySource;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
-use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
 use Dvsa\Olcs\Api\Domain\Repository\AbstractReadonlyRepository;
+use Dvsa\Olcs\Api\Domain\RepositoryServiceManager;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\RepoQuerySource;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

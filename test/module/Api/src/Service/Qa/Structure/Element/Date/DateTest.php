@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Date;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Date\Date;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

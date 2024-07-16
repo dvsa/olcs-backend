@@ -6,8 +6,8 @@ use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\Behaviour;
-use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\PeriodArrayGenerator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\CountryGenerator;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\PeriodArrayGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

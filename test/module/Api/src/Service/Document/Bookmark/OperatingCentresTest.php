@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\OperatingCentres;
 use Dvsa\Olcs\Api\Service\Document\Parser\RtfParser;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Mockery as m;
 
 /**

@@ -2,10 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Internal;
 
-use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\BilateralRequiredGenerator;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Mockery as m;
+use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\BilateralRequiredGenerator;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

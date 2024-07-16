@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Cli\Domain\Command\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\Command\Licence;
 
 use Dvsa\Olcs\Api\Domain\Command\Licence\EndIrhpApplicationsAndPermits;
 use Dvsa\Olcs\Api\Entity\WithdrawableInterface;

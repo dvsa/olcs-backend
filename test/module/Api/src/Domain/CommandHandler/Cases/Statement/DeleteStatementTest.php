@@ -4,17 +4,16 @@
  * Delete Statement Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Statement;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Statement;
 
 use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Statement\DeleteStatement as DeleteCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\Statement\DeleteStatement as DeleteCommand;
-use Dvsa\Olcs\Api\Domain\Repository\Statement;
 use Dvsa\Olcs\Api\Domain\Repository;
+use Dvsa\Olcs\Api\Domain\Repository\Statement;
 use Dvsa\Olcs\Api\Entity\Cases\Statement as StatementEntity;
-use Mockery as m;
+use Dvsa\Olcs\Transfer\Command\Cases\Statement\DeleteStatement as DeleteCommand;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Entity;
+use Mockery as m;
 
 /**
  * Delete Statement Test

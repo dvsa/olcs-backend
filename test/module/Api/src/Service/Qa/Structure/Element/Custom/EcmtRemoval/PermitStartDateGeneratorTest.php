@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThreshold;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Common\DateWithThresholdGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\EcmtRemoval\PermitStartDateGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;

@@ -1,14 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Formatter;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\Date;
-use Dvsa\Olcs\Api\Service\Publication\Formatter\People as Formatter;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Person\Person;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Publication\Formatter\People as Formatter;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * PeopleTest

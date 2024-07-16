@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Scoring;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Domain\Repository\SystemParameter as SystemParameterRepository;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\System\SystemParameter;
 use Dvsa\Olcs\Api\Service\Permits\Scoring\CandidatePermitsCreator;
