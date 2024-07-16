@@ -30,6 +30,11 @@ class ToggleService
         return $this->toggleManager->active($name, $context);
     }
 
+    public function isDisabled(string $name, Context $context = null): bool
+    {
+        return !$this->isEnabled($name, $context);
+    }
+
     /**
      * override config to toggle a named feature on (for this single request only)
      *
