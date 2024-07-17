@@ -22,9 +22,16 @@ class AddressHelperService
         return $this->addressService->lookupAddress($query);
     }
 
-    public function fetchTrafficAreaByPostcodeOrUprn(string $postcode): ?Entity\TrafficArea\TrafficArea
+    /**
+     * Fetch Traffic Area by Postcode or UPRN.
+     *
+     * If queried using Postcode and multiple addresses are found, the first address is used.
+     *
+     * @param string $query Postcode or UPRN
+     */
+    public function fetchTrafficAreaByPostcodeOrUprn(string $query): ?Entity\TrafficArea\TrafficArea
     {
-        $addressData = $this->lookupAddress($postcode);
+        $addressData = $this->lookupAddress($query);
         if (empty($addressData)) {
             return null;
         }

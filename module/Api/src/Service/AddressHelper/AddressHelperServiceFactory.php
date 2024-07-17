@@ -8,10 +8,12 @@ use Psr\Container\ContainerInterface;
 
 class AddressHelperServiceFactory implements FactoryInterface
 {
+    public const ADDRESS_SERVICE_ALIAS = 'AddressService';
+
     public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): AddressHelperService
     {
         return new AddressHelperService(
-            $container->get('AddressService'),
+            $container->get(static::ADDRESS_SERVICE_ALIAS),
             $container->get(Repository\PostcodeEnforcementArea::class),
             $container->get(Repository\AdminAreaTrafficArea::class)
         );
