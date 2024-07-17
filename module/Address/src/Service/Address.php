@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Address\Service;
 
 use Dvsa\Olcs\Api\Service\Exception;
+use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
 use Dvsa\Olcs\DvsaAddressService\Service\AddressInterface;
 
 class Address implements AddressInterface
@@ -18,6 +19,12 @@ class Address implements AddressInterface
     {
     }
 
+    /**
+     * @return Dvsa\Olcs\DvsaAddressService\Model\Address[]
+     *
+     * @deprecated Use Dvsa\Olcs\DvsaAddressService\Service\AddressInterface::lookupAddress instead
+     *
+     */
     public function lookupAddress(string $query): array
     {
         $this->client->setUri('address/' . urlencode($query));
@@ -31,10 +38,16 @@ class Address implements AddressInterface
 
         $json = json_decode($content, true);
 
+        // If the response is not an array, convert it to an array of objects
         if (!empty($json) && !isset($json[0])) {
             $json = [$json];
         }
 
-        return $json;
+        // Convert 'administritive_area' to 'administrative_area'
+        foreach($json as $key => $address) {
+            $json[$key]['administrative_area'] = $address['administritive_area'] ?? null;
+        }
+
+        return AddressMapper::mapAddressDataArrayToObjects($json);
     }
 }
