@@ -27,7 +27,6 @@ class DvsaAddressService implements AddressInterface
                 'exception' => $e,
                 'trace' => $e->getTraceAsString()
             ]);
-            return [];
         }
     }
 }

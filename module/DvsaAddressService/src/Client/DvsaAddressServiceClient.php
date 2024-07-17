@@ -37,11 +37,14 @@ class DvsaAddressServiceClient
 
             return AddressMapper::mapAddressDataArrayToObjects($json);
         } catch (ClientException | ServerException $exception) {
-            throw new ServiceException(
-                'There was a client/server exception when communicating with the DVSA Address Service API',
-                0,
-                $exception
-            );
+            return match ($exception->getResponse()->getStatusCode()) {
+                400, 422 => [], // Return empty result for bad request or unprocessable entity
+                default => throw new ServiceException(
+                    'There was a uncaught client/server exception when communicating with the DVSA Address Service API - ' . $exception->getResponse()->getStatusCode() . ' - ' . $exception->getResponse()->getReasonPhrase(),
+                    0,
+                    $exception
+                )
+            };
         } catch (ConnectException | RequestException $exception) {
             throw new ServiceException(
             'There was an error when communicating with the DVSA Address Service API',
