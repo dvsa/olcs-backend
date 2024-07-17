@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\DvsaAddressService\Service;
 
+use Dvsa\Olcs\DvsaAddressService\Client\DvsaAddressServiceClient;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 

@@ -74,14 +74,15 @@ class DvsaAddressServiceClientFactory implements FactoryInterface
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => $config['oauth2']['client_id'],
             'clientSecret' => $config['oauth2']['client_secret'],
-            'urlAccessToken' => $config['oauth2']['url_access_token'],
-            'scope' => $config['oauth2']['scope'],
+            'urlAccessToken' => $config['oauth2']['token_url'],
+            'urlAuthorize' => $config['oauth2']['token_url'],
+            'urlResourceOwnerDetails' => $config['oauth2']['token_url'],
         ]);
 
         try {
-            return $provider->getAccessToken('client_credentials')->getToken();
+            return $provider->getAccessToken('client_credentials', ['scope' => $config['oauth2']['scope']])->getToken();
         } catch (IdentityProviderException $e) {
-            throw new AddressServiceIdentityProviderException('Failed to get access token for DVSA Address Service', previous: $e);
+            throw new AddressServiceIdentityProviderException('Failed to get access token for DVSA Address Service: ' . $e->getMessage(), previous: $e);
         }
     }
 }

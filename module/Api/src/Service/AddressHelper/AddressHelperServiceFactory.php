@@ -14,8 +14,8 @@ class AddressHelperServiceFactory implements FactoryInterface
     {
         return new AddressHelperService(
             $container->get(static::ADDRESS_SERVICE_ALIAS),
-            $container->get(Repository\PostcodeEnforcementArea::class),
-            $container->get(Repository\AdminAreaTrafficArea::class)
+            $container->get('RepositoryServiceManager')->get(Repository\PostcodeEnforcementArea::class),
+            $container->get('RepositoryServiceManager')->get(Repository\AdminAreaTrafficArea::class)
         );
     }
 }
