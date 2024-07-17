@@ -8,6 +8,7 @@ use Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -25,10 +26,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
     protected $messages = [];
 
-    /**
-     * @var Address
-     */
-    protected $addressService;
+    protected AddressHelperService $addressHelperService;
 
     /**
      * @var AdminAreaTrafficArea
@@ -52,9 +50,8 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
         }
 
         try {
-            $trafficArea = $this->addressService->fetchTrafficAreaByPostcode(
-                $postcode,
-                $this->adminAreaTrafficAreaRepo
+            $trafficArea = $this->addressHelperService->fetchTrafficAreaByPostcodeOrUprn(
+                $postcode
             );
         } catch (\Exception) {
             // If address service is not available then we can skip validation
@@ -86,9 +83,9 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
      * @param string $postcode
      * @return true|array
      */
-    public function validateForSameTrafficAreasWithPostcode(Application $application, $postcode)
+    public function validateForSameTrafficAreasWithPostcode(Application $application, string $postcode): array|true
     {
-        $trafficArea = $this->addressService->fetchTrafficAreaByPostcode($postcode, $this->adminAreaTrafficAreaRepo);
+        $trafficArea = $this->addressHelperService->fetchTrafficAreaByPostcodeOrUprn($postcode);
         if ($trafficArea === null) {
             return true;
         }
@@ -272,7 +269,7 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->addressService = $container->get('AddressService');
+        $this->addressHelperService = $container->get(AddressHelperService::class);
         $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
         return $this;
     }

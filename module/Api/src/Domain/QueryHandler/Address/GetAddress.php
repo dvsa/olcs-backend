@@ -1,32 +1,24 @@
 <?php
 
-/**
- * Get address by uprn
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Address;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareTrait;
 
-/**
- * Get address by uprn
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
-class GetAddress extends AbstractQueryHandler implements AddressServiceAwareInterface
+class GetAddress extends AbstractQueryHandler
 {
-    use AddressServiceAwareTrait;
+    public function __construct(protected AddressHelperService $addressHelperService)
+    {
+    }
 
     public function handleQuery(QueryInterface $query)
     {
         $uprn = $query->getUprn();
         return [
-            'result' => [$this->getAddressService()->fetchByUprn($uprn)],
+            'result' => $this->addressHelperService->lookupAddress($uprn),
             'count' => 1
         ];
     }

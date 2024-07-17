@@ -19,6 +19,7 @@ use Dvsa\Olcs\Api\Domain\Repository\Document as DocRepo;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
@@ -49,10 +50,7 @@ class OperatingCentreHelper implements FactoryInterface
      */
     protected $messages = [];
 
-    /**
-     * @var Address
-     */
-    protected $addressService;
+    protected AddressHelperService $addressHelperService;
 
     /**
      * @var AdminAreaTrafficArea
@@ -114,7 +112,7 @@ class OperatingCentreHelper implements FactoryInterface
      *
      * @return void
      */
-    protected function validateForGoods($entity, $command, $isExternal = false, $xoc = null)
+    protected function validateForGoods($entity, $command, $isExternal = false, $xoc = null): void
     {
         $sum = (int)$command->getNoOfVehiclesRequired() + (int)$command->getNoOfTrailersRequired();
         if ($sum < 1) {
@@ -153,7 +151,7 @@ class OperatingCentreHelper implements FactoryInterface
      *
      * @return void
      */
-    public function validateTrafficArea($entity, $command)
+    public function validateTrafficArea($entity, $command): void
     {
         $address = $command->getAddress();
 
@@ -341,18 +339,10 @@ class OperatingCentreHelper implements FactoryInterface
         $this->messages[$field][] = [$messageCode => $message];
     }
 
-    /**
-     * Fetch traffic area using postcode
-     *
-     * @param string $postcode postcode service
-     *
-     * @return \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea
-     */
-    private function fetchTrafficAreaByPostcode($postcode)
+    private function fetchTrafficAreaByPostcode(string $postcode): ?TrafficArea
     {
-        return $this->addressService->fetchTrafficAreaByPostcode(
-            $postcode,
-            $this->adminAreaTrafficAreaRepo
+        return $this->addressHelperService->fetchTrafficAreaByPostcodeOrUprn(
+            $postcode
         );
     }
 
@@ -371,7 +361,7 @@ class OperatingCentreHelper implements FactoryInterface
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->addressService = $container->get('AddressService');
+        $this->addressHelperService = $container->get(AddressHelperService::class);
         $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
         $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
         $this->docRepo = $container->get('RepositoryServiceManager')->get('Document');

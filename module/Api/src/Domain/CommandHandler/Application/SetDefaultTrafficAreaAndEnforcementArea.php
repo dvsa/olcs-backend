@@ -1,43 +1,38 @@
 <?php
 
-/**
- * Set Default Traffic Area And Enforcement Area
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Application;
 
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Address\Service\AddressServiceAwareTrait;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
+use Dvsa\Olcs\DvsaAddressService\Service\AddressInterface;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Domain\Command\Application\SetDefaultTrafficAreaAndEnforcementArea as Cmd;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
 
-/**
- * Set Default Traffic Area And Enforcement Area
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandler implements
-    TransactionedInterface,
-    AddressServiceAwareInterface
+    TransactionedInterface
 {
-    use AddressServiceAwareTrait;
-
     protected $repoServiceName = 'Application';
 
-    protected $extraRepos = ['OperatingCentre', 'AdminAreaTrafficArea', 'PostcodeEnforcementArea'];
+    protected $extraRepos = ['OperatingCentre'];
+
+    public function __construct(protected AddressHelperService $addressHelperService)
+    {
+
+    }
 
     /**
      * @param Cmd $command
+     * @throws RuntimeException
      */
-    public function handleCommand(CommandInterface $command)
+    public function handleCommand(CommandInterface $command): \Dvsa\Olcs\Api\Domain\Command\Result
     {
         /** @var Application $application */
         $application = $this->getRepo()->fetchUsingId($command);
@@ -93,8 +88,8 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
         if (!empty($postcode)) {
             if ($setTa) {
                 try {
-                    $trafficArea = $this->getAddressService()
-                        ->fetchTrafficAreaByPostcode($postcode, $this->getRepo('AdminAreaTrafficArea'));
+                    $trafficArea = $this->addressHelperService
+                        ->fetchTrafficAreaByPostcodeOrUprn($postcode);
                 } catch (\Exception) {
                     // Address service is down, just continue without saving
                     return $this->result;
@@ -107,8 +102,8 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
 
             if ($setEa) {
                 try {
-                    $enforcementArea = $this->getAddressService()
-                        ->fetchEnforcementAreaByPostcode($postcode, $this->getRepo('PostcodeEnforcementArea'));
+                    $enforcementArea = $this->addressHelperService
+                        ->fetchEnforcementAreaByPostcode($postcode);
                 } catch (\Exception) {
                     // Address service is down, just continue without saving
                     return $this->result;
@@ -123,7 +118,7 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
         return $this->result;
     }
 
-    protected function updateTrafficArea(Application $application, $trafficArea)
+    protected function updateTrafficArea(Application $application, $trafficArea): void
     {
         $data = [
             'id' => $application->getLicence()->getId(),

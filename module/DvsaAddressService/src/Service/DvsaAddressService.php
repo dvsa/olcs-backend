@@ -2,6 +2,7 @@
 
 namespace Dvsa\Olcs\DvsaAddressService\Service;
 
+use Dvsa\Olcs\DvsaAddressService\Client\DvsaAddressServiceClient;
 use Dvsa\Olcs\DvsaAddressService\Exception\ServiceException;
 use GuzzleHttp\Exception\GuzzleException;
 use Laminas\Log\LoggerInterface;
