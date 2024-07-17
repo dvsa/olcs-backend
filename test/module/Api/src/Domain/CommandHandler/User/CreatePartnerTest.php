@@ -6,14 +6,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreatePartner;
-use Dvsa\Olcs\Api\Domain\Repository\Partner;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
+use Dvsa\Olcs\Api\Domain\Repository\Partner;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Transfer\Command\User\CreatePartner as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\CreatePartner;
+use Mockery as m;
 
 /**
  * CreatePartner Test

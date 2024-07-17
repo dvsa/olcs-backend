@@ -10,6 +10,7 @@ namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantTransportManager as GrantTransportManagerCmd;
 use Dvsa\Olcs\Api\Domain\Command\Licence\TmNominatedTask;
 use Dvsa\Olcs\Api\Domain\Command\Queue\Create;
 use Dvsa\Olcs\Api\Domain\Command\Result;
@@ -21,10 +22,8 @@ use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantTransportManager as GrantTransportManagerCmd;
-use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * Grant Transport Manager Test

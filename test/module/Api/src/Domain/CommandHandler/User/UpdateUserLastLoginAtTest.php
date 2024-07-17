@@ -1,15 +1,15 @@
 <?php
 
-namespace Dvsa\Olcs\Api\Domain\CommandHandler\User;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
 use Dvsa\Olcs\Api\Domain\Repository\User;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserLastLoginAt as Sut;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
 use Dvsa\Olcs\Api\Rbac\Identity;
 use Dvsa\Olcs\Transfer\Command\User\UpdateUserLastLoginAt as Cmd;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Mockery as m;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserLastLoginAt as Sut;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 class UpdateUserLastLoginAtTest extends AbstractCommandHandlerTestCase
 {

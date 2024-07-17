@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Ecmt;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Ecmt\RestrictedCountry;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

@@ -1,18 +1,18 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus\Ebsr;
 
-use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
-use Mockery as m;
-use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\OrganisationUnprocessedList as Qry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\Ebsr\OrganisationUnprocessedList;
+use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
+use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
+use Dvsa\Olcs\Api\Entity\Doc\Document as DocumentEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
+use Dvsa\Olcs\Transfer\Query\Bus\Ebsr\OrganisationUnprocessedList as Qry;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\EbsrSubmission as EbsrSubmissionRepo;
-use LmcRbacMvc\Service\AuthorizationService;
 use LmcRbacMvc\Identity\IdentityInterface;
-use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
+use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 
 /**
  * OrganisationUnprocessedList Test

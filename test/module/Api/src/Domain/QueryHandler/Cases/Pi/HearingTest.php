@@ -8,14 +8,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\Pi;
 
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi\Hearing;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
-use Dvsa\Olcs\Transfer\Query\Cases\Pi\Hearing as Qry;
 use Dvsa\Olcs\Api\Domain\QueryHandler\BundleSerializableInterface;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\Pi\Hearing;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
-use Mockery as m;
+use Dvsa\Olcs\Api\Domain\Repository\PiHearing as PiHearingRepo;
 use Dvsa\Olcs\Api\Entity\Pi\Pi as PiEntity;
+use Dvsa\Olcs\Transfer\Query\Cases\Pi\Hearing as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * Hearing Test

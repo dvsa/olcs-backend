@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Metadata;
 
 use Dvsa\Olcs\Api\Domain\Repository\IrhpPermitStock as IrhpPermitStockRepository;
-use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitStock;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Metadata\FieldsGeneratorInterface;

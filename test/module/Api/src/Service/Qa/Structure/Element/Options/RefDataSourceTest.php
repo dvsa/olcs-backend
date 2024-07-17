@@ -3,8 +3,8 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Options;
 
 use Dvsa\Olcs\Api\Domain\Repository\RefData as RefDataRepository;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\RefDataSource;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\RefDataSource;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

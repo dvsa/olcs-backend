@@ -2,14 +2,14 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Application;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationSection as PublicationSectionEntity;
 use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Dvsa\Olcs\Api\Service\Publication\Context\Application\BusNote;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class BusNoteTest

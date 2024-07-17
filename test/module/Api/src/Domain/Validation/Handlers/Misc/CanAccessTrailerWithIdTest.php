@@ -1,11 +1,11 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Trailer;
+namespace Dvsa\OlcsTest\Api\Domain\Validation\Handlers\Misc;
 
+use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTrailerWithId;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\OlcsTest\Api\Domain\Validation\Handlers\AbstractHandlerTestCase;
 use Mockery as m;
-use Dvsa\Olcs\Api\Domain\Validation\Handlers\Misc\CanAccessTrailerWithId;
 
 /**
  * CanAccessTrailerWithIdTest

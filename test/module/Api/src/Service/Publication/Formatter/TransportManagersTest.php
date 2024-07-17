@@ -1,10 +1,10 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service;
+namespace Dvsa\OlcsTest\Api\Service\Publication\Formatter;
 
+use Dvsa\Olcs\Api\Service\Publication\Formatter\TransportManagers as Formatter;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\Publication\Formatter\TransportManagers as Formatter;
 
 /**
  * TransportManagersTest

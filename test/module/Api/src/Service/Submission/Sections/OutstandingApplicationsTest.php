@@ -2,8 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 /**
  * Class OutstandingApplicationsTest
  * @to-do this currently doesnt really test anything because the criteria object on licence::getOutstandingApplications

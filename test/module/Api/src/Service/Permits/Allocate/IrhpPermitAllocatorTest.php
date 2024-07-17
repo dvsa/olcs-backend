@@ -1,14 +1,14 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Permits;
+namespace Dvsa\OlcsTest\Api\Service\Permits\Allocate;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermit;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpPermit as IrhpPermitRepository;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\IrhpPermitAllocator;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\RangeMatchingCriteriaInterface;
 use Mockery as m;

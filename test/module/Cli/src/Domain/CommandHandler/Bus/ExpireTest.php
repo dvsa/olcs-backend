@@ -2,12 +2,10 @@
 
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Bus;
 
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Cli\Domain\Command\Bus\Expire as ExpireBusCmd;
 use Dvsa\Olcs\Cli\Domain\CommandHandler\Bus\Expire as ExpireHandler;
-use Mockery as m;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Bus reg expiry command handler test

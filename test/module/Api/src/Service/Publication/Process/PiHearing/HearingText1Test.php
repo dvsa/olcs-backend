@@ -2,17 +2,17 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\PiHearing;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Entity\Licence\Licence as LicenceEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
-use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\Organisation\OrganisationPerson as OrganisationPersonEntity;
+use Dvsa\Olcs\Api\Entity\Organisation\TradingName as TradingNameEntity;
 use Dvsa\Olcs\Api\Entity\Person\Person as PersonEntity;
-use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Dvsa\Olcs\Api\Service\Publication\Process\PiHearing\HearingText1;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class HearingText1Test

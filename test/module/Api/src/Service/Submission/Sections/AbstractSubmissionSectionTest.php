@@ -40,9 +40,9 @@ use Dvsa\Olcs\Api\Entity\Tm\TransportManagerApplication;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManagerLicence;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Vehicle\Vehicle;
+use Laminas\View\Renderer\PhpRenderer;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\View\Renderer\PhpRenderer;
 
 /**
  * Class AbstractSubmissionSectionTest

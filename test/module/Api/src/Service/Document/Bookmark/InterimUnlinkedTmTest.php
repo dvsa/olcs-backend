@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Dvsa\Olcs\Api\Service\Document\Bookmark\InterimUnlinkedTm;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Service\Document\Bookmark\InterimUnlinkedTm;
 
 /**
  * Interim Unlinked TM test

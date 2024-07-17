@@ -6,24 +6,22 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\User;
 
-use Dvsa\Olcs\Api\Entity\EventHistory\EventHistoryType as EventHistoryTypeEntity;
-use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
-use Dvsa\Olcs\Auth\Adapter\CognitoAdapter;
-use Dvsa\Olcs\Auth\Service\PasswordService;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption;
-use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
-use Mockery as m;
 use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve as Sut;
 use Dvsa\Olcs\Api\Domain\Repository\ContactDetails;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails as ContactDetailsEntity;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\User\User as UserEntity;
-use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Api\Service\EventHistory\Creator as EventHistoryCreator;
+use Dvsa\Olcs\Auth\Service\PasswordService;
+use Dvsa\Olcs\Transfer\Command\User\UpdateUserSelfserve as Cmd;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Dvsa\Olcs\Api\Domain\CommandHandler\User\UpdateUserSelfserve as Sut;
+use Laminas\Authentication\Adapter\ValidatableAdapterInterface;
 use LmcRbacMvc\Service\AuthorizationService;
+use Mockery as m;
 use ReflectionClass;
 
 /**

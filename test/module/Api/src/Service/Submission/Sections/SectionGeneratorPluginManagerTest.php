@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service;
+namespace Dvsa\OlcsTest\Api\Service\Submission\Sections;
 
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorInterface;
 use Dvsa\Olcs\Api\Service\Submission\Sections\SectionGeneratorPluginManager;
+use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\ServiceManager\Exception\InvalidServiceException;
 use Psr\Container\ContainerInterface;
 
 /**

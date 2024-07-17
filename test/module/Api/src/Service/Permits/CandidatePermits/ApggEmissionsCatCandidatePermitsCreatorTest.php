@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\CandidatePermits;
 
+use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpCandidatePermit;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitRange;
 use Dvsa\Olcs\Api\Entity\System\RefData;
-use Dvsa\Olcs\Api\Domain\Repository\IrhpCandidatePermit as IrhpCandidatePermitRepository;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteria;
 use Dvsa\Olcs\Api\Service\Permits\Allocate\EmissionsStandardCriteriaFactory;
 use Dvsa\Olcs\Api\Service\Permits\CandidatePermits\ApggCandidatePermitFactory;

@@ -12,15 +12,15 @@ use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CopyApplicationDataToLicence;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CreateDiscRecords;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ProcessApplicationOperatingCentres;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication as Cmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\Grant\ValidateApplication;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Transfer\Command\Application\CreateSnapshot;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\ValidateApplication as Cmd;
 use Dvsa\Olcs\Transfer\Command\InspectionRequest\CreateFromGrant;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Validate Application Test

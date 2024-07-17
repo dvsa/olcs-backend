@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\InputFilter;
 
-use Dvsa\Olcs\Api\Service\InputFilter\Input;
-use Psr\Container\ContainerInterface;
-use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
-use Mockery as m;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
-use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection;
 use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingReason;
+use Dvsa\Olcs\Api\Service\Ebsr\RulesValidator\ShortNotice\MissingSection;
+use Dvsa\Olcs\Api\Service\InputFilter\Input;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase as TestCase;
+use Psr\Container\ContainerInterface;
 
 class ShortNoticeInputFactoryTest extends TestCase
 {

@@ -2,15 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\Variation;
 
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationSection;
-use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\System\RefData;
+use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Text3Test

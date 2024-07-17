@@ -5,8 +5,8 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\AnswersSummary;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummary;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryFactory;
-use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowsAdderInterface;
+use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\IpaAnswersSummaryGenerator;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

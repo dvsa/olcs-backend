@@ -2,9 +2,9 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
+use Dvsa\Olcs\Api\Service\Document\Bookmark\FeeDueDate;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Dvsa\Olcs\Api\Service\Document\Bookmark\FeeDueDate;
 
 /**
  * @covers Dvsa\Olcs\Api\Service\Document\Bookmark\FeeDueDate

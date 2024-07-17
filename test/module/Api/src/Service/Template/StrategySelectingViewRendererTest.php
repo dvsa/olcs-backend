@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Template;
 
-use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
 use Dvsa\Olcs\Api\Service\Template\StrategySelectingViewRenderer;
+use Dvsa\Olcs\Api\Service\Template\TwigRenderer;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Renderer\RendererInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Twig\Loader\LoaderInterface as TwigLoader;
-use Laminas\View\Renderer\RendererInterface;
-use Laminas\View\Model\ViewModel;
 
 /**
  * StrategySelectingViewRendererTest

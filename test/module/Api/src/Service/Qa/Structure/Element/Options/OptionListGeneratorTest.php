@@ -2,11 +2,11 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Options;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\SourceInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListFactory;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\SourceInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use RuntimeException;

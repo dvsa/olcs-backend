@@ -8,8 +8,8 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application\Grant;
 
-use Doctrine\ORM\Query;
 use Dvsa\Olcs\Api\Domain\Command\Application\CancelAllInterimFees;
+use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant as CommonGrantCmd;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantCommunityLicence;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantConditionUndertaking;
 use Dvsa\Olcs\Api\Domain\Command\Application\Grant\GrantPeople;
@@ -21,9 +21,8 @@ use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Transfer\Command\Licence\PrintLicence;
-use Mockery as m;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Application\Grant\CommonGrant as CommonGrantCmd;
+use Mockery as m;
 
 /**
  * Common Grant Test

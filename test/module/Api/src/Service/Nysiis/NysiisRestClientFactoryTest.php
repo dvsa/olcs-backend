@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Service\Data;
+namespace Dvsa\OlcsTest\Api\Service\Nysiis;
 
-use Psr\Container\ContainerInterface;
-use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory;
 use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClient;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Service\Nysiis\NysiisRestClientFactory;
 use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
 class NysiisRestClientFactoryTest extends MockeryTestCase
 {

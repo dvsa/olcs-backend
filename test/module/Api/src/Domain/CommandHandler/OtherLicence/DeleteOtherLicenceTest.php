@@ -6,17 +6,16 @@
  * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Application;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\OtherLicence;
 
-use Doctrine\ORM\Query;
+use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\OtherLicence\DeleteOtherLicence;
 use Dvsa\Olcs\Api\Domain\Repository\OtherLicence as OtherLicenceRepo;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Transfer\Command\OtherLicence\DeleteOtherLicence as Cmd;
 use Dvsa\Olcs\Api\Entity\OtherLicence\OtherLicence as OtherLicenceEntity;
-use Dvsa\Olcs\Api\Domain\Command\Application\UpdateApplicationCompletion as UpdateApplicationCompletionCmd;
+use Dvsa\Olcs\Transfer\Command\OtherLicence\DeleteOtherLicence as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Update Other Licence Test

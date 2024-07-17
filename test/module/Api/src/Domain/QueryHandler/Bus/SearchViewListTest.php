@@ -1,17 +1,16 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Entity\Bus;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Bus;
 
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchView;
-use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as SearchViewListQuery;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\SearchViewList as SearchViewListQueryHandler;
-use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
-use Doctrine\ORM\Query;
-use Mockery as m;
-use Doctrine\ORM\Query as DoctrineQuery;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Query as DoctrineQuery;
+use Dvsa\Olcs\Api\Domain\QueryHandler\Bus\SearchViewList as SearchViewListQueryHandler;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ResultList;
+use Dvsa\Olcs\Api\Domain\Repository\BusRegSearchView as BusRegSearchView;
+use Dvsa\Olcs\Api\Entity\View\BusRegSearchView as BusRegSearchViewEntity;
+use Dvsa\Olcs\Transfer\Query\Bus\SearchViewList as SearchViewListQuery;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * SearchViewList Test

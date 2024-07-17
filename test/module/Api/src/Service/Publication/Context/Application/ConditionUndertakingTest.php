@@ -2,15 +2,15 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Context\Application;
 
-use Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking as ConditionUndertakingContext;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
-use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
-use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Entity\Cases\ConditionUndertaking as ConditionUndertakingEntity;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address as AddressEntity;
+use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre as OperatingCentreEntity;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Helper\FormatAddress;
+use Dvsa\Olcs\Api\Service\Publication\Context\Application\ConditionUndertaking as ConditionUndertakingContext;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class ConditionUndertakingTest

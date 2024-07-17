@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler;
+namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\CommunityLic;
 
-use Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic\Suspend;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\Repository\CommunityLic as CommunityLicRepo;
 use Dvsa\Olcs\Api\Entity\CommunityLic\CommunityLic;
 use Dvsa\Olcs\Cli\Domain\Command\CommunityLic\Suspend as Cmd;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\CommunityLic\Suspend;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
 
 /**

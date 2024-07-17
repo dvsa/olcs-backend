@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Lva\Application;
 
-use Psr\Container\ContainerInterface;
-use Mockery as m;
-use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Entity\Application\Application as ApplicationEntity;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
+use Dvsa\Olcs\Api\Entity\System\RefData;
 use Dvsa\Olcs\Api\Service\Lva\Application\PublishValidationService;
+use Mockery as m;
+use Psr\Container\ContainerInterface;
 
 /**
  * PublishValidationServiceTest

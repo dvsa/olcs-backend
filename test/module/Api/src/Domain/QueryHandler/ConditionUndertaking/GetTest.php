@@ -1,12 +1,12 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Licence;
+namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\ConditionUndertaking;
 
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\ConditionUndertaking\Get as QueryHandler;
-use Dvsa\Olcs\Transfer\Query\ConditionUndertaking\Get as Qry;
 use Dvsa\Olcs\Api\Domain\Repository\ConditionUndertaking as ConditionUndertakingRepo;
+use Dvsa\Olcs\Transfer\Query\ConditionUndertaking\Get as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * GetTest

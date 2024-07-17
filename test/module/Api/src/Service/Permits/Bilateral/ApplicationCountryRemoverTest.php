@@ -5,7 +5,6 @@ namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Country;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Cqrs\CommandCreator;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\ApplicationCountryRemover;

@@ -8,14 +8,14 @@ use Dvsa\Olcs\Api\Entity\Generic\Question as QuestionEntity;
 use Dvsa\Olcs\Api\Entity\Generic\QuestionText as QuestionTextEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\QaEntityInterface;
+use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ElementContainer;
+use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePageGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
-use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

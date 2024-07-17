@@ -2,9 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Document\Bookmark;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Service\Document\Bookmark\FeeReqNumber;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Fee Req Number test

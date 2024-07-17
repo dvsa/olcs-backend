@@ -5,14 +5,14 @@ namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 use Dvsa\Olcs\Api\Domain\FormControlServiceManager;
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
 use Dvsa\Olcs\Api\Service\Qa\QaContext;
+use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStepGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContextGenerator;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementInterface;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ValidatorList;
-use Dvsa\Olcs\Api\Service\Qa\Strategy\FormControlStrategyInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 

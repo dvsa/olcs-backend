@@ -5,9 +5,9 @@ namespace Dvsa\OlcsTest\Api\Service\Document;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
 use Dvsa\Olcs\Api\Service\Document\PrintLetter;
-use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Psr\Container\ContainerInterface;
 
 /**
  * @covers \Dvsa\Olcs\Api\Service\Document\PrintLetter

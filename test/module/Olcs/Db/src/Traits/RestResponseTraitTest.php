@@ -6,7 +6,7 @@
  * @author Rob Caiger <rob@clocal.co.uk>
  */
 
-namespace OlcsTest\Db\Service;
+namespace Dvsa\OlcsTest\Db\Traits;
 
 use Laminas\Http\Response;
 
@@ -25,7 +25,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
      */
     public function testGetNewResponse()
     {
-        $trait = $this->getMockForTrait(\Olcs\Db\Traits\RestResponseTrait::class);
+        $trait = $this->getMockForTrait(\Dvsa\Olcs\Db\Traits\RestResponseTrait::class);
 
         $response = $trait->getNewResponse();
 
@@ -69,7 +69,7 @@ class RestResponseTraitTest extends \PHPUnit\Framework\TestCase
         );
 
         $trait = $this->getMockForTrait(
-            \Olcs\Db\Traits\RestResponseTrait::class,
+            \Dvsa\Olcs\Db\Traits\RestResponseTrait::class,
             [],
             '',
             true,

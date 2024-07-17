@@ -6,14 +6,14 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Cases\ProposeToRevoke;
 
+use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase;
 use Dvsa\Olcs\Api\Domain\QueryHandler\Result;
+use Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke as ProposeToRevokeRepo;
 use Dvsa\Olcs\Api\Entity\Cases\ProposeToRevoke;
 use Dvsa\Olcs\Api\Entity\System\SlaTargetDate;
-use Mockery as m;
-use Dvsa\Olcs\Api\Domain\QueryHandler\Cases\ProposeToRevoke\ProposeToRevokeByCase;
-use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Repository\ProposeToRevoke as ProposeToRevokeRepo;
 use Dvsa\Olcs\Transfer\Query\Cases\ProposeToRevoke\ProposeToRevokeByCase as Qry;
+use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
+use Mockery as m;
 
 /**
  * ProposeToRevokeByCase Test

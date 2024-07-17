@@ -26,7 +26,6 @@ return [
         'Dvsa\Olcs\Transfer',
         'DoctrineModule',
         'DoctrineORMModule',
-        'Olcs\Db',
         'Dvsa\Olcs\AcquiredRights',
         'Dvsa\Olcs\Api',
         'Dvsa\Olcs\Scanning',

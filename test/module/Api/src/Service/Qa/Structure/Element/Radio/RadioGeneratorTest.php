@@ -3,12 +3,12 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Radio;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
+use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionList;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Options\OptionListGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\Radio;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioFactory;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Radio\RadioGenerator;
-use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\TranslateableTextGenerator;
 use Mockery as m;

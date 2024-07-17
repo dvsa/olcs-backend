@@ -3,13 +3,13 @@
 namespace Dvsa\OlcsTest\Cli\Domain\CommandHandler\Permits;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult as UploadScoringResultCommand;
-use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\UploadScoringResult as UploadScoringResultHandler;
 use Dvsa\Olcs\Api\Entity\System\Category;
 use Dvsa\Olcs\Api\Entity\System\SubCategory;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
+use Dvsa\Olcs\Cli\Domain\Command\Permits\UploadScoringResult as UploadScoringResultCommand;
+use Dvsa\Olcs\Cli\Domain\CommandHandler\Permits\UploadScoringResult as UploadScoringResultHandler;
 use Dvsa\Olcs\Transfer\Command\Document\Upload;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 
 /**
  * Upload scoring result test

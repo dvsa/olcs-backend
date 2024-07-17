@@ -4,17 +4,15 @@
  * Update ProhibitionDefect Test
  */
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Prohibition\Defect;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Cases\Prohibition\Defect;
 
-use Doctrine\ORM\Query;
-use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Cases\Prohibition\Defect\Update as UpdateCommandHandler;
-use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Update as UpdateCommand;
 use Dvsa\Olcs\Api\Domain\Repository\ProhibitionDefect;
-use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as ProhibitionDefectEntity;
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\Prohibition\ProhibitionDefect as ProhibitionDefectEntity;
+use Dvsa\Olcs\Transfer\Command\Cases\Prohibition\Defect\Update as UpdateCommand;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Update Prohibition\Defect Test

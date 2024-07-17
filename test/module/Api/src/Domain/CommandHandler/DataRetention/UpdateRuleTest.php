@@ -1,6 +1,6 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\System;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\DataRetention;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\DataRetention\UpdateRule as CommandHandler;
 use Dvsa\Olcs\Api\Domain\Repository\DataRetentionRule as Repo;

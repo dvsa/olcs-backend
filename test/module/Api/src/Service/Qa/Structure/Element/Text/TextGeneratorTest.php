@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Text;
 
 use Dvsa\Olcs\Api\Entity\Generic\ApplicationStep as ApplicationStepEntity;
-use Dvsa\Olcs\Api\Service\Qa\QaContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\ElementGeneratorContext;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\Text;
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Text\TextFactory;

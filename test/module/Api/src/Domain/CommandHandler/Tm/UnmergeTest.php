@@ -1,15 +1,13 @@
 <?php
 
-namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\TransportManager;
+namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\Tm;
 
-use Mockery as m;
-use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Tm\Unmerge as CommandHandler;
-use Dvsa\Olcs\Transfer\Command\Tm\Unmerge as Cmd;
-use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\Util\DateTime\DateTime;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
 use Dvsa\Olcs\Api\Domain\Exception;
+use Dvsa\Olcs\Api\Entity\Tm\TransportManager as TransportManagerEntity;
+use Dvsa\Olcs\Transfer\Command\Tm\Unmerge as Cmd;
+use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
+use Mockery as m;
 
 /**
  * Class UnmergeTest

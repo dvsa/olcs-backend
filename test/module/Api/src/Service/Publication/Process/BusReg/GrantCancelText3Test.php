@@ -2,12 +2,12 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\BusReg;
 
-use Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Mockery as m;
+use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
+use Dvsa\Olcs\Api\Service\Publication\Process\BusReg\GrantCancelText3;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class GrantCancelText3

@@ -4,8 +4,8 @@ namespace Dvsa\OlcsTest\Api\Service\Template;
 
 use DateTime;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
-use Dvsa\Olcs\Api\Service\Template\DatabaseTwigLoader;
 use Dvsa\Olcs\Api\Service\Template\DatabaseTemplateFetcher;
+use Dvsa\Olcs\Api\Service\Template\DatabaseTwigLoader;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Twig\Error\LoaderError;

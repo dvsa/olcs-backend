@@ -3,7 +3,6 @@
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure\Element\Custom\Bilateral;
 
 use Dvsa\Olcs\Api\Service\Qa\Structure\Element\Custom\Bilateral\NoOfPermitsText;
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**

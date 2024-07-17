@@ -2,7 +2,6 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Qa\Structure;
 
-use Dvsa\Olcs\Api\Service\Qa\Structure\FilteredTranslateableText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\ApplicationStep;
 use Dvsa\Olcs\Api\Service\Qa\Structure\QuestionText\QuestionText;
 use Dvsa\Olcs\Api\Service\Qa\Structure\SelfservePage;

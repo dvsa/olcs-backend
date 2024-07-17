@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Ebsr\Filter\Format;
 
-use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
+use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult;
 use Mockery as m;
 
 /**

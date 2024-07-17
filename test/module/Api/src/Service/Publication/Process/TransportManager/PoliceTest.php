@@ -2,13 +2,13 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Publication\Process\TransportManager;
 
-use Mockery as m;
-use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Dvsa\Olcs\Api\Entity\Person\Person;
 use Dvsa\Olcs\Api\Entity\Publication\PublicationLink;
+use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData;
 use Dvsa\Olcs\Api\Service\Publication\ImmutableArrayObject;
 use Dvsa\Olcs\Api\Service\Publication\Process\TransportManager\Police;
-use Dvsa\Olcs\Api\Entity\Publication\PublicationPoliceData;
-use Dvsa\Olcs\Api\Entity\Person\Person;
+use Mockery as m;
+use Mockery\Adapter\Phpunit\MockeryTestCase;
 
 /**
  * Class PoliceTest

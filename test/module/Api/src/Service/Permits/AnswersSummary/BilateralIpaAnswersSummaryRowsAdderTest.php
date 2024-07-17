@@ -11,9 +11,9 @@ use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRow;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowFactory;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\AnswersSummaryRowsAdderInterface;
 use Dvsa\Olcs\Api\Service\Permits\AnswersSummary\BilateralIpaAnswersSummaryRowsAdder;
+use Laminas\View\Renderer\RendererInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
-use Laminas\View\Renderer\RendererInterface;
 
 /**
  * BilateralIpaAnswersSummaryRowsAdderTest

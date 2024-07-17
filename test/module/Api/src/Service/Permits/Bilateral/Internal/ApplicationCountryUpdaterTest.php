@@ -2,8 +2,8 @@
 
 namespace Dvsa\OlcsTest\Api\Service\Permits\Bilateral\Internal;
 
-use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
+use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitApplication;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ApplicationCountryUpdater;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\ExistingIrhpPermitApplicationHandler;
 use Dvsa\Olcs\Api\Service\Permits\Bilateral\Internal\IrhpPermitApplicationCreator;
