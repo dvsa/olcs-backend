@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\DvsaAddressService\Service;
 
 use Dvsa\Olcs\DvsaAddressService\Client\DvsaAddressServiceClient;
 use Dvsa\Olcs\DvsaAddressService\Exception\ServiceException;
+use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use GuzzleHttp\Exception\GuzzleException;
 use Laminas\Log\LoggerInterface;
 
@@ -13,6 +14,9 @@ class DvsaAddressService implements AddressInterface
     {
     }
 
+    /**
+     * @return Address[]
+     */
     public function lookupAddress(string $query): array
     {
         try {

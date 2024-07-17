@@ -6,6 +6,8 @@ namespace Dvsa\Olcs\Api\Domain\QueryHandler\Address;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
 use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
+use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
+use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 
 class GetList extends AbstractQueryHandler
@@ -17,9 +19,10 @@ class GetList extends AbstractQueryHandler
     public function handleQuery(QueryInterface|\Dvsa\Olcs\Transfer\Query\Address\GetList $query): array
     {
         $addresses = $this->addressHelperService->lookupAddress($query->getPostcode());
+
         return [
-            'result' => $addresses,
-            'count' => count($addresses)
+            'result' => AddressMapper::convertAddressObjectsToArrayRepresentation($addresses),
+            'count' => count($addresses),
         ];
     }
 }

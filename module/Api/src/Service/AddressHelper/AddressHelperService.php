@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\AddressHelper;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use Dvsa\Olcs\DvsaAddressService\Service\AddressInterface;
 
 class AddressHelperService
@@ -17,6 +18,13 @@ class AddressHelperService
 
     }
 
+    /**
+     * Lookup Address.
+     *
+     * @param string $query Postcode or UPRN
+     *
+     * @return Address[]
+     */
     public function lookupAddress(string $query): array
     {
         return $this->addressService->lookupAddress($query);
@@ -38,7 +46,7 @@ class AddressHelperService
 
         $addressData = $addressData[0];
 
-        $adminArea = $addressData['administrative_area'] ?? null;
+        $adminArea = $addressData->getAdministrativeArea();
         if (empty($adminArea)) {
             return null;
         }

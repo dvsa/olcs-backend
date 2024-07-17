@@ -2,7 +2,9 @@
 
 namespace Dvsa\Olcs\DvsaAddressService\Client;
 
+use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
 use Dvsa\Olcs\DvsaAddressService\Exception\ServiceException;
+use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ConnectException;
@@ -22,6 +24,7 @@ class DvsaAddressServiceClient
 
     /**
      * @throws ServiceException|GuzzleException
+     * @return Address[]
      */
     public function lookupAddress(string $query): array
     {
@@ -30,7 +33,9 @@ class DvsaAddressServiceClient
                 'query' => ['query' => $query]
             ]);
 
-            return json_decode($response->getBody(), true);
+            $json = json_decode($response->getBody(), true);
+
+            return AddressMapper::mapAddressDataArrayToObjects($json);
         } catch (ClientException | ServerException $exception) {
             throw new ServiceException(
                 'There was a client/server exception when communicating with the DVSA Address Service API',
