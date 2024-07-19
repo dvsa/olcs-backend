@@ -85,8 +85,7 @@ class ByOrganisationTest extends QueryHandlerTestCase
 
         $mockQb = m::mock(QueryBuilder::class);
 
-        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb);
-        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationId')->andReturn($mockQb)->once()->andReturn($licences);
+        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($licences);
         $this->repoMap[Repository\Application::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($applications);
 
         $result = $this->sut->handleQuery($query);
@@ -158,8 +157,7 @@ class ByOrganisationTest extends QueryHandlerTestCase
 
         $mockQb = m::mock(QueryBuilder::class);
 
-        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb);
-        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationId')->andReturn($mockQb)->once()->andReturn($licences);
+        $this->repoMap[Repository\Licence::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($licences);
         $this->repoMap[Repository\Application::class]->shouldReceive('fetchByOrganisationIdAndStatuses')->andReturn($mockQb)->once()->andReturn($applications);
 
         $result = $this->sut->handleQuery($query);

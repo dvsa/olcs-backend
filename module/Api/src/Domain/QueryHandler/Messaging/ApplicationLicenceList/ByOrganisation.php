@@ -12,6 +12,7 @@ use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Entity\Application\Application;
+use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Entity\Application\Application as Entity;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
@@ -40,7 +41,10 @@ class ByOrganisation extends AbstractQueryHandler implements ToggleRequiredInter
 
         $orgId = (int)($query->getOrganisation() ?: $this->getCurrentOrganisation()->getId());
 
-        $licences = $licenceRepository->fetchByOrganisationId($orgId);
+        $licences = $licenceRepository->fetchByOrganisationIdAndStatuses(
+            $orgId,
+            [Licence::LICENCE_STATUS_VALID, Licence::LICENCE_STATUS_SUSPENDED, Licence::LICENCE_STATUS_CURTAILED],
+        );
 
         /** @var Application[] $applications */
         $applications = $applicationRepository->fetchByOrganisationIdAndStatuses(
