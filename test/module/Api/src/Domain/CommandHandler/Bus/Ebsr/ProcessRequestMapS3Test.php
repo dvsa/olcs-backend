@@ -14,13 +14,8 @@ use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap as ProcessRequestMap
 use Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr\ProcessRequestMap;
 use Dvsa\Olcs\Api\Domain\Repository\Bus as BusRepo;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
-use Dvsa\Olcs\Api\Entity\Task\Task as TaskEntity;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
-use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
-use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\UpdateTxcInboxPdf as UpdateTxcInboxPdfCmd;
-use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
-use Dvsa\Olcs\Api\Domain\Command\Task\CreateTask as CreateTaskCmd;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
@@ -30,7 +25,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Service\File\ContentStoreFileUploader;
 use org\bovigo\vfs\vfsStream;
 
-class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
+class ProcessRequestMapS3Test extends AbstractCommandHandlerTestCase
 {
     protected $templatePath;
     protected $templatePaths;
@@ -94,7 +89,6 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $licenceId = 77;
         $submissionId = 55;
         $documentIdentifier = 'identifier';
-        $uploadedDocumentId = 55;
         $busRegNo = 'PB8593040/4896';
 
         $fileSystem = vfsStream::setup();
@@ -129,13 +123,6 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             ->andReturn(BusRegEntity::STATUS_CANCEL);
 
         $this->commonAssertions($command, $busReg, $documentIdentifier, $transxchangeFilename, 1);
-
-        $docUploadResult = $this->docUploadResult($uploadedDocumentId);
-        $documentDesc = $this->sut->getDocumentDescriptions()[TransExchangeClient::DVSA_RECORD_TEMPLATE];
-
-        $this->documentSideEffect($transxchangeFilename, $id, $licenceId, $documentDesc, $docUploadResult);
-        $this->txcInboxSideEffect($id, $uploadedDocumentId, ProcessRequestMap::TXC_INBOX_TYPE_PDF);
-        $this->taskSideEffect($id, $licenceId, $this->taskSuccessDesc($state, $busRegNo, $documentDesc));
 
         $result = $this->sut->handleCommand($command);
 
@@ -371,7 +358,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
             ->once()
-            ->with($documentIdentifier, true)
+            ->with($documentIdentifier, false)
             ->andThrow($fileProcessorException);
 
         $this->sut->handleCommand($command);
@@ -437,7 +424,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $this->mockedSmServices[FileProcessorInterface::class]
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
             ->once()
-            ->with($documentIdentifier, true)
+            ->with($documentIdentifier, false)
             ->andReturn($xmlFilename);
 
         $taskDesc = 'New pdf files created: '
@@ -507,26 +494,22 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $command,
         $busReg,
         $documentIdentifier,
-        $transxchangeFilename,
         $numRequests,
-        $returnDocument = true
     ) {
         $xmlFilename = 'filename.xml';
-
-        $transXchangeDocument = [
-            'files' => [
-                0 => $transxchangeFilename
-            ]
-        ];
 
         $xmlTemplate = '<xml></xml>';
 
         $this->busEntity($command, $busReg);
 
         $this->mockedSmServices[FileProcessorInterface::class]
-            ->shouldReceive('fetchXmlFileNameFromDocumentStore')
-            ->once()
-            ->with($documentIdentifier, true)
+            ->expects('fetchXmlFileNameFromDocumentStore')
+            ->with($documentIdentifier, false)
+            ->andReturn($xmlFilename);
+
+        $this->mockedSmServices[S3Processor::class]
+            ->expects('process')
+            ->with($documentIdentifier, false)
             ->andReturn($xmlFilename);
 
         $this->mockedSmServices[TemplateBuilder::class]
@@ -537,69 +520,6 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
         $this->mockedSmServices[TransExchangeClient::class]
             ->shouldReceive('makeRequest')
             ->times($numRequests)
-            ->with($xmlTemplate)
-            ->andReturn($returnDocument ? $transXchangeDocument : []);
-    }
-
-    /**
-     * creates a txc inbox side effect (avoids doing so for timetables)
-     *
-     * @param $id
-     * @param $uploadedDocumentId
-     * @param $pdfType
-     */
-    private function txcInboxSideEffect($id, $uploadedDocumentId, $pdfType): void
-    {
-        if ($pdfType !== '') {
-            $txcPdfData = [
-                'id' => $id,
-                'document' => $uploadedDocumentId,
-                'pdfType' => $pdfType
-            ];
-
-            $this->expectedSideEffect(UpdateTxcInboxPdfCmd::class, $txcPdfData, new Result());
-        }
-    }
-
-    /**
-     * @param $transxchangeFilename
-     * @param $busRegId
-     * @param $licenceId
-     * @param $documentDesc
-     * @param $uploadResult
-     */
-    private function documentSideEffect($transxchangeFilename, $busRegId, $licenceId, $documentDesc, $uploadResult): void
-    {
-        $documentData = [
-            'content' => base64_encode(file_get_contents($transxchangeFilename)),
-            'busReg' => $busRegId,
-            'licence' => $licenceId,
-            'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
-            'subCategory' => CategoryEntity::BUS_SUB_CATEGORY_TRANSXCHANGE_PDF,
-            'filename' => basename((string) $transxchangeFilename),
-            'description' => $documentDesc,
-            'user' => 1
-        ];
-
-        $this->expectedSideEffect(UploadCmd::class, $documentData, $uploadResult);
-    }
-
-    /**
-     * @param $busRegId
-     * @param $licenceId
-     * @param $taskDesc
-     */
-    private function taskSideEffect($busRegId, $licenceId, $taskDesc): void
-    {
-        $taskData = [
-            'category' => TaskEntity::CATEGORY_BUS,
-            'subCategory' => TaskEntity::SUBCATEGORY_EBSR,
-            'description' => $taskDesc,
-            'actionDate' => date('Y-m-d'),
-            'busReg' => $busRegId,
-            'licence' => $licenceId,
-        ];
-
-        $this->expectedSideEffect(CreateTaskCmd::class, $taskData, new Result());
+            ->with($xmlTemplate);
     }
 }

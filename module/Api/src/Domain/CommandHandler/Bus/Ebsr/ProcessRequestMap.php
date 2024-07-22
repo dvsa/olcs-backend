@@ -7,7 +7,7 @@ use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
+use Dvsa\Olcs\Api\Service\Ebsr\S3Processor;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -24,11 +24,14 @@ use Dvsa\Olcs\Api\Domain\TransExchangeAwareInterface;
 use Dvsa\Olcs\Api\Domain\TransExchangeAwareTrait;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Olcs\XmlTools\Xml\TemplateBuilder;
 use Dvsa\Olcs\Api\Domain\Exception\TransxchangeException;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -39,11 +42,13 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     UploaderAwareInterface,
     TransExchangeAwareInterface,
     ConfigAwareInterface,
-    ToggleAwareInterface
+    ToggleAwareInterface,
+    FileProcessorAwareInterface
 {
     use UploaderAwareTrait;
     use TransExchangeAwareTrait;
     use ConfigAwareTrait;
+    use FileProcessorAwareTrait;
     use QueueAwareTrait;
     use ToggleAwareTrait;
 
@@ -60,7 +65,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Bus';
 
-    private EbsrProcessingChain $processingChain;
+    private s3Processor $s3Processor;
 
     protected array $documentDescriptions = [
         TransExchangeClient::REQUEST_MAP_TEMPLATE => "Route Track Map PDF",
@@ -83,6 +88,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      */
     public function handleCommand(CommandInterface $command)
     {
+        $isNewTxc = $this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE);
+
         /**
          * @var BusRegEntity $busReg
          * @var EbsrSubmissionEntity $submission
@@ -103,14 +110,20 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         $ebsrSubmissions = $busReg->getEbsrSubmissions();
         $submission = $ebsrSubmissions->first();
 
-        $processorOptions = [
-            'isTransXchange' => true,
-            's3Filename' => $submission->getId() . '.xml',
-        ];
+        /** @var FileProcessor $fileProcessor */
+        $fileProcessor = $this->getFileProcessor();
+        $fileProcessor->setSubDirPath($config['ebsr']['tmp_extra_path']);
 
         try {
-            $filesProcessed = $this->processingChain->process($submission->getDocument()->getIdentifier(), $processorOptions);
-            $xmlFilename = $filesProcessed['s3Filename'] ?? $filesProcessed['xmlFilename'];
+            $xmlFilename = $fileProcessor->fetchXmlFileNameFromDocumentStore(
+                $submission->getDocument()->getIdentifier(),
+                !$isNewTxc
+            );
+
+            if ($isNewTxc) {
+                $s3Options = ['s3Filename' => $submission->getId() . '.xml'];
+                $xmlFilename = $this->s3Processor->process($xmlFilename, $s3Options);
+            }
         } catch (\Exception $e) {
             $message = $e->getMessage();
 
@@ -150,7 +163,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             }
 
             //the rest of this block is moved to the TransXchange consumer under new Txc
-            if ($this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
+            if ($isNewTxc) {
                 continue;
             }
 
@@ -174,11 +187,13 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             }
         }
 
-        //moved to the TransXchange consumer under new Txc
-        if (!$this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
-            $sideEffects[] = $this->createTaskCmd($busReg, $processedMaps, $failedMaps, $command->getFromNewEbsr());
-            $result->merge($this->handleSideEffects($sideEffects));
+        if ($isNewTxc) {
+            return $result;
         }
+
+        //moved to the TransXchange consumer under new Txc
+        $sideEffects[] = $this->createTaskCmd($busReg, $processedMaps, $failedMaps, $command->getFromNewEbsr());
+        $result->merge($this->handleSideEffects($sideEffects));
 
         return $result;
     }
@@ -347,7 +362,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $this->processingChain = $container->get(EbsrProcessingChain::class);
+        $this->s3Processor = $container->get(S3Processor::class);
         $this->templateBuilder = $container->get(TemplateBuilder::class);
         return parent::__invoke($container, $requestedName, $options);
     }

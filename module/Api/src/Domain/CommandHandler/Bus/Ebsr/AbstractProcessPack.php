@@ -1,12 +1,13 @@
 <?php
 
+/**
+ * Process Ebsr pack
+ */
+
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessor;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\BusRegistrationInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ProcessedDataInputFactory;
 use Dvsa\Olcs\Api\Service\Ebsr\InputFilter\ShortNoticeInputFactory;
@@ -19,8 +20,6 @@ use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Service\Ebsr\Filter\Format\SubmissionResult as SubmissionResultFilter;
 use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Api\Domain\Exception;
-use Dvsa\Olcs\Api\Service\Ebsr\ZipProcessor;
-use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Transfer\Command\Bus\Ebsr\RequestMap as RequestMapQueueCmd;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusNoticePeriod as BusNoticePeriodEntity;
@@ -42,15 +41,18 @@ use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\UploaderAwareTrait;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\ConfigAwareTrait;
-use Olcs\Logging\Log\LaminasLogPsr3Adapter;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareTrait;
 use Psr\Container\ContainerInterface;
 
 abstract class AbstractProcessPack extends AbstractCommandHandler implements
     UploaderAwareInterface,
+    FileProcessorAwareInterface,
     ConfigAwareInterface
 {
     use QueueAwareTrait;
     use UploaderAwareTrait;
+    use FileProcessorAwareTrait;
     use ConfigAwareTrait;
 
     protected $repoServiceName = 'Bus';
@@ -78,8 +80,6 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      */
     protected $submissionResultFilter;
 
-    protected EbsrProcessingChain $processingChain;
-
     /**
      * @var Result
      */
@@ -92,7 +92,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      * @param EbsrSubmissionEntity $ebsrSub ebsr submission entity
      * @param DocumentEntity       $doc     document entity
      * @param string               $xmlName name of the xml file
-     * @param string | array       $value   input value
+     * @param array                $value   input value
      * @param array                $context input context
      *
      * @return array|bool
@@ -163,7 +163,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      *
      * @return array
      */
-    protected function getSubmissionResultData(array $errorMessages, mixed $rawData, EbsrSubmissionEntity $ebsrSub): array
+    protected function getSubmissionResultData(array $errorMessages, mixed $rawData, EbsrSubmissionEntity $ebsrSub)
     {
         $input = [
             'rawData' => $rawData,
@@ -183,7 +183,7 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      *
      * @return Result
      */
-    protected function addErrorMessages(DocumentEntity $doc, array $messages, $xmlName): Result
+    protected function addErrorMessages(DocumentEntity $doc, array $messages, $xmlName)
     {
         $filename = '';
         $joinedMessages = strtolower(implode(', ', $messages));
@@ -220,11 +220,11 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
      * Sets the EBSR submission to failed, and saves the record
      *
      * @param EbsrSubmissionEntity $ebsrSub        EBSR submission entity
-     * @param array                $ebsrResultData serialized array of data
+     * @param string               $ebsrResultData serialized array of data
      *
      * @return EbsrSubmissionEntity
      */
-    protected function setEbsrSubmissionFailed(EbsrSubmissionEntity $ebsrSub, array $ebsrResultData)
+    protected function setEbsrSubmissionFailed(EbsrSubmissionEntity $ebsrSub, $ebsrResultData)
     {
         $ebsrSub->finishValidating(
             $this->getRepo()->getRefdataReference(EbsrSubmissionEntity::FAILED_STATUS),
@@ -643,16 +643,6 @@ abstract class AbstractProcessPack extends AbstractCommandHandler implements
     }
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $logger = new LaminasLogPsr3Adapter($container->get('Logger'));
-        $toggleService = $container->get(ToggleService::class);
-
-        $processor = FileProcessor::class;
-
-        if ($toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
-            $processor = ZipProcessor::class;
-        }
-
-        $this->processingChain = new EbsrProcessingChain($logger, $container->get($processor));
         $this->xmlStructureInput = $container->get(XmlStructureInputFactory::class);
         $this->busRegInput = $container->get(BusRegistrationInputFactory::class);
         $this->processedDataInput = $container->get(ProcessedDataInputFactory::class);

@@ -7,11 +7,15 @@ use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\Registration;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\ServiceClassification;
 use Dvsa\Olcs\Api\Service\Ebsr\XmlValidator\SupportingDocuments;
 use Laminas\ServiceManager\Factory\FactoryInterface;
-use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
+use Olcs\XmlTools\Filter\ParseXml;
 use Dvsa\Olcs\Api\Service\InputFilter\Input;
 use Psr\Container\ContainerInterface;
 
+/**
+ * Class XmlStructureInputFactory
+ * @package Dvsa\Olcs\Api\Service\Ebsr\InputFilter
+ */
 class XmlStructureInputFactory implements FactoryInterface
 {
     public const MAX_SCHEMA_MSG = 'No config specified for max_schema_errors';
@@ -35,7 +39,7 @@ class XmlStructureInputFactory implements FactoryInterface
         $service = new Input($inputName);
         $config = $container->get('config');
         $filterChain = $service->getFilterChain();
-        $filterChain->attach($container->get('FilterManager')->get(ParseXmlString::class));
+        $filterChain->attach($container->get('FilterManager')->get(ParseXml::class));
         $validatorchain = $service->getValidatorChain();
         //allows validators to be switched off (debug only, not to be used for production)
         if (!isset($config['ebsr']['validate'][$inputName]) || $config['ebsr']['validate'][$inputName] === true) {

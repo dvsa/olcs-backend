@@ -42,6 +42,8 @@ use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
@@ -199,6 +201,10 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof ConfigAwareInterface) {
             $config = $mainServiceLocator->get('config') ?? [];
             $this->setConfig($config);
+        }
+
+        if ($this instanceof FileProcessorAwareInterface) {
+            $this->setFileProcessor($mainServiceLocator->get(FileProcessorInterface::class));
         }
 
         if ($this instanceof QueueInterface) {

@@ -45,7 +45,7 @@ class ProcessPackFailedTest extends ProcessPackTestCase
         $documentMock->shouldReceive('getDescription')->andReturn('description');
         $ebsrMock->shouldReceive('getDocument')->andReturn($documentMock);
         $ebsrMock->shouldReceive('finishValidating')
-            ->with($this->refData[EbsrSubmission::FAILED_STATUS], 'json string')
+            ->with($this->refData[EbsrSubmission::FAILED_STATUS], ['an_array'])
             ->andReturnSelf();
         $ebsrMock->shouldReceive('getId')->andReturn(12);
 
