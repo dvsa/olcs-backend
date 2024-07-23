@@ -52,9 +52,6 @@
         "laminas/laminas-cli": "^1.5"
     },
     "autoload": {
-        "classmap": [
-          "module/Db/src"
-        ],
         "psr-4": {
             "Dvsa\\Olcs\\Db\\": "module/Db/src",
             "Dvsa\\Olcs\\AcquiredRights\\": "module/AcquiredRights/src",

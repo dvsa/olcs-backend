@@ -20,6 +20,7 @@ return [
         'Dvsa\Olcs\CompaniesHouse',
         'Dvsa\Olcs\Cpms',
         'Dvsa\Olcs\DocumentShare',
+        'Dvsa\Olcs\Db',
         'LmcRbacMvc',
         'Dvsa\Olcs\Transfer',
         'DoctrineModule',
