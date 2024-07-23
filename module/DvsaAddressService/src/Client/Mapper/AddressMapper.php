@@ -31,15 +31,15 @@ class AddressMapper
     public static function mapSingleAddressDataToObject(array $data): Address
     {
         return new Address(
-            $data['address_line1'],
+            $data['address_line1'] ?? null,
             $data['address_line2'] ?? null,
             $data['address_line3'] ?? null,
             $data['address_line4'] ?? null,
-            $data['post_town'],
-            $data['postcode'],
-            $data['postcode_trim'],
+            $data['post_town'] ?? null,
+            $data['postcode'] ?? null,
+            $data['postcode_trim'] ?? null,
             $data['organisation_name'] ?? null,
-            $data['uprn'],
+            $data['uprn'] ?? null,
             $data['administrative_area'] ?? null
         );
     }

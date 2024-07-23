@@ -29,11 +29,6 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
     protected AddressHelperService $addressHelperService;
 
     /**
-     * @var AdminAreaTrafficArea
-     */
-    protected $adminAreaTrafficAreaRepo;
-
-    /**
      * Validate traffic area based on postcode
      *
      * @param Application|Licence $entity Application or Licence entity
@@ -270,7 +265,6 @@ class TrafficAreaValidator implements \Laminas\ServiceManager\Factory\FactoryInt
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->addressHelperService = $container->get(AddressHelperService::class);
-        $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
         return $this;
     }
 }

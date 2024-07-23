@@ -69,7 +69,7 @@ class DvsaAddressServiceClientFactory implements FactoryInterface
     /**
      * @throws AddressServiceIdentityProviderException
      */
-    private function getAppRegistrationServiceToken(array $config): string
+    protected function getAppRegistrationServiceToken(array $config): string
     {
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => $config['oauth2']['client_id'],

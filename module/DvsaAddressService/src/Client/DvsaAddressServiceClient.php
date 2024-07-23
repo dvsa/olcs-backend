@@ -4,6 +4,7 @@ namespace Dvsa\Olcs\DvsaAddressService\Client;
 
 use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
 use Dvsa\Olcs\DvsaAddressService\Exception\ServiceException;
+use Dvsa\Olcs\DvsaAddressService\Exception\ValidationException;
 use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
@@ -23,8 +24,9 @@ class DvsaAddressServiceClient
     }
 
     /**
-     * @throws ServiceException|GuzzleException
      * @return Address[]
+     * @throws ValidationException
+     * @throws ServiceException|GuzzleException
      */
     public function lookupAddress(string $query): array
     {
@@ -37,8 +39,8 @@ class DvsaAddressServiceClient
 
             return AddressMapper::mapAddressDataArrayToObjects($json);
         } catch (ClientException | ServerException $exception) {
-            return match ($exception->getResponse()->getStatusCode()) {
-                400, 422 => [], // Return empty result for bad request or unprocessable entity
+            match ($exception->getResponse()->getStatusCode()) {
+                400, 422 => throw new ValidationException('User input bad or invalid postcode: ' . $exception->getMessage()),
                 default => throw new ServiceException(
                     'There was a uncaught client/server exception when communicating with the DVSA Address Service API - ' . $exception->getResponse()->getStatusCode() . ' - ' . $exception->getResponse()->getReasonPhrase(),
                     0,
@@ -57,6 +59,19 @@ class DvsaAddressServiceClient
                 0,
                 $invalidArgumentException
             );
+        }
+    }
+
+    private function validateQueryStringIsPostcodeOrUprn(string $query): void
+    {
+        // Basic empty check before running RegEx
+        if (empty($query)) {
+            throw new ValidationException('Query cannot be empty');
+        }
+
+        // Validate query is a string a-Z, 0-9, or space between 1 and 12 characters
+        if (!preg_match('/^[a-zA-Z0-9 ]{1,12}$/', $query)) {
+            throw new ValidationException('Query must be a valid UK Postcode or UPRN');
         }
     }
 }

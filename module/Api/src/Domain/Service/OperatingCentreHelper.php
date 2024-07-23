@@ -362,7 +362,6 @@ class OperatingCentreHelper implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
         $this->addressHelperService = $container->get(AddressHelperService::class);
-        $this->adminAreaTrafficAreaRepo = $container->get('RepositoryServiceManager')->get('AdminAreaTrafficArea');
         $this->trafficAreaValidator = $container->get('TrafficAreaValidator');
         $this->docRepo = $container->get('RepositoryServiceManager')->get('Document');
         return $this;

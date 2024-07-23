@@ -5,6 +5,7 @@ namespace Dvsa\Olcs\Api\Service\AddressHelper;
 use Dvsa\Olcs\Api\Domain\Exception\NotFoundException;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
+use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use Dvsa\Olcs\DvsaAddressService\Service\AddressInterface;
 
@@ -21,12 +22,14 @@ class AddressHelperService
     /**
      * Lookup Address.
      *
-     * @param string $query Postcode or UPRN
+     * @param string|int $query Postcode or UPRN
      *
      * @return Address[]
      */
-    public function lookupAddress(string $query): array
+    public function lookupAddress(string|int $query): array
     {
+        $query = (string) $query;
+
         return $this->addressService->lookupAddress($query);
     }
 
@@ -35,9 +38,10 @@ class AddressHelperService
      *
      * If queried using Postcode and multiple addresses are found, the first address is used.
      *
-     * @param string $query Postcode or UPRN
+     * @param string|int $query Postcode or UPRN
+     * @return TrafficArea|null
      */
-    public function fetchTrafficAreaByPostcodeOrUprn(string $query): ?Entity\TrafficArea\TrafficArea
+    public function fetchTrafficAreaByPostcodeOrUprn(string|int $query): ?Entity\TrafficArea\TrafficArea
     {
         $addressData = $this->lookupAddress($query);
         if (empty($addressData)) {
