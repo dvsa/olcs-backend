@@ -18,7 +18,7 @@ class Address implements \JsonSerializable
     ) {
     }
 
-    public function getAddressLine1(): string
+    public function getAddressLine1(): ?string
     {
         return $this->addressLine1;
     }
@@ -38,17 +38,17 @@ class Address implements \JsonSerializable
         return $this->addressLine4;
     }
 
-    public function getPostTown(): string
+    public function getPostTown(): ?string
     {
         return $this->postTown;
     }
 
-    public function getPostcode(): string
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
 
-    public function getPostcodeTrim(): string
+    public function getPostcodeTrim(): ?string
     {
         return $this->postcodeTrim;
     }
@@ -58,7 +58,7 @@ class Address implements \JsonSerializable
         return $this->organisationName;
     }
 
-    public function getUprn(): string
+    public function getUprn(): ?string
     {
         return $this->uprn;
     }
@@ -83,6 +83,7 @@ class Address implements \JsonSerializable
             'postcode_trim' => $this->postcodeTrim,
             'organisation_name' => $this->organisationName,
             'uprn' => $this->uprn,
+            'administrative_area' => $this->administrativeArea,
         ];
     }
 
