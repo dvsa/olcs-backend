@@ -61,8 +61,6 @@ class LoginTest extends AbstractCommandHandlerTestCase
             'password' => $testPassword,
             'realm' => 'internal'
         ]));
-
-        $this->assertTrue(true);
     }
 
 
