@@ -20,9 +20,9 @@ class Address implements AddressInterface
     }
 
     /**
-     * @return Dvsa\Olcs\DvsaAddressService\Model\Address[]
+     * @return \Dvsa\Olcs\DvsaAddressService\Model\Address[]
      *
-     * @deprecated Use Dvsa\Olcs\DvsaAddressService\Service\AddressInterface::lookupAddress instead
+     * @deprecated Use \Dvsa\Olcs\DvsaAddressService\Service\DvsaAddressService::lookupAddress instead
      *
      */
     public function lookupAddress(string $query): array
