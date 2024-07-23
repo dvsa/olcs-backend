@@ -17,7 +17,7 @@ use Mockery\Adapter\Phpunit\MockeryTestCase;
 class DvsaAddressServiceClientTest extends MockeryTestCase
 {
     protected DvsaAddressServiceClient $sut;
-    protected Client|(m\MockInterface&m\LegacyMockInterface) $httpClient;
+    protected Client | (m\MockInterface & m\LegacyMockInterface ) $httpClient;
 
     public function setUp(): void
     {

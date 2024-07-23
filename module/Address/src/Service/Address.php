@@ -44,7 +44,7 @@ class Address implements AddressInterface
         }
 
         // Convert 'administritive_area' to 'administrative_area'
-        foreach($json as $key => $address) {
+        foreach ($json as $key => $address) {
             $json[$key]['administrative_area'] = $address['administritive_area'] ?? null;
         }
 

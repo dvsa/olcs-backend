@@ -52,7 +52,7 @@ class AddressMapper
      */
     public static function convertAddressObjectsToArrayRepresentation(array $addresses): array
     {
-        return array_map(function($addressObject) {
+        return array_map(function ($addressObject) {
             return $addressObject->toArray();
         }, $addresses);
     }

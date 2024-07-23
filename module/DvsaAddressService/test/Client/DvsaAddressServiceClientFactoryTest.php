@@ -9,9 +9,11 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-class TestableDvsaAddressServiceClientFactory extends DvsaAddressServiceClientFactory {
+class TestableDvsaAddressServiceClientFactory extends DvsaAddressServiceClientFactory
+{
     public bool $getAppRegistrationServiceTokenCalled = false;
-    protected function getAppRegistrationServiceToken(array $config): string {
+    protected function getAppRegistrationServiceToken(array $config): string
+    {
         $this->getAppRegistrationServiceTokenCalled = true;
         return 'mock_access_token';
     }

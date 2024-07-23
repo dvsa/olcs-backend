@@ -25,7 +25,6 @@ final class SetDefaultTrafficAreaAndEnforcementArea extends AbstractCommandHandl
 
     public function __construct(protected AddressHelperService $addressHelperService)
     {
-
     }
 
     /**

@@ -5,15 +5,15 @@ namespace Dvsa\Olcs\DvsaAddressService\Model;
 class Address implements \JsonSerializable
 {
     public function __construct(
-        protected ?string  $addressLine1,
+        protected ?string $addressLine1,
         protected ?string $addressLine2,
         protected ?string $addressLine3,
         protected ?string $addressLine4,
-        protected ?string  $postTown,
-        protected ?string  $postcode,
-        protected ?string  $postcodeTrim,
+        protected ?string $postTown,
+        protected ?string $postcode,
+        protected ?string $postcodeTrim,
         protected ?string $organisationName,
-        protected ?string  $uprn,
+        protected ?string $uprn,
         protected ?string $administrativeArea
     ) {
     }

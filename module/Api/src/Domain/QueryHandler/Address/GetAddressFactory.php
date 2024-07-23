@@ -2,7 +2,6 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Address;
 
-
 use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use Psr\Container\ContainerInterface;

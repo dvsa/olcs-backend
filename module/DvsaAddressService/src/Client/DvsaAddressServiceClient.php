@@ -20,7 +20,6 @@ class DvsaAddressServiceClient
 
     public function __construct(private readonly Client $client)
     {
-
     }
 
     /**
@@ -49,9 +48,9 @@ class DvsaAddressServiceClient
             };
         } catch (ConnectException | RequestException $exception) {
             throw new ServiceException(
-            'There was an error when communicating with the DVSA Address Service API',
-            0,
-            $exception
+                'There was an error when communicating with the DVSA Address Service API',
+                0,
+                $exception
             );
         } catch (InvalidArgumentException $invalidArgumentException) {
             throw new ServiceException(

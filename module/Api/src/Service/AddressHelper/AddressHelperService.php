@@ -14,9 +14,8 @@ class AddressHelperService
     public function __construct(
         protected AddressInterface $addressService,
         protected Repository\PostcodeEnforcementArea $postcodeEnforcementAreaRepository,
-        protected Repository\AdminAreaTrafficArea $adminAreaTrafficAreaRepository)
-    {
-
+        protected Repository\AdminAreaTrafficArea $adminAreaTrafficAreaRepository
+    ) {
     }
 
     /**

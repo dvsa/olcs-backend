@@ -32,7 +32,7 @@ class DvsaAddressService implements AddressInterface
                 'exception' => $e
             ]);
             return [];
-        } catch (ServiceException|GuzzleException $e) {
+        } catch (ServiceException | GuzzleException $e) {
             $this->logger->err('DVSA Address Service: Error looking up address by query: ' . $e->getMessage(), [
                 'query' => $query,
                 'exception' => $e,
