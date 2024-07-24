@@ -16,7 +16,11 @@ class GetList extends AbstractQueryHandler
     {
     }
 
-    public function handleQuery(QueryInterface|\Dvsa\Olcs\Transfer\Query\Address\GetList $query): array
+    /**
+     * @param \Dvsa\Olcs\Transfer\Query\Address\GetList $query
+     * @return array
+     */
+    public function handleQuery(QueryInterface $query): array
     {
         $addresses = $this->addressHelperService->lookupAddress($query->getPostcode());
 
