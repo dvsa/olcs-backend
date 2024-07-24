@@ -1,5 +1,7 @@
 <?php
 
+namespace Dvsa\OlcsTest\Api\Service\AddressHelper;
+
 use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Dvsa\Olcs\Api\Domain\Repository;
 use Dvsa\Olcs\Api\Entity;
