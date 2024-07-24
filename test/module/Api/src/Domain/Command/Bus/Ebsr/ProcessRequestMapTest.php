@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Domain\Command\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap;
@@ -11,14 +13,13 @@ use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessRequestMap;
  */
 class ProcessRequestMapTest extends \PHPUnit\Framework\TestCase
 {
-    public function testStructure()
+    public function testStructure(): void
     {
         $id = 1;
         $user = 2;
         $scale = 'small';
         $licence = 'licence';
         $regNo = '123/45678';
-        $fromNewEbsr = true;
 
         $command = ProcessRequestMap::create(
             [
@@ -27,7 +28,6 @@ class ProcessRequestMapTest extends \PHPUnit\Framework\TestCase
                 'scale' => $scale,
                 'licence' => $licence,
                 'regNo' => $regNo,
-                'fromNewEbsr' => $fromNewEbsr
             ]
         );
 
@@ -36,6 +36,5 @@ class ProcessRequestMapTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($scale, $command->getScale());
         $this->assertEquals($licence, $command->getLicence());
         $this->assertEquals($regNo, $command->getRegNo());
-        $this->assertEquals($fromNewEbsr, $command->getFromNewEbsr());
     }
 }

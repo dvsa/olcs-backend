@@ -4,7 +4,6 @@ namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
 use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
-use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\Http\Request;
 use Laminas\Log\Processor\RequestId;
@@ -22,10 +21,6 @@ use Psr\Container\ContainerInterface;
  */
 class TransExchangeClientFactory implements FactoryInterface
 {
-    protected $toggleConfig = [
-        'default' => FeatureToggle::BACKEND_TRANSXCHANGE
-    ];
-
     public const PUBLISH_XSD = 'http://naptan.dft.gov.uk/transxchange/publisher/schema/3.1.2/TransXChangePublisherService.xsd';
 
     /**
@@ -47,25 +42,14 @@ class TransExchangeClientFactory implements FactoryInterface
         $token = $transXChangeAppRegistrationService->getToken();
         $headers = ['Authorization' => 'Bearer ' . $token];
 
-        /** @var ToggleService $toggleService */
-        $toggleService = $container->get(ToggleService::class);
-
         if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
         $config = $config['ebsr']['transexchange_publisher'];
 
-        if ($toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
-            $config['uri'] = $config['new_uri'];
-            $method = Request::METHOD_POST;
-        } else {
-            //ensure we exactly preserve the old behaviour by removing the new config
-            unset($config['options']['adapter'], $config['options']['proxy_host'], $config['options']['proxy_port']);
-            $method = Request::METHOD_GET;
-        }
-        $httpClient = new RestClient($config['uri'], $config['options']);
+        $httpClient = new RestClient($config['new_uri'], $config['options']);
         $httpClient->setHeaders($headers);
-        $httpClient->setMethod($method);
+        $httpClient->setMethod(Request::METHOD_POST);
         $wrapper = new ClientAdapterLoggingWrapper();
         $wrapper->wrapAdapter($httpClient);
         /**

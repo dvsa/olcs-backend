@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Request new Ebsr map
- */
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
@@ -56,7 +52,6 @@ final class RequestMapQueue extends AbstractCommandHandler implements AuthAwareI
         $optionData = [
             'scale' => $command->getScale(),
             'id' => $entityId,
-            'fromNewEbsr' => $command->getFromNewEbsr(),
             'regNo' => $busReg->getRegNo(),
             'licence' => $busReg->getLicence()->getId(),
             'user' => $this->getCurrentUser()->getId()
