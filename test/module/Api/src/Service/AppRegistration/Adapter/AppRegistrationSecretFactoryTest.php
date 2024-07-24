@@ -18,7 +18,7 @@ class AppRegistrationSecretFactoryTest extends MockeryTestCase
      * @dataProvider secretsProviders
      * @throws \Exception
      */
-    public function testInvkoe(string $secretsProvider, $args): void
+    public function testInvoke(string $secretsProvider, $args): void
     {
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->expects('get')->with('config')->andReturn(['app-registrations' => ['secrets' => ['provider' => $secretsProvider]]]);

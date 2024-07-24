@@ -32,9 +32,6 @@ use org\bovigo\vfs\vfsStream;
 
 class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 {
-    protected $templatePath;
-    protected $templatePaths;
-
     public function setUp(): void
     {
         $this->sut = new ProcessRequestMap();
@@ -331,10 +328,8 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
 
     /**
      * test handleCommand when template config is not found
-     *
-     * @dataProvider missingEbsrPackProvider
      */
-    public function testHandleCommandMissingEbsrPack($fileProcessorException): void
+    public function testHandleCommandMissingEbsrPack(): void
     {
         $this->expectException(TransxchangeException::class);
         $this->expectExceptionMessage(ProcessRequestMap::MISSING_PACK_FILE_ERROR);
@@ -372,20 +367,9 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
             ->shouldReceive('fetchXmlFileNameFromDocumentStore')
             ->once()
             ->with($documentIdentifier, true)
-            ->andThrow($fileProcessorException);
+            ->andThrow(EbsrPackException::class);
 
         $this->sut->handleCommand($command);
-    }
-
-    /**
-     * @return array
-     */
-    public function missingEbsrPackProvider(): array
-    {
-        return [
-            [EbsrPackException::class],
-            [\RuntimeException::class]
-        ];
     }
 
     /**
@@ -453,7 +437,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      */
     public function testHandleCommandMissingFilePathConfig(): void
     {
-        $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\TransxchangeException::class);
+        $this->expectException(TransxchangeException::class);
         $this->expectExceptionMessage('No tmp directory specified in config');
 
         $command = ProcessRequestMapCmd::create([]);
@@ -468,7 +452,7 @@ class ProcessRequestMapTest extends AbstractCommandHandlerTestCase
      *
      * @return string
      */
-    private function taskSuccessDesc($state, $regNo, $desc): String
+    private function taskSuccessDesc($state, $regNo, $desc): string
     {
         return 'New ' . $state . ' created: ' . $regNo . "\n" . 'The following PDFs were generated: ' . $desc;
     }

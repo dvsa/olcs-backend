@@ -58,7 +58,6 @@ class TransXChangeConsumer extends AbstractConsumer
      */
     public function handleCommand(CommandInterface $command): Result
     {
-        Logger::debug('Processing TransXchange Consumer');
         $allMessages = [];
 
         $maxMessagesPerRun = $this->config['ebsr']['max_messages_per_run'] ?? 100;
@@ -71,8 +70,6 @@ class TransXChangeConsumer extends AbstractConsumer
             }
 
             $batch = $this->fetchMessages(10, 60);
-
-            Logger::debug('Fetched TransXchange messages', $batch);
 
             if (empty($batch)) {
                 break;
@@ -141,7 +138,6 @@ class TransXChangeConsumer extends AbstractConsumer
      */
     protected function processMessage(array $message): array
     {
-        Logger::debug('TransXchange queue attributes', $message);
         $inputDocumentName = $this->getQueueAttribute($message, 'InputDocumentName');
 
         $ebsrId = explode(".", (string) $inputDocumentName, -1)[0];
@@ -160,8 +156,6 @@ class TransXChangeConsumer extends AbstractConsumer
         $documentDescription = $this->getDocumentDescription($message);
 
         $body = $this->parseMessageBody($message);
-
-        Logger::debug('TransXchange message body', $body);
 
         if (isset($body['error'])) {
             return [$this->createTaskCmd($busRegistration, $documentDescription, true)];
@@ -381,6 +375,8 @@ class TransXChangeConsumer extends AbstractConsumer
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): self
     {
+        parent::__invoke($container, $requestedName, $options);
+
         $filterManager = $container->get('FilterManager');
         $this->xmlParser = $filterManager->get(ParseXmlString::class);
         $this->xmlFilter = $filterManager->get(MapXmlFile::class);
@@ -441,6 +437,6 @@ class TransXChangeConsumer extends AbstractConsumer
 
         $this->ebsrSubmissionRepository = $repositoryServiceManager->get('EbsrSubmission');
 
-        return parent::__invoke($container, $requestedName, $options);
+        return $this;
     }
 }

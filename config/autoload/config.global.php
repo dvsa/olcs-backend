@@ -591,7 +591,6 @@ return [
         'proxy' => 'http://%shd_proxy%',
     ],
     'app-registrations' => [
-
         'secrets' => ['provider' => \Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager::class],
         'transxchange' => [
             'token_url' => '%olcs_txc_token_url%',

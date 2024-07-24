@@ -167,11 +167,13 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
                 continue;
             }
 
+            //moved to the TransXchange consumer under new Txc
             if (!isset($documents['files'])) {
                 $failedMaps[$documentDesc] = $documentDesc;
                 continue;
             }
 
+            //moved to the TransXchange consumer under new Txc
             foreach ($documents['files'] as $document) {
                 $uploadDocCmd = $this->generateDocumentCmd($document, $busReg, $command->getUser(), $documentDesc);
                 $uploadedDoc = $this->handleSideEffect($uploadDocCmd);

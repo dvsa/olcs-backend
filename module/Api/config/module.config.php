@@ -12,8 +12,6 @@ use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
-use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChain;
-use Dvsa\Olcs\Api\Service\Ebsr\EbsrProcessingChainFactory;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Strategy as QaStrategy;
 use Dvsa\Olcs\Api\Service\Translator;
