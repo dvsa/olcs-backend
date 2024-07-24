@@ -1407,7 +1407,6 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
         $requestMapData = [
             'id' => $savedBusRegId,
             'scale' => 'auto',
-            'fromNewEbsr' => true
         ];
 
         $this->expectedSideEffect(RequestMapQueueCmd::class, $requestMapData, new Result());
