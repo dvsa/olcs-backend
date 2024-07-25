@@ -1,16 +1,13 @@
 <?php
 
-/**
- * Create PrivateHireLicence
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
 use Dvsa\Olcs\Api\Domain\CommandHandler\TransactionedInterface;
 use Dvsa\Olcs\Api\Entity\Licence\PrivateHireLicence;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Create as Command;
 use Dvsa\Olcs\Api\Entity\ContactDetails;
@@ -20,8 +17,6 @@ use Dvsa\Olcs\Api\Entity\System\Category as CategoryEntity;
 use Dvsa\Olcs\Api\Entity\User\Permission;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareTrait;
 
 /**
  * Create PrivateHireLicence
@@ -30,19 +25,21 @@ use Dvsa\Olcs\Address\Service\AddressServiceAwareTrait;
  */
 final class Create extends AbstractCommandHandler implements
     TransactionedInterface,
-    AuthAwareInterface,
-    AddressServiceAwareInterface
+    AuthAwareInterface
 {
     use AuthAwareTrait;
-    use AddressServiceAwareTrait;
 
     public const PHL_INVALID_TA = 'PHL_INVALID_TA';
 
     protected $repoServiceName = 'PrivateHireLicence';
 
-    protected $extraRepos = ['ContactDetails', 'AdminAreaTrafficArea'];
+    protected $extraRepos = ['ContactDetails'];
 
-    public function handleCommand(CommandInterface $command)
+    public function __construct(protected AddressHelperService $addressHelperService)
+    {
+    }
+
+    public function handleCommand(CommandInterface $command): \Dvsa\Olcs\Api\Domain\Command\Result
     {
         /* @var $command Command */
         $address = new \Dvsa\Olcs\Api\Entity\ContactDetails\Address();
@@ -101,36 +98,37 @@ final class Create extends AbstractCommandHandler implements
      * @param string $postcode
      * @throws \Dvsa\Olcs\Api\Domain\Exception\ValidationException
      */
-    protected function checkTrafficArea($postcode, PrivateHireLicence $phl)
+    protected function checkTrafficArea(string $postcode, PrivateHireLicence $phl): void
     {
-        $postCodeTrafficArea = $this->getAddressService()->fetchTrafficAreaByPostcode(
-            $postcode,
-            $this->getRepo('AdminAreaTrafficArea')
+        $postCodeTrafficArea = $this->addressHelperService->fetchTrafficAreaByPostcodeOrUprn(
+            $postcode
         );
 
-        if ($postCodeTrafficArea) {
-            // if TA not set
-            if ($phl->getLicence()->getTrafficArea() === null) {
-                // update the licence TA
-                $data = [
-                    'id' => $phl->getLicence()->getId(),
-                    'version' => $phl->getLicence()->getVersion(),
-                    'trafficArea' => $postCodeTrafficArea->getId(),
-                ];
-                $this->result->merge(
-                    $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::create($data))
+        if (!$postCodeTrafficArea) {
+            return;
+        }
+
+        // if TA not set
+        if ($phl->getLicence()->getTrafficArea() === null) {
+            // update the licence TA
+            $data = [
+                'id' => $phl->getLicence()->getId(),
+                'version' => $phl->getLicence()->getVersion(),
+                'trafficArea' => $postCodeTrafficArea->getId(),
+            ];
+            $this->result->merge(
+                $this->handleSideEffect(\Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea::create($data))
+            );
+        } else {
+            // check that the updated PHL's postcode is in the TA
+            if ($phl->getLicence()->getTrafficArea() !== $postCodeTrafficArea) {
+                $message = 'Your Taxi/PHV licence is in ' . $postCodeTrafficArea->getName() .
+                    ' traffic area, which differs to your first Taxi/PHV Licence (' .
+                    $phl->getLicence()->getTrafficArea()->getName() .
+                    '). You will need to apply for more than one Special Restricted licence.';
+                throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
+                    [self::PHL_INVALID_TA => $message]
                 );
-            } else {
-                // check that the updated PHL's postcode is in the TA
-                if ($phl->getLicence()->getTrafficArea() !== $postCodeTrafficArea) {
-                    $message = 'Your Taxi/PHV licence is in ' . $postCodeTrafficArea->getName() .
-                        ' traffic area, which differs to your first Taxi/PHV Licence (' .
-                        $phl->getLicence()->getTrafficArea()->getName() .
-                        '). You will need to apply for more than one Special Restricted licence.';
-                    throw new \Dvsa\Olcs\Api\Domain\Exception\ValidationException(
-                        [self::PHL_INVALID_TA => $message]
-                    );
-                }
             }
         }
     }

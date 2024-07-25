@@ -64,7 +64,7 @@ class ImplementationTest extends MockeryTestCase
     public function testAllImplemented()
     {
         foreach ($this->handlers as $handler) {
-            $this->assertTrue($this->validationManager->has($handler));
+            $this->assertTrue($this->validationManager->has($handler), $handler);
         }
     }
 }

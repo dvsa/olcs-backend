@@ -19,7 +19,7 @@ class PostcodeEnforcementArea extends AbstractRepository
 {
     protected $entity = Entity::class;
 
-    public function fetchByPostcodeId($postcodeId)
+    public function fetchByPostcodeId($postcodeId): ?Entity
     {
         return $this->getRepository()->findOneBy(['postcodeId' => $postcodeId]);
     }

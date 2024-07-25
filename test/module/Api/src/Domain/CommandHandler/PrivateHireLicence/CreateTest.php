@@ -9,6 +9,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\CommandHandler\PrivateHireLicence;
 
 use Dvsa\Olcs\Api\Domain\CommandHandler\PrivateHireLicence\Create as CommandHandler;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Dvsa\Olcs\Transfer\Command\PrivateHireLicence\Create as Command;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Mockery as m;
@@ -29,14 +30,14 @@ class CreateTest extends AbstractCommandHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new CommandHandler();
         $this->mockRepo('PrivateHireLicence', \Dvsa\Olcs\Api\Domain\Repository\PrivateHireLicence::class);
         $this->mockRepo('ContactDetails', \Dvsa\Olcs\Api\Domain\Repository\ContactDetails::class);
-        $this->mockRepo('AdminAreaTrafficArea', \Dvsa\Olcs\Api\Domain\Repository\AdminAreaTrafficArea::class);
         $this->mockedSmServices = [
             AuthorizationService::class => m::mock(AuthorizationService::class),
-            'AddressService' => m::mock(\Dvsa\Olcs\Address\Service\AddressInterface::class)
+            AddressHelperService::class => m::mock(AddressHelperService::class),
         ];
+
+        $this->sut = new CommandHandler($this->mockedSmServices[AddressHelperService::class]);
 
         parent::setUp();
     }
@@ -76,8 +77,8 @@ class CreateTest extends AbstractCommandHandlerTestCase
         ];
         $command = Command::create($params);
 
-        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn(null);
+        $this->mockedSmServices[AddressHelperService::class]->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('S1 4QT')->once()->andReturn(null);
 
         $this->repoMap['ContactDetails']->shouldReceive('save')->once()->andReturnUsing(
             function (\Dvsa\Olcs\Api\Entity\ContactDetails\ContactDetails $cd) use ($params) {
@@ -155,8 +156,8 @@ class CreateTest extends AbstractCommandHandlerTestCase
         $trafficArea = new \Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea();
         $trafficArea->setId('TA');
 
-        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea);
+        $this->mockedSmServices[AddressHelperService::class]->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('S1 4QT')->once()->andReturn($trafficArea);
 
         $this->repoMap['ContactDetails']->shouldReceive('save')->once();
 
@@ -205,8 +206,8 @@ class CreateTest extends AbstractCommandHandlerTestCase
 
         $this->references[Licence::class][323]->setTrafficArea($trafficArea2);
 
-        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('S1 4QT', $this->repoMap['AdminAreaTrafficArea'])->once()->andReturn($trafficArea);
+        $this->mockedSmServices[AddressHelperService::class]->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('S1 4QT')->once()->andReturn($trafficArea);
 
         try {
             $this->sut->handleCommand($command);

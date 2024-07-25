@@ -2,6 +2,7 @@
 
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Psr\Container\ContainerInterface;
 use Mockery as m;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,42 +14,21 @@ use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 
-/**
- * TrafficAreaValidatorTest
- *
- * @author Mat Evans <mat.evans@valtech.co.uk>
- */
 class TrafficAreaValidatorTest extends MockeryTestCase
 {
-    /**
-     * @var \Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator
-     */
-    protected $sut;
+    protected TrafficAreaValidator $sut;
 
-    protected $addressService;
-
-    protected $adminAreaTrafficAreaRepo;
+    protected m\MockInterface|AddressHelperService $addressService;
 
     public function setUp(): void
     {
-        $this->addressService = m::mock();
-        $this->adminAreaTrafficAreaRepo = m::mock();
-
-        $repositoryServiceManager = m::mock();
-        $repositoryServiceManager->shouldReceive('get')
-            ->with('AdminAreaTrafficArea')
-            ->once()
-            ->andReturn($this->adminAreaTrafficAreaRepo);
+        $this->addressService = m::mock(AddressHelperService::class);
 
         $container = m::mock(ContainerInterface::class);
         $container->shouldReceive('get')
-            ->with('AddressService')
+            ->with(AddressHelperService::class)
             ->once()
-            ->andReturn($this->addressService)
-            ->shouldReceive('get')
-            ->with('RepositoryServiceManager')
-            ->once()
-            ->andReturn($repositoryServiceManager);
+            ->andReturn($this->addressService);
 
         $this->sut = new TrafficAreaValidator();
         $this->sut->__invoke($container, TrafficAreaValidator::class);
@@ -56,8 +36,8 @@ class TrafficAreaValidatorTest extends MockeryTestCase
 
     public function testCalidateForSameTrafficAreasWithPostcodeWithNullPostcode()
     {
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('POSTCODE', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('POSTCODE')
             ->once()
             ->andReturn(null);
 
@@ -68,10 +48,10 @@ class TrafficAreaValidatorTest extends MockeryTestCase
 
     public function testCalidateForSameTrafficAreasWithPostcode()
     {
-        $trafficArea = m::mock()->shouldReceive('getId')->with()->once()->andReturn('X')->getMock();
+        $trafficArea = m::mock(TrafficArea::class)->shouldReceive('getId')->with()->once()->andReturn('X')->getMock();
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('POSTCODE', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('POSTCODE')
             ->once()
             ->andReturn($trafficArea);
 
@@ -534,8 +514,8 @@ class TrafficAreaValidatorTest extends MockeryTestCase
     {
         $postcode = 'AB1 2CD';
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with($postcode)
             ->once()
             ->andThrow(new \Exception());
 
@@ -555,8 +535,8 @@ class TrafficAreaValidatorTest extends MockeryTestCase
     {
         $postcode = 'AB1 2CD';
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with($postcode)
             ->once()
             ->andReturn(null);
 
@@ -579,8 +559,8 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $trafficArea = new TrafficArea();
         $trafficArea->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with($postcode)
             ->once()
             ->andReturn($trafficArea);
 
@@ -607,8 +587,8 @@ class TrafficAreaValidatorTest extends MockeryTestCase
         $trafficArea = new TrafficArea();
         $trafficArea->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with($postcode, $this->adminAreaTrafficAreaRepo)
+        $this->addressService->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with($postcode)
             ->once()
             ->andReturn($trafficArea);
 
