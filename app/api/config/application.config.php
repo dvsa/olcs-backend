@@ -14,7 +14,6 @@ return [
         'Laminas\Mvc\I18n\Module',
         'Laminas\I18n\Module',
         'Dvsa\Olcs\Utils',
-        'Dvsa\Olcs\Address',
         'Dvsa\Olcs\Auth',
         'Dvsa\Olcs\Snapshot',
         'Dvsa\Olcs\Email',
@@ -34,6 +33,8 @@ return [
         'Dvsa\Olcs\GdsVerify',
         'Dvsa\Olcs\AwsSdk',
         'Dvsa\Olcs\Queue',
+        'Dvsa\Olcs\DvsaAddressService',
+        'Dvsa\Olcs\Address', // Load after DvsaAddressService as it may overwrite the AddressService alias until removed
     ],
     // These are various options for the listeners attached to the ModuleManager
     'module_listener_options' => [

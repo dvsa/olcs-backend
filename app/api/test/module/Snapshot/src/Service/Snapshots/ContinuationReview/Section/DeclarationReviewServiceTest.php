@@ -84,7 +84,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
     }
 
     /**
-     * @dataProvider testGetConfigFromDataDeclarationMarkupDataProvider
+     * @dataProvider getConfigFromDataDeclarationMarkupDataProvider
      */
     public function testGetConfigFromDataDeclarationMarkup($expectedMarkup, $goodsOrPsv, $licenceType, $isNi, $isLgv)
     {
@@ -117,7 +117,7 @@ class DeclarationReviewServiceTest extends MockeryTestCase
         );
     }
 
-    public function testGetConfigFromDataDeclarationMarkupDataProvider()
+    public function getConfigFromDataDeclarationMarkupDataProvider()
     {
         return [
             [

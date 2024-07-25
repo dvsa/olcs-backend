@@ -3,6 +3,7 @@
 namespace Dvsa\OlcsTest\Api\Domain\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Dvsa\Olcs\Api\Domain\Service\TrafficAreaValidator;
 use Dvsa\Olcs\Api\Entity\Application\Application;
 use Dvsa\Olcs\Api\Entity\Application\ApplicationOperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
@@ -10,59 +11,48 @@ use Dvsa\Olcs\Api\Domain\Command\ContactDetails\SaveAddress;
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\Exception\ValidationException;
-use Dvsa\Olcs\Api\Domain\Repository\Document;
+use Dvsa\Olcs\Api\Domain\Repository\Document as DocumentRepository;
 use Dvsa\Olcs\Api\Entity\ContactDetails\Address;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Licence\LicenceOperatingCentre;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Dvsa\Olcs\Transfer\Command\Licence\CreateOperatingCentre;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 use Dvsa\Olcs\Api\Domain\Service\OperatingCentreHelper;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Operating Centre Helper Test
- *
- * @author Rob Caiger <rob@clocal.co.uk>
- */
 class OperatingCentreHelperTest extends MockeryTestCase
 {
-    /**
-     * @var OperatingCentreHelper
-     */
-    protected $sut;
+    protected OperatingCentreHelper $sut;
 
-    protected $addressService;
+    protected m\MockInterfac|AddressHelperService $addressService;
 
-    protected $adminAreaTrafficAreaRepo;
+    protected m\MockInterface|DocumentRepository $documentRepo;
 
-    protected $documentRepo;
-
-    protected $trafficAreaValidator;
+    protected m\MockInterface|TrafficAreaValidator $trafficAreaValidator;
 
     public function setUp(): void
     {
-        $this->addressService = m::mock();
-        $this->adminAreaTrafficAreaRepo = m::mock();
-        $this->documentRepo = m::mock();
-        $this->trafficAreaValidator = m::mock();
+        $this->addressService = m::mock(AddressHelperService::class);
+        $this->documentRepo = m::mock(DocumentRepository::class);
+        $this->trafficAreaValidator = m::mock(TrafficAreaValidator::class);
 
         $sm = m::mock(ServiceLocatorInterface::class);
-        $sm->shouldReceive('get')
-            ->with('AddressService')
+        $sm->allows('get')
+            ->with(AddressHelperService::class)
             ->andReturn($this->addressService);
 
-        $sm->shouldReceive('get')
+        $sm->allows('get')
             ->with('RepositoryServiceManager')
             ->andReturnSelf()
-            ->shouldReceive('get')
-            ->with('AdminAreaTrafficArea')
-            ->andReturn($this->adminAreaTrafficAreaRepo)
-            ->shouldReceive('get')
+            ->getMock()
+            ->allows('get')
             ->with('Document')
             ->andReturn($this->documentRepo)
-            ->shouldReceive('get')
+            ->getMock()
+            ->allows('get')
             ->with('TrafficAreaValidator')
             ->andReturn($this->trafficAreaValidator);
 
@@ -73,12 +63,12 @@ class OperatingCentreHelperTest extends MockeryTestCase
     /**
      * @dataProvider validateWithErrors
      */
-    public function testValidateWithErrorsInternal($isPsv, $isRestricted, $commandData, $expected)
+    public function testValidateWithErrorsInternal(bool $isPsv, bool $isRestricted, array $commandData, array $expected)
     {
         $entity = m::mock();
-        $entity->shouldReceive('isPsv')->andReturn($isPsv);
-        $entity->shouldReceive('isRestricted')->andReturn($isRestricted);
-        $entity->shouldReceive('isGoods')->andReturn(!$isPsv);
+        $entity->allows('isPsv')->andReturn($isPsv);
+        $entity->allows('isRestricted')->andReturn($isRestricted);
+        $entity->allows('isGoods')->andReturn(!$isPsv);
 
         $command = CreateOperatingCentre::create($commandData);
 
@@ -87,20 +77,14 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $this->documentRepo->shouldReceive('fetchUnlinkedOcDocumentsForEntity')->with($entity)
             ->andReturn($docCollection);
 
-        try {
-            $this->sut->validate($entity, $command, false);
-            // If we are expecting errors, but the validate method didn't throw an exception
-            if (!empty($expected)) {
-                $this->fail('Validation Exception was not thrown');
-            }
-        } catch (ValidationException $ex) {
-            // If we were not expecting any errors, but the exception was thrown
-            if (empty($expected)) {
-                $this->fail('Validation Exception was thrown');
-            }
-
-            $this->assertEquals($expected, $ex->getMessages());
+        if (!empty($expected)) {
+            $this->expectException(ValidationException::class);
+            $this->expectExceptionMessage(var_export($expected, true));
+        } else {
+            $this->expectNotToPerformAssertions();
         }
+
+        $this->sut->validate($entity, $command, false);
     }
 
     /**
@@ -154,20 +138,14 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $xoc->shouldReceive('getOperatingCentre->getAdDocuments')->andReturn($docCollection);
 
-        try {
-            $this->sut->validate($entity, $command, false, $xoc);
-            // If we are expecting errors, but the validate method didn't throw an exception
-            if (!empty($expected)) {
-                $this->fail('Validation Exception was not thrown');
-            }
-        } catch (ValidationException $ex) {
-            // If we were not expecting any errors, but the exception was thrown
-            if (empty($expected)) {
-                $this->fail('Validation Exception was thrown');
-            }
-
-            $this->assertEquals($expected, $ex->getMessages());
+        if (!empty($expected)) {
+            $this->expectException(ValidationException::class);
+            $this->expectExceptionMessage(var_export($expected, true));
+        } else {
+            $this->expectNotToPerformAssertions();
         }
+
+        $this->sut->validate($entity, $command, false, $xoc);
     }
 
     public function testValidateTrafficAreaWithoutPostcode()
@@ -203,9 +181,9 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $command = CreateOperatingCentre::create($commandData);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
-            ->andReturn('FOO');
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
+            ->andReturn(null);
 
         $this->sut->validateTrafficArea($entity, $command);
 
@@ -221,7 +199,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
             'isTaOverridden' => 'N'
         ];
 
-        $trafficArea = m::mock();
+        $trafficArea = m::mock(TrafficArea::class);
         $trafficArea->shouldReceive('getId')->andReturn('TA');
 
         /** @var Application $entity */
@@ -230,8 +208,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $command = CreateOperatingCentre::create($commandData);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($trafficArea);
 
         $this->trafficAreaValidator->shouldReceive('validateForSameTrafficAreas')
@@ -252,8 +230,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $ta = m::mock();
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn(null);
 
         /** @var Application $entity */
@@ -281,8 +259,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $wrongTa = m::mock(TrafficArea::class)->makePartial();
         $wrongTa->setName('Bar');
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($wrongTa);
 
         /** @var Application $entity */
@@ -315,8 +293,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
 
         $ta = m::mock(TrafficArea::class)->makePartial();
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($ta);
 
         /** @var Application $entity */
@@ -340,8 +318,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
             ]
         ];
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn(null);
 
         /** @var Application $entity */
@@ -367,8 +345,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $ta = m::mock(TrafficArea::class)->makePartial();
         $ta->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($ta);
 
         /** @var Application $entity */
@@ -394,8 +372,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $ta = m::mock(TrafficArea::class)->makePartial();
         $ta->setId(TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($ta);
 
         /** @var Application $entity */
@@ -428,8 +406,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $ta = m::mock(TrafficArea::class)->makePartial();
         $ta->setId(TrafficArea::NORTHERN_IRELAND_TRAFFIC_AREA_CODE);
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($ta)
             ->once();
 
@@ -466,7 +444,7 @@ class OperatingCentreHelperTest extends MockeryTestCase
             $document
         ];
 
-        $documentRepo = m::mock(Document::class);
+        $documentRepo = m::mock(DocumentRepository::class);
         $documentRepo->shouldReceive('fetchUnlinkedOcDocumentsForEntity')
             ->with($entity)
             ->andReturn($documents)
@@ -836,8 +814,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
                 'postcode' => 'SW1A 1AA'
             ]
         ];
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('SW1A 1AA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('SW1A 1AA')
             ->andThrow(new \Exception());
 
         $entity = m::mock();
@@ -861,8 +839,8 @@ class OperatingCentreHelperTest extends MockeryTestCase
         $wrongTa = m::mock(TrafficArea::class)->makePartial();
         $wrongTa->setName('Bar');
 
-        $this->addressService->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('AA11AAA', $this->adminAreaTrafficAreaRepo)
+        $this->addressService->expects('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('AA11AAA')
             ->andReturn($wrongTa);
 
         /** @var Application $entity */

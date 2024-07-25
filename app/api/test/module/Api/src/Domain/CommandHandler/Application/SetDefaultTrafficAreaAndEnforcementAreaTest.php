@@ -15,6 +15,7 @@ use Dvsa\Olcs\Api\Entity\EnforcementArea\EnforcementArea;
 use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\OperatingCentre\OperatingCentre;
 use Dvsa\Olcs\Api\Entity\TrafficArea\TrafficArea;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
 use Dvsa\Olcs\Transfer\Command\Licence\UpdateTrafficArea;
 use Mockery as m;
 use Dvsa\Olcs\Api\Domain\CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea as CommandHandler;
@@ -32,13 +33,12 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends AbstractCommandHandler
 {
     public function setUp(): void
     {
-        $this->sut = new CommandHandler();
         $this->mockRepo('Application', Repository\Application::class);
         $this->mockRepo('OperatingCentre', Repository\OperatingCentre::class);
-        $this->mockRepo('AdminAreaTrafficArea', Repository\AdminAreaTrafficArea::class);
-        $this->mockRepo('PostcodeEnforcementArea', Repository\PostcodeEnforcementArea::class);
 
-        $this->mockedSmServices['AddressService'] = m::mock(AddressInterface::class);
+        $this->mockedSmServices[AddressHelperService::class] = m::mock(AddressHelperService::class);
+
+        $this->sut = new CommandHandler($this->mockedSmServices[AddressHelperService::class]);
 
         parent::setUp();
     }
@@ -204,13 +204,13 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends AbstractCommandHandler
             ->with(222)
             ->andReturn($operatingCentre);
 
-        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+        $this->mockedSmServices[AddressHelperService::class]->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
             ->once()
-            ->with('AB1 1BA', $this->repoMap['AdminAreaTrafficArea'])
+            ->with('AB1 1BA')
             ->andReturn($this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE])
             ->shouldReceive('fetchEnforcementAreaByPostcode')
             ->once()
-            ->with('AB1 1BA', $this->repoMap['PostcodeEnforcementArea'])
+            ->with('AB1 1BA')
             ->andReturn(
                 $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE]
             );
@@ -263,13 +263,13 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends AbstractCommandHandler
             ->once()
             ->with($application);
 
-        $this->mockedSmServices['AddressService']->shouldReceive('fetchTrafficAreaByPostcode')
+        $this->mockedSmServices[AddressHelperService::class]->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
             ->once()
-            ->with('AB1 1BA', $this->repoMap['AdminAreaTrafficArea'])
+            ->with('AB1 1BA')
             ->andReturn($this->references[TrafficArea::class][TrafficArea::NORTH_EASTERN_TRAFFIC_AREA_CODE])
             ->shouldReceive('fetchEnforcementAreaByPostcode')
             ->once()
-            ->with('AB1 1BA', $this->repoMap['PostcodeEnforcementArea'])
+            ->with('AB1 1BA')
             ->andReturn(
                 $this->references[EnforcementArea::class][EnforcementArea::NORTHERN_IRELAND_ENFORCEMENT_AREA_CODE]
             );
@@ -330,9 +330,9 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends AbstractCommandHandler
             ->with($command)
             ->andReturn($application);
 
-        $this->mockedSmServices['AddressService']
+        $this->mockedSmServices[AddressHelperService::class]
             ->shouldReceive('fetchEnforcementAreaByPostcode')
-            ->with('SW1A 1AA', $this->repoMap['PostcodeEnforcementArea'])
+            ->with('SW1A 1AA')
             ->once()
             ->andThrow(new \Exception());
         $result = $this->sut->handleCommand($command);
@@ -373,9 +373,9 @@ class SetDefaultTrafficAreaAndEnforcementAreaTest extends AbstractCommandHandler
             ->with($command)
             ->andReturn($application);
 
-        $this->mockedSmServices['AddressService']
-            ->shouldReceive('fetchTrafficAreaByPostcode')
-            ->with('SW1A 1AA', $this->repoMap['AdminAreaTrafficArea'])
+        $this->mockedSmServices[AddressHelperService::class]
+            ->shouldReceive('fetchTrafficAreaByPostcodeOrUprn')
+            ->with('SW1A 1AA')
             ->once()
             ->andThrow(new \Exception());
         $result = $this->sut->handleCommand($command);
