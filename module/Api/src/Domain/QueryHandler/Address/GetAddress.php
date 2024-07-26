@@ -1,33 +1,31 @@
 <?php
 
-/**
- * Get address by uprn
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Address;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
+use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareTrait;
 
-/**
- * Get address by uprn
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
-class GetAddress extends AbstractQueryHandler implements AddressServiceAwareInterface
+class GetAddress extends AbstractQueryHandler
 {
-    use AddressServiceAwareTrait;
-
-    public function handleQuery(QueryInterface $query)
+    public function __construct(protected AddressHelperService $addressHelperService)
     {
-        $uprn = $query->getUprn();
+    }
+
+    /**
+     * @param \Dvsa\Olcs\Transfer\Query\Address\GetAddress $query
+     * @return array
+     */
+    public function handleQuery(QueryInterface $query): array
+    {
+        $addresses = $this->addressHelperService->lookupAddress($query->getUprn());
+
         return [
-            'result' => [$this->getAddressService()->fetchByUprn($uprn)],
-            'count' => 1
+            'result' => AddressMapper::convertAddressObjectsToArrayRepresentation($addresses),
+            'count' => count($addresses),
         ];
     }
 }

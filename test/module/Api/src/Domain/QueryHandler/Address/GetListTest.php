@@ -1,30 +1,22 @@
 <?php
 
-/**
- * GetList test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
-
 namespace Dvsa\OlcsTest\Api\Domain\QueryHandler\Address;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\Address\GetList;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
+use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
+use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use Dvsa\OlcsTest\Api\Domain\QueryHandler\QueryHandlerTestCase;
 use Dvsa\Olcs\Transfer\Query\Address\GetList as Qry;
 use Mockery as m;
-use Dvsa\Olcs\Address\Service\AddressInterface;
 
-/**
- * GetList test
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
 class GetListTest extends QueryHandlerTestCase
 {
     public function setUp(): void
     {
-        $this->sut = new GetList();
-        $this->mockedSmServices['AddressService'] = m::mock(AddressInterface::class);
+        $this->mockedSmServices[AddressHelperService::class] = m::mock(AddressHelperService::class);
+
+        $this->sut = new GetList($this->mockedSmServices[AddressHelperService::class]);
 
         parent::setUp();
     }
@@ -33,18 +25,46 @@ class GetListTest extends QueryHandlerTestCase
     {
         $query = Qry::create(['postcode' => 'ABC']);
 
-        $this->mockedSmServices['AddressService']
-            ->shouldReceive('fetchByPostcode')
+        $lookupAddressResponse = [
+            new Address(
+                'address 1',
+                'address line 2',
+                'address line 3',
+                'address line 4',
+                'post town',
+                'postcode',
+                'postcode trim',
+                'organisation',
+                'uprn',
+                'administrative area',
+            ),
+            new Address(
+                'address 2',
+                'address line 2',
+                'address line 3',
+                'address line 4',
+                'post town',
+                'postcode',
+                'postcode trim',
+                'organisation',
+                'uprn',
+                'administrative area',
+            ),
+        ];
+
+        $this->mockedSmServices[AddressHelperService::class]
+            ->shouldReceive('lookupAddress')
             ->with('ABC')
             ->once()
-            ->andReturn(['addresses'])
+            ->andReturn($lookupAddressResponse)
             ->getMock();
 
         $expected = [
-            'result' => ['addresses'],
-            'count' => 1
+            'result' => AddressMapper::convertAddressObjectsToArrayRepresentation($lookupAddressResponse),
+            'count' => 2
         ];
 
+        $this->assertCount(2, $expected['result']);
         $this->assertEquals($expected, $this->sut->handleQuery($query));
     }
 }
