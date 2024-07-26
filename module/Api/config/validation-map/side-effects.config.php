@@ -61,6 +61,7 @@ return [
     CommandHandler\Application\UndoCancelAllInterimFees::class                        => IsSideEffect::class,
     CommandHandler\Application\CancelOutstandingFees::class                           => IsSideEffect::class,
     CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class         => IsSideEffect::class,
+    CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementAreaFactory::class  => IsSideEffect::class,
     CommandHandler\Application\DeleteApplication::class                               => IsSideEffect::class,
     CommandHandler\ApplicationOperatingCentre\CreateApplicationOperatingCentre::class => IsSideEffect::class,
     CommandHandler\ApplicationOperatingCentre\DeleteApplicationOperatingCentre::class => IsSideEffect::class,
