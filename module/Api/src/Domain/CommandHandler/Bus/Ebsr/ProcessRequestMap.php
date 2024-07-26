@@ -1,14 +1,13 @@
 <?php
 
-/**
- * Request new Ebsr map
- */
-
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
 use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
-use Dvsa\Olcs\Api\Domain\CommandHandler\TransactioningCommandHandler;
+use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
+use Dvsa\Olcs\Api\Domain\ToggleAwareTrait;
+use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
+use Dvsa\Olcs\Api\Service\Ebsr\S3Processor;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
 use Dvsa\Olcs\Api\Entity\Bus\BusReg as BusRegEntity;
@@ -43,6 +42,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     UploaderAwareInterface,
     TransExchangeAwareInterface,
     ConfigAwareInterface,
+    ToggleAwareInterface,
     FileProcessorAwareInterface
 {
     use UploaderAwareTrait;
@@ -50,6 +50,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     use ConfigAwareTrait;
     use FileProcessorAwareTrait;
     use QueueAwareTrait;
+    use ToggleAwareTrait;
 
     public const MISSING_TMP_DIR_ERROR = 'No tmp directory specified in config';
     public const MISSING_PACK_FILE_ERROR = 'Could not fetch EBSR pack file';
@@ -64,9 +65,9 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
 
     protected $repoServiceName = 'Bus';
 
-    protected $templatePaths;
+    private s3Processor $s3Processor;
 
-    protected $documentDescriptions = [
+    protected array $documentDescriptions = [
         TransExchangeClient::REQUEST_MAP_TEMPLATE => "Route Track Map PDF",
         TransExchangeClient::TIMETABLE_TEMPLATE => "Timetable PDF",
         TransExchangeClient::DVSA_RECORD_TEMPLATE => "DVSA Record PDF",
@@ -75,18 +76,20 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * @var TemplateBuilder
      */
-    protected $templateBuilder;
+    protected TemplateBuilder $templateBuilder;
 
     /**
      * Transxchange map request
      *
      * @param CommandInterface|RequestMapCmd $command the command
      *
-     * @throws TransxchangeException
      * @return Result
+     * @throws TransxchangeException
      */
     public function handleCommand(CommandInterface $command)
     {
+        $isNewTxc = $this->toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE);
+
         /**
          * @var BusRegEntity $busReg
          * @var EbsrSubmissionEntity $submission
@@ -114,11 +117,26 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
         try {
             $xmlFilename = $fileProcessor->fetchXmlFileNameFromDocumentStore(
                 $submission->getDocument()->getIdentifier(),
-                true
+                !$isNewTxc
             );
+
+            if ($isNewTxc) {
+                $s3Options = ['s3Filename' => $submission->getId() . '.xml'];
+                $xmlFilename = $this->s3Processor->process($xmlFilename, $s3Options);
+            }
         } catch (\Exception $e) {
-            Logger::info('TransXchange error', ['data' => self::MISSING_PACK_FILE_ERROR]);
-            throw new TransxchangeException(self::MISSING_PACK_FILE_ERROR);
+            $message = $e->getMessage();
+
+            Logger::info(
+                'TransXchange file processor error',
+                [
+                    'data' => self::MISSING_PACK_FILE_ERROR,
+                    'processor_message' => $message,
+                    'exception_class' => $e::class,
+                ]
+            );
+
+            throw new TransxchangeException(self::MISSING_PACK_FILE_ERROR . ' ' . $message);
         }
 
         //decide which template files we need
@@ -144,11 +162,18 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
                 continue;
             }
 
+            //the rest of this block is moved to the TransXchange consumer under new Txc
+            if ($isNewTxc) {
+                continue;
+            }
+
+            //moved to the TransXchange consumer under new Txc
             if (!isset($documents['files'])) {
                 $failedMaps[$documentDesc] = $documentDesc;
                 continue;
             }
 
+            //moved to the TransXchange consumer under new Txc
             foreach ($documents['files'] as $document) {
                 $uploadDocCmd = $this->generateDocumentCmd($document, $busReg, $command->getUser(), $documentDesc);
                 $uploadedDoc = $this->handleSideEffect($uploadDocCmd);
@@ -164,6 +189,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
             }
         }
 
+        if ($isNewTxc) {
+            return $result;
+        }
+
+        //moved to the TransXchange consumer under new Txc
         $sideEffects[] = $this->createTaskCmd($busReg, $processedMaps, $failedMaps, $command->getFromNewEbsr());
         $result->merge($this->handleSideEffects($sideEffects));
 
@@ -173,9 +203,9 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a transxchange xml file to request a map
      *
-     * @param string $template    xml template
+     * @param string $template xml template
      * @param string $xmlFilename xml file name and path
-     * @param string $scale       scale of route map
+     * @param string $scale scale of route map
      *
      * @return string
      * @throws TransxchangeException
@@ -204,10 +234,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Creates a command to upload the transxchange map
      *
-     * @param string       $document     document content
-     * @param BusRegEntity $busReg       bus reg entity
-     * @param int          $user         user id
-     * @param string       $documentDesc document description
+     * @param string $document document content
+     * @param BusRegEntity $busReg bus reg entity
+     * @param int $user user id
+     * @param string $documentDesc document description
      *
      * @return UploadCmd
      */
@@ -230,10 +260,10 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     /**
      * Returns a command to create a task
      *
-     * @param BusRegEntity $busReg        bus reg entity
-     * @param array        $processedMaps processed maps, comma separated
-     * @param array        $failedMaps    failed maps, comma separated
-     * @param bool         $fromNewEbsr   whether this map request is a result of a new ebsr submission
+     * @param BusRegEntity $busReg bus reg entity
+     * @param array $processedMaps processed maps, comma separated
+     * @param array $failedMaps failed maps, comma separated
+     * @param bool $fromNewEbsr whether this map request is a result of a new ebsr submission
      *
      * @return CreateTaskCmd
      */
@@ -282,8 +312,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      * Creates a command to update TxcInbox records with the new document id
      * We don't do this for timetable pdfs
      *
-     * @param int $busRegId     bus reg id
-     * @param int $documentId   document id
+     * @param int $busRegId bus reg id
+     * @param int $documentId document id
      * @param int $templateFile the template file
      *
      * @return UpdateTxcInboxPdfCmd
@@ -291,8 +321,8 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     private function createUpdateTxcInboxPdfCmd($busRegId, $documentId, $templateFile)
     {
         $pdfType = $templateFile === TransExchangeClient::REQUEST_MAP_TEMPLATE
-                    ? self::TXC_INBOX_TYPE_ROUTE
-                    : self::TXC_INBOX_TYPE_PDF;
+            ? self::TXC_INBOX_TYPE_ROUTE
+            : self::TXC_INBOX_TYPE_PDF;
 
         $data = [
             'id' => $busRegId,
@@ -307,7 +337,7 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
      * Works out the document description (route maps also have a scale)
      *
      * @param string $templateFile template file
-     * @param string $scale        scale of the route map
+     * @param string $scale scale of the route map
      *
      * @return string
      */
@@ -331,11 +361,11 @@ final class ProcessRequestMap extends AbstractCommandHandler implements
     {
         return $this->documentDescriptions;
     }
+
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        $fullContainer = $container;
-
+        $this->s3Processor = $container->get(S3Processor::class);
         $this->templateBuilder = $container->get(TemplateBuilder::class);
-        return parent::__invoke($fullContainer, $requestedName, $options);
+        return parent::__invoke($container, $requestedName, $options);
     }
 }

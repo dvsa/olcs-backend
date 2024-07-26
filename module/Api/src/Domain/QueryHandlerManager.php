@@ -3,6 +3,7 @@
 namespace Dvsa\Olcs\Api\Domain;
 
 use Dvsa\Olcs\Api\Domain\Exception\ForbiddenException;
+use Dvsa\Olcs\Api\Domain\Query\Queue\NextItem;
 use Dvsa\Olcs\Transfer\Query\LoggerOmitResponseInterface;
 use Psr\Container\ContainerInterface;
 use Olcs\Logging\Log\Logger;
@@ -19,6 +20,10 @@ class QueryHandlerManager extends AbstractPluginManager
     protected $instanceOf = QueryHandlerInterface::class;
     private readonly ValidationHandlerManager $validationHandlerManager;
 
+    private array $queryLoggingExcluded = [
+        NextItem::class,
+    ];
+
     public function __construct(ContainerInterface $container, array $config = [])
     {
         $this->validationHandlerManager = $container->get('ValidationHandlerManager');
@@ -29,15 +34,18 @@ class QueryHandlerManager extends AbstractPluginManager
     {
         $start = microtime(true);
 
-            $queryFqcl = $query::class;
+        $queryFqcl = $query::class;
+        $shouldLogQuery = !in_array($queryFqcl, $this->queryLoggingExcluded);
 
         /** @var QueryHandlerInterface $queryHandler */
         $queryHandler = $this->get($queryFqcl);
 
-        Logger::debug(
-            'Query Received: ' . $queryFqcl,
-            ['data' => ['queryData' => $query->getArrayCopy()]]
-        );
+        if ($shouldLogQuery) {
+            Logger::debug(
+                'Query Received: ' . $queryFqcl,
+                ['data' => ['queryData' => $query->getArrayCopy()]],
+            );
+        }
 
         $queryHandler->checkEnabled();
 
@@ -57,15 +65,17 @@ class QueryHandlerManager extends AbstractPluginManager
             $logData = (array)$response;
         }
 
-        Logger::debug(
-            'Query Handler Response: ' . $queryHandlerFqcl,
-            [
-                'data' => [
-                    'response' => $logData,
-                    'time' => round(microtime(true) - $start, 5),
+        if ($shouldLogQuery) {
+            Logger::debug(
+                'Query Handler Response: ' . $queryHandlerFqcl,
+                [
+                    'data' => [
+                        'response' => $logData,
+                        'time' => round(microtime(true) - $start, 5),
+                    ],
                 ]
-            ]
-        );
+            );
+        }
 
         return $response;
     }

@@ -257,7 +257,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $ebsrSubmission->shouldReceive('finishValidating')
             ->once()
-            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], 'json string')
+            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], ['an_array'])
             ->andReturnSelf();
 
         $ebsrSubmission->shouldReceive('finishProcessing')
@@ -503,7 +503,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $ebsrSubmission->shouldReceive('finishValidating')
             ->once()
-            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], 'json string')
+            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], ['an_array'])
             ->andReturnSelf();
 
         $ebsrSubmission->shouldReceive('finishProcessing')
@@ -680,7 +680,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $ebsrSubmission->shouldReceive('finishValidating')
             ->once()
-            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], 'json string')
+            ->with($this->refData[EbsrSubmissionEntity::PROCESSING_STATUS], ['an_array'])
             ->andReturnSelf();
 
         $ebsrSubmission->shouldReceive('finishProcessing')
@@ -1114,7 +1114,7 @@ class ProcessPackTransactionTest extends ProcessPackTestCase
 
         $ebsrSubmission->shouldReceive('finishValidating')
             ->once()
-            ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], 'json string')
+            ->with($this->refData[EbsrSubmissionEntity::FAILED_STATUS], ['an_array'])
             ->andReturnSelf();
 
         return $ebsrSubmission;

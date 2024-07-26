@@ -117,9 +117,9 @@ abstract class AbstractCommandHandlerTestCase extends MockeryTestCase
                 ->with('User')
                 ->andReturn(
                     m::mock(\Dvsa\Olcs\Api\Domain\Repository\User::class)
-                    ->shouldReceive('fetchById')
-                    ->with(IdentityProviderInterface::SYSTEM_USER)
-                    ->getMock()
+                        ->shouldReceive('fetchById')
+                        ->with(IdentityProviderInterface::SYSTEM_USER)
+                        ->getMock()
                 )
                 ->getMock();
         }

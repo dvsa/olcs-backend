@@ -3,7 +3,6 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Domain\Exception\EbsrPackException;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation as OrganisationEntity;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Entity\Ebsr\EbsrSubmission as EbsrSubmissionEntity;
@@ -42,10 +41,9 @@ final class ProcessPackTransaction extends AbstractProcessPack implements
 
         try {
             $xmlName = $this->getFileProcessor()->fetchXmlFileNameFromDocumentStore($doc->getIdentifier());
-        } catch (EbsrPackException $e) {
+        } catch (\Exception $e) {
             //process the validation failure information
             $this->processFailure($ebsrSub, $doc, ['upload-failure' => $e->getMessage()], '', []);
-
             return $this->result;
         }
 

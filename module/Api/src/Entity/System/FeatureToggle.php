@@ -25,6 +25,7 @@ class FeatureToggle extends AbstractFeatureToggle
     public const SELFSERVE_SURRENDER = 'ss_surrender';
     public const BACKEND_SURRENDER = 'back_surrender';
     public const MESSAGING = 'messaging';
+    public const BACKEND_TRANSXCHANGE = 'transxchange_connection';
     public const USE_NEW_ADDRESS_SERVICE = 'use_new_address_service';
 
     public static function create(/*string*/ $configName, /*string*/ $friendlyName, RefData $status)/*: FeatureToggle */
