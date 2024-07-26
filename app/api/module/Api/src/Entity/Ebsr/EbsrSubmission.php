@@ -125,13 +125,8 @@ class EbsrSubmission extends AbstractEbsrSubmission implements OrganisationProvi
 
     /**
      * Called when validation of EBSR pack is completed
-     *
-     * @param RefData $ebsrSubmissionStatus the submission status
-     * @param String  $ebsrSubmissionResult this is a serialized array
-     *
-     * @return void
      */
-    public function finishValidating(RefData $ebsrSubmissionStatus, $ebsrSubmissionResult)
+    public function finishValidating(RefData $ebsrSubmissionStatus, array $ebsrSubmissionResult): void
     {
         $this->ebsrSubmissionStatus = $ebsrSubmissionStatus;
         $this->ebsrSubmissionResult = LaminasJson::encode($ebsrSubmissionResult);

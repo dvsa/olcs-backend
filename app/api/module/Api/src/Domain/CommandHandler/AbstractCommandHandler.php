@@ -624,7 +624,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         return null;
     }
 
-
     /**
      * Note this is only intended for internal users, selfserve users don't have these access permissions
      *

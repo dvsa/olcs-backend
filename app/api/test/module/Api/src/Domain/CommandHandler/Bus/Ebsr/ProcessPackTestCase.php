@@ -64,7 +64,7 @@ class ProcessPackTestCase extends AbstractCommandHandlerTestCase
 
         $submissionResultFilter
             ->shouldReceive('filter')
-            ->andReturn('json string');
+            ->andReturn(['an_array']);
 
         $filterManager
             ->shouldReceive('get')

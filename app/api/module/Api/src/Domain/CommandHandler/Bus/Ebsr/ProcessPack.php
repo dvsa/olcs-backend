@@ -3,6 +3,8 @@
 namespace Dvsa\Olcs\Api\Domain\CommandHandler\Bus\Ebsr;
 
 use Dvsa\Olcs\Api\Domain\Command\Result;
+use Dvsa\Olcs\Api\Domain\CommandHandler\AbstractCommandHandler;
+use Dvsa\Olcs\Api\Domain\QueueAwareTrait;
 use Dvsa\Olcs\Api\Entity\Queue\Queue;
 use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Api\Domain\Command\Bus\Ebsr\ProcessPack as ProcessPackCmd;
@@ -12,8 +14,10 @@ use Dvsa\Olcs\Api\Domain\Command\Queue\Create as CreateQueueCmd;
 /**
  * Process Ebsr pack
  */
-final class ProcessPack extends AbstractProcessPack
+final class ProcessPack extends AbstractCommandHandler
 {
+    use QueueAwareTrait;
+
     /**
      * Process the EBSR pack
      * Error information is added into the ebsr_submission_result column of the ebsr_submission table

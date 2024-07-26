@@ -22,12 +22,10 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload as UploadCmd;
 use Exception;
 use RuntimeException;
 use Psr\Container\ContainerInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Olcs\Logging\Log\Logger;
 use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
-use Psr\Container\ContainerExceptionInterface;
 
 class TransXChangeConsumer extends AbstractConsumer
 {
@@ -344,7 +342,7 @@ class TransXChangeConsumer extends AbstractConsumer
 
         foreach ($documents as $document) {
             $data = [
-                'content' => $this->getFromS3($document),
+                'content' => base64_encode($this->getFromS3($document)),
                 'busReg' => $busRegistration->getId(),
                 'licence' => $busRegistration->getLicence()->getId(),
                 'category' => CategoryEntity::CATEGORY_BUS_REGISTRATION,
@@ -377,6 +375,8 @@ class TransXChangeConsumer extends AbstractConsumer
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): self
     {
+        parent::__invoke($container, $requestedName, $options);
+
         $filterManager = $container->get('FilterManager');
         $this->xmlParser = $filterManager->get(ParseXmlString::class);
         $this->xmlFilter = $filterManager->get(MapXmlFile::class);
@@ -408,6 +408,10 @@ class TransXChangeConsumer extends AbstractConsumer
                 'secret' => $result['Credentials']['SecretAccessKey'],
                 'token'  => $result['Credentials']['SessionToken']
             ],
+            'http'    => [
+                'proxy' => $config['app-registrations']['proxy'],
+                'timeout' => 30,
+            ]
         ] + ($config['awsOptions']['s3'] ?? []) + ($config['awsOptions']['global'] ?? []);
 
         $sqsClientConfiguration = [
@@ -418,6 +422,10 @@ class TransXChangeConsumer extends AbstractConsumer
                 'secret' => $result['Credentials']['SecretAccessKey'],
                 'token'  => $result['Credentials']['SessionToken']
             ],
+            'http'    => [
+                'proxy' => $config['app-registrations']['proxy'],
+                'timeout' => 30,
+            ]
         ] + ($config['awsOptions']['sqs'] ?? []) + ($config['awsOptions']['global'] ?? []);
 
         $this->s3Client = new S3Client($s3ClientConfiguration);
@@ -429,6 +437,6 @@ class TransXChangeConsumer extends AbstractConsumer
 
         $this->ebsrSubmissionRepository = $repositoryServiceManager->get('EbsrSubmission');
 
-        return parent::__invoke($container, $requestedName, $options);
+        return $this;
     }
 }

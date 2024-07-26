@@ -25,7 +25,6 @@ use Dvsa\Olcs\Transfer\Command\Document\Upload;
 use Dvsa\OlcsTest\Api\Domain\CommandHandler\AbstractCommandHandlerTestCase;
 use Exception;
 use Laminas\Filter\FilterPluginManager;
-use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Validator\ValidatorPluginManager;
 use Mockery as m;
 use Olcs\Logging\Log\Logger;
@@ -33,6 +32,7 @@ use Olcs\XmlTools\Filter\MapXmlFile;
 use Olcs\XmlTools\Filter\ParseXmlString;
 use Olcs\XmlTools\Validator\Xsd;
 use Olcs\XmlTools\Xml\Specification\SpecificationInterface;
+use Psr\Container\ContainerInterface;
 use RuntimeException;
 
 /**
@@ -50,11 +50,14 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
             'global' => [],
             's3' => [],
         ],
+        'app-registrations' => [
+            'proxy' => 'http://proxy.test',
+        ],
         'ebsr' => [
             'output_s3_bucket' => 'txc-local-output',
             'txc_consumer_role_arn' => 'arn:aws:iam::000000000000:role/txc-local-consumer-role',
             'max_messages_per_run' => 100,
-        ]
+        ],
     ];
 
     /**
@@ -89,7 +92,7 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
         Logger::setLogger($logger);
     }
 
-    public function testEmptyQueue()
+    public function testEmptyQueue(): void
     {
         $this->setupMocks();
 
@@ -107,9 +110,7 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
 
     public function testMaxMessagesPerRun(): void
     {
-        $this->config['ebsr']['max_messages_per_run'] = 20;
-
-        $this->setupMocks();
+        $this->setupMocks(20);
 
         $messages = array_fill(0, 7, $this->createQueueMessage('Timetable', 'ExampleTimetable.xml'));
 
@@ -394,12 +395,39 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
         ];
     }
 
-    protected function setupMocks()
+    protected function setupMocks(int $maxMessages = 100): void
     {
+        $transXChangeXmlMapping = m::mock(SpecificationInterface::class);
+        $this->xmlParser = m::mock(ParseXmlString::class);
+        $this->xmlFilter = m::mock(MapXmlFile::class);
+        $this->xmlFilter->expects('setMapping')
+            ->with($transXChangeXmlMapping)
+            ->andReturnSelf();
+
+        $this->xmlParser->shouldReceive('filter')->andReturn([]);
+        $this->xmlFilter->shouldReceive('filter')->byDefault()->andReturn([
+            'files' => ['ExampleTimetable.xml']
+        ]);
+
+        $this->xmlValidator = m::mock(Xsd::class);
+        $this->xmlValidator->shouldReceive('setXsd')->andReturnSelf();
+        $this->xmlValidator->shouldReceive('isValid')->andReturn(true);
+
+        $filterPluginManager = m::mock(FilterPluginManager::class);
+        $filterPluginManager->shouldReceive('get')->with(ParseXmlString::class)->andReturn($this->xmlParser);
+        $filterPluginManager->shouldReceive('get')->with(MapXmlFile::class)->andReturn($this->xmlFilter);
+
+        $validatorManager = m::mock(ValidatorPluginManager::class);
+        $validatorManager->shouldReceive('get')->with(Xsd::class)->andReturn($this->xmlValidator);
+
+        $this->config['ebsr']['max_messages_per_run'] = $maxMessages;
+
         // Parent mocks.
         $this->mockedSmServices = [
             Queue::class => m::mock(Queue::class),
             MessageBuilder::class => m::mock(MessageBuilder::class),
+            'FilterManager' => $filterPluginManager,
+            'ValidatorManager' => $validatorManager,
             'config' => $this->config
         ];
 
@@ -416,39 +444,12 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
                 ->andReturn($service);
         }
 
-        $sm = m::mock(ServiceLocatorInterface::class);
+        $sm = m::mock(ContainerInterface::class);
         $sm->shouldReceive('get')->with('RepositoryServiceManager')->andReturn($this->repoManager);
         $sm->shouldReceive('get')->with('TransactionManager')->andReturn($this->mockTransationMngr);
         $sm->shouldReceive('get')->with('QueryHandlerManager')->andReturn($this->queryHandler);
         $sm->shouldReceive('get')->with('CommandHandlerManager')->andReturn($this->commandHandler);
         $sm->shouldReceive('get')->with(IdentityProviderInterface::class)->andReturn($this->identityProvider);
-
-        // Actual service mocks.
-        $this->xmlParser = m::mock(ParseXmlString::class);
-        $this->xmlFilter = m::mock(MapXmlFile::class);
-        $this->xmlFilter->shouldReceive('setMapping')->andReturnSelf();
-
-        $this->xmlParser->shouldReceive('filter')->andReturn([]);
-        $this->xmlFilter->shouldReceive('filter')->byDefault()->andReturn([
-            'files' => ['ExampleTimetable.xml']
-        ]);
-
-        $filterPluginManager = m::mock(FilterPluginManager::class);
-        $filterPluginManager->shouldReceive('get')->with(ParseXmlString::class)->andReturn($this->xmlParser);
-        $filterPluginManager->shouldReceive('get')->with(MapXmlFile::class)->andReturn($this->xmlFilter);
-
-        $sm->shouldReceive('get')->with('FilterManager')->andReturn($filterPluginManager);
-
-        $this->xmlValidator = m::mock(Xsd::class);
-        $this->xmlValidator->shouldReceive('setXsd')->andReturnSelf();
-        $this->xmlValidator->shouldReceive('isValid')->andReturn(true);
-
-        $transXChangeXmlMapping = m::mock(SpecificationInterface::class);
-
-        $validatorManager = m::mock(ValidatorPluginManager::class);
-        $validatorManager->shouldReceive('get')->with(Xsd::class)->andReturn($this->xmlValidator);
-
-        $sm->shouldReceive('get')->with('ValidatorManager')->andReturn($validatorManager);
         $sm->shouldReceive('get')->with('TransExchangePublisherXmlMapping')->andReturn($transXChangeXmlMapping);
 
         foreach ($this->mockedSmServices as $serviceName => $service) {
