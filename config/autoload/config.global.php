@@ -305,7 +305,6 @@ return [
                 'adapter' => \Laminas\Http\Client\Adapter\Proxy::class,
                 'proxy_host' => 'proxy.%domain%',
                 'proxy_port' => 3128,
-            'options' => [
                 'timeout' => 30
             ]
         ],
@@ -326,7 +325,6 @@ return [
         // The maximum number of SQS message to consume per run.
         'max_queue_messages_per_run' => '100',
     ],
-
     'nr' => [
         // @to-do currently waiting on the actual nr address
         'inr_service' => [
