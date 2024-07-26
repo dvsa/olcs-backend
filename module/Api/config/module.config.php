@@ -520,13 +520,15 @@ return [
                 ApiSrv\EventHistory\CreatorFactory::class,
             ApiSrv\EventHistory\Creator::class => ApiSrv\EventHistory\CreatorFactory::class,
 
-
-            ApiSrv\GovUkAccount\GovUkAccountService::class => ApiSrv\GovUkAccount\GovUkAccountServiceFactory::class,
             TransXChangeAppRegistrationService::class => AppRegistrationServiceFactory::class,
             ApiSrv\SecretsManager\SecretsManager::class => SecretsManagerFactory::class,
             ApiSrv\SecretsManager\LocalSecretsManager::class => ApiSrv\SecretsManager\LocalSecretsManagerFactory::class,
             ApiSrv\AppRegistration\Adapter\AppRegistrationSecret::class => Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecretFactory::class,
             ApiSrv\Ebsr\S3Processor::class => ApiSrv\Ebsr\S3ProcessorFactory::class,
+
+            ApiSrv\GovUkAccount\GovUkAccountService::class => ApiSrv\GovUkAccount\GovUkAccountServiceFactory::class,
+
+            ApiSrv\AddressHelper\AddressHelperService::class => ApiSrv\AddressHelper\AddressHelperServiceFactory::class,
         ],
     ],
     'view_manager' => [
@@ -716,8 +718,8 @@ return [
             'CompaniesHouseCompany' => RepositoryFactory::class,
             'CompaniesHouseInsolvencyPractitioner' => RepositoryFactory::class,
             'Queue' => RepositoryFactory::class,
-            'AdminAreaTrafficArea' => RepositoryFactory::class,
-            'PostcodeEnforcementArea' => RepositoryFactory::class,
+            Repository\AdminAreaTrafficArea::class => RepositoryFactory::class,
+            Repository\PostcodeEnforcementArea::class => RepositoryFactory::class,
             'Venue' => RepositoryFactory::class,
             'Disqualification' => RepositoryFactory::class,
             'DiscSequence' => RepositoryFactory::class,
@@ -815,6 +817,8 @@ return [
             'TaskAllocationRule' => Repository\TaskAllocationRule::class,
             'TxcInbox' => Repository\TxcInbox::class,
             'Correspondence' => Repository\Correspondence::class,
+            'PostcodeEnforcementArea' => Repository\PostcodeEnforcementArea::class,
+            'AdminAreaTrafficArea' => Repository\AdminAreaTrafficArea::class,
         ],
     ],
     \Dvsa\Olcs\Api\Domain\FormControlServiceManagerFactory::CONFIG_KEY => [

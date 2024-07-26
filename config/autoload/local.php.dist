@@ -279,4 +279,16 @@ return [
     'proxy' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
   ],
   'openam' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+  'dvsa_address_service' => [
+        'client' => [ // Guzzle client options; see https://docs.guzzlephp.org/en/stable/quickstart.html
+            'base_uri' => '', //param
+            'headers' => [], // additional or override default client headers
+        ],
+        'oauth2' => [ // if client['headers']['Authorization'] is not set, then this will be used to get token
+            'client_id' => '', //param
+            'client_secret' => '', // secret
+            'token_url' => '', //param
+            'scope' => '', //param
+        ],
+    ],
 ];

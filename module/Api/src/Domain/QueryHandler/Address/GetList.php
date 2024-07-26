@@ -1,33 +1,32 @@
 <?php
 
-/**
- * Get addresses by postcode
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
+declare(strict_types=1);
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler\Address;
 
 use Dvsa\Olcs\Api\Domain\QueryHandler\AbstractQueryHandler;
+use Dvsa\Olcs\Api\Service\AddressHelper\AddressHelperService;
+use Dvsa\Olcs\DvsaAddressService\Client\Mapper\AddressMapper;
+use Dvsa\Olcs\DvsaAddressService\Model\Address;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
-use Dvsa\Olcs\Address\Service\AddressServiceAwareTrait;
 
-/**
- * Get address by postcode
- *
- * @author Alex Peshkov <alex.peshkov@valtech.co.uk>
- */
-class GetList extends AbstractQueryHandler implements AddressServiceAwareInterface
+class GetList extends AbstractQueryHandler
 {
-    use AddressServiceAwareTrait;
-
-    public function handleQuery(QueryInterface $query)
+    public function __construct(protected AddressHelperService $addressHelperService)
     {
-        $addresses = $this->getAddressService()->fetchByPostcode($query->getPostcode());
+    }
+
+    /**
+     * @param \Dvsa\Olcs\Transfer\Query\Address\GetList $query
+     * @return array
+     */
+    public function handleQuery(QueryInterface $query): array
+    {
+        $addresses = $this->addressHelperService->lookupAddress($query->getPostcode());
+
         return [
-            'result' => $addresses,
-            'count' => count($addresses)
+            'result' => AddressMapper::convertAddressObjectsToArrayRepresentation($addresses),
+            'count' => count($addresses),
         ];
     }
 }

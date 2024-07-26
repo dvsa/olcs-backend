@@ -3,7 +3,7 @@
 return [
     'service_manager' => [
         'factories' => [
-            'AddressService' => \Dvsa\Olcs\Address\Service\AddressFactory::class
+            \Dvsa\Olcs\Address\Service\Address::class => \Dvsa\Olcs\Address\Service\AddressFactory::class
         ],
     ],
 ];

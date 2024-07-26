@@ -12,7 +12,7 @@
   </php>
   <testsuites>
     <testsuite name="Module Unit Test">
-      <directory>../module/**/test</directory>
+      <directory>./module/**/test</directory>
     </testsuite>
     <testsuite name="Address">
       <directory>./test/module/Address</directory>

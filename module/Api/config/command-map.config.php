@@ -568,7 +568,7 @@ return [
     Command\Application\UndoCancelAllInterimFees::class => CommandHandler\Application\UndoCancelAllInterimFees::class,
     Command\Application\CancelOutstandingFees::class => CommandHandler\Application\CancelOutstandingFees::class,
     Command\Application\SetDefaultTrafficAreaAndEnforcementArea::class
-        => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementArea::class,
+        => CommandHandler\Application\SetDefaultTrafficAreaAndEnforcementAreaFactory::class,
     Command\Application\DeleteApplication::class => CommandHandler\Application\DeleteApplication::class,
 
     // Domain - Application Operating Centre
@@ -915,8 +915,8 @@ return [
 
     // PrivateHireLicence
     TransferCommand\PrivateHireLicence\DeleteList::class => CommandHandler\PrivateHireLicence\DeleteList::class,
-    TransferCommand\PrivateHireLicence\Create::class => CommandHandler\PrivateHireLicence\Create::class,
-    TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\Update::class,
+    TransferCommand\PrivateHireLicence\Create::class => CommandHandler\PrivateHireLicence\CreateFactory::class,
+    TransferCommand\PrivateHireLicence\Update::class => CommandHandler\PrivateHireLicence\UpdateFactory::class,
 
     // ContinuationDetail
     TransferCommand\ContinuationDetail\Submit::class => CommandHandler\ContinuationDetail\Submit::class,

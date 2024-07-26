@@ -2,39 +2,29 @@
 
 namespace Dvsa\Olcs\Api\Domain\QueryHandler;
 
+use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
 use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
+use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\Logger\EntityAccessLogger;
-use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
-use Dvsa\Olcs\Api\Entity\Application\Application;
-use Dvsa\Olcs\Api\Entity\Bus\BusReg;
-use Dvsa\Olcs\Api\Entity\Cases\Cases;
-use Dvsa\Olcs\Api\Entity\Licence\ContinuationDetail;
-use Dvsa\Olcs\Api\Entity\Licence\Licence;
-use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
-use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
-use Dvsa\Olcs\Api\Entity\Surrender;
-use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
-use Dvsa\Olcs\Api\Service\Document\NamingService;
-use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
-use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
-use Dvsa\Olcs\Transfer\Query\QueryInterface;
-use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
-use Laminas\ServiceManager\Factory\FactoryInterface;
-use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
-use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
-use LmcRbacMvc\Service\AuthorizationService;
-use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
 use Dvsa\Olcs\Api\Domain\NationalRegisterAwareInterface;
+use Dvsa\Olcs\Api\Domain\Repository\RepositoryInterface;
 use Dvsa\Olcs\Api\Domain\ToggleAwareInterface;
 use Dvsa\Olcs\Api\Domain\ToggleRequiredInterface;
 use Dvsa\Olcs\Api\Domain\TranslationLoaderAwareInterface;
 use Dvsa\Olcs\Api\Domain\TranslatorAwareInterface;
+use Dvsa\Olcs\Api\Domain\UploaderAwareInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
-use Dvsa\Olcs\Api\Domain\AuthAwareTrait;
+use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Transfer\Query\Cache\ById as CacheById;
-use Olcs\Logging\Log\Logger;
+use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
+use Dvsa\Olcs\Transfer\Query\QueryInterface;
+use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
+use Laminas\ServiceManager\Factory\FactoryInterface;
+use LmcRbacMvc\Service\AuthorizationService;
+use Olcs\Logging\Log\Logger;
 use Psr\Container\ContainerInterface;
 
 abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInterface, AuthAwareInterface
@@ -273,10 +263,6 @@ abstract class AbstractQueryHandler implements QueryHandlerInterface, FactoryInt
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\CpmsAwareInterface) {
             $this->setCpmsService($mainServiceLocator->get('CpmsHelperService'));
-        }
-
-        if ($this instanceof \Dvsa\Olcs\Address\Service\AddressServiceAwareInterface) {
-            $this->setAddressService($mainServiceLocator->get('AddressService'));
         }
 
         if ($this instanceof NationalRegisterAwareInterface) {

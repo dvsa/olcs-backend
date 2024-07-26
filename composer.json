@@ -61,6 +61,7 @@
             "Dvsa\\Olcs\\Scanning\\": "module/Scanning/src",
             "Dvsa\\Olcs\\Email\\": "module/Email/src",
             "Dvsa\\Olcs\\Address\\": "module/Address/src",
+            "Dvsa\\Olcs\\DvsaAddressService\\": "module/DvsaAddressService/src",
             "Dvsa\\Olcs\\Snapshot\\": "module/Snapshot/src",
             "Dvsa\\Olcs\\GdsVerify\\": "module/GdsVerify/src",
             "Dvsa\\Olcs\\Queue\\": "module/Queue/src",

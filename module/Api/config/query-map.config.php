@@ -508,8 +508,8 @@ return [
     TransferQuery\Cpms\StoredCardList::class => QueryHandler\Cpms\StoredCardList::class,
 
     // Address
-    TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddress::class,
-    TransferQuery\Address\GetList::class => QueryHandler\Address\GetList::class,
+    TransferQuery\Address\GetAddress::class => QueryHandler\Address\GetAddressFactory::class,
+    TransferQuery\Address\GetList::class => QueryHandler\Address\GetListFactory::class,
 
     TransferQuery\Category\GetList::class => QueryHandler\Category\GetList::class,
     TransferQuery\SubCategory\GetList::class => QueryHandler\SubCategory\GetList::class,

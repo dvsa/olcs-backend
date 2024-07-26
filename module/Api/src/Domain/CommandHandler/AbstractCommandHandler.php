@@ -2,18 +2,20 @@
 
 namespace Dvsa\Olcs\Api\Domain\CommandHandler;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Dvsa\Olcs\Address\Service\AddressServiceAwareInterface;
 use Dvsa\Olcs\Api\Domain\AuthAwareInterface;
+use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForLicence;
 use Dvsa\Olcs\Api\Domain\Command\Cache\ClearForOrganisation;
 use Dvsa\Olcs\Api\Domain\Command\Cache\Generate;
 use Dvsa\Olcs\Api\Domain\Command\Result;
-use Dvsa\Olcs\Api\Domain\CacheAwareInterface;
 use Dvsa\Olcs\Api\Domain\CommandHandlerManager;
 use Dvsa\Olcs\Api\Domain\ConfigAwareInterface;
 use Dvsa\Olcs\Api\Domain\DocumentGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\Exception\DisabledHandlerException;
 use Dvsa\Olcs\Api\Domain\Exception\RuntimeException;
+use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
 use Dvsa\Olcs\Api\Domain\HandlerEnabledTrait;
 use Dvsa\Olcs\Api\Domain\PublicationGeneratorAwareInterface;
 use Dvsa\Olcs\Api\Domain\QueryHandlerManager;
@@ -36,14 +38,15 @@ use Dvsa\Olcs\Api\Entity\Licence\Licence;
 use Dvsa\Olcs\Api\Entity\Organisation\Organisation;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpApplication;
 use Dvsa\Olcs\Api\Entity\Surrender;
+use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
 use Dvsa\Olcs\Api\Entity\Tm\TransportManager;
+use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
 use Dvsa\Olcs\Api\Service\Document\NamingService;
 use Dvsa\Olcs\Api\Service\Document\NamingServiceAwareInterface;
+use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Submission\SubmissionGenerator;
-use Dvsa\Olcs\Api\Domain\FileProcessorAwareInterface;
-use Dvsa\Olcs\Api\Service\Ebsr\FileProcessorInterface;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Dvsa\Olcs\Api\Service\Translator\TranslationLoader;
 use Dvsa\Olcs\Queue\Service\Message\MessageBuilder;
@@ -53,13 +56,10 @@ use Dvsa\Olcs\Transfer\Command\CommandInterface;
 use Dvsa\Olcs\Transfer\Query\MyAccount\MyAccount;
 use Dvsa\Olcs\Transfer\Query\QueryInterface;
 use Dvsa\Olcs\Transfer\Service\CacheEncryption as CacheEncryptionService;
-use Olcs\Logging\Log\Logger;
 use Laminas\ServiceManager\Exception\ExceptionInterface as LaminasServiceException;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use LmcRbacMvc\Service\AuthorizationService;
-use Doctrine\Common\Collections\ArrayCollection;
-use Dvsa\Olcs\Api\Rbac\IdentityProviderInterface;
-use Dvsa\Olcs\Api\Entity\System\RefData as RefDataEntity;
+use Olcs\Logging\Log\Logger;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -165,10 +165,6 @@ abstract class AbstractCommandHandler implements CommandHandlerInterface, Factor
         if ($this instanceof SubmissionGeneratorAwareInterface) {
             $this->setSubmissionGenerator($mainServiceLocator->get(SubmissionGenerator::class));
             $this->setSubmissionConfig($mainServiceLocator->get('config')['submissions']['sections']['configuration']);
-        }
-
-        if ($this instanceof AddressServiceAwareInterface) {
-            $this->setAddressService($mainServiceLocator->get('AddressService'));
         }
 
         if ($this instanceof \Dvsa\Olcs\Api\Domain\EmailAwareInterface) {
