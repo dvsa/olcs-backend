@@ -71,13 +71,19 @@ class DvsaAddressServiceClientFactory implements FactoryInterface
      */
     protected function getAppRegistrationServiceToken(array $config): string
     {
-        $provider = new \League\OAuth2\Client\Provider\GenericProvider([
+        $providerConfig = [
             'clientId' => $config['oauth2']['client_id'],
             'clientSecret' => $config['oauth2']['client_secret'],
             'urlAccessToken' => $config['oauth2']['token_url'],
             'urlAuthorize' => $config['oauth2']['token_url'],
             'urlResourceOwnerDetails' => $config['oauth2']['token_url'],
-        ]);
+        ];
+
+        if (!empty($config['oauth2']['proxy'] ?? null)) {
+            $providerConfig['proxy'] = $config['oauth2']['proxy'];
+        }
+
+        $provider = new \League\OAuth2\Client\Provider\GenericProvider($providerConfig);
 
         try {
             return $provider->getAccessToken('client_credentials', ['scope' => $config['oauth2']['scope']])->getToken();
