@@ -6,7 +6,11 @@
       <h2 class="govuk-summary-card__title">
         <?php
         if ($message->getCreatedBy()->getContactDetails() !== null && $message->getCreatedBy()->getContactDetails()->getPerson()) {
-          $sender = $message->getCreatedBy()->getContactDetails()->getPerson()->getFullName();
+          if (!$enhanced && $message->getCreatedBy()->getTeam() !== null){
+            $sender = $message->getCreatedBy()->getContactDetails()->getPerson()->getForename();
+          } else {
+            $sender = $message->getCreatedBy()->getContactDetails()->getPerson()->getFullName();
+          }
         } else {
           $sender = $message->getCreatedBy()->getLoginId();
         }
