@@ -470,5 +470,6 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
         $this->s3Client->shouldReceive('getObject')->andReturn(new \Aws\Result(['Body' => '']));
 
         $this->sut->__invoke($sm, TransXChangeConsumer::class);
+        $this->sut->setQueueService($this->mockedSmServices[Queue::class]);
     }
 }
