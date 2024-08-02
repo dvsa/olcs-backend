@@ -27,6 +27,7 @@ class FeatureToggle extends AbstractFeatureToggle
     public const MESSAGING = 'messaging';
     public const BACKEND_TRANSXCHANGE = 'transxchange_connection';
     public const USE_NEW_ADDRESS_SERVICE = 'use_new_address_service';
+    public const TRANSPORT_CONSULTANT_ROLE = 'transport_consultant_role';
 
     public static function create(/*string*/ $configName, /*string*/ $friendlyName, RefData $status)/*: FeatureToggle */
     {
