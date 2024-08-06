@@ -11,9 +11,9 @@ use Symfony\Component\Ldap\Ldap;
 
 class LdapClientFactory implements FactoryInterface
 {
-    const CONFIG_NAMESPACE = 'auth';
-    const CONFIG_ADAPTERS = 'adapters';
-    const CONFIG_ADAPTER = 'ldap';
+    public const CONFIG_NAMESPACE = 'auth';
+    public const CONFIG_ADAPTERS = 'adapters';
+    public const CONFIG_ADAPTER = 'ldap';
 
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): Client
     {
