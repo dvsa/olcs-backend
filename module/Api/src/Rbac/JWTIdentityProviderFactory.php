@@ -2,7 +2,7 @@
 
 namespace Dvsa\Olcs\Api\Rbac;
 
-use Dvsa\Authentication\Cognito\Client;
+use Dvsa\Contracts\Auth\OAuthClientInterface;
 use Psr\Container\ContainerInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 
@@ -26,7 +26,7 @@ class JWTIdentityProviderFactory implements FactoryInterface
         return new JWTIdentityProvider(
             $container->get('RepositoryServiceManager')->get('User'),
             $container->get('Request'),
-            $container->get(Client::class)
+            $container->get(OAuthClientInterface::class)
         );
     }
 }

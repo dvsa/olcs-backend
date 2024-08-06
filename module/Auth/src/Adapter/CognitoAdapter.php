@@ -10,6 +10,7 @@ use Dvsa\Authentication\Cognito\Client;
 use Dvsa\Contracts\Auth\AccessTokenInterface;
 use Dvsa\Contracts\Auth\Exceptions\ChallengeException;
 use Dvsa\Contracts\Auth\Exceptions\ClientException;
+use Dvsa\Contracts\Auth\OAuthClientInterface;
 use Dvsa\Contracts\Auth\Exceptions\InvalidTokenException;
 use Dvsa\Contracts\Auth\ResourceOwnerInterface;
 use Dvsa\Olcs\Auth\Exception\ResetPasswordException;
@@ -338,7 +339,7 @@ class CognitoAdapter extends AbstractAdapter
         $resourceOwner = $this->client->getResourceOwner($token);
 
         return [
-            'Provider' => Client::class,
+            'Provider' => OAuthClientInterface::class,
             'Token' => $token,
             'ResourceOwner' => $resourceOwner,
             'AccessToken' => $token->getToken(),
