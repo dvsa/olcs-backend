@@ -306,7 +306,16 @@ return [
                 'proxy_host' => 'proxy.%domain%',
                 'proxy_port' => 3128,
                 'timeout' => 30
-            ]
+            ],
+            'consumer_proxy' => 'http://%shd_proxy%',
+            'oauth2' => [
+                'client_id' => '%olcs_txc_client_id%',
+                'client_secret' => '%olcs_txc_client_secret%',
+                'token_url' => '%olcs_txc_token_url%',
+                'scope' => '%olcs_txc_scope%',
+                'proxy' => 'http://%shd_proxy%',
+                'service_name' => 'TransXchange',
+            ],
         ],
         'tmp_extra_path' => '/EBSR', //extra path to ebsr files within /tmp
         //debug only - validation must always be set to true in production
@@ -588,21 +597,6 @@ return [
         'targetUrl' => '%operator_reports_api_url%',
         'apiKey' => '%dvsa_reports_api_key%',
         'proxy' => 'http://%shd_proxy%',
-    ],
-    'app-registrations' => [
-        'secrets' => ['provider' => \Dvsa\Olcs\Api\Service\SecretsManager\LocalSecretsManager::class],
-        'transxchange' => [
-            'token_url' => '%olcs_txc_token_url%',
-            'client_id' => '%olcs_txc_client_id%',
-            'scope' => '%olcs_txc_scope%',
-            'secret_name' => 'txc_client_secret',
-        ],
-
-        'proxy' => 'http://%shd_proxy%',
-        'max_retry_attempts' => 3,
-    ],
-    'localSecretsManager' => [
-        'txc_client_secret' => ['client_secret' => '%olcs_txc_client_secret%'],
     ],
     'dvsa_address_service' => [
         'client' => [ // Guzzle client options

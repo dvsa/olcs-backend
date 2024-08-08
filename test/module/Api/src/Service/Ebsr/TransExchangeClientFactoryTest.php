@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
+use Dvsa\Olcs\Api\Service\AccessToken\Provider;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClientFactory;
 use Psr\Container\ContainerInterface;
@@ -34,11 +34,13 @@ class TransExchangeClientFactoryTest extends TestCase
 
     public function testInvoke(): void
     {
+        $oAuthOptions = ['options'];
         $config = [
             'transexchange_publisher' => [
                 'uri' => 'http://localhost:8080/txc/',
                 'options' => ['argseparator' => '~'],
-                'template_file' => 'template.xml'
+                'template_file' => 'template.xml',
+                'oauth2' => $oAuthOptions,
             ]
         ];
 
@@ -55,8 +57,8 @@ class TransExchangeClientFactoryTest extends TestCase
             ->once()
             ->with(TransExchangeClientFactory::PUBLISH_XSD);
 
-        $mockTxcAppRegService = m::mock(TransXChangeAppRegistrationService::class);
-        $mockTxcAppRegService->shouldReceive('getToken')->once()->andReturn('token');
+        $mockTokenProvider = m::mock(Provider::class);
+        $mockTokenProvider->expects('getToken')->withNoArgs()->andReturn('token');
 
         $mockToggle = m::mock(ToggleService::class);
         $mockToggle->shouldReceive('getToggleService')->andReturn($mockToggle);
@@ -70,7 +72,8 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(ParseXmlString::class)->andReturn($mockParser);
         $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
         $mockSl->shouldReceive('get')->with(ToggleService::class)->andReturn($mockToggle);
-        $mockSl->shouldReceive('get')->with(TransXChangeAppRegistrationService::class)->andReturn($mockTxcAppRegService);
+        $mockSl->shouldReceive('build')->with(Provider::class, $oAuthOptions)->andReturn($mockTokenProvider);
+
         $sut = new TransExchangeClientFactory();
         $service = $sut->__invoke($mockSl, TransExchangeClient::class);
 
@@ -84,18 +87,17 @@ class TransExchangeClientFactoryTest extends TestCase
      */
     public function tesInvokeToggleOn(): void
     {
+        $oAuthOptions = ['options'];
         $config = [
             'ebsr' => [
                 'transexchange_publisher' => [
                     'uri' => 'http://localhost:8080/txc/',
                     'new_uri' => 'http://txc.dev/',
                     'options' => ['argseparator' => '~'],
-                    'template_file' => 'template.xml'
-                ]
+                    'template_file' => 'template.xml',
+                    'oauth2' => $oAuthOptions,
+                ],
             ],
-            'app-registrations' => [
-                'proxy' => 'http://localhost',
-            ]
         ];
         $mockToggle = m::mock(ToggleService::class);
         $mockToggle->shouldReceive('getToggleService')->andReturn($mockToggle);
@@ -112,8 +114,10 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockXsdValidator->shouldReceive('setXsd')
             ->once()
             ->with(TransExchangeClientFactory::PUBLISH_XSD);
-        $mockTxcAppRegService = m::mock(TransXChangeAppRegistrationService::class);
-        $mockTxcAppRegService->shouldReceive('getToken')->once()->andReturn('token');
+
+        $mockTokenProvider = m::mock(Provider::class);
+        $mockTokenProvider->expects('getToken')->withNoArgs()->andReturn('token');
+
         $mockSl = m::mock(ContainerInterface::class);
         $mockSl->shouldReceive('get')->with('config')->andReturn($config);
         $mockSl->shouldReceive('get')->with('FilterManager')->andReturnSelf();
@@ -123,7 +127,8 @@ class TransExchangeClientFactoryTest extends TestCase
         $mockSl->shouldReceive('get')->with(ParseXmlString::class)->andReturn($mockParser);
         $mockSl->shouldReceive('get')->with(Xsd::class)->andReturn($mockXsdValidator);
         $mockSl->shouldReceive('get')->with(ToggleService::class)->andReturn($mockToggle);
-        $mockSl->shouldReceive('get')->with(TransXChangeAppRegistrationService::class)->andReturn($mockTxcAppRegService);
+        $mockSl->shouldReceive('build')->with(Provider::class, $oAuthOptions)->andReturn($mockTokenProvider);
+
         $sut = new TransExchangeClientFactory();
         $service = $sut->__invoke($mockSl, TransExchangeClient::class);
 
