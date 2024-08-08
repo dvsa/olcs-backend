@@ -205,10 +205,13 @@ class UserEntityTest extends EntityTester
         ];
     }
 
-    public function testCreateTransportManager()
+    /**
+     * @dataProvider dpOperatorAdminRoles
+     */
+    public function testCreateTransportManager(string $adminRoleAsString): void
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole($adminRoleAsString);
 
         $orgName = 'Org Name';
         $org = m::mock(OrganisationEntity::class)->makePartial();
@@ -509,10 +512,13 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(false, $entity->isAnonymous());
     }
 
-    public function testCreateOperator()
+    /**
+     * @dataProvider dpOperatorAdminRoles
+     */
+    public function testCreateOperator(string $adminRoleAsString): void
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole($adminRoleAsString);
 
         $orgName = 'Org Name';
         $org = m::mock(OrganisationEntity::class)->makePartial();
@@ -609,10 +615,13 @@ class UserEntityTest extends EntityTester
         $this->assertEquals(false, $entity->isAnonymous());
     }
 
-    public function testUpdateOperatorIsAdministratorOnly()
+    /**
+     * @dataProvider dpOperatorAdminRoles
+     */
+    public function testUpdateOperatorIsAdministratorOnly(string $adminRoleAsString): void
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole($adminRoleAsString);
 
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
         $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
@@ -985,10 +994,13 @@ class UserEntityTest extends EntityTester
         ];
     }
 
-    public function testUpdateOperatorWithOrganisationUsers()
+    /**
+     * @dataProvider dpOperatorAdminRoles
+     */
+    public function testUpdateOperatorWithOrganisationUsers(string $adminRoleAsString): void
     {
         $adminRole = m::mock(RoleEntity::class)->makePartial();
-        $adminRole->setRole(RoleEntity::ROLE_OPERATOR_ADMIN);
+        $adminRole->setRole($adminRoleAsString);
 
         $nonAdminRole = m::mock(RoleEntity::class)->makePartial();
         $nonAdminRole->setRole(RoleEntity::ROLE_OPERATOR_USER);
@@ -1146,6 +1158,7 @@ class UserEntityTest extends EntityTester
                     RoleEntity::ROLE_INTERNAL_CASE_WORKER,
                     RoleEntity::ROLE_INTERNAL_READ_ONLY,
                     RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
+                    RoleEntity::ROLE_OPERATOR_TC,
                     RoleEntity::ROLE_OPERATOR_ADMIN,
                     RoleEntity::ROLE_OPERATOR_USER,
                     RoleEntity::ROLE_OPERATOR_TM,
@@ -1164,6 +1177,7 @@ class UserEntityTest extends EntityTester
                     RoleEntity::ROLE_INTERNAL_CASE_WORKER,
                     RoleEntity::ROLE_INTERNAL_READ_ONLY,
                     RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
+                    RoleEntity::ROLE_OPERATOR_TC,
                     RoleEntity::ROLE_OPERATOR_ADMIN,
                     RoleEntity::ROLE_OPERATOR_USER,
                     RoleEntity::ROLE_OPERATOR_TM,
@@ -1189,6 +1203,7 @@ class UserEntityTest extends EntityTester
                     RoleEntity::ROLE_INTERNAL_CASE_WORKER,
                     RoleEntity::ROLE_INTERNAL_READ_ONLY,
                     RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
+                    RoleEntity::ROLE_OPERATOR_TC,
                     RoleEntity::ROLE_OPERATOR_ADMIN,
                     RoleEntity::ROLE_OPERATOR_USER,
                     RoleEntity::ROLE_OPERATOR_TM,
@@ -1212,6 +1227,7 @@ class UserEntityTest extends EntityTester
                     RoleEntity::ROLE_INTERNAL_CASE_WORKER,
                     RoleEntity::ROLE_INTERNAL_READ_ONLY,
                     RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
+                    RoleEntity::ROLE_OPERATOR_TC,
                     RoleEntity::ROLE_OPERATOR_ADMIN,
                     RoleEntity::ROLE_OPERATOR_USER,
                     RoleEntity::ROLE_OPERATOR_TM,
@@ -1282,6 +1298,13 @@ class UserEntityTest extends EntityTester
                 'rolesOwn' => [$internalReadOnlyRole],
                 'rolesToCheck' => [
                     RoleEntity::ROLE_INTERNAL_LIMITED_READ_ONLY,
+                ],
+                'expected' => false,
+            ],
+            'ROLE_INTERNAL_READ_ONLY user - not allowed to perform action on ROLE_OPERATOR_TC' => [
+                'rolesOwn' => [$internalReadOnlyRole],
+                'rolesToCheck' => [
+                    RoleEntity::ROLE_OPERATOR_TC,
                 ],
                 'expected' => false,
             ],
@@ -1374,6 +1397,14 @@ class UserEntityTest extends EntityTester
         return [
             'account disabled, reset not allowed' => ['Y', false],
             'account active, reset allowed' => ['N', true],
+        ];
+    }
+
+    public function dpOperatorAdminRoles(): array
+    {
+        return [
+            [RoleEntity::ROLE_OPERATOR_ADMIN],
+            [RoleEntity::ROLE_OPERATOR_TC],
         ];
     }
 }
