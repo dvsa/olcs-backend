@@ -7,15 +7,12 @@ use Dvsa\Olcs\Api\Domain\Util;
 use Dvsa\Olcs\Api\Entity\Generic\Question;
 use Dvsa\Olcs\Api\Entity\Permits\IrhpPermitType;
 use Dvsa\Olcs\Api\Service as ApiSrv;
-use Dvsa\Olcs\Api\Service\AppRegistration\AppRegistrationServiceFactory;
-use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
 use Dvsa\Olcs\Api\Service\Cpms\ApiServiceFactory;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchService;
 use Dvsa\Olcs\Api\Service\DvlaSearch\DvlaSearchServiceFactory;
 use Dvsa\Olcs\Api\Service\Publication\PublicationGenerator;
 use Dvsa\Olcs\Api\Service\Qa\Strategy as QaStrategy;
 use Dvsa\Olcs\Api\Service\Translator;
-use Dvsa\Olcs\AwsSdk\Factories\SecretsManagerFactory;
 
 return [
     'router' => [
@@ -519,11 +516,7 @@ return [
             'EventHistoryCreator' =>
                 ApiSrv\EventHistory\CreatorFactory::class,
             ApiSrv\EventHistory\Creator::class => ApiSrv\EventHistory\CreatorFactory::class,
-
-            TransXChangeAppRegistrationService::class => AppRegistrationServiceFactory::class,
-            ApiSrv\SecretsManager\SecretsManager::class => SecretsManagerFactory::class,
-            ApiSrv\SecretsManager\LocalSecretsManager::class => ApiSrv\SecretsManager\LocalSecretsManagerFactory::class,
-            ApiSrv\AppRegistration\Adapter\AppRegistrationSecret::class => Dvsa\Olcs\Api\Service\AppRegistration\Adapter\AppRegistrationSecretFactory::class,
+            ApiSrv\AccessToken\Provider::class => ApiSrv\AccessToken\ProviderFactory::class,
             ApiSrv\Ebsr\S3Processor::class => ApiSrv\Ebsr\S3ProcessorFactory::class,
 
             ApiSrv\GovUkAccount\GovUkAccountService::class => ApiSrv\GovUkAccount\GovUkAccountServiceFactory::class,

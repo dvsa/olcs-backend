@@ -137,7 +137,21 @@ return [
   'ebsr' => [
     'transexchange_publisher' => [
       'uri' => 'http://localhost:8080/txc/publisherService',
+      'new_uri' => '',
+      'options' => [
+          'proxy_host' => '',
+      ],
+      'consumer_proxy' => '',
+      'oauth2' => [
+          'client_id' => '',
+          'client_secret' => '',
+          'token_url' => '',
+          'scope' => '',
+          'proxy' => '',
+      ],
     ],
+    // the input bucket for TransXChange, where the xml is placed
+    'input_s3_bucket' => 'txc-local-input',
     // The output bucket for TransXChange. This bucket will container the resulting PDFs.
     'output_s3_bucket' => 'txc-local-output',
     // The cross account role that VOL will assume to access the output bucket and output SQS queue.

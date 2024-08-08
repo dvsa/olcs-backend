@@ -50,8 +50,8 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
             'global' => [],
             's3' => [],
         ],
-        'app-registrations' => [
-            'proxy' => 'http://proxy.test',
+        'transexchange_publisher' => [
+            'consumer_proxy' => 'http://proxy.test',
         ],
         'ebsr' => [
             'output_s3_bucket' => 'txc-local-output',
