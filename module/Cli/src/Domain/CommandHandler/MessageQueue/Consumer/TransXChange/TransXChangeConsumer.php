@@ -409,7 +409,7 @@ class TransXChangeConsumer extends AbstractConsumer
                 'token'  => $result['Credentials']['SessionToken']
             ],
             'http'    => [
-                'proxy' => $config['app-registrations']['proxy'],
+                'proxy' => $config['transexchange_publisher']['consumer_proxy'],
                 'timeout' => 30,
             ]
         ] + ($config['awsOptions']['s3'] ?? []) + ($config['awsOptions']['global'] ?? []);
@@ -423,7 +423,7 @@ class TransXChangeConsumer extends AbstractConsumer
                 'token'  => $result['Credentials']['SessionToken']
             ],
             'http'    => [
-                'proxy' => $config['app-registrations']['proxy'],
+                'proxy' => $config['transexchange_publisher']['consumer_proxy'],
                 'timeout' => 30,
             ]
         ] + ($config['awsOptions']['sqs'] ?? []) + ($config['awsOptions']['global'] ?? []);
