@@ -3,7 +3,7 @@
 namespace Dvsa\Olcs\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Entity\System\FeatureToggle;
-use Dvsa\Olcs\Api\Service\AppRegistration\TransXChangeAppRegistrationService;
+use Dvsa\Olcs\Api\Service\AccessToken\Provider;
 use Dvsa\Olcs\Api\Service\Toggle\ToggleService;
 use Laminas\Filter\FilterPluginManager;
 use Laminas\Http\Request;
@@ -16,10 +16,6 @@ use Laminas\Http\Client as RestClient;
 use Dvsa\Olcs\Utils\Client\ClientAdapterLoggingWrapper;
 use Psr\Container\ContainerInterface;
 
-/**
- * Class TransExchangeClientFactory
- * @package Dvsa\Olcs\Api\Service\Ebsr
- */
 class TransExchangeClientFactory implements FactoryInterface
 {
     protected $toggleConfig = [
@@ -41,19 +37,21 @@ class TransExchangeClientFactory implements FactoryInterface
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null): TransExchangeClient
     {
         $config = $container->get('config');
-        $transXChangeAppRegistrationService = $container->get(TransXChangeAppRegistrationService::class);
-
-        $correlationId = (new RequestId())->process([])['extra']['requestId'];
-        $token = $transXChangeAppRegistrationService->getToken();
-        $headers = ['Authorization' => 'Bearer ' . $token];
-
-        /** @var ToggleService $toggleService */
-        $toggleService = $container->get(ToggleService::class);
 
         if (!isset($config['ebsr']['transexchange_publisher'])) {
             throw new \RuntimeException('Missing transexchange_publisher config');
         }
+
         $config = $config['ebsr']['transexchange_publisher'];
+
+        $correlationId = (new RequestId())->process([])['extra']['requestId'];
+
+        /** @var Provider $tokenProvider */
+        $tokenProvider = $container->build(Provider::class, $config['oauth2']);
+        $headers = ['Authorization' => 'Bearer ' .  $tokenProvider->getToken()];
+
+        /** @var ToggleService $toggleService */
+        $toggleService = $container->get(ToggleService::class);
 
         if ($toggleService->isEnabled(FeatureToggle::BACKEND_TRANSXCHANGE)) {
             $config['uri'] = $config['new_uri'];

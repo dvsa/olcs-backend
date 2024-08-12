@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Dvsa\OlcsTest\Api\Service\Ebsr;
 
 use Dvsa\Olcs\Api\Service\Ebsr\TransExchangeClient;
@@ -31,7 +33,7 @@ class TransExchangeClientTest extends TestCase
     /**
      * Tests making a request
      */
-    public function testMakeRequest()
+    public function testMakeRequest(): void
     {
         $requestBody = 'body';
         $responseContent = '<success></success>';
@@ -71,7 +73,7 @@ class TransExchangeClientTest extends TestCase
     /**
      * Tests exception thrown when request not valid
      */
-    public function testMakeRequestThrowsException()
+    public function testMakeRequestThrowsException(): void
     {
         $this->expectException(\Dvsa\Olcs\Api\Domain\Exception\TransxchangeException::class);
         $this->expectExceptionMessage('TransXchange response did not validate against the schema: message 1, message 2');
