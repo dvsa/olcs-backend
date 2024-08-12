@@ -33,7 +33,6 @@ class ByApplicationToLicenceTest extends QueryHandlerTestCase
         $mockLicence->shouldReceive('getId')->once()->andReturn(2);
         $mockApplication = m::mock(Application::class);
         $mockApplication->shouldReceive('getLicence')->once()->andReturn($mockLicence);
-        $mockApplication->shouldReceive('serialize')->once()->andReturn(['id' => 7]);
 
         $this->repoMap[Repository\Application::class]->shouldReceive('fetchById')->andReturn($mockApplication);
 
