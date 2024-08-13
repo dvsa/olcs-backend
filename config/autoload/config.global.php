@@ -607,7 +607,7 @@ return [
         'oauth2' => [
             'client_id' => '%address_service_azure_client_id%',
             'client_secret' => '%address_service_azure_client_secret%',
-            'token_url' => '%olcs_txc_token_url%',
+            'token_url' => '%address_service_azure_token_url%',
             'scope' => '%address_service_azure_token_scope%',
             'proxy' => 'http://%shd_proxy%',
         ],
