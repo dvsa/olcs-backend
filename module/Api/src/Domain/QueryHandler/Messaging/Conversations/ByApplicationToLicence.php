@@ -32,12 +32,7 @@ class ByApplicationToLicence extends AbstractQueryHandler implements ToggleRequi
             'licence'  => $application->getLicence()->getId(),
             'statuses' => $query->getStatuses(),
         ];
-        $byLicence = $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
-        array_walk(
-            $byLicence['result'],
-            fn(&$result) => $result['task']['application'] = $application->serialize(),
-        );
 
-        return $byLicence;
+        return $this->getQueryHandler()->handleQuery(GetConversationsByLicenceQuery::create($licenceQuery));
     }
 }
