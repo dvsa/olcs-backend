@@ -50,10 +50,10 @@ class TransXChangeConsumerTest extends AbstractCommandHandlerTestCase
             'global' => [],
             's3' => [],
         ],
-        'transexchange_publisher' => [
-            'consumer_proxy' => 'http://proxy.test',
-        ],
         'ebsr' => [
+            'transexchange_publisher' => [
+                'consumer_proxy' => 'http://proxy.test',
+            ],
             'output_s3_bucket' => 'txc-local-output',
             'txc_consumer_role_arn' => 'arn:aws:iam::000000000000:role/txc-local-consumer-role',
             'max_messages_per_run' => 100,
