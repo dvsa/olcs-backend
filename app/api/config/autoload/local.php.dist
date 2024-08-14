@@ -1,5 +1,9 @@
 <?php
 
+use Dvsa\Contracts\Auth\OAuthClientInterface;
+use Dvsa\Authentication\Cognito\Client as CognitoClient;
+use Dvsa\Authentication\Ldap\Client as LdapClient;
+
 /**
  * Local Configuration Override
  *
@@ -247,7 +251,30 @@ return [
     'api_key' => '',
     'proxy' => "",
   ],
+  /*
+  |--------------------------------------------------------------------------
+  | Authentication Identity Provider
+  |--------------------------------------------------------------------------
+  |
+  | Select an identity provider client that will be used to connect to an
+  | identity provider that implement the `OAuthClientInterface`.
+  |
+  | This config file is loaded after the module configuration, so overwriting
+  | the service manager alias in a global config file will overwrite the
+  | modules own config allowing this file to set the identity provider.
+  |
+  | Example adapters:
+  |   - Dvsa\Authentication\Cognito\Client as CognitoClient
+  |   - Dvsa\Authentication\Ldap\Client as LdapClient
+  |
+  */
+  'service_manager' => [
+    'aliases' => [
+      OAuthClientInterface::class => LdapClient::class,
+    ],
+  ],
   'auth' => [
+    'default_adapter' => 'ldap',
     'adapters' => [
       'cognito' => [
         'adapter' => \Dvsa\Olcs\Auth\Adapter\CognitoAdapter::class,
@@ -259,7 +286,29 @@ return [
           'proxy' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
         ],
       ],
-      'openam' => new \Laminas\Stdlib\ArrayUtils\MergeRemoveKey(),
+      /*
+      |--------------------------------------------------------------------------
+      | LDAP Local Credentials
+      |--------------------------------------------------------------------------
+      |
+      | The login credentials that match the OpenLDAP container bundled as
+      | part of https://github.com/dvsa/vol-docker-compose.
+      |
+      | These are default LOCAL values, do not alter unless defaults have changed.
+      |
+      */
+      'ldap' => [
+        'adapter' => \Dvsa\Olcs\Auth\Adapter\LdapAdapter::class,
+        'host' => 'openldap',
+        'port' => 1389,
+        'admin_dn' => 'cn=admin,dc=vol,dc=dvsa',
+        'admin_password' => 'admin',
+        'rdn' => 'cn',
+        'object_class' => ['inetOrgPerson'],
+        'base_dn' => 'ou=users,dc=vol,dc=dvsa',
+        'encryption' => 'none',
+        'secret' => 'SUPER_SECRET',
+      ],
     ],
   ],
   'acquired_rights' => [
