@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dvsa\OlcsTest\Api\Rbac;
 
 use Dvsa\Authentication\Cognito\Client;
+use Dvsa\Contracts\Auth\OAuthClientInterface;
 use Dvsa\Olcs\Api\Domain\Repository\User;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProvider;
 use Dvsa\Olcs\Api\Rbac\JWTIdentityProviderFactory;
@@ -73,7 +74,7 @@ class JWTIdentityProviderFactoryTest extends MockeryTestCase
     {
         $this->repositoryServiceManager();
         $this->serviceManager()->setService('Request', m::mock(Request::class));
-        $this->serviceManager->setService(Client::class, m::mock(Client::class));
+        $this->serviceManager->setService(OAuthClientInterface::class, m::mock(Client::class));
     }
 
     private function repositoryServiceManager()
