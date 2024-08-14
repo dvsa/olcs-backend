@@ -123,10 +123,10 @@
         "mikey179/vfsstream": "^1.6",
         "dms/phpunit-arraysubset-asserts": "^0.5.0"
     },
-    "extra" : {
-      "bamarni-bin": {
-        "bin-links": true,
-        "forward-command": true
-      }
+    "extra": {
+        "bamarni-bin": {
+            "bin-links": true,
+            "forward-command": true
+        }
     }
 }
